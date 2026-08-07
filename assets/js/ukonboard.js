@@ -99,8 +99,10 @@ window.UKONBOARD = (function () {
         return ask('Welcome to Ukreate',
           'Hotels trade nights they would rather fill for content. You shoot the ' +
           'property, they host your stay, and everything you make stays yours to post. ' +
-          'Two minutes and they can start finding you.', peek('creator'), { mark: true });
+          'Two minutes and they can start finding you.', '', { mark: true });
       },
+      art: 'creator',
+      bare: true,          /* not a question: no rail, and it does not count */
       done: function () { return true; },
       cta: 'Get started'
     },
@@ -169,6 +171,7 @@ window.UKONBOARD = (function () {
           '', { mark: true });
       },
       art: 'hotel',
+      bare: true,          /* not a question: no rail, and it does not count */
       done: function () { return true; },
       cta: 'Get started'
     },
@@ -379,8 +382,17 @@ window.UKONBOARD = (function () {
      row of numbered dots. Dots put every step on screen at once, which makes a
      four-step flow look like a form with four sections; a bar says only how far
      along you are, which is the one thing worth saying. */
+  /* The welcome is not a question, so it carries no rail and is not counted. A
+     counter that opens on 1/6 and then shows 2/6 on the first thing you are
+     actually asked is describing a form with six fields; the questions are five
+     and the welcome is the door. */
+  function counted(side) {
+    return steps(side).filter(function (s) { return !s.bare; });
+  }
   function railHtml(side, at) {
-    var list = steps(side);
+    var list = counted(side);
+    var bare = steps(side).length - list.length;   /* how many precede the count */
+    at = at - bare;
     var pct = Math.round((at) / (list.length - 1) * 100);
     return '<div class="ukObBar">' +
         '<div class="ukObBar_t" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
@@ -408,7 +420,7 @@ window.UKONBOARD = (function () {
     return '<div class="ukModalWrap ukOb" data-ob-wrap>' +
       '<div class="ukModal ukOb_modal' + (s.art ? ' has-art' : '') + '" role="dialog" ' +
         'aria-modal="true" aria-label="Set up your account">' +
-        railHtml(side, at) +
+        (s.bare ? '' : railHtml(side, at)) +
         /* Outside the question, because it belongs to the card. Nested inside the
            scrolling body it counted toward that body's scroll height and put a
            scrollbar on a step that fits. */

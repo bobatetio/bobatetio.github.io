@@ -216,9 +216,18 @@ left on the checklist, because a property with none is not really listed.
 
 **The modal is one size on every screen** and does not resize between questions,
 so Continue never moves under the cursor. The question scrolls; the progress bar
-and the buttons do not. The welcome carries a single supplied image rather than
-assembled data — drop it at `assets/img/onboard-welcome-{hotel,creator}.jpg` and
-it is picked up; until then the slot renders a plain placeholder.
+and the buttons do not.
+
+**The welcome is not a question**, and it is built differently for that reason. No
+progress bar and no counter, because it is the door rather than the first of five
+things being asked; the counter starts at 1/5 on the step after it. Its copy and
+mark are centred, its heading is larger, and its one action runs the full width of
+the card. The artwork sits BEHIND the step, out of flow, so it sets the height of
+nothing and can run down past the copy and behind the button. It is contained,
+never cropped, because the fade under it is part of the artwork rather than a
+gradient drawn here. Drop a cutout PNG at
+`assets/img/onboard-welcome-{hotel,creator}.png` and flip its entry in `ART`;
+until then that side renders a placeholder in the same band.
 
 Behind the modal sits the **marketplace**, not the user's own dashboard. A new
 account's dashboard is empty; the creator network and the live stays are not,

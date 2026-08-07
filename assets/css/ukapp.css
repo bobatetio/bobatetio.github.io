@@ -4844,7 +4844,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
    something drawn here, so any crop cuts the fade off and leaves the plane
    sitting on a hard edge. Containing it also means the height alone sets the
    size: at 46% the image draws about 445px wide rather than filling the card. */
-.ukObArt{position:absolute;left:0;right:0;bottom:22%;height:38%;z-index:0;
+.ukObArt{position:absolute;left:0;right:0;bottom:5%;height:55%;z-index:0;
   pointer-events:none;display:grid;place-items:center}
 /* Sized by its own limits, not by object-fit. height:100% inside a grid row that
    is itself auto-sized is a circular reference, so the browser dropped it back to
@@ -4857,7 +4857,10 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
    percentage and resolves circularly, so a max-height in percent was ignored the
    same way height:100% was. Width caps it, the ratio does the rest, and because
    the image sizes itself there is nothing to crop. */
-.ukObArt_i{max-width:50%;width:auto;height:auto;display:block;margin:auto;grid-area:1/1}
+/* 82% IS the ceiling: the artwork is 492px across and the card is 600, so this is
+   its native size. Anything past it is an upscale, which on a cutout with fine
+   detail in the phone screens is the first thing that would look soft. */
+.ukObArt_i{max-width:82%;width:auto;height:auto;display:block;margin:auto;grid-area:1/1}
 /* The placeholder is still a block: with no artwork there is nothing to sit
    behind, and an empty layer would be invisible rather than a stand-in. */
 /* The placeholder occupies the same band, so a side without artwork yet shows
@@ -4869,7 +4872,20 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukObArt.is-empty{border-style:dashed}
 .ukObArt.is-empty .ukObArt_ph{display:block}
 /* The product's own mark, above the line that names it. */
-.ukOb_logo{display:block;height:28px;width:auto;margin:0 0 16px}
+.ukOb_logo{display:block;height:34px;width:auto;margin:0 0 18px}
+
+/* ---- the welcome, centred ----
+   It is the one step that is not a question. Nothing on it is being answered, so
+   there is no field or option list for the copy to line up with, and a single
+   action reads better centred under centred text than pushed into a corner. The
+   question steps stay left-aligned with their controls. */
+.ukStart_ask--mark{text-align:center}
+/* Larger here than on a question: this line is the whole point of the screen,
+   and there is no field beside it competing for the eye. */
+.ukOb_modal .ukStart_ask--mark .ukStart_h{font-size:clamp(26px,3vw,33px)}
+.ukStart_ask--mark .ukOb_logo{margin-left:auto;margin-right:auto}
+.ukOb_modal:has(.ukStart_ask--mark) .ukOb_nav{display:block}
+.ukOb_modal:has(.ukStart_ask--mark) .ukOb_nav .ukNav_go{width:100%;justify-content:center}
 @media (prefers-color-scheme:dark){.ukOb_logo{filter:invert(1) brightness(1.6)}}
 :root[data-theme="dark"] .ukOb_logo{filter:invert(1) brightness(1.6)}
 :root[data-theme="light"] .ukOb_logo{filter:none}
