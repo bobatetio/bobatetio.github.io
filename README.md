@@ -137,6 +137,12 @@ own repository, those three are the whole of the untangling.
   three: `--c1` teal for the live reading, `--c2` gold for the one waiting on
   someone, `--c3` green for the settled one.
 - **Two typefaces.** Marcellus for display and numbers, Lato for everything else.
+- **The hotel app is the reference.** Where both sides do the same job, the
+  hotel's component is the one to use: `head()` and its split variant for page
+  headers, `.ukStatusBadge` for whose-move-is-it, `.ukTrack` for the stage rail,
+  `.ukTableWrap`/`.ukTable` for tables, `.ukCards` for a card grid, `UKCHART`
+  for every chart, and `ukstaycard.js` for a stay or a hotel. Before building
+  something, check whether `/app/` already has it.
 
 ## Known gaps
 

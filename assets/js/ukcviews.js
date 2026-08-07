@@ -7,8 +7,14 @@ window.UKCV = (function () {
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) {
     return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' })[c]; }); };
 
-  function head(t, s) {
-    return '<div class="ukPageHead"><h2>' + t + '</h2>' + (s ? '<p>' + s + '</p>' : '') + '</div>';
+  /* The same page header the hotel side uses, including its split variant: a
+     page whose primary action belongs beside the title now has somewhere to put
+     it, instead of floating it into the body. */
+  function head(t, s, aside) {
+    var body = '<h2>' + t + '</h2>' + (s ? '<p>' + s + '</p>' : '');
+    if (!aside) return '<div class="ukPageHead">' + body + '</div>';
+    return '<div class="ukPageHead ukPageHead--split"><div class="ukPageHead_txt">' + body + '</div>' +
+      '<div class="ukPageHead_aside">' + aside + '</div></div>';
   }
   function empty(t, p, cta) {
     return '<div class="ukPanel ukStub"><div class="ukEmpty"><p class="ukEmpty_t">' + t + '</p>' +
@@ -227,15 +233,35 @@ window.UKCV = (function () {
           return '<button class="ukFilter' + (f === String(i) ? ' is-on' : '') + '" type="button" role="tab" aria-selected="' + (f === String(i)) + '" data-stage="' + i + '">' +
             '<span class="ukFilter_lb">' + stage.short + '</span>' + (n ? '<span class="ukFilter_ct">' + n + '</span>' : '') + '</button>';
         }).join('') + '</div></div>' +
-      (list.length ? '<div class="ukBoard">' + list.map(function (c) {
+      /* THE HOTEL CARD, the shared component — the hotel side's collaboration
+         list leads with the creator card because the creator is the subject
+         there; here the subject is the property, and that card already exists.
+         This was a bespoke .ukBoardCard: a 16:9 photograph over a name, two per
+         row and twice the height of anything on the hotel side. */
+      (list.length ? '<div class="ukCards">' + list.map(function (c, i) {
         var stay = D.stay(c.stay), mine = D.collabMine(c);
-        return '<article class="ukBoardCard" data-thread="' + c.id + '" tabindex="0" role="button" aria-label="Open your collab with ' + esc(stay.hotel) + '">' +
-          pic(stay.img, stay.hotel, '16x9', 'ukM--cardtop') +
-          '<div class="ukBoardCard_pad"><div class="ukBoardCard_top"><div><h3 class="ukBoardCard_n">' + esc(stay.hotel) + '</h3><p class="ukBoardCard_m">' + esc(stay.city) + '</p></div>' + (c.unread ? '<span class="ukDot">' + c.unread + '</span>' : '') + '</div>' +
-            track(c.stage, true) + '<p class="ukNext"><span class="ukNext_lb">' + (c.stage === 4 ? 'Done' : mine ? 'Your move' : 'With your host') + '</span><span class="ukNext_say">' + esc(D.collabSay(c)) + '</span></p>' +
-            cardPreview(c, stay) + '</div></article>';
+        return '<div class="ukCollabCell" data-thread="' + c.id + '" tabindex="0" role="button" ' +
+          'aria-label="Open your collab with ' + esc(stay.hotel) + '">' +
+          window.UKSTAY.hotelCard(stay, {
+            eager: i < 3,
+            tag: c.unread ? '<span class="ukDot">' + c.unread + '</span>' : '',
+            foot: track(c.stage, true) + statusBadge(c, mine) + cardPreview(c, stay)
+          }) + '</div>';
       }).join('') + '</div>'
         : empty('Nothing at that stage', 'Try another stage — everything stays in one thread as it moves.'));
+  }
+
+  /* The hotel's .ukStatusBadge, not a second component doing its job. Both sides
+     answer the same question on a collaboration card — whose move is it, and
+     what is the next thing — and this side had grown its own .ukNext to do it,
+     with different type and a different tint. Only the words differ, because the
+     answer genuinely differs: "With your host" is not "With the creator". */
+  function statusBadge(c, mine) {
+    var lb = c.stage === 4 ? 'Done' : mine ? 'Your move' : 'With your host';
+    return '<div class="ukStatusBadge' + (mine ? ' is-mine' : '') + '" role="status">' +
+      '<span class="ukStatusBadge_lb">' + esc(lb) + '</span>' +
+      '<span class="ukStatusBadge_say">' + esc(D.collabSay(c)) + '</span>' +
+    '</div>';
   }
 
   function track(stage, mini) {
@@ -545,7 +571,8 @@ window.UKCV = (function () {
     var styles = ['all'].concat(D.stays.map(function (s) { return s.style; })
       .filter(function (v, i, a) { return a.indexOf(v) === i; }));
 
-    return head('Discover stays', 'Hotels that actually want to work with creators like you.') +
+    return head('Discover stays', 'Hotels that actually want to work with creators like you.',
+      '<button class="ukBtn" type="button" data-goto="pitch">Open Pitch Pilot</button>') +
       '<div class="ukToolbar ukToolbar--split ukCrBar">' +
         '<div class="ukCrBar_l">' +
           '<label class="ukSearch"><span data-icon="search"></span>' +
@@ -759,45 +786,10 @@ window.UKCV = (function () {
   }
 
   /* ============================ 7 — earnings ============================ */
-  function earn() {
-    var e = D.earnings, max = Math.max.apply(null, e.months.map(function (x) { return x.pitches; }));
-    var booked = D.pitches.filter(function (p) { return p.status === 'Booked'; }).length;
-    return head('Earnings and growth', 'What your work has been worth so far, and where it is going.') +
-      '<div class="ukKpis">' +
-        st2('Stays landed', e.stays, 'in the last six months') +
-        st2('Nights hosted', e.nights, 'rooms you did not pay for') +
-        st2('What that was worth', D.money(e.value), 'at the rooms&rsquo; own rates') +
-        st2('Pitch to booking', Math.round(booked / D.pitches.length * 100) + '%', 'roughly one in every ' + Math.round(D.pitches.length / booked)) +
-      '</div>' +
-      '<div class="ukGrid ukGrid--roi">' +
-        '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Pitches and bookings</h3></div>' +
-          '<div class="ukChart" role="img" aria-label="Pitches per month rising from 4 to 14, with bookings in most months">' +
-            e.months.map(function (x) {
-              return '<div class="ukChart_col">' +
-                '<span class="ukChart_bar" style="height:' + Math.round(x.pitches / max * 100) + '%">' +
-                '<span class="ukChart_tip">' + x.pitches + ' pitches<em>' + x.booked + ' booked</em></span></span>' +
-                '<span class="ukChart_x">' + x.m + '</span></div>';
-            }).join('') + '</div>' +
-          '<p class="ukWhy">The line that matters is the volume. More pitches out is the whole game — even the biggest creators hear no far more than yes.</p>' +
-        '</section>' +
-        '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What performed</h3></div>' +
-          '<div class="ukReels ukReels--sm">' + D.me.work.slice(0, 3).map(function (w) {
-            return '<figure class="ukReel">' + m(w.m, w.t) +
-              '<figcaption><span class="ukReel_t">' + esc(w.t) + '</span>' +
-              '<span class="ukReel_s">' + D.fmt(w.plays) + ' plays</span></figcaption></figure>';
-          }).join('') + '</div>' +
-        '</section>' +
-      '</div>' +
-      '<section class="ukPanel ukSoonC"><div>' +
-        '<p class="ukHero_eyebrow">Coming</p>' +
-        '<h3 class="ukCheerBig_t">Commission on the bookings you drive</h3>' +
-        '<p class="ukCheerBig_p">Hotels are moving to paying creators a cut of the direct bookings their content brings in. ' +
-        'When that switches on, your share lands here. Nothing to do yet.</p></div>' +
-        '<div class="ukSoonC_g">' + ['Bookings you drove','Commission earned','Best performing piece'].map(function (l) {
-          return '<div class="ukStat ukStat--ghost"><p class="ukStat_label">' + l + '</p>' +
-            '<p class="ukStat_value">&mdash;</p></div>'; }).join('') + '</div>' +
-      '</section>';
-  }
+  /* earn() used to live here and drew its own bar chart out of divs
+     (.ukChart_col / _bar / _tip) — the only hand-rolled chart in the product,
+     while everything else went through UKCHART. ukcdash.js has replaced this
+     view since, so the code was dead as well as divergent. */
   function st2(l, v, n) {
     return '<div class="ukKpi"><p class="ukStat_label">' + l + '</p><p class="ukKpi_v">' + v + '</p>' +
       '<p class="ukStat_note">' + n + '</p></div>';
@@ -851,7 +843,8 @@ window.UKCV = (function () {
   function kit() {
     var me = D.me;
     var total = me.plats.reduce(function (a, p) { return a + p.f; }, 0);
-    return head('Your media kit', 'One page you can send to any hotel or brand, on or off Ukreate.') +
+    return head('Your media kit', 'One page you can send to any hotel or brand, on or off Ukreate.',
+      '<button class="ukBtn" type="button" data-ack="Link copied">Copy the link</button>') +
       '<div class="ukToolbar"><span class="ukCount">Updates itself as your work does</span>' +
         '<button class="ukGhost" type="button" data-ack="Link copied">Copy share link</button>' +
         '<button class="ukBtn" type="button" data-ack="Preparing your PDF">Download as PDF</button></div>' +
@@ -1058,7 +1051,8 @@ window.UKCV = (function () {
   }
 
   return {
-    home:home, collabs:collabs, stays:stays, apply:apply, earn:earn, profile:profile,
+    /* earn is not here: ukcdash.js owns that view and assigns V.earn itself */
+    home:home, collabs:collabs, stays:stays, apply:apply, profile:profile,
     kit:kit, academy:academy, community:community, member:member, account:account,
     empty:empty, media:m, pic:pic, head:head, track:track, paginate:paginate,
     /* the shared stay card as this side dresses it, so the dashboard, Pitch Pilot

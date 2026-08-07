@@ -112,7 +112,8 @@
   function profile() {
     var me = D.me;
 
-    return head('Your profile', 'This is what a hotel sees. Make yourself impossible to ignore.') +
+    return head('Your profile', 'This is what a hotel sees. Make yourself impossible to ignore.',
+      '<button class="ukBtn" type="button" data-goto="kit">Make my media kit</button>') +
 
       '<section class="ukProf">' +
         '<div class="ukProf_id">' + pic(me.img, me.n, '1x1', 'ukM--avxl', true) +
