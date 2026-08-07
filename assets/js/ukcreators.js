@@ -86,8 +86,12 @@
       '<div class="ukTrackRow"><span class="ukTrackRow_l">Discount code</span>' +
         '<code class="ukCode">' + esc(row.code) + '</code>' +
         '<button class="ukGhost" type="button" data-ack="Copied">Copy</button></div>' +
-      '<button class="ukGhost ukCard_cta" type="button" data-tab="tracking" data-goto="roi">' +
-      'Manage all links and codes</button></section>';
+      /* same honesty as the collaboration panel: the link exists, the reporting
+         behind it may not */
+      window.UKTRACK.linkNote() +
+      (D.trackingLive()
+        ? '<button class="ukGhost ukCard_cta" type="button" data-tab="tracking" data-goto="roi">' +
+          'Manage all links and codes</button>' : '') + '</section>';
   }
 
   var CHEV_ICON = '<svg class="ukDrop_car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';

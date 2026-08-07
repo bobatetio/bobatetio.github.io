@@ -907,8 +907,21 @@ window.UK = (function () {
        other place in the product is written */
     name:'MiraGrace Estate', code:'MG', city:'Miami, Florida', cc:'us', type:'Resort',
     cat:'Wellness & spa', img:IMG+'fc2/hero-hotel.jpg',
-    about:'A wellness-led estate ten minutes from the water, built around a spa, two restaurants and a rooftop pool.'
+    about:'A wellness-led estate ten minutes from the water, built around a spa, two restaurants and a rooftop pool.',
+    /* ---- is this property's booking tracking actually live ----
+       Real state on the record, one of 'none' | 'pending' | 'live'. Every surface
+       that would otherwise print an attributed figure reads it, because a hotel
+       whose booking flow is not instrumented cannot have attributed revenue and
+       must never be shown any. Seeded live for the demo account. The states, the
+       copy and the plug-in point all live in uktrack.js.
+       // PLUG-IN POINT — real instrumentation status, via UKTRACK.status(). */
+    tracking: (window.UKTRACK ? window.UKTRACK.status() : 'live')
   };
+  /* Read this rather than property.tracking directly, so the whole app keeps one
+     answer if the record is ever hydrated after load. */
+  function trackingLive() {
+    return window.UKTRACK ? window.UKTRACK.isLive() : property.tracking === 'live';
+  }
 
 
   /* ---- Bookings & ROI ----
@@ -1107,7 +1120,7 @@ window.UK = (function () {
     ROLES: ROLES, team: team, addMember: addMember,
     setRole: function (id, r) { var m = team.filter(function (x) { return x.id === id; })[0]; if (m) m.role = r; },
     dropMember: function (id) { var i = team.map(function (x) { return x.id; }).indexOf(id); if (i > 0) team.splice(i, 1); },
-    assets: assets, property: property,
+    assets: assets, property: property, trackingLive: trackingLive,
     creator: function (id) { return byId(creators, id); },
     stay:    function (id) { return byId(stays, id); },
     asset:   function (id) { return byId(assets, id); },

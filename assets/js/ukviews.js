@@ -324,8 +324,14 @@ window.UKV = (function () {
         dkpi('Creators hosted', 4, 'all delivered on time', 'creators') +
         dkpi('Stays open', live.length, live.reduce(function (a, s) { return a + s.apps; }, 0) + ' creators applied', 'stays') +
         dkpi('Waiting on you', needsYou.length, needsYou.length ? 'oldest is 8 days' : 'nothing outstanding', 'collabs') +
-        dkpi('Direct bookings', t.bookings, D.money(t.revenue) + ' attributed', 'roi') +
-        dkpi('Kept vs OTA', D.money(t.saved), 'on the same bookings', 'roi') +
+        /* Both of these are attributed figures. ukdash.js replaces this whole view
+           in the shipped app, but the fallback has to be as honest as the thing it
+           falls back from, or the one time it renders is the one time we lie. */
+        (D.trackingLive()
+          ? dkpi('Direct bookings', t.bookings, D.money(t.revenue) + ' attributed', 'roi') +
+            dkpi('Kept vs OTA', D.money(t.saved), 'on the same bookings', 'roi')
+          : dkpi('Direct bookings', '&mdash;', 'booking tracking is not live', 'roi') +
+            dkpi('Kept vs OTA', '&mdash;', 'nothing to compare yet', 'roi')) +
       '</div>' +
 
       '<div class="ukGrid ukGrid--dash">' +
@@ -1337,6 +1343,9 @@ window.UKV = (function () {
       '<div class="ukTrackMini_r"><span class="ukTrackMini_l">Discount code</span>' +
         '<button class="ukTrackMini_i" type="button" data-ack="Code copied" ' +
           'aria-label="Copy the discount code">' + '<code>' + esc(row.code) + '</code></button></div>' +
+      /* the same caveat the fuller panels carry: the link works, the reporting
+         behind it does not yet */
+      window.UKTRACK.linkNote() +
     '</div>';
   }
 
@@ -1427,7 +1436,12 @@ window.UKV = (function () {
       '<div class="ukTrackRow"><span class="ukTrackRow_l">Code</span>' +
         '<code class="ukCode">' + esc(row.code) + '</code>' +
         '<button class="ukGhost" type="button" data-ack="Copied">Copy</button></div>' +
-      '<p class="ukHint">Anything booked through these is attributed to ' + esc(cr.n.split(' ')[0]) + '.</p>' +
+      (D.trackingLive()
+        ? '<p class="ukHint">Anything booked through these is attributed to ' + esc(cr.n.split(' ')[0]) + '.</p>'
+        /* The link is real and the creator can use it today. What is not true yet
+           is that anything comes back through it, and a hotel handing it over
+           deserves to know which of the two it has. */
+        : window.UKTRACK.linkNote()) +
     '</section>';
   }
 
@@ -2328,6 +2342,12 @@ window.UKV = (function () {
   /* ============================ settings ============================ */
   var SET = [
     { id:'account',  t:'Account' },
+    /* Status, not setup. There is nothing to connect here and deliberately no
+       button that pretends otherwise: which booking engine a property runs and
+       what it can pass through is a conversation with Ukreate, not a toggle. What
+       the hotel needs from this screen is to know where they stand and what to
+       quote when they ask. */
+    { id:'tracking', t:'Booking tracking' },
     { id:'billing',  t:'Plan & billing' },
     { id:'notify',   t:'Notifications' },
     { id:'team',     t:'Team' }
@@ -2345,6 +2365,7 @@ window.UKV = (function () {
         }).join('') + '</nav>' +
         '<div>' + (
           tab === 'account'  ? setAccount() :
+          tab === 'tracking' ? setTracking() :
           tab === 'billing'  ? setBilling() :
           tab === 'notify'   ? setNotify() : setTeam(st)
         ) + '</div>' +
@@ -2387,8 +2408,13 @@ window.UKV = (function () {
     var owned = (D.assets || []).filter(function (a) { return a.owned; });
     var vid = owned.filter(function (a) { return a.k === 'video'; }).length;
     var hosted = (D.collabs || []).filter(function (c) { return c.stage >= 4; }).length;
-    var trend = D.trend || [];
-    var perf = (D.contentPerf || []).filter(function (r) { return r.bookings; });
+    /* The two booking charts below read attribution, so they only exist for a
+       property whose tracking is live. Everything else on this page counts stays,
+       applications and files, which are true regardless. Emptying the arrays is
+       enough: both cards are already gated on having something to draw. */
+    var trend = D.trackingLive() ? (D.trend || []) : [];
+    var perf = D.trackingLive()
+      ? (D.contentPerf || []).filter(function (r) { return r.bookings; }) : [];
 
     /* the stays that people actually applied to, biggest first */
     var top = stays.filter(function (x) { return x.apps; })
@@ -2497,6 +2523,44 @@ window.UKV = (function () {
       '<h4 class="ukSub">Sign out</h4>' +
       '<p class="ukHint" style="margin-bottom:14px">Signs you out on this device only.</p>' +
       '<button class="ukGhost" type="button" data-signout>Sign out</button></section>';
+  }
+  /* ---- booking tracking, in Settings ----
+     Read-mostly on purpose. Status, the identifiers Ukreate reconciles this
+     property against, and where the state goes next. No connect buttons for a
+     PMS or for Partnerize: those integrations are engineering work agreed off
+     platform, and a button here would promise a hotel something this screen
+     cannot deliver. When tracking is live the panel is a receipt; when it is not,
+     the same explanation the ROI page carries sits underneath, so a hotel that
+     lands here from the account menu gets the whole answer in one place. */
+  function setTracking() {
+    var T = window.UKTRACK;
+    var live = D.trackingLive();
+    /* Status first, then the identifiers, then the route onward, in one panel.
+       An earlier pass put the full ROI explanation underneath as a second panel
+       and the screen said the same thing twice in a row. The explanation belongs
+       to the page that has nothing else to show; this screen only has to answer
+       where you stand and what to quote. */
+    return '<section class="ukPanel">' +
+        '<div class="ukPanel_head"><h3 class="ukPanel_title">Booking tracking</h3>' + T.pill() + '</div>' +
+        '<p class="ukAsk">' + (live
+          ? 'Bookings made through your creators’ links and codes are reported back to Ukreate and ' +
+            'attributed on your Bookings and ROI page.'
+          : esc(T.state().short) + ' ' + esc(T.state().apart)) +
+        '</p>' +
+        '<button class="ukGhost" type="button" data-goto="roi">' +
+          (live ? 'Open Bookings and ROI' : 'See what tracking shows you') + '</button>' +
+        '<div class="ukRule"></div>' +
+        '<h4 class="ukSub">What Ukreate reconciles you against</h4>' +
+        '<p class="ukHint" style="margin-bottom:2px">Ukreate holds these. You are never asked to set them ' +
+          'up yourself, and nothing here is a credential.</p>' +
+        T.refs() +
+        (live ? '' :
+          '<div class="ukRule"></div>' +
+          '<h4 class="ukSub">What happens next</h4>' +
+          '<p class="ukTrackState_next">' + esc(T.state().next) + '</p>' +
+          '<button class="ukBtn" type="button" data-ack="' + esc(T.state().ack) + '">' +
+            esc(T.state().cta) + '</button>') +
+      '</section>';
   }
   function setBilling() {
     return '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Plan &amp; billing</h3></div>' +

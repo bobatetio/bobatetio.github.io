@@ -44,10 +44,18 @@
     });
     var hovers = cards.map(function () { return 0; });
 
-    // dock: the incense image over the "Sharing the Japanese Spirit" text
+    /* Where the cards come to rest. This was hard-wired to
+       .homePhilosophy_singleImg, the incense photograph in Izanami's philosophy
+       section, because that is the page this was first written against. With
+       that section gone the cards had no destination, so they never began their
+       descent and rode the scroll over every section below the hero.
+
+       A page names its own dock with [data-surfer-dock]; the Izanami selectors
+       stay as the fallback so the original still runs. */
     var philo = null;
     function pickTarget() {
-      philo = document.querySelector('.homePhilosophy_singleImg');
+      philo = document.querySelector('[data-surfer-dock]') ||
+              document.querySelector('.homePhilosophy_singleImg');
       if (!philo) {
         var els = document.querySelectorAll('.homePhilosophy_img');
         var best = null, bestRect = null;

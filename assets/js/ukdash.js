@@ -23,7 +23,7 @@
   function kpi(o) {
     return '<article class="ukK' + (o.hero ? ' ukK--hero' : '') + ' c3">' +
       '<p class="ukK_l">' + esc(o.l) + '</p>' +
-      '<p class="ukK_v">' + o.v + '</p>' +
+      '<p class="ukK_v' + (o.muted ? ' ukK_v--none' : '') + '">' + o.v + '</p>' +
       '<p class="ukK_n">' + (o.d ? '<span class="ukK_d' + (o.down ? ' is-down' : '') + '">' +
         (o.down ? '&#9662;' : '&#9652;') + ' ' + esc(o.d) + '</span>' : '') +
         '<span>' + esc(o.n) + '</span></p>' +
@@ -65,6 +65,11 @@
     var leftToDo = setup.filter(function (t) { return !t.done; });
     /* nothing offered and nothing under way: there is no activity to report on */
     var barren = !live.length && !D.collabs.length;
+    /* and separately: can we see this property's bookings at all. Two different
+       reasons for a page to be quiet, and the hotel has to be able to tell them
+       apart, so they gate different things and say different words. */
+    var TRK = window.UKTRACK;
+    var trackLive = D.trackingLive();
 
     return '<div class="ukDashTop"><div>' +
         '<h2 class="ukDashTop_h">Good morning, Robert</h2>' +
@@ -87,8 +92,16 @@
            its bookings up nine, against zero and zero. */
         kpi({ l:'Content you own', v:owned, n:'yours in perpetuity', go:'library',
               d: barren ? '' : '+' + Math.max(1, ready.length) }) +
-        kpi({ l:'Direct bookings', v:t.bookings, n:D.money(t.revenue) + ' attributed', go:'roi',
-              d: barren ? '' : (delta >= 0 ? '+' : '') + delta, down: !barren && delta < 0 }) +
+        /* A direct-bookings figure is only a figure if we can see the bookings.
+           Without live tracking the tile keeps its place in the row but holds a
+           dash and says why, and the arrow still opens the page that explains it.
+           A confident number here would be the single most misleading thing in
+           the product. */
+        (trackLive
+          ? kpi({ l:'Direct bookings', v:t.bookings, n:D.money(t.revenue) + ' attributed', go:'roi',
+                  d: barren ? '' : (delta >= 0 ? '+' : '') + delta, down: !barren && delta < 0 })
+          : kpi({ l:'Direct bookings', v:'&mdash;', muted:true, go:'roi',
+                  n:(TRK.status() === 'pending' ? 'tracking is being set up' : 'tracking is not live yet') })) +
         kpi({ l:'Stays open', v:live.length, n:applied + ' creators applied', go:'stays' }) +
         kpi({ l:'Waiting on you', v:needsYou.length,
               n:needsYou.length ? 'oldest is 8 days' : 'nothing outstanding', go:'collabs' }) +
@@ -105,6 +118,14 @@
          feature still has an outstanding task, and hiding twenty stays and
          fourteen collaborations behind that would be absurd. */
       (barren ? '' :
+
+      /* Both cards in this row read attribution: the trend is bookings over time
+         and the ranking is revenue per creator. Without live tracking neither has
+         anything real to draw, and a chart through seeded rows is the worst of
+         the three options. So the pair is replaced by the one thing that is
+         actually true, in short form, with the full explanation a click away on
+         Bookings and ROI. */
+      (!trackLive ? '<div class="ukBento">' + TRK.panel('compact') + '</div>' :
 
       '<div class="ukBento">' +
         '<section class="ukCard c7"><div class="ukCard_h">' +
@@ -146,7 +167,7 @@
             }).join('') + '</ul>' +
           '</section>';
         })() +
-      '</div>' +
+      '</div>') +
 
       '<div class="ukBento">' +
         '<section class="ukCard c5"><div class="ukCard_h">' +
@@ -171,12 +192,24 @@
           }) +
         '</section>' +
 
+        /* The saved figure is attributed revenue with a rate applied to it, so it
+           is exactly as unavailable as the revenue is. The card keeps its slot and
+           its width because the comparison it makes is still true and still worth
+           making: it just states the rates instead of a running total, and the
+           calculator underneath turns them into a number the hotel supplies the
+           inputs for. */
         '<section class="ukCard ukCard--ink c3">' +
-          '<div class="ukCard_h"><h3 class="ukCard_t">Kept, not paid out</h3></div>' +
-          '<p class="ukInk_v">' + D.money(t.saved) + '</p>' +
-          '<p class="ukInk_n">What an OTA would have taken on the same ' + t.bookings +
-            ' bookings, at ' + D.COMMISSION.ota + '% against your ' + (D.COMMISSION.uk + D.COMMISSION.creator) + '%.</p>' +
-          '<button class="ukInk_link" type="button" data-goto="roi">How this is tracked</button>' +
+          (trackLive
+            ? '<div class="ukCard_h"><h3 class="ukCard_t">Kept, not paid out</h3></div>' +
+              '<p class="ukInk_v">' + D.money(t.saved) + '</p>' +
+              '<p class="ukInk_n">What an OTA would have taken on the same ' + t.bookings +
+                ' bookings, at ' + D.COMMISSION.ota + '% against your ' + (D.COMMISSION.uk + D.COMMISSION.creator) + '%.</p>' +
+              '<button class="ukInk_link" type="button" data-goto="roi">How this is tracked</button>'
+            : '<div class="ukCard_h"><h3 class="ukCard_t">What you keep</h3></div>' +
+              '<p class="ukInk_n">An OTA takes ' + D.COMMISSION.ota + '% of every booking it sends you. ' +
+                'Your creators cost ' + (D.COMMISSION.uk + D.COMMISSION.creator) + '%, and only on stays a guest ' +
+                'actually took. Once booking tracking is live, the difference lands here as a running total.</p>' +
+              '<button class="ukInk_link" type="button" data-goto="roi">About booking tracking</button>') +
           '<button class="ukCalcBtn" type="button" data-calc-open>' +
             '<span class="ukCalcBtn_ic" aria-hidden="true" data-lottie-src="/assets/lottie/calc-icon-gold.json?v=1"></span>' +
             '<span>Calculate your savings from working with creators</span></button>' +

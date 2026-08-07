@@ -37,6 +37,13 @@
   /* Same rows the ROI page sums, so the default rate this calculator opens with is
      the property's own real average, not an invented placeholder. */
   function defaultRate() {
+    /* Only when the attributed rows are real. For a property whose booking
+       tracking is not live they are seeded demonstration data, and opening a
+       calculator on a rate derived from bookings that hotel never had would be
+       the same lie the ROI page was just stopped from telling. The field is
+       editable and typing your own rate over it is the first thing anyone does.
+       // PLUG-IN POINT — the property's own published nightly rate. */
+    if (!D.trackingLive()) return 250;
     var t = D.roiTotals(D.attribution);
     return t.nights ? Math.round(t.revenue / t.nights) : 250;
   }
@@ -114,7 +121,13 @@
                 'aria-label="Empty nights available" data-calc-field="nights" value="' + s.nights + '"></label>' +
             '<label class="ukCalcRow"><span class="ukCalcRow_ic" aria-hidden="true">' + TAG_ICON + '</span>' +
               '<span class="ukCalcRow_b"><span class="ukCalcRow_lbl">Average nightly rate</span>' +
-              '<span class="ukCalcRow_hint">From your tracked bookings</span></span>' +
+              /* The hint has to describe where the number in the field actually
+                 came from. Without live tracking there are no tracked bookings for
+                 it to have come from, and the honest answer is that it is a
+                 starting point to type over. */
+              '<span class="ukCalcRow_hint">' + (D.trackingLive()
+                ? 'From your tracked bookings' : 'A starting point. Enter your own rate.') +
+              '</span></span>' +
               '<span class="ukCalcRow_pre">$</span>' +
               '<input class="ukCalcRow_in" type="number" min="0" step="1" inputmode="numeric" ' +
                 'aria-label="Average nightly rate" data-calc-field="rate" value="' + s.rate + '"></label>' +

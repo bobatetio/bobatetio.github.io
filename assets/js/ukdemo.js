@@ -124,8 +124,32 @@ window.UKDEMO = (function () {
         '<button class="ukDock_i' + (live ? '' : ' is-on') + '" type="button" data-demo="new">' +
           '<span class="ukDock_t">First-time account</span>' +
           '<span class="ukDock_s">The first hour. Onboarding, and nothing done yet.</span></button>' +
+        trackRows() +
       '</div>' +
     '</div>';
+  }
+
+  /* ---- booking tracking status, for review ----
+     Hotel side only: the creator app has no attribution surfaces of its own to
+     gate, and putting a hotel's instrumentation state in a creator's dock would
+     be nonsense. Same reason the account switch is here rather than in a menu:
+     the whole point of the not-started state is that it changes what several
+     pages are, and nobody can review that without a way to stand in it.
+     ?tracking=none and ?tracking=pending do the same job from a pasted URL. */
+  function trackRows() {
+    var T = window.UKTRACK;
+    if (!T || !document.querySelector('[data-ukapp]')) return '';
+    var now = T.status();
+    return '<div class="ukDock_rule"></div>' +
+      '<p class="ukDock_h">Booking tracking</p>' +
+      [['live','Live','Attribution reporting. The demo default.'],
+       ['pending','In setup','Setup underway, figures held back.'],
+       ['none','Not started','Nothing instrumented. No figures anywhere.']
+      ].map(function (r) {
+        return '<button class="ukDock_i' + (now === r[0] ? ' is-on' : '') + '" type="button" ' +
+          'data-track="' + r[0] + '"><span class="ukDock_t">' + r[1] + '</span>' +
+          '<span class="ukDock_s">' + r[2] + '</span></button>';
+      }).join('');
   }
 
   function mount() {
@@ -141,6 +165,8 @@ window.UKDEMO = (function () {
   document.addEventListener('click', function (e) {
     var el = e.target.closest && e.target.closest('[data-demo-toggle]');
     if (el) { setDockOpen(!dockOpen()); return mount(); }
+    var trk = e.target.closest && e.target.closest('[data-track]');
+    if (trk && window.UKTRACK) return window.UKTRACK.set(trk.dataset.track);
     var pick = e.target.closest && e.target.closest('[data-demo]');
     if (pick) set(pick.dataset.demo);
   });

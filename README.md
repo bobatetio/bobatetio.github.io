@@ -378,8 +378,14 @@ started. That page was the Ukreate hero and creator surfer wrapped in Izanami's
 own sections, header, drawer and footer, which is why the whole folder read as
 Izanami. Everything Izanami is stripped: the philosophy, projects, school, craft,
 retreat and company sections, its site header and menu, its footer with the Dubai
-and Tokyo offices, its analytics and its Open Graph tags. What is left is the
-hero, the trust strip and the creator surfer.
+and Tokyo offices, its analytics and its Open Graph tags. What is left is the hero, the trust strip, the creator
+surfer and eight sections: featured creators, case-study results, the platform
+tour, testimonials, a creator call-out, pricing, FAQ and the newsletter.
+
+The page came from `index.html.bak-csport` in that tree rather than its live
+`index.html`. The live one had those eight sections replaced by Izanami's,
+leaving only the hero, which is why a first pass produced a hero and nothing
+else.
 
 It still carries two build artefacts from that tree, `index.By0AFpwc.css` and
 `index.B6uyWDS7.js`, which is what the hero's mesh backgrounds, the preloader and
@@ -418,7 +424,8 @@ own repository, those three are the whole of the untangling.
 - `/`'s hero depends on an 865KB build artefact inherited from the Izanami tree
   (see above). Everything else on that page is ours.
 - `Creator Academy`, `Membership` and `About` in the marketing nav have no pages
-  yet and point at `#`.
+  yet and point at `#`, as do the in-page links on `/` that are not sign-up or
+  sign-in: case-study links, FAQ entries and the newsletter form.
 - The in-app assistant (`ukask.js` / `ukaskbrain.js`) runs a local, deterministic
   conversation engine. `serve.py` has an Anthropic-backed path, but with no API
   key present it falls back to the local engine and the response carries

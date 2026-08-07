@@ -39,6 +39,22 @@
   };
 
   function roi(st) {
+    /* ---- nothing to report, and why ----
+       If this property's booking tracking is not live there is no honest version
+       of this page: every figure on it is attributed, and attribution needs the
+       booking flow instrumented first. So the page changes job rather than
+       showing zeroes or, worse, seeded figures. The tabs go with it. Links and
+       codes would otherwise hand a hotel a link and label it Live.
+
+       The calculator stays in the page head. It is a projection from the hotel's
+       own rates rather than a report of anything, so it is the one thing here an
+       uninstrumented property can still use, and it answers the question the
+       explanation raises. */
+    if (!D.trackingLive()) {
+      var T = window.UKTRACK;
+      return head('Bookings and ROI', T.state().sub) + T.panel();
+    }
+
     var tab = st.tab || 'overview';
     if (!TABS.some(function (t) { return t.id === tab; })) tab = 'overview';
     var range = st.range || 'Last 90 days';

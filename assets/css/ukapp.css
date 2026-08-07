@@ -5000,6 +5000,9 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukDock_i:hover{background:var(--hover)}
 .ukDock_i:focus-visible{outline:2px solid var(--uk-gold);outline-offset:-2px}
 .ukDock_i.is-on{background:var(--active-bg);border-color:var(--active-ring)}
+/* the dock now holds two unrelated review switches, so they get a divider */
+.ukDock_rule{height:1px;background:var(--line);margin:10px 0 8px}
+.ukDock_rule+.ukDock_h{margin-top:0}
 .ukDock_t{font:700 12.5px/1.3 'Lato',sans-serif;color:var(--text)}
 .ukDock_s{font:400 11px/1.35 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){ .ukDock_car{transition:none} }
@@ -5172,3 +5175,44 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
    COLUMN, so a basis there sets the flag's height and stacks it above the name. */
 .ukChip .ukCrFlag{margin-right:2px;vertical-align:-1px;flex:0 0 auto}
 .ukPickr_on .ukCrFlag{margin-right:7px;vertical-align:-1px}
+
+/* ================= booking tracking status =================
+   The honest state a hotel sees wherever attributed revenue would otherwise be.
+   No new colours: it is a panel like every other panel, and the status pill
+   reuses the three tag tones. A revenue page that cannot show revenue should
+   look like a page doing its job, not like an error. */
+.ukTrackState--roi{max-width:760px}
+.ukTrackState_h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.ukTrackState_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:clamp(20px,2.4vw,25px);
+  line-height:1.25;color:var(--text);margin:0;flex:1 1 260px;min-width:0;text-wrap:balance}
+.ukTrackState_p{font:400 14.5px/1.65 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+/* The sentence that separates "we cannot see your bookings" from "you have no
+   bookings". Tinted, not ruled: a left stroke would read as a warning. */
+.ukTrackState_apart{font:400 13.5px/1.65 'Lato',sans-serif;color:var(--text);margin:16px 0 0;
+  background:var(--todo-bg);border:1px solid var(--todo-line);border-radius:14px;
+  padding:14px 16px;text-wrap:pretty}
+.ukTrackState .ukSub{margin-top:22px}
+.ukTrackState_next{font:400 13.5px/1.65 'Lato',sans-serif;color:var(--text-2);margin:0 0 18px;text-wrap:pretty}
+.ukTrackState--compact{max-width:none}
+.ukTrackState--compact .ukTrackState_p{font-size:13.5px}
+.ukTrackState--compact .ukGhost{margin-top:16px}
+
+.ukTrackWhy{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:14px}
+.ukTrackWhy li{background:var(--hover);border-radius:14px;padding:14px 16px}
+.ukTrackWhy_t{font:700 13.5px/1.4 'Lato',sans-serif;color:var(--text);margin:0;text-wrap:balance}
+.ukTrackWhy_p{font:400 13px/1.6 'Lato',sans-serif;color:var(--text-2);margin:5px 0 0;text-wrap:pretty}
+@media (min-width:760px){ .ukTrackWhy{grid-template-columns:repeat(3,1fr)} }
+
+/* Read-only identifiers. A definition list, because that is what they are. */
+.ukTrackRefs{margin:14px 0 0;padding:0;display:grid;gap:14px}
+.ukTrackRefs>div{background:var(--hover);border-radius:14px;padding:14px 16px}
+.ukTrackRefs dt{font:700 12px/1.4 'Lato',sans-serif;color:var(--text-2);margin:0;
+  text-transform:uppercase;letter-spacing:.08em}
+.ukTrackRefs dd{font:400 15px/1.4 'Lato',sans-serif;color:var(--text);margin:6px 0 0;word-break:break-word}
+.ukTrackRefs_h{font:400 12.5px/1.55 'Lato',sans-serif!important;color:var(--text-3)!important;
+  margin-top:5px!important;text-wrap:pretty}
+.ukTrackNote{margin-top:10px}
+
+/* A KPI tile with nothing it can honestly report. The value slot still holds a
+   value so the row does not go ragged; it just holds a dash instead of a lie. */
+.ukK_v--none{color:var(--text-3)}
