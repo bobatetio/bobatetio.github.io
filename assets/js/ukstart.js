@@ -169,28 +169,11 @@
     return f.shotIx;
   }
 
-  /* Drag-to-reframe. The preview is the same crop the canvas will write: an <img>
-     covering a 4:3 box with object-position bound to the focal point. */
-  function cropEditor() {
-    var sh = f.photos[f.cropIx];
-    if (!sh) return '';
-    return '<div class="ukCropWrap" data-cropwrap>' +
-      '<div class="ukCropPanel">' +
-        '<h2 class="ukCropPanel_h">Reframe this room</h2>' +
-        '<p class="ukCropPanel_p">Drag the photo to choose what stays in the crop. ' +
-          esc(SHOT_ADVICE) + '</p>' +
-        '<div class="ukCropBox" data-cropbox>' +
-          '<img src="' + sh.src + '" alt="" style="object-position:' +
-            (sh.fx * 100).toFixed(1) + '% ' + (sh.fy * 100).toFixed(1) + '%">' +
-          '<span class="ukCropGrid" aria-hidden="true"></span>' +
-        '</div>' +
-        '<div class="ukCropNav">' +
-          '<button class="ukGhost ukNav_back" type="button" data-cropcancel>Cancel</button>' +
-          '<button class="ukBtn ukNav_go" type="button" data-cropsave>Save crop</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }
+  /* Drag-to-reframe, the tiles and the crop maths all live in ukshots.js now, so
+     this page and the in-app gate render one component rather than two copies of
+     it. The handlers below stay here because they are wired to this page's own
+     `f` and paint(). */
+  function cropEditor() { return window.UKSHOTS ? window.UKSHOTS.editor(f) : ''; }
 
   function stepTwo() {
     var shots = f.photos || (f.photos = []);
@@ -199,27 +182,7 @@
         '<h1 class="ukStart_h">Show creators your hotel</h1>' +
         '<p class="ukStart_p">One room is enough. Add the rest now, or whenever suits you.</p>' +
 
-        '<div class="ukShots">' +
-          shots.map(function (sh, i) {
-            return '<figure class="ukShotTile">' +
-              '<img src="' + shotOut(sh) + '" alt="Room photo ' + (i + 1) + '">' +
-              '<button class="ukShotTile_x" type="button" data-unshot="' + i + '" ' +
-              'aria-label="Remove photo ' + (i + 1) + '">&times;</button>' +
-              '<button class="ukShotTile_c" type="button" data-crop="' + i + '">Reframe</button>' +
-              '</figure>';
-          }).join('') +
-          '<label class="ukShotAdd">' +
-            '<input type="file" accept="image/*" multiple data-shotin hidden>' +
-            '<span class="ukShotAdd_p" aria-hidden="true">+</span>' +
-            '<span class="ukShotAdd_t">' + (shots.length ? 'Add more rooms' : 'Drag photos here, or browse') + '</span>' +
-            (shots.length ? '' : '<span class="ukShotAdd_s">One room or the whole property. Add as many as you like.</span>') +
-          '</label>' +
-        '</div>' +
-
-        '<p class="ukHint">' + (shots.length
-          ? shots.length + ' photo' + (shots.length === 1 ? '' : 's') +
-            ' added, cropped to 4:3. Drag to reframe any of them.'
-          : SHOT_ADVICE) + '</p>' +
+        (window.UKSHOTS ? window.UKSHOTS.tiles(f) : '') +
 
         '<div class="ukNav">' +
           '<button class="ukGhost ukNav_back" type="button" data-back>Back</button>' +
@@ -877,49 +840,13 @@
      side renders these in fixed tiles either way. The crop is centred to start with
      and the host can drag the focal point; the original is kept, so re-cropping
      never degrades. */
-  var SHOT_AR = 4 / 3, SHOT_W = 1280, SHOT_H = 960;
-  var SHOT_ADVICE = 'Landscape, 1600 \u00d7 1200 or larger. We crop to 4:3 for the listing.';
+  /* See ukshots.js. */
+  var SHOT_ADVICE = (window.UKSHOTS && window.UKSHOTS.ADVICE) ||
+    'Landscape, 1600 \u00d7 1200 or larger. We crop to 4:3 for the listing.';
+  function shotOut(sh) { return window.UKSHOTS ? window.UKSHOTS.out(sh) : (sh.out || sh.src); }
+  function cropShot(sh, done) { window.UKSHOTS.cropShot(sh, done); }
+  function takeFiles(fileList) { window.UKSHOTS.takeFiles(fileList, f, paint); }
 
-  function shotOut(sh) { return sh.out || sh.src; }
-
-  function cropShot(sh, done) {
-    var img = new Image();
-    img.onload = function () {
-      var c = document.createElement('canvas');
-      c.width = SHOT_W; c.height = SHOT_H;
-      var ctx = c.getContext('2d');
-      var ir = img.width / img.height, sw, sh2;
-      if (ir > SHOT_AR) { sh2 = img.height; sw = sh2 * SHOT_AR; }
-      else { sw = img.width; sh2 = sw / SHOT_AR; }
-      /* same arithmetic object-position uses, so the editor preview and the output
-         are the same crop rather than two guesses at it */
-      ctx.drawImage(img, (img.width - sw) * sh.fx, (img.height - sh2) * sh.fy, sw, sh2,
-                    0, 0, SHOT_W, SHOT_H);
-      try { sh.out = c.toDataURL('image/jpeg', 0.86); } catch (e) { sh.out = sh.src; }
-      done && done();
-    };
-    img.onerror = function () { sh.out = sh.src; done && done(); };
-    img.src = sh.src;
-  }
-
-  /* one path for files, whether they arrive by picker or by drop */
-  function takeFiles(fileList) {
-    f.photos = f.photos || [];
-    var files = [].slice.call(fileList).slice(0, 8 - f.photos.length);
-    var pending = files.length;
-    if (!pending) return;
-    files.forEach(function (file) {
-      if (!/^image\//.test(file.type)) { if (!--pending) paint(); return; }
-      var fr = new FileReader();
-      fr.onload = function () {
-        var sh = { src: fr.result, fx: 0.5, fy: 0.5 };
-        f.photos.push(sh);
-        cropShot(sh, function () { if (!--pending) paint(); });
-      };
-      fr.onerror = function () { if (!--pending) paint(); };
-      fr.readAsDataURL(file);
-    });
-  }
   ['dragenter','dragover'].forEach(function (ev) {
     root.addEventListener(ev, function (e) {
       var t = e.target.closest('.ukShotAdd'); if (!t) return;

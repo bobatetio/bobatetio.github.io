@@ -606,6 +606,14 @@
     }
   }
 
+  /* THE uploader handles its own drag, drop, picker, remove and crop. Wired once
+     against the gate's state; see ukshots.js. */
+  if (window.UKSHOTS && window.UKONBOARD) {
+    window.UKSHOTS.wire(document,
+      function () { return window.UKONBOARD.shots(); },
+      function () { window.UKONBOARD.flushShots('hotel'); window.UKONBOARD.apply('hotel'); paintOnboard(); });
+  }
+
   document.addEventListener('click', function (e) {
     if (!window.UKONBOARD) return;
     var el;
@@ -646,13 +654,6 @@
       var cq2 = window.UKONBOARD.cityq(); cq2.open = false; cq2.q = '';
       paintOnboard();
     }
-    if ((el = e.target.closest('[data-ob-unshot]'))) {
-      var shots = (window.UKONBOARD.get('hotel').photos || []).slice();
-      shots.splice(Number(el.dataset.obUnshot), 1);
-      window.UKONBOARD.set('hotel', { photos: shots });
-      window.UKONBOARD.apply('hotel');
-      return paintOnboard();
-    }
     if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
     if (e.target.closest('[data-ob-next]')) {
       var list = window.UKONBOARD.steps('hotel');
@@ -664,23 +665,6 @@
       paintNav();
       return paintView();
     }
-  });
-
-  /* Photographs picked in the gate. Object URLs rather than data URLs: a hotel
-     dropping in eight photographs of a resort would put several megabytes of
-     base64 through localStorage, which is neither what it is for nor big enough.
-     These live for the session, which is exactly as long as the demo data does. */
-  document.addEventListener('change', function (e) {
-    var el = e.target.closest && e.target.closest('[data-ob-shots]');
-    if (!el || !window.UKONBOARD) return;
-    var add = Array.prototype.slice.call(el.files || [])
-      .filter(function (f) { return /^image\//.test(f.type); })
-      .map(function (f) { return URL.createObjectURL(f); });
-    if (!add.length) return;
-    var shots = (window.UKONBOARD.get('hotel').photos || []).concat(add).slice(0, 12);
-    window.UKONBOARD.set('hotel', { photos: shots });
-    window.UKONBOARD.apply('hotel');
-    paintOnboard();
   });
 
   document.addEventListener('keydown', function (e) {

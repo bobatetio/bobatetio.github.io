@@ -5142,34 +5142,7 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
 .ukOb_modal .ukPlace_drop{max-height:240px}
 .ukOb_modal .ukPlace_list{max-height:232px}
 
-/* ---- onboarding: the property's photographs ----
-   A grid of what has been added with the adder as the last cell, so the control
-   sits where the next photo will land rather than above the pile. The first cell
-   is labelled Cover, because it is the one every card in the product renders and
-   a hotel should know that while it is choosing. */
-.ukShots{margin-top:4px}
-.ukShots_g{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
-.ukShot{position:relative;margin:0;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
-  background:var(--hover);border:1px solid var(--line)}
-.ukShot img{width:100%;height:100%;object-fit:cover;display:block}
-.ukShot_c{position:absolute;left:7px;bottom:7px;padding:3px 8px;border-radius:999px;
-  background:rgba(17,24,39,.72);color:#fff;font:700 9.5px/1 'Lato',sans-serif;
-  text-transform:uppercase;letter-spacing:.1em}
-.ukShot_x{position:absolute;top:6px;right:6px;width:22px;height:22px;border:0;border-radius:50%;
-  background:rgba(17,24,39,.66);color:#fff;font-size:15px;line-height:1;cursor:pointer;
-  display:grid;place-items:center;opacity:0;transition:opacity .15s ease,transform .15s ease}
-.ukShot:hover .ukShot_x,.ukShot_x:focus-visible{opacity:1}
-.ukShot_x:hover{transform:scale(1.08)}
-.ukShot_x:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukShot--add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  cursor:pointer;border-style:dashed;background:transparent;
-  transition:background .15s ease,border-color .15s ease}
-.ukShot--add:hover{background:var(--hover);border-color:var(--uk-gold)}
-.ukShot--add:focus-within{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukShot_plus{font:300 26px/1 'Lato',sans-serif;color:var(--text-3)}
-.ukShot_l{font:600 12px/1.2 'Lato',sans-serif;color:var(--text-2)}
-
-/* Before the first photo there is nothing to sit beside, so the adder takes the
-   whole area rather than being one small tile against a lot of white. */
-.ukShots_g:has(.ukShot--add:only-child){grid-template-columns:1fr}
-.ukShots_g:has(.ukShot--add:only-child) .ukShot--add{aspect-ratio:16/9}
+/* The photographs step uses .ukShots / .ukShotTile / .ukShotAdd / .ukCrop*,
+   which this file already defines for /start/. There is no second set of
+   styles for it. The block that used to sit here invented a .ukShot that
+   collided with the content library's card of the same name. */

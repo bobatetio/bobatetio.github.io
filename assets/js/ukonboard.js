@@ -236,14 +236,17 @@ window.UKONBOARD = (function () {
          with none is not really listed. It was the one setup task that gated
          everything after it, and leaving it for later meant the first thing a
          hotel published was a stay nobody could see. */
+      /* THE uploader from /start/: drop or browse, drag to reframe, remove.
+         See ukshots.js. This step had a rebuilt-from-nothing grid with no crop
+         and no drop target for a while. */
       render: function (f) {
-        var shots = f.photos || [];
+        var S = window.UKSHOTS;
         return ask('Now some photographs of the property.',
           'Creators look at these before they read anything else. Three or four ' +
           'is plenty to start, and you can add the rest later.',
-          shotGrid(shots));
+          S ? S.tiles(shotState(f)) : '');   /* the crop overlay is rendered by modalHtml */
       },
-      done: function (f) { return (f.photos || []).length > 0; }
+      done: function (f) { return ((SHOTS.photos || f.photos) || []).length > 0; }
     }
   ];
 
@@ -283,6 +286,17 @@ window.UKONBOARD = (function () {
   /* The connector mutates its own state object as the OAuth beats play out, so
      it needs a live one rather than a fresh read of storage each paint. */
   var LIVE = {};
+  /* The uploader mutates its own state as crops are dragged and written, so it
+     needs a live object rather than a fresh read of storage on every paint. Same
+     reason the platform connector has one. */
+  var SHOTS = { photos: null, cropIx: null };
+  function shotState(f) {
+    if (!SHOTS.photos) SHOTS.photos = (f.photos || []).slice();
+    return SHOTS;
+  }
+  function flushShots(side) {
+    if (SHOTS.photos) set(side, { photos: SHOTS.photos.slice() });
+  }
   /* How you found the place is view state, not an answer, so it lives here and
      not in the saved record. */
   var CITYQ = { q: '', open: false };
@@ -325,38 +339,6 @@ window.UKONBOARD = (function () {
         'aria-pressed="' + on + '"' + (full ? ' disabled' : '') + '>' + esc(n) + '</button>';
     }).join('') + '</div>';
   }
-  /* The uploader. A real file input behind a drop area, because that is the one
-     control every operating system already agrees on; what it adds are object
-     URLs, so a photo picked here is the photo shown on the very next screen
-     rather than a filename in a list.
-
-     // PLUG-IN POINT - a real upload. These are object URLs, alive for this
-     // session only. Swapping in a signed upload means changing where src comes
-     // from and nothing else. */
-  function shotGrid(shots) {
-    return '<div class="ukShots">' +
-      '<div class="ukShots_g">' +
-        shots.map(function (src, i) {
-          return '<figure class="ukShot"' + (i === 0 ? ' data-cover="1"' : '') + '>' +
-            '<img src="' + esc(src) + '" alt="">' +
-            (i === 0 ? '<figcaption class="ukShot_c">Cover</figcaption>' : '') +
-            '<button class="ukShot_x" type="button" data-ob-unshot="' + i + '" ' +
-              'aria-label="Remove photo ' + (i + 1) + '">&times;</button>' +
-          '</figure>';
-        }).join('') +
-        '<label class="ukShot ukShot--add">' +
-          '<input type="file" accept="image/*" multiple data-ob-shots hidden>' +
-          '<span class="ukShot_plus" aria-hidden="true">+</span>' +
-          '<span class="ukShot_l">' + (shots.length ? 'Add more' : 'Add photos') + '</span>' +
-        '</label>' +
-      '</div>' +
-      (shots.length
-        ? '<p class="ukHint">' + shots.length + (shots.length === 1 ? ' photo' : ' photos') +
-          '. The first one is the cover creators see.</p>'
-        : '') +
-    '</div>';
-  }
-
   function field(id, k, v, ph, label, ac) {
     return '<label class="ukField"><span class="ukField_l ukSrOnly">' + esc(label) + '</span>' +
       '<input class="ukField_i" id="' + id + '" data-ob-field="' + esc(k) + '" value="' + esc(v) + '" ' +
@@ -434,7 +416,14 @@ window.UKONBOARD = (function () {
           '<button class="ukBtn ukNav_go" type="button" data-ob-next' + (ready ? '' : ' disabled') + '>' +
             (s.cta || (last ? 'Finish' : 'Continue')) + '</button>' +
         '</div>' +
-      '</div></div>';
+      '</div>' +
+      /* Outside the card, the way the artwork is outside the question.
+         .ukStart_ask is positioned and scrolls, so it makes a stacking context,
+         and a fixed overlay rendered inside it painted UNDER the nav row that
+         follows it: Save crop was visible and unclickable. */
+      ((window.UKSHOTS && SHOTS.cropIx !== null && SHOTS.cropIx !== undefined)
+        ? window.UKSHOTS.editor(SHOTS) : '') +
+    '</div>';
   }
 
   /* ================= applying the answers =================
@@ -473,8 +462,14 @@ window.UKONBOARD = (function () {
       if (String(f.city || '').trim()) p.city = String(f.city).trim();
       if (f.cc) p.cc = f.cc;
       if (f.cat) { p.cat = f.cat; p.type = p.type || f.cat; }
-      /* the first one is the cover, which is what every card in the product uses */
-      if ((f.photos || []).length) { p.shots = f.photos.slice(); p.img = f.photos[0]; }
+      /* The cropped file, not the original: every card in the product renders
+         these in a fixed 4:3 tile, and the crop is the whole point of the step.
+         The first one is the cover. */
+      var S = window.UKSHOTS, ph = (SHOTS.photos && SHOTS.photos.length) ? SHOTS.photos : (f.photos || []);
+      if (ph.length && S) {
+        p.shots = ph.map(function (x) { return S.out(x); });
+        p.img = p.shots[0];
+      }
     }
   }
 
@@ -545,6 +540,8 @@ window.UKONBOARD = (function () {
     /* the connector mutates this as its OAuth beats play out */
     live: function () { return liveState(get('creator')); },
     cityq: function () { return CITYQ; },
+    shots: function () { return SHOTS; },
+    flushShots: flushShots,
     flush: flushPlats
   };
 })();
