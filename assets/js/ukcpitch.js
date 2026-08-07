@@ -64,29 +64,39 @@ window.UKCP = (function () {
   /* ================= the one list =================
      A stay and a pitch are the same subject at different points, so they are
      joined here once and every view reads the result. */
+  /* A stay's state comes from an APPLICATION to that stay — applications are
+     stay-specific, and that is the whole point of them. Keying on the hotel
+     NAME instead meant one pitch to a property marked every stay that property
+     offers: MiraGrace has thirteen, so a single answered pitch put all thirteen
+     in the same lane. */
   function rows() {
-    var byHotel = {};
-    (D.pitches || []).forEach(function (p) { byHotel[p.hotel] = p; });
+    var A = window.UKAPPLY;
     return (D.stays || []).map(function (s) {
-      var p = byHotel[s.hotel];
-      var state = !p ? 'to'
-                : p.status === 'Booked' ? 'booked'
-                : p.status === 'Responded' ? 'replied' : 'waiting';
-      return { stay: s, pitch: p || null, state: state,
+      var ap = A && A.all().filter(function (x) {
+        return x.stay === s.id && x.creator === A.ME && x.state !== 'withdrawn';
+      })[0];
+      var state = !ap ? 'to'
+                : ap.state === 'approved' ? 'booked'
+                : ap.state === 'passed'   ? 'to'      /* a no frees it to try again later */
+                : 'waiting';
+      var p = ap ? { id: ap.id, on: ap.at, via: 'Ukreate', note: '', nudged: ap.nudged,
+                     status: ap.state === 'approved' ? 'Booked' : 'Sent' } : null;
+      return { stay: s, pitch: p, state: state,
                days: p ? daysAgo(p) : 0,
-               due: !!p && p.status === 'Sent' && daysAgo(p) >= NUDGE_AFTER && !p.nudged };
+               due: !!p && state === 'waiting' && daysAgo(p) >= NUDGE_AFTER && !p.nudged };
     });
   }
-  /* a pitch logged against a hotel that is not on the roster still belongs in
-     the list — it is a real pitch and the numbers have to include it */
+
+  /* Pitches are property-level: a creator wrote to a hotel, not to one of its
+     stays, and often to a property with nothing published at all. Each is its
+     own row rather than being smeared across that property's listings. */
   function loose() {
-    var known = {};
-    (D.stays || []).forEach(function (s) { known[s.hotel] = 1; });
-    return (D.pitches || []).filter(function (p) { return !known[p.hotel]; }).map(function (p) {
-      return { stay: null, pitch: p,
-               state: p.status === 'Booked' ? 'booked' : p.status === 'Responded' ? 'replied' : 'waiting',
+    return (D.pitches || []).map(function (p) {
+      var state = p.converted ? 'booked'
+                : p.status === 'Responded' ? 'replied' : 'waiting';
+      return { stay: null, pitch: p, state: state,
                days: daysAgo(p),
-               due: p.status === 'Sent' && daysAgo(p) >= NUDGE_AFTER && !p.nudged };
+               due: !p.converted && p.status === 'Sent' && daysAgo(p) >= NUDGE_AFTER && !p.nudged };
     });
   }
   function all() { return rows().concat(loose()); }
@@ -95,7 +105,7 @@ window.UKCP = (function () {
     { id:'to',      t:'To pitch' },
     { id:'waiting', t:'Waiting' },
     { id:'replied', t:'Replied' },
-    { id:'booked',  t:'Booked' }
+    { id:'booked',  t:'Became collabs' }
   ];
 
   /* ================= what to say =================
@@ -223,7 +233,8 @@ window.UKCP = (function () {
     var visible = capped ? shown.slice(0, CAP) : shown;
 
     return UKCV.head('Pitch Pilot',
-      'One list. Who is worth writing to, what you have sent, and who owes you an answer.') +
+      'The outbound half of your work: who is worth writing to, what you have sent, and who owes ' +
+      'you an answer. The moment one says yes it becomes a collaboration and moves to Your collabs.') +
       todayStrip(due, toAnswer, counts) +
       lanes(lane, counts) +
       bar(st, fs, fb, shown.length, lane) +
@@ -357,10 +368,18 @@ window.UKCP = (function () {
             '<button class="ukBtn ukPL_go" type="button" data-setst="' + esc(p.id) + '|Booked">It is booked</button>' +
             '<button class="ukGhost ukGhost--sm" type="button" data-setst="' + esc(p.id) + '|Passed">They passed</button>' +
           '</div>'
-        : '<span class="ukTag ukTag--you">Booked</span>';
+        /* Booked is not a state this page owns. The moment a hotel says yes the
+         relationship stops being a pitch and becomes a collaboration, which
+         lives in Your collabs with its own lifecycle. Leaving it here as a
+         status meant the same hotel sat in two places with two answers —
+         Fjordheim was "Complete" in one and "Responded" in the other. So this
+         lane is a receipt, and the only thing it offers is the way across. */
+      : '<button class="ukGhost ukPL_go" type="button" data-goto="collabs">Open the collab</button>';
 
     var meta =
       lane === 'to' ? esc(tradeLine(s))
+      : lane === 'booked'
+        ? 'They said yes \u2014 this is a collaboration now, and it is tracked in Your collabs.'
       : (p.via ? esc(p.via) + ' · ' : '') + 'sent ' + esc(p.on) +
         (r.state === 'waiting' ? ' · no reply yet' : '') +
         (p.note ? ' · ' + esc(p.note) : '');
@@ -387,7 +406,9 @@ window.UKCP = (function () {
                 'Every hotel that fits you has been pitched. Loosen the filters, or come back — new stays land most weeks.'],
       waiting: ['Nothing is out right now', 'Anything you send shows up here until they answer.'],
       replied: ['No replies waiting', 'When a hotel comes back to you, it lands here first.'],
-      booked:  ['No stays booked yet', 'The ones that say yes end up here, and in your collabs.']
+      booked:  ['Nothing has converted yet',
+                'When a hotel says yes, the pitch stops being a pitch. It moves to Your collabs, ' +
+                'and a receipt for it appears here.']
     }[lane];
     return UKCV.empty(M[0], M[1],
       lane === 'to'

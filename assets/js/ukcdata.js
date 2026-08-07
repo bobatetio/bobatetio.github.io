@@ -262,6 +262,7 @@ window.UKC = (function () {
   function pushSharedMsg(c, msg)     { if (c.link && window.UKShared) window.UKShared.pushMsg(c.link, msg); }
   function hydrateLinked() {
     hydrateApplications();
+    reconcilePipeline();
     collabs.forEach(function (c) { c.link ? hydrateFromShared(c) : ensureLifecycle(c); });
   }
 
@@ -619,12 +620,64 @@ window.UKC = (function () {
     placeStays();
     hydrateFavs && hydrateFavs();
   }
+  /* ---- one home, one state ----
+     The same hotel relationship was being tracked in two places with two state
+     models that disagreed: Fjordheim Lodge was "Complete" in Your collabs and
+     "Responded" in Pitch Pilot; Riad Amber was "Creating" and "Booked". The
+     creator's own dashboard counted several of them twice.
+
+     The split is real, so it is kept — but as a HANDOFF rather than two ledgers:
+
+       Pitch Pilot owns the outbound phase. To pitch, waiting, replied. That is
+       where a creator works the funnel, and while a pitch is out there is no
+       collaboration yet — only a hope.
+
+       Your collabs owns the collaboration. It begins the moment a hotel says
+       yes, at Onboarding, and runs to sign-off.
+
+     So a collaboration at "Inquiry" was never a collaboration; it was a pitch
+     that had not been answered. Those move to where they belong, and a pitch
+     that HAS been answered stops carrying a state of its own and carries a
+     pointer to the collaboration it became. */
+  function reconcilePipeline() {
+    var byHotel = {};
+    collabs.forEach(function (c) {
+      var st = byId(stays, c.stay);
+      if (st) (byHotel[st.hotel] = byHotel[st.hotel] || []).push(c);
+    });
+
+    /* 1. a "collaboration" still at Inquiry is an unanswered pitch. It belongs
+          to Pitch Pilot, so it is recorded there and leaves this list. */
+    collabs.slice().forEach(function (c) {
+      if (c.stage !== 0) return;
+      var st = byId(stays, c.stay);
+      if (!st) return;
+      var existing = pitches.filter(function (x) { return x.hotel === st.hotel; })[0];
+      if (!existing) {
+        pitches.push({ id: 'p' + (pitches.length + 1), hotel: st.hotel, city: st.city,
+          on: c.when || 'recently', via: 'Ukreate', status: 'Sent',
+          note: ((c.msgs || [])[(c.msgs || []).length - 1] || {}).tx || '', fromCollab: c.id });
+      }
+      var i = collabs.indexOf(c);
+      if (i > -1) collabs.splice(i, 1);
+    });
+
+    /* 2. a pitch whose hotel now has a live collaboration is no longer a pitch
+          with a status. It became something, and it points at it. */
+    pitches.forEach(function (p) {
+      var live = (byHotel[p.hotel] || []).filter(function (c) { return c.stage >= 1; })[0];
+      if (live) { p.converted = live.id; p.status = 'Booked'; }
+      else { delete p.converted; if (p.status === 'Booked') p.status = 'Responded'; }
+    });
+  }
+
   /* NOT called here. ukcmatch.js adds the rest of the market after this file
      runs, and the registry has to be able to compare a published stay against
      those before deciding an id collision — hydrating first let the hotel's s7
      take the id and shut out the property that already had it. ukcmatch calls
      hydrateStays() once it has finished. */
   hydrateApplications();
+  reconcilePipeline();
 
   return {
     hydrateStays: hydrateStays,

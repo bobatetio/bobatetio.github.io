@@ -222,13 +222,22 @@ window.UKCV = (function () {
   function collabs(st) {
     if (D.hydrateLinked) D.hydrateLinked();
     if (st.thread) return thread(st);
-    var f = st.stageF == null ? '0' : String(st.stageF);
+    /* The lifecycle here begins at Onboarding, not Inquiry. On the hotel side
+       Inquiry is a real stage — somebody has to decide. From this side it means
+       "waiting on them", which is exactly Pitch Pilot's Waiting lane, and having
+       it in both places is what let one hotel sit in two lists with two
+       different answers. A collaboration starts when a hotel says yes. */
+    var f = st.stageF == null ? '1' : String(st.stageF);
     var list = D.collabs.filter(function (c) { return String(c.stage) === f; });
-    return head('Your collabs', 'The full creator lifecycle, from the first pitch through sign-off.') +
+    return head('Your collabs',
+      'Every stay a hotel has said yes to, from the package through to sign-off. ' +
+      'Anything still waiting on an answer is in Pitch Pilot.',
+      '<button class="ukGhost" type="button" data-goto="pitch">Pitch Pilot</button>') +
       invitations(st) +
       (st.sent ? '<p class="ukCheer" role="status">Pitch sent. Nice one. Hotels usually reply within a few days, and no reply for a week is normal rather than a no.</p>' : '') +
       '<div class="ukToolbar"><div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Filter your collaborations by lifecycle stage">' +
         D.STAGES.map(function (stage, i) {
+          if (i === 0) return '';        /* Inquiry lives in Pitch Pilot */
           var n = D.collabs.filter(function (c) { return c.stage === i; }).length;
           return '<button class="ukFilter' + (f === String(i) ? ' is-on' : '') + '" type="button" role="tab" aria-selected="' + (f === String(i)) + '" data-stage="' + i + '">' +
             '<span class="ukFilter_lb">' + stage.short + '</span>' + (n ? '<span class="ukFilter_ct">' + n + '</span>' : '') + '</button>';
@@ -248,7 +257,9 @@ window.UKCV = (function () {
             foot: track(c.stage, true) + statusBadge(c, mine) + cardPreview(c, stay)
           }) + '</div>';
       }).join('') + '</div>'
-        : empty('Nothing at that stage', 'Try another stage — everything stays in one thread as it moves.'));
+        : empty('Nothing at that stage',
+                'Try another stage. Anything you are still waiting to hear about is in Pitch Pilot.',
+                '<button class="ukBtn" type="button" data-goto="pitch">Open Pitch Pilot</button>'));
   }
 
   /* The hotel's .ukStatusBadge, not a second component doing its job. Both sides

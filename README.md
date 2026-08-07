@@ -97,6 +97,29 @@ written by both apps. Nothing is duplicated per side.
 To watch a full loop: publish a stay in `/app/`, open `/creator/` in another tab,
 apply to it from Discover, then answer it back in `/app/`.
 
+**One object, one home, one state.** The creator side has two lists and they
+hand off rather than overlap:
+
+- **Pitch Pilot** owns the outbound phase — to pitch, waiting, replied. While a
+  pitch is out there is no collaboration, only a hope.
+- **Your collabs** owns the collaboration, and it begins at *Onboarding*, the
+  moment a hotel says yes.
+
+So the creator's list has no Inquiry stage. On the hotel side Inquiry is a real
+decision point; from this side it means "waiting on them", which is Pitch
+Pilot's Waiting lane. Having it in both places is what let one hotel sit in two
+lists with two different answers — Fjordheim Lodge was `Complete` in one and
+`Responded` in the other. `reconcilePipeline()` in `ukcdata.js` enforces the
+handoff: an unanswered "collaboration" is recorded as a pitch and leaves the
+collab list, and a pitch whose hotel now has a live collaboration stops carrying
+a state and carries a pointer to it. Pitch Pilot's last lane is a receipt, not a
+status.
+
+Note that a stay's state comes from an **application**, which is stay-specific,
+never from a pitch, which is property-level. MiraGrace offers thirteen stays;
+keying on the property name put all thirteen in whatever lane one answered pitch
+was in.
+
 **Two id spaces overlap.** Both apps seed stays starting at `s1`, and they mean
 different properties — the hotel's `s7` is MiraGrace's, the creator's `s7` is
 Casa Boa Vista's. Where a published stay collides with a seeded one belonging to
