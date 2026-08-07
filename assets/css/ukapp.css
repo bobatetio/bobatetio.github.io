@@ -4816,15 +4816,44 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukOb_modal{max-width:600px;width:min(600px,calc(100vw - 32px));
   height:min(604px,calc(100vh - 48px));padding:26px 28px 22px;
   display:flex;flex-direction:column;overflow:hidden}
+.ukOb_modal{position:relative}
 .ukOb_modal .ukStart_ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-  padding-right:6px;margin-right:-6px}
-.ukObBar,.ukOb_nav{flex:0 0 auto}
+  padding-right:6px;margin-right:-6px;position:relative;z-index:1}
+/* above the artwork layer, so the copy and the buttons are never behind it */
+.ukObBar,.ukOb_nav{flex:0 0 auto;position:relative;z-index:1}
+.ukOb_nav .ukBtn,.ukOb_nav .ukEnter{position:relative;z-index:2}
 
 /* The welcome's artwork. A fixed slot, so the step is the same height whether
    the image has landed yet or not. */
-.ukObArt{position:relative;margin-top:4px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
-  background:var(--hover);border:1px solid var(--line);display:grid;place-items:center}
-.ukObArt_i{width:100%;height:100%;object-fit:cover;display:block;grid-area:1/1}
+/* The artwork is BEHIND the step, not a block inside it.
+
+   As a block it had to be given a height, and whatever height it was given it
+   pushed the card taller or got cut off at the bottom. Neither is what the
+   design shows: there the plane runs down past the copy and behind the button,
+   which is only possible if it is not in the flow at all.
+
+   So it is a layer. It takes its width from the card, sits on the bottom, sets
+   no height on anything, and is a cutout on a transparent ground so the copy
+   above it stays legible. The card's size is decided by the question, the same
+   on every step, exactly as before. */
+/* Measured off the design, in proportions of the card so it holds at any width:
+   the artwork sits in a band 46% of the card tall whose bottom clears the button
+   row, and it is centred in it.
+
+   CONTAIN, ALWAYS. The soft fade under the plane is part of the artwork, not
+   something drawn here, so any crop cuts the fade off and leaves the plane
+   sitting on a hard edge. Containing it also means the height alone sets the
+   size: at 46% the image draws about 445px wide rather than filling the card. */
+.ukObArt{position:absolute;left:0;right:0;bottom:13%;height:46%;z-index:0;
+  pointer-events:none;display:grid;place-items:center}
+.ukObArt_i{width:100%;height:100%;object-fit:contain;object-position:center;
+  display:block;grid-area:1/1}
+/* The placeholder is still a block: with no artwork there is nothing to sit
+   behind, and an empty layer would be invisible rather than a stand-in. */
+/* The placeholder occupies the same band, so a side without artwork yet shows
+   where it will go rather than nothing at all. */
+.ukObArt.is-empty{border-radius:14px;background:var(--hover);border:1px dashed var(--line);
+  place-items:center;left:28px;right:28px}
 .ukObArt_ph{grid-area:1/1;display:none;font:600 12px/1 'Lato',sans-serif;color:var(--text-3);
   text-transform:uppercase;letter-spacing:.14em}
 .ukObArt.is-empty{border-style:dashed}

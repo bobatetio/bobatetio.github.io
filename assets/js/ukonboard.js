@@ -166,8 +166,9 @@ window.UKONBOARD = (function () {
           'Travel creators shoot your property in exchange for nights you were unlikely to ' +
           'sell, and everything they make is yours to keep and post. A minute here is all ' +
           'it takes for them to start finding you.',
-          peek('hotel'), { mark: true });
+          '', { mark: true });
       },
+      art: 'hotel',
       done: function () { return true; },
       cta: 'Get started'
     },
@@ -258,12 +259,21 @@ window.UKONBOARD = (function () {
 
      // PLUG-IN POINT - drop the artwork at /assets/img/onboard-welcome-<side>.jpg
      // and it is picked up here. */
+  /* Named here rather than probed for. Requesting a file that is not there in
+     order to find out whether it is there costs a 404 on every first paint, and
+     the fallback it triggers looks identical to real artwork having failed.
+
+     PNG, not JPG: these are cutouts with a transparent background, and
+     flattening one onto white would put a white slab inside a card that is not
+     always white. */
+  var ART = { hotel: true, creator: false };
   function peek(side) {
-    var src = '/assets/img/onboard-welcome-' + side + '.jpg';
+    if (!ART[side]) {
+      return '<div class="ukObArt is-empty" data-obart>' +
+        '<span class="ukObArt_ph" aria-hidden="true">Image</span></div>';
+    }
     return '<div class="ukObArt" data-obart>' +
-      '<img class="ukObArt_i" src="' + src + '" alt="" ' +
-        'onerror="this.closest(\'[data-obart]\').classList.add(\'is-empty\');this.remove()">' +
-      '<span class="ukObArt_ph" aria-hidden="true">Image</span>' +
+      '<img class="ukObArt_i" src="/assets/img/onboard-welcome-' + side + '.png" alt="">' +
     '</div>';
   }
 
@@ -396,8 +406,13 @@ window.UKONBOARD = (function () {
     var ready = s.done(f);
     var last = at === list.length - 1;
     return '<div class="ukModalWrap ukOb" data-ob-wrap>' +
-      '<div class="ukModal ukOb_modal" role="dialog" aria-modal="true" aria-label="Set up your account">' +
+      '<div class="ukModal ukOb_modal' + (s.art ? ' has-art' : '') + '" role="dialog" ' +
+        'aria-modal="true" aria-label="Set up your account">' +
         railHtml(side, at) +
+        /* Outside the question, because it belongs to the card. Nested inside the
+           scrolling body it counted toward that body's scroll height and put a
+           scrollbar on a step that fits. */
+        (s.art ? peek(s.art) : '') +
         s.render(f) +
         '<div class="ukNav ukOb_nav">' +
           '<span></span>' +
