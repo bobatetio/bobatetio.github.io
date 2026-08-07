@@ -1352,3 +1352,9 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukMapSlot--dash .ukMapPin_n,.ukMapSlot--dash .ukMapPin_s,
 .ukMapSlot--dash .ukMapStem,.ukMapSlot--dash .ukMap_ui{display:none}
 .ukMapSlot--dash .ukMapPin{background:none;box-shadow:none;padding:0;border:0}
+
+
+/* a stay that a hotel has just published, marked on the card so it reads as the
+   live thing it is rather than another row in the seeded list */
+.ukStayNew{position:absolute;left:12px;bottom:12px;z-index:2}
+.ukStayCell .ukLst_m{position:relative}

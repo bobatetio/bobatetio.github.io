@@ -594,7 +594,8 @@ window.UKCV = (function () {
      and the foot carries this side's two actions. */
   function stayCard(s, i, st) {
     st = st || {};
-    var over = '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>' +
+    var over = (s.published ? '<span class="ukTag ukTag--you ukStayNew">Just published</span>' : '') +
+      '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>' +
       '<button class="ukHeart' + (s.saved ? ' is-on' : '') + '" type="button" data-save="' + s.id + '" ' +
       'aria-pressed="' + (s.saved ? 'true' : 'false') + '" aria-label="' +
       (s.saved ? 'Remove ' : 'Save ') + esc(s.hotel) + (s.saved ? ' from saved' : '') + '">' +
@@ -612,10 +613,27 @@ window.UKCV = (function () {
         getLabel: 'They get',
         propGo: { attr:'hotel', val:s.id, title:'See the property' },
         foot: '<div class="ukStayCell_act">' +
-          '<button class="ukBtn" type="button" data-apply="' + s.id + '">Pitch this stay</button>' +
+          applyCta(s) +
           '<button class="ukGhost" type="button" data-hotel="' + s.id + '">See the property</button>' +
         '</div>'
       }) + '</div>';
+  }
+
+  /* A creator who has already applied should not be offered the button again —
+     the application is on the shared record, so both sides know it exists and
+     the answer is pending with the hotel. */
+  function applyCta(s, cls) {
+    var A = window.UKAPPLY;
+    var sent = A && A.applied(s.id);
+    if (!sent) {
+      return '<button class="ukBtn' + (cls ? ' ' + cls : '') + '" type="button" ' +
+        'data-apply="' + s.id + '">Pitch this stay</button>';
+    }
+    var said = sent.state === 'approved' ? 'They said yes'
+             : sent.state === 'passed'   ? 'They passed'
+             : 'Applied \u2014 waiting on them';
+    return '<button class="ukGhost' + (cls ? ' ' + cls : '') + '" type="button" ' +
+      'data-goto="collabs">' + said + '</button>';
   }
 
   function stayGrid(list, st) {
@@ -691,7 +709,7 @@ window.UKCV = (function () {
             '<div><dt>Dates</dt><dd>' + esc(s.from) + ' to ' + esc(s.to) + '</dd></div>' +
             '<div><dt>Usage</dt><dd>' + esc(s.rights) + '</dd></div>' +
           '</dl>' +
-          '<button class="ukBtn ukCard_cta" type="button" data-apply="' + s.id + '">Pitch this stay</button>' +
+          applyCta(s, 'ukCard_cta') +
           '<button class="ukGhost ukCard_cta" type="button" data-hotel="' + s.id + '">See the property</button>' +
           '<button class="ukGhost ukCard_cta" type="button" data-save="' + s.id + '">' +
             (s.saved ? 'Saved' : 'Save for later') + '</button>' +
@@ -722,7 +740,10 @@ window.UKCV = (function () {
         '</section>' +
         '<div class="ukNav2"><span></span><div class="ukNav2_r">' +
           '<button class="ukGhost" type="button" data-ack="Saved">Save as draft</button>' +
-          '<button class="ukBtn" type="button" data-sendapply="' + s.id + '">Send my pitch</button></div></div>' +
+          (window.UKAPPLY && window.UKAPPLY.applied(s.id)
+            ? '<button class="ukGhost" type="button" data-goto="collabs">Already applied \u2014 open the thread</button>'
+            : '<button class="ukBtn" type="button" data-sendapply="' + s.id + '">Send my pitch</button>') +
+          '</div></div>' +
       '</div>' +
       '<aside class="ukPanel ukSticky"><div class="ukPanel_head"><h3 class="ukPanel_title">The trade</h3></div>' +
         '<div class="ukTrade"><div class="ukTrade_side"><p class="ukTrade_l">You get</p>' +

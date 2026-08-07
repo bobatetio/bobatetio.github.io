@@ -72,6 +72,24 @@
      of sync: resolve the underlying thing and the notification is simply not
      generated on the next read. */
   if (window.UKNOTIFY) {
+    /* an application arriving from the creator app is the newest thing that can
+       happen to this property, and it has a deadline attached to it in practice
+       — a creator waiting on an answer goes and pitches somebody else */
+    window.UKNOTIFY.source(function () {
+      var A = window.UKAPPLY;
+      if (!A) return [];
+      var mine = {};
+      UK.stays.forEach(function (s) { mine[s.id] = s; });
+      return A.all().filter(function (ap) {
+        return ap.state === 'sent' && mine[ap.stay];
+      }).map(function (ap) {
+        var st = mine[ap.stay];
+        return { id:'apply:' + ap.id, kind:'move', at: 6,
+          t: (ap.creatorName || 'A creator') + ' applied to ' + (st.t || 'a stay'),
+          s: 'Waiting on your yes or no', go:'collabs', open: ap.id };
+      });
+    });
+
     window.UKNOTIFY.source(function () {
       var out = [];
       UK.collabs.forEach(function (c) {
@@ -974,7 +992,53 @@
     if (e.target.closest('[data-publish-go]')) {
       var pf = st().form || {};
       if (pf.visibility === 'private' && !(pf.invited || []).length) return;
+
+      /* Publishing used to set a flag and repaint a confirmation screen. It
+         never created a stay — not in this app's own list, and certainly not
+         anywhere the creator side could see one. It does both now: the stay goes
+         into the shared registry, which is the same record the creator app reads
+         its Discover list out of, and comes back into this app's list through
+         the same door. */
+      var shots = (pf.photos || []).map(function (sh) { return sh.out || sh.src; }).filter(Boolean);
+      var del = Object.keys(pf.del || {}).filter(function (k) { return pf.del[k]; })
+                  .map(function (k) { return { t: k, q: pf.del[k] }; });
+      var nights = pf.nights || null;
+      var published = window.UKSTAYS && window.UKSTAYS.publish({
+        t: pf.title || ((nights ? nights + (String(nights) === '1' ? ' night at ' : ' nights at ') : 'A stay at ') +
+                        D.property.name),
+        /* everything the creator side needs to place and render it, resolved
+           here — it cannot reach into this app's data later to fill a gap */
+        property: {
+          name: D.property.name, city: D.property.city, cc: D.property.cc || null,
+          lat: D.property.lat, lng: D.property.lng,
+          img: D.property.img, cat: D.property.cat
+        },
+        shots: shots.length ? shots : [D.property.img],
+        img: shots[0] || D.property.img,
+        nights: nights,
+        capacity: pf.capacity || 1,
+        rooms: pf.type || D.property.cat || 'Room',
+        incList: pf.incList || [],
+        inc: pf.inc || '',
+        del: del,
+        from: pf.date || '', to: pf.dateTo || pf.date || '',
+        reach: pf.reach || '5K - 25K',
+        type: pf.shoots || D.property.cat || '',
+        brief: pf.brief || '', guide: pf.guide || '',
+        visibility: pf.visibility === 'private' ? 'private' : 'public',
+        invited: pf.invited || []
+      });
+
+      if (published) {
+        D.addStay(window.UKSTAYS.toHotel(published));
+        /* a private stay IS an invitation: the creators it names are the only
+           ones who will ever see it, so they are invited to it by definition */
+        if (published.visibility === 'private' && window.UKINVITE) {
+          window.UKINVITE.invite(published.id, published.invited, published.capacity);
+        }
+      }
       st().publish = 'done';
+      st().publishedId = published && published.id;
       return repaint();
     }
     if ((el = e.target.closest('[data-vis]'))) {

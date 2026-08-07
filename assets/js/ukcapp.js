@@ -53,7 +53,97 @@
     });
   }
 
+  /* ---------------- notifications ----------------
+     The bell has been in this app's header all along with nothing behind it:
+     UKNOTIFY was registered by the hotel app only, so a creator was never told
+     when a hotel answered them. Same module, same panel markup, this side's
+     sources. */
+  var NOTIFY_ICONS = { move:'chat', invite:'idcard', content:'book', booking:'star', review:'star' };
+
+  if (window.UKNOTIFY) {
+    /* what the hotel did with an application you sent */
+    window.UKNOTIFY.source(function () {
+      var A = window.UKAPPLY;
+      if (!A) return [];
+      return A.mine().filter(function (ap) {
+        return ap.state === 'approved' || ap.state === 'passed';
+      }).map(function (ap) {
+        var stay = D.stay(ap.stay);
+        var who = stay ? stay.hotel : 'A hotel';
+        return ap.state === 'approved'
+          ? { id:'appok:' + ap.id, kind:'move', at: 6,
+              t: who + ' said yes', s:'Your stay is confirmed \u2014 open it to sort the dates',
+              go:'collabs', open: ap.id }
+          : { id:'appno:' + ap.id, kind:'move', at: 3,
+              t: who + ' passed this time', s:'Nothing is recorded against you. Send another.',
+              go:'pitch' };
+      });
+    });
+
+    /* a stay published by a hotel since you last looked */
+    window.UKNOTIFY.source(function () {
+      var R = window.UKSTAYS;
+      if (!R) return [];
+      return R.forCreator('c1').slice(0, 5).map(function (s) {
+        return { id:'newstay:' + s.id, kind:'invite', at: 5,
+          t: s.hotel + ' published a new stay',
+          s: (s.nights ? s.nights + ' nights' : 'A stay') + ' in ' + String(s.city).split(',')[0],
+          go:'stays' };
+      });
+    });
+
+    /* your own collaborations, when the move is yours */
+    window.UKNOTIFY.source(function () {
+      return D.collabs.filter(function (c) {
+        return D.STAGES[c.stage] && D.STAGES[c.stage].mine && !c.passed;
+      }).map(function (c) {
+        var stay = D.stay(c.stay);
+        return { id:'cmove:' + c.id + ':' + c.stage, kind:'move', at: 4,
+          t: (stay ? stay.hotel : 'A collaboration') + ' is waiting on you',
+          s: D.STAGES[c.stage].sayMine || D.STAGES[c.stage].say || '',
+          go:'collabs', open: c.id };
+      });
+    });
+  }
+
+  function paintNotify() {
+    if (!window.UKNOTIFY) return;
+    var list = window.UKNOTIFY.all();
+    var n = list.filter(function (x) { return !x.seen; }).length;
+    var dot = q('.ukTop_dot');
+    if (dot) { dot.textContent = n > 99 ? '99+' : (n || ''); dot.hidden = !n; }
+
+    var panel = q('#ukNotifyPanel');
+    if (!panel || panel.hidden) return;
+    panel.innerHTML =
+      '<div class="ukNotify_head"><p class="ukNotify_h">Notifications</p>' +
+        (n ? '<button class="ukGhost ukGhost--sm" type="button" data-notify-all>Mark all read</button>' : '') +
+      '</div>' +
+      (list.length
+        ? '<ul class="ukNotify_list">' + list.slice(0, 20).map(function (x) {
+            return '<li><button class="ukNotify_i' + (x.seen ? '' : ' is-new') + '" type="button" ' +
+              'data-notify-go="' + escHtml(x.id) + '" data-go2="' + escHtml(x.go || '') + '" ' +
+              'data-open="' + escHtml(x.open || '') + '">' +
+              '<span class="ukNotify_ic"><span data-icon="' + (NOTIFY_ICONS[x.kind] || 'chat') + '"></span></span>' +
+              '<span class="ukNotify_b"><span class="ukNotify_t">' + escHtml(x.t) + '</span>' +
+              '<span class="ukNotify_s">' + escHtml(x.s || '') + '</span></span>' +
+              (x.seen ? '' : '<span class="ukNotify_new" aria-label="Unread"></span>') +
+            '</button></li>';
+          }).join('') + '</ul>'
+        : '<p class="ukNotify_none">Nothing needs you right now.</p>');
+    icons(panel);
+  }
+
+  function closeNotify() {
+    var panel = q('#ukNotifyPanel');
+    if (!panel) return;
+    panel.hidden = true;
+    var b = q('[data-notify-toggle]');
+    if (b) b.setAttribute('aria-expanded', 'false');
+  }
+
   function paintNav() {
+    paintNotify();
     var needs = D.collabs.filter(function (c) { return D.STAGES[c.stage].mine && c.stage < 5; }).length;
     q('#ukNav').innerHTML = NAV.map(function (g) {
       return '<div class="ukSide_group"><p class="ukSide_gLabel">' + g.group + '</p>' +
@@ -361,6 +451,30 @@
     if (e.target.closest('[data-clearf]'))       { s.q=''; s.style='all'; s.saved=false; return repaint(); }
     if (e.target.closest('[data-savedonly]'))    { s.saved = !s.saved;         return repaint(); }
 
+    if (e.target.closest('[data-notify-toggle]')) {
+      var np = q('#ukNotifyPanel');
+      var opening = np.hidden;
+      np.hidden = !opening;
+      e.target.closest('[data-notify-toggle]').setAttribute('aria-expanded', String(opening));
+      paintNotify();
+      return;
+    }
+    if (e.target.closest('[data-notify-all]')) {
+      window.UKNOTIFY.markAllSeen(window.UKNOTIFY.all());
+      paintNotify();
+      return;
+    }
+    if ((el = e.target.closest('[data-notify-go]'))) {
+      window.UKNOTIFY.markSeen([el.dataset.notifyGo]);
+      var dest = el.dataset.go2, opening2 = el.dataset.open;
+      closeNotify();
+      if (dest) {
+        if (opening2) S[dest] = Object.assign({}, S[dest] || {}, { thread: opening2 });
+        return go(dest);
+      }
+      paintNotify();
+      return;
+    }
     if ((el = e.target.closest('[data-save]'))) {
       /* Backed by the shared favourites store, so a saved property survives a
          reload and sits in the same record as the hotel's own shortlist of
@@ -392,14 +506,19 @@
     }
     if (e.target.closest('[data-staypop-close]')) { s.stayPop = null; return paintView(true); }
 
+    /* A stay card is clickable, and it has buttons inside it. Those buttons are
+       answered FIRST: closest('[data-open]') from a button inside the card finds
+       the card, so "Pitch this stay" was opening the stay detail rather than
+       starting an application. */
+    if ((el = e.target.closest('[data-apply]'))) {
+      view = 'apply'; st().stay = el.dataset.apply; paintNav(); return paintView();
+    }
+    if ((el = e.target.closest('[data-hotel]'))) { view = 'hotel'; st().stay = el.dataset.hotel; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-open]'))) { s.open = el.dataset.open; return paintView(); }
     if (e.target.closest('[data-back]')) {
       if (s.delivering) { s.delivering = null; s.picked = null; return paintView(); }
       if (s.lesson) { s.lesson = null; return paintView(); }
       s.open = null; s.thread = null; return paintView();
-    }
-    if ((el = e.target.closest('[data-apply]'))) {
-      view = 'apply'; st().stay = el.dataset.apply; paintNav(); return paintView();
     }
     if (e.target.closest('[data-newboard]'))    { s.making = true; return paintView(); }
     if (e.target.closest('[data-cancelboard]')) { s.making = false; s.mk = null; return paintView(); }
@@ -422,13 +541,31 @@
     }
 
     if (e.target.closest('[data-editme]')) { go('editme'); return; }
-    if ((el = e.target.closest('[data-hotel]'))) { view = 'hotel'; st().stay = el.dataset.hotel; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-board]'))) { view = 'board'; st().board = el.dataset.board; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-guide]'))) { view = 'guide'; st().guide = el.dataset.guide; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-sendapply]'))) {
       var sid = el.dataset.sendapply;
-      D.collabs.unshift({ id:'k' + Date.now(), stay:sid, stage:0, when:'just now', unread:0, fresh:true,
-        msgs:[{ by:'me', at:'just now', tx:(root.querySelector('#ukApplyMsg') || {}).value || 'I would love to be considered for this stay.' }] });
+      var msg = (root.querySelector('#ukApplyMsg') || {}).value ||
+                'I would love to be considered for this stay.';
+
+      /* The application used to be pushed into this app's own collaboration list
+         and stop there: the hotel never learned that anyone had applied, and the
+         creator watched a thread that existed on their machine and nowhere else.
+         It goes to the shared record first, and the local row is built from what
+         comes back — so both sides are reading the same application. */
+      var me = D.me, sent = null;
+      if (window.UKAPPLY) {
+        sent = window.UKAPPLY.send({
+          stay: sid, creator: window.UKAPPLY.ME,
+          creatorName: me.n, creatorHandle: me.h, creatorImg: me.img,
+          creatorCity: me.city,
+          creatorReach: (me.plats || []).reduce(function (a, p) { return a + (p.f || 0); }, 0),
+          msg: msg
+        });
+      }
+      D.collabs.unshift({ id: (sent && sent.id) || ('k' + Date.now()), stay:sid, stage:0,
+        when:'just now', unread:0, fresh:true, application: sent && sent.id,
+        msgs:[{ by:'me', at:'just now', tx: msg }] });
       view = 'collabs'; S.collabs = { sent:true }; paintNav(); return paintView();
     }
     if ((el = e.target.closest('[data-thread]'))) { s.thread = el.dataset.thread; s.delivering = null; s.picked = null; return paintView(); }
@@ -520,6 +657,8 @@
   document.addEventListener('click', function (e) {
     if (!menu.hidden && !menu.contains(e.target) && !e.target.closest('[data-menu-toggle]')) closeMenu();
     if (side.classList.contains('is-open') && !side.contains(e.target) && !e.target.closest('[data-burger]')) closeSide();
+    var np2 = q('#ukNotifyPanel');
+    if (np2 && !np2.hidden && !np2.contains(e.target) && !e.target.closest('[data-notify-toggle]')) closeNotify();
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {

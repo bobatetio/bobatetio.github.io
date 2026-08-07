@@ -250,7 +250,43 @@ window.UKC = (function () {
   }
   function pushSharedPatch(c, patch) { if (c.link && window.UKShared) window.UKShared.set(c.link, patch); }
   function pushSharedMsg(c, msg)     { if (c.link && window.UKShared) window.UKShared.pushMsg(c.link, msg); }
-  function hydrateLinked() { collabs.forEach(function (c) { c.link ? hydrateFromShared(c) : ensureLifecycle(c); }); }
+  function hydrateLinked() {
+    hydrateApplications();
+    collabs.forEach(function (c) { c.link ? hydrateFromShared(c) : ensureLifecycle(c); });
+  }
+
+  /* ---- what the hotel did with an application ----
+     An application this creator sent lives on the shared record, and the hotel
+     answers it there. This pulls the answer back: a yes moves the row into
+     onboarding, a no takes it out of the pipeline. Without this the creator
+     would sit on "waiting to hear" forever, however many times the hotel
+     replied. It also adds rows for applications sent from another session, so
+     the list is the record rather than a copy of it. */
+  function hydrateApplications() {
+    var A = window.UKAPPLY;
+    if (!A) return;
+    var byApp = {};
+    collabs.forEach(function (c) { if (c.application) byApp[c.application] = c; });
+
+    A.mine().forEach(function (ap) {
+      var c = byApp[ap.id];
+      if (!c) {
+        if (ap.state === 'withdrawn') return;
+        c = { id: ap.id, stay: ap.stay, stage: 0, when: ap.at || 'just now',
+              unread: 0, application: ap.id, msgs: [] };
+        collabs.unshift(c);
+      }
+      c.msgs = (ap.msgs || []).map(function (m) {
+        return { by: m.by === 'creator' ? 'me' : 'them', at: m.at, tx: m.tx };
+      });
+      if (ap.state === 'approved' && c.stage < 1) { c.stage = 1; c.passed = false; }
+      if (ap.state === 'passed') { c.passed = true; c.stage = 0; }
+      if (ap.state === 'withdrawn') {
+        var i = collabs.indexOf(c);
+        if (i > -1) collabs.splice(i, 1);
+      }
+    });
+  }
 
   /* The mirror of the hotel's mapping: the same id is derived from the same pair,
      so a collaboration about stay s1 can never share a record with one about s2.
@@ -539,7 +575,30 @@ window.UKC = (function () {
   }
   placeStays();
 
+  /* ---- stays a hotel has actually published ----
+     The seeded stays above are the rest of the market: other properties, other
+     cities, demonstration data. A stay published from the hotel app is a real
+     one, and it arrives through the shared registry — the same record that app
+     writes to. It goes to the front of the list because it is the newest thing
+     in the network, and it is marked so the UI can say so. */
+  function hydrateStays() {
+    var R = window.UKSTAYS;
+    if (!R) return;
+    var have = {};
+    stays.forEach(function (s) { have[s.id] = 1; });
+    R.forCreator('c1').forEach(function (rec) {
+      if (have[rec.id]) return;
+      have[rec.id] = 1;
+      stays.unshift(rec);
+    });
+    placeStays();
+    hydrateFavs && hydrateFavs();
+  }
+  hydrateStays();
+  hydrateApplications();
+
   return {
+    hydrateStays: hydrateStays,
     MEDIA: MEDIA, me: me, stays: stays, STAGES: STAGES, collabs: collabs,
     addProof: addProof, acceptInvite: acceptInvite,
     pitches: pitches, earnings: earnings, academy: academy, MEMBER_PRICE: MEMBER_PRICE,

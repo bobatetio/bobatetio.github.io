@@ -50,6 +50,15 @@ Modules worth knowing before you touch anything:
 - `assets/js/ukshared.js` — the vocabularies both sides must agree on (what a
   creator shoots, what they make, where they post) and `UKShared`, the single
   record for a collaboration that genuinely exists on both sides.
+- `assets/js/ukstays.js` — **the stay registry.** A stay published by a hotel is
+  written here, and the creator app reads its Discover list out of it. One shape,
+  two readings: `toHotel()` and `toCreator()` are the only translation in the
+  system. The seeded stays in each app are the rest of the market.
+- `assets/js/ukapply.js` — **applications.** A creator applying to a published
+  stay writes here; the hotel reads it as an inquiry and answers on the same
+  record, so the creator sees the yes or the no. Distinct from `ukpitchin.js`: a
+  pitch has no stay behind it and asks "shall I build one", an application hangs
+  off a published stay and asks "yes or no".
 - `assets/js/ukstaycard.js` — **the** stay card. Both apps render it. A hotel
   card is the same component with the stay's own detail left off. Do not write a
   second one.
@@ -64,7 +73,27 @@ Modules worth knowing before you touch anything:
 
 Handler order matters. The click chain in `ukapp.js` / `ukcapp.js` is linear and
 first match wins, so a control nested inside a clickable card must be answered
-before the card.
+before the card. (`[data-apply]` sits above `[data-open]` for exactly this
+reason — a stay card is clickable and has buttons inside it.)
+
+### How the two sides talk to each other
+
+Every crossing is a record in `localStorage` on the shared origin, read and
+written by both apps. Nothing is duplicated per side.
+
+| Record | Direction | What crosses |
+| --- | --- | --- |
+| `UKSTAYS` | hotel → creator | a published stay appears in Discover |
+| `UKAPPLY` | creator → hotel | an application appears as an inquiry; the hotel's yes or no comes back |
+| `UKPITCHIN` | creator → hotel | a Pitch Pilot pitch, with no stay behind it |
+| `UKINVITE` | hotel → creator | an invitation to a stay; a private stay is one by definition |
+| `UKShared` | both | the live collaboration: stage, messages, dates, delivery |
+| `UKREVIEWS` | both | neither side sees the other's review until both are in |
+| `UKATTRIB` | both | bookings traced to a creator's link or code |
+| `UKFAVS` · `UKNOTIFY` | per side | saved items, and notifications derived from all of the above |
+
+To watch a full loop: publish a stay in `/app/`, open `/creator/` in another tab,
+apply to it from Discover, then answer it back in `/app/`.
 
 ## The marketing pages
 

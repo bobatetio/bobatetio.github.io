@@ -422,6 +422,7 @@ window.UK = (function () {
     }
     c.passed = false;
     c.stage = 1;
+    if (c.application && window.UKAPPLY) window.UKAPPLY.approve(c.application);
     c.dates = dates;
     c.briefSent = true;
     c.brief = finalBrief;
@@ -440,6 +441,9 @@ window.UK = (function () {
   function passCollab(collabId) {
     var c = byId(collabs, collabId);
     if (!c) return null;
+    /* an inquiry that came in as an application is answered on the shared
+       record, so the creator sees the no on their own side */
+    if (c.application && window.UKAPPLY) window.UKAPPLY.pass(c.application);
     var msg = { by:'hotel', at:'just now', tx:'Passed on this collaboration for now.', kind:'pass' };
     if (c.link) {
       pushSharedPatch(c, { passed:true, stage:'inquiry' });
@@ -958,6 +962,75 @@ window.UK = (function () {
 
   function byId(list, id) { return list.filter(function (x) { return x.id === id; })[0]; }
   function fmt(n) { return n >= 1000 ? (n/1000).toFixed(n >= 10000 ? 0 : 1).replace('.0','') + 'K' : String(n); }
+
+  /* ---- applications creators have actually sent ----
+     A creator applying to a published stay writes to the shared applications
+     record. This is where those arrive: each one becomes an inquiry in the
+     Collaborations list, the same shape as a seeded one, so the hotel reads it
+     with the controls it already has. Before this the application existed only
+     in the creator's own app and the hotel never learned anyone had applied. */
+  function hydrateApplications() {
+    var A = window.UKAPPLY;
+    if (!A) return;
+    var have = {};
+    collabs.forEach(function (c) { if (c.application) have[c.application] = 1; });
+    var mine = {};
+    stays.forEach(function (s) { mine[s.id] = 1; });
+
+    A.all().forEach(function (ap) {
+      if (!mine[ap.stay]) return;                 /* not one of our stays */
+      if (have[ap.id]) return;
+      if (ap.state === 'withdrawn') return;
+      /* the creator has to exist on the roster or the row cannot render; the
+         application carries enough to add them if they are new to us */
+      if (!byId(creators, ap.creator) && ap.creatorName) {
+        creators.push({
+          id: ap.creator, n: ap.creatorName, h: ap.creatorHandle || '',
+          img: ap.creatorImg || '', loc: ap.creatorCity || '',
+          f: ap.creatorReach || 0, type: 'Travel', cats: ['Travel'],
+          plats: [], stays: 0, ontime: 100, eng: '\u2014', rating: null,
+          free: 'Ask them', bio: '', proof: ''
+        });
+      }
+      collabs.unshift({
+        id: ap.id, who: ap.creator, stay: ap.stay,
+        stage: ap.state === 'approved' ? 1 : 0,
+        passed: ap.state === 'passed',
+        unread: ap.state === 'sent' ? 1 : 0,
+        when: ap.at || 'just now',
+        application: ap.id,
+        fresh: ap.state === 'sent',
+        msgs: (ap.msgs || []).map(function (m) {
+          return { by: m.by === 'creator' ? 'them' : 'hotel', at: m.at, tx: m.tx };
+        })
+      });
+    });
+  }
+
+  /* ---- stays this property has actually published ----
+     The seeded stays above are demonstration data and live only in memory. A
+     stay the hotel publishes is written to the shared registry instead, because
+     the creator app reads its Discover list out of that same record. Merging it
+     back in here is what makes a published stay survive a reload and sit in the
+     Hosted stays list beside the seeded ones. */
+  (function () {
+    var R = window.UKSTAYS;
+    if (!R) return;
+    var have = {};
+    stays.forEach(function (s) { have[s.id] = 1; });
+    R.forProperty(property.name).forEach(function (rec) {
+      if (!have[rec.id]) stays.unshift(R.toHotel(rec));
+    });
+    /* how many creators have applied is counted from the applications record
+       rather than stored on the stay, so the two can never disagree */
+    var A = window.UKAPPLY;
+    if (!A) return;
+    stays.forEach(function (s) {
+      var n = A.forStay(s.id).filter(function (x) { return x.state !== 'withdrawn'; }).length;
+      if (n) s.apps = n;
+    });
+    hydrateApplications();
+  })();
 
   return {
     STAGES: STAGES, creators: creators, stays: stays, collabs: collabs, packages: packages,
