@@ -234,8 +234,20 @@ account's dashboard is empty; the creator network and the live stays are not,
 and they are the reason someone signed up. `obBackdrop()` switches the view for
 exactly this.
 
-**Tier two** is a checklist at the top of the dashboard, and every line is asked
-of the live records — "Publish your first stay" is done when the registry holds
+**Tier two** is a checklist on the dashboard, under the greeting rather than above
+it, because a page that opens on a list of chores has not said hello yet. While
+anything is outstanding the line under the greeting is about setup and names what
+is actually left, derived from the live checklist rather than fixed.
+
+The rest of the dashboard waits. Everything below the four stats is a reading of
+activity — bookings over time, top creators, content you own — and on an account
+that has published nothing there is nothing to read; a chart drawn through zeroes
+does not look empty, it looks broken. That gate is on **having something to
+describe**, not on the checklist being finished: an established hotel that has
+simply never used the invite feature still has an outstanding task, and hiding
+twenty stays behind it would be absurd.
+
+Every line is asked of the live records — "Publish your first stay" is done when the registry holds
 one. It stops rendering entirely once nothing is left, because a finished
 checklist is clutter.
 

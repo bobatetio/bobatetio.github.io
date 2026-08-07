@@ -58,23 +58,53 @@
     ].filter(function (s) { return s.v > 0 || s.l === 'Waiting on you'; });
     var pipeTotal = done.length + active.length || 1;
 
-    return (window.UKONBOARD ? window.UKONBOARD.checklist('hotel') : '') +
-      '<div class="ukDashTop"><div>' +
+    /* The greeting comes first, then the checklist under it. A checklist above the
+       greeting made the page open on a list of chores from an account nobody had
+       said hello to yet. */
+    var setup = window.UKONBOARD ? window.UKONBOARD.tasks('hotel') : [];
+    var leftToDo = setup.filter(function (t) { return !t.done; });
+    /* nothing offered and nothing under way: there is no activity to report on */
+    var barren = !live.length && !D.collabs.length;
+
+    return '<div class="ukDashTop"><div>' +
         '<h2 class="ukDashTop_h">Good morning, Robert</h2>' +
-        '<p class="ukDashTop_p">' +
-          (needsYou.length ? needsYou.length + (needsYou.length === 1 ? ' collaboration needs' : ' collaborations need') + ' you today.' : 'Nothing is waiting on you today.') +
-          (ready.length ? ' A set of content has just landed.' : '') + '</p></div>' +
+        '<p class="ukDashTop_p">' + (leftToDo.length
+          /* While setup is unfinished the line is about setup, because nothing
+             else on the page is true yet: there is no work waiting on you when
+             you have not published anything for anyone to respond to. */
+          ? setupLine(leftToDo)
+          : (needsYou.length ? needsYou.length + (needsYou.length === 1 ? ' collaboration needs' : ' collaborations need') + ' you today.' : 'Nothing is waiting on you today.') +
+            (ready.length ? ' A set of content has just landed.' : '')) +
+        '</p></div>' +
         '</div>' +
 
+      (window.UKONBOARD ? window.UKONBOARD.checklist('hotel') : '') +
+
       '<div class="ukBento">' +
+        /* No movement badge on an account with nothing to have moved. The first
+           of these was hardcoded to at least +1 and the second reads a seeded
+           trend, so a five-minute-old hotel was told its content was up one and
+           its bookings up nine, against zero and zero. */
         kpi({ l:'Content you own', v:owned, n:'yours in perpetuity', go:'library',
-              d:'+' + Math.max(1, ready.length) }) +
+              d: barren ? '' : '+' + Math.max(1, ready.length) }) +
         kpi({ l:'Direct bookings', v:t.bookings, n:D.money(t.revenue) + ' attributed', go:'roi',
-              d:(delta >= 0 ? '+' : '') + delta, down:delta < 0 }) +
+              d: barren ? '' : (delta >= 0 ? '+' : '') + delta, down: !barren && delta < 0 }) +
         kpi({ l:'Stays open', v:live.length, n:applied + ' creators applied', go:'stays' }) +
         kpi({ l:'Waiting on you', v:needsYou.length,
               n:needsYou.length ? 'oldest is 8 days' : 'nothing outstanding', go:'collabs' }) +
       '</div>' +
+
+      /* Everything below the four stats is a reading of activity: bookings over
+         time, top creators, content you own. On an account that has published
+         nothing there is nothing for any of it to read, and a chart drawn through
+         zeroes does not look empty, it looks broken. It also buries the one thing
+         that matters on day one, which is the checklist above.
+
+         Gated on there being something to describe, NOT on the checklist being
+         finished. An established hotel that has simply never used the invite
+         feature still has an outstanding task, and hiding twenty stays and
+         fourteen collaborations behind that would be absurd. */
+      (barren ? '' :
 
       '<div class="ukBento">' +
         '<section class="ukCard c7"><div class="ukCard_h">' +
@@ -165,7 +195,22 @@
               V.who(cr, esc(cr.n), 'ukShot_by') + '</figcaption></figure>';
           }).join('') + '</div>' +
         '</section>' +
-      '</div>'
+      '</div>');
+  }
+
+  /* The line under the greeting while setup is unfinished. Derived from the live
+     checklist, so it names what is actually left rather than a fixed sentence
+     that goes stale the moment one is ticked. */
+  var COUNT_WORD = { 1:'One', 2:'Two', 3:'Three', 4:'Four', 5:'Five' };
+  function setupLine(left) {
+    var first = String(left[0].t).charAt(0).toLowerCase() + String(left[0].t).slice(1);
+    if (left.length === 1) {
+      return 'One thing left before creators can find you: ' + esc(first) + '.';
+    }
+    return (COUNT_WORD[left.length] || left.length) +
+      ' things left before creators can find you. Start by ' +
+      esc(first.replace(/^publish\b/, 'publishing').replace(/^invite\b/, 'inviting')
+               .replace(/^add\b/, 'adding').replace(/^write\b/, 'writing')) + '.';
   }
 
   V.dashboard = dashboard;
