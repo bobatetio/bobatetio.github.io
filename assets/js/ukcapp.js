@@ -335,8 +335,17 @@
     document.body.classList.add('is-onboarding');
     host.innerHTML = window.UKONBOARD.modalHtml('creator', obAt);
     if (window.UKSTAY && window.UKSTAY.clamp) window.UKSTAY.clamp(host);
-    var first = host.querySelector('input');
-    if (first) first.focus();
+    /* Focus back into the field, caret at the end. Every keystroke in the market
+       search repaints, because the ranked list under it IS the response to the
+       keystroke, and without this the input is replaced mid-word: the first
+       letter registers and the rest go nowhere. Same reason the hotel gate does
+       it for the city field. Hidden inputs are skipped, or the file picker on a
+       photographs step would steal it. */
+    var first = host.querySelector('input:not([type=file]):not([hidden])');
+    if (first) {
+      first.focus();
+      try { first.setSelectionRange(first.value.length, first.value.length); } catch (err) {}
+    }
   }
 
   document.addEventListener('click', function (e) {
@@ -389,6 +398,30 @@
       window.UKONBOARD.flush('creator');
       return paintOnboard();
     }
+    /* the chip picker from /creator/start/: pick, remove, and close on an
+       outside click, the same three behaviours it has always had */
+    if ((el = e.target.closest('[data-chip]'))) {
+      var dq = window.UKONBOARD.destq();
+      var cur = (window.UKONBOARD.get('creator').dests || []).slice();
+      var v = el.dataset.val;
+      if (cur.indexOf(v) < 0 && cur.length < ((window.UKCHIPS && window.UKCHIPS.CAP) || 5)) cur.push(v);
+      window.UKONBOARD.set('creator', { dests: cur });
+      dq.q = ''; dq.open = false;
+      window.UKONBOARD.apply('creator');
+      return paintOnboard();
+    }
+    if ((el = e.target.closest('[data-unchip]'))) {
+      var cur2 = (window.UKONBOARD.get('creator').dests || []).filter(function (k) {
+        return k !== el.dataset.val;
+      });
+      window.UKONBOARD.set('creator', { dests: cur2 });
+      window.UKONBOARD.apply('creator');
+      return paintOnboard();
+    }
+    if (window.UKONBOARD.destq().open && !e.target.closest('.ukPickr')) {
+      var dq2 = window.UKONBOARD.destq(); dq2.open = false; dq2.q = '';
+      paintOnboard();
+    }
     if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
     if (e.target.closest('[data-ob-next]')) {
       var list = window.UKONBOARD.steps('creator');
@@ -410,6 +443,14 @@
   });
 
   document.addEventListener('input', function (e) {
+    /* typing in the market search repaints, because the ranked list under it IS
+       the response to the keystroke */
+    var mq = e.target.closest && e.target.closest('.ukPickr_q');
+    if (mq && window.UKONBOARD) {
+      var dq = window.UKONBOARD.destq();
+      dq.q = mq.value; dq.open = true;
+      return paintOnboard();
+    }
     var el = e.target.closest && e.target.closest('[data-ob-field]');
     if (!el || !window.UKONBOARD) return;
     var patch = {}; patch[el.dataset.obField] = el.value;

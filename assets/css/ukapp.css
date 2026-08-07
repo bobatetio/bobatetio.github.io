@@ -4870,6 +4870,15 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
    its native size. Anything past it is an upscale, which on a cutout with fine
    detail in the phone screens is the first thing that would look soft. */
 .ukObArt_i{max-width:82%;width:auto;height:auto;display:block;margin:auto;grid-area:1/1}
+
+/* ---- per side, because the two illustrations are composed differently ----
+   The hotel's is a plane that fades out at the bottom, so it can run under the
+   button: there is nothing down there to cut. The creator's is a stack of cards
+   with hard edges all the way to the base, and the button sliced straight
+   through them. It sits above the button instead, which needs a little less
+   width to fit between the copy and the nav. */
+.ukObArt--creator{bottom:16%;height:48%}
+.ukObArt--creator .ukObArt_i{max-width:70%}
 /* The placeholder is still a block: with no artwork there is nothing to sit
    behind, and an empty layer would be invisible rather than a stand-in. */
 /* The placeholder occupies the same band, so a side without artwork yet shows

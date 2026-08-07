@@ -54,7 +54,9 @@ window.UKONBOARD = (function () {
        platforms, this was left describing the old questions — so an established
        account came up with the gate in front of it, having answered everything
        the gate no longer asked. */
-    creator: { shoots:['Wellness & spa','Luxury & design'],
+    creator: { intent:'pitch',
+               dests:['c-pt-lisbon','c-es-barcelona'],
+               shoots:['Wellness & spa','Luxury & design'],
                formats:['Reels','Photos'],
                plats:[{ k:'ig', handle:'amaratravels', f:12400 },
                       { k:'tt', handle:'amaratravels', f:8600 }] }
@@ -97,14 +99,29 @@ window.UKONBOARD = (function () {
          platform — nothing shown here turns out to have been staged. */
       render: function () {
         return ask('Welcome to Ukreate',
-          'Hotels trade nights they would rather fill for content. You shoot the ' +
-          'property, they host your stay, and everything you make stays yours to post. ' +
-          'Two minutes and they can start finding you.', '', { mark: true });
+          'Hotels trade unsold nights for content. You shoot, they host, and everything ' +
+          'you make stays yours to post. Two minutes and they can find you.',
+          '', { mark: true });
       },
       art: 'creator',
       bare: true,          /* not a question: no rail, and it does not count */
       done: function () { return true; },
       cta: 'Get started'
+    },
+    {
+      k: 'intent',
+      /* The original asked this first and the gate dropped it, so the hotel was
+         asked what it came for and the creator was not. Same three answers. */
+      render: function (f) {
+        return ask('What are you hoping to do here?',
+          'There is no wrong answer. It only decides what we show you first.',
+          intents(f.intent, [
+            { k:'pitch',   t:'Find hotels to pitch',     s:'Jump straight into real matches.' },
+            { k:'profile', t:'Build my profile',         s:'Get my platforms and work set up.' },
+            { k:'look',    t:'See how this works first', s:'Look around before connecting anything.' }
+          ]));
+      },
+      done: function (f) { return !!f.intent; }
     },
     {
       k: 'shoots',
@@ -140,6 +157,30 @@ window.UKONBOARD = (function () {
           picks(((window.UKVOCAB || {}).FORMATS || []), picked, 'formats', CAP));
       },
       done: function (f) { return (f.formats || []).length > 0; }
+    },
+    {
+      k: 'dests',
+      /* MISSING UNTIL NOW, and it is the question the original called the one
+         that decides matches: "Hotels match on this before anything else."
+         Without it a creator's fit score was computed against no markets at all.
+         THE picker from /creator/start/, against the same D.DESTS. */
+      render: function (f) {
+        var C = window.UKCHIPS, D = window.UKC;
+        var picked = f.dests || [];
+        if (!C || !D || !D.DESTS) return ask('Where do you travel?', '', '');
+        return ask('Tell us where you’re headed.',
+          'The places you already travel, and the ones you would go tomorrow. ' +
+          'Hotels match on this before anything else.',
+          '<p class="ukField_l">Markets you cover' + C.counter(picked.length) + '</p>' +
+          C.html({
+            key:'dests', qkey:'destQ', q: DESTQ.q, open: DESTQ.open,
+            chosen: picked, options: D.DESTS,
+            find: function (k) { return D.destOf(k); },
+            ph:'Try Miami, Bali, Lagos…', label:'Markets you cover',
+            idle: false          /* fifteen hundred markets cannot be browsed */
+          }));
+      },
+      done: function (f) { return (f.dests || []).length > 0; }
     },
     {
       k: 'plats',
@@ -278,7 +319,7 @@ window.UKONBOARD = (function () {
       return '<div class="ukObArt is-empty" data-obart>' +
         '<span class="ukObArt_ph" aria-hidden="true">Image</span></div>';
     }
-    return '<div class="ukObArt" data-obart>' +
+    return '<div class="ukObArt ukObArt--' + esc(side) + '" data-obart>' +
       '<img class="ukObArt_i" src="/assets/img/onboard-welcome-' + side + '.png" alt="">' +
     '</div>';
   }
@@ -300,6 +341,7 @@ window.UKONBOARD = (function () {
   /* How you found the place is view state, not an answer, so it lives here and
      not in the saved record. */
   var CITYQ = { q: '', open: false };
+  var DESTQ = { q: '', open: false };
   function liveState(f) {
     if (!LIVE.plats) LIVE.plats = (f.plats || []).slice();
     return LIVE;
@@ -440,6 +482,11 @@ window.UKONBOARD = (function () {
         if (me) { me.cats = f.shoots.slice(); me.type = f.shoots[0]; }
       }
       if (f.formats && f.formats.length && me) me.makes = f.formats.slice();
+      /* what the matcher scores a stay's city against */
+      if (f.dests && f.dests.length) {
+        if (me) me.dests = f.dests.slice();
+        if (M)  M.dests = f.dests.slice();
+      }
       /* Connected platforms give the real handle and the real follower count, so
          the band is read off them rather than asked for. */
       var P = window.UKPLATCONNECT;
@@ -540,6 +587,7 @@ window.UKONBOARD = (function () {
     /* the connector mutates this as its OAuth beats play out */
     live: function () { return liveState(get('creator')); },
     cityq: function () { return CITYQ; },
+    destq: function () { return DESTQ; },
     shots: function () { return SHOTS; },
     flushShots: flushShots,
     flush: flushPlats
