@@ -348,7 +348,10 @@
     var replied = D.pitches.filter(function (p) { return p.status !== 'Sent'; });
     var waiting = D.pitches.filter(function (p) { return p.status === 'Sent'; });
     var next    = D.stays.slice().sort(function (a, b) { return D.scoreFor(b) - D.scoreFor(a); })[0];
-    var top     = D.me.work[0];
+    /* A first-hour account has delivered nothing, sent nothing and earned
+       nothing. Every reading below has to survive that — the greeting used to
+       reach into work[0] and take a title from it. */
+    var top     = D.me.work[0] || null;
 
     /* Pitches AND the stays they turned into, on one chart and one scale. A count
        of pitches on its own is effort with no outcome attached to it; the gap
@@ -357,23 +360,28 @@
       return { k: r.m, v: r.pitches, hi: i === arr.length - 1 };
     });
     var monthsB = D.earnings.months.map(function (r) { return { k: r.m, v: r.booked }; });
-    var lastM = D.earnings.months[D.earnings.months.length - 1];
-    var prevM = D.earnings.months[D.earnings.months.length - 2];
+    var lastM = D.earnings.months[D.earnings.months.length - 1] || { pitches:0 };
+    var prevM = D.earnings.months[D.earnings.months.length - 2] || { pitches:0 };
     var delta = lastM.pitches - prevM.pitches;
-    var rate  = Math.round(replied.length / D.pitches.length * 100);
+    var rate  = D.pitches.length ? Math.round(replied.length / D.pitches.length * 100) : 0;
 
     return (window.UKONBOARD ? window.UKONBOARD.checklist('creator') : '') +
       '<div class="ukDashTop"><div>' +
         '<h2 class="ukDashTop_h">Morning, ' + esc(D.me.n.split(' ')[0]) + '.</h2>' +
         '<p class="ukDashTop_p">' +
           (needs.length ? needs.length + (needs.length === 1 ? ' collab needs' : ' collabs need') + ' you today.'
-                        : 'Nothing needs you right now, so it is a good day to pitch.') +
-          ' Your ' + esc(top.t.toLowerCase()) + ' is still climbing.</p></div>' +
+                        : D.pitches.length
+                          ? 'Nothing needs you right now, so it is a good day to pitch.'
+                          : 'Nothing is out yet. Pick a stay you like and we will write the first pitch with you.') +
+          (top ? ' Your ' + esc(top.t.toLowerCase()) + ' is still climbing.' : '') +
+        '</p></div>' +
         '</div>' +
 
       '<div class="ukBento">' +
-        kpi({ l:'Pitches sent', v:D.pitches.length, n:'keep it moving', go:'pitch',
-              d:(delta >= 0 ? '+' : '') + delta, down:delta < 0 }) +
+        kpi({ l:'Pitches sent', v:D.pitches.length,
+              n: D.pitches.length ? 'keep it moving' : 'none sent yet', go:'pitch',
+              /* no movement is not a rise: "+0" in a green chip reads as progress */
+              d: delta ? (delta > 0 ? '+' : '') + delta : null, down: delta < 0 }) +
         kpi({ l:'Replies', v:replied.length, n:rate + '% reply rate', go:'pitch' }) +
         kpi({ l:'Stays booked', v:booked.length, n:'from ' + D.pitches.length + ' pitches', go:'collabs' }) +
         kpi({ l:'Stays value', v:D.money(D.earnings.value), n:'across ' + D.earnings.nights + ' nights', go:'earn' }) +
@@ -383,14 +391,21 @@
         '<section class="ukCard c7"><div class="ukCard_h">' +
           '<h3 class="ukCard_t">Pitches against stays</h3>' +
           '<button class="ukCard_more" type="button" data-goto="pitch">Pitch tracker</button></div>' +
-          '<p class="ukCard_sub">Pitching is a numbers game at every size. More out means more back. ' +
-            'The stays that landed came to ' + D.earnings.nights + ' nights you did not pay for.</p>' +
-          CH.area({ data:months, data2:monthsB, unit:'pitches', unit2:'stays',
+          '<p class="ukCard_sub">Pitching is a numbers game at every size. More out means more back.' +
+            (D.earnings.nights
+              ? ' The stays that landed came to ' + D.earnings.nights + ' nights you did not pay for.'
+              : '') + '</p>' +
+          (months.some(function (r) { return r.v; })
+            ? CH.area({ data:months, data2:monthsB, unit:'pitches', unit2:'stays',
                     name:'Pitches sent', name2:'Stays landed',
                     /* the axis stops just above the highest real reading rather
                        than at a round number well above it */
                     max:Math.max.apply(null, months.concat(monthsB).map(function (r) { return r.v; })),
-                    label:'Pitches sent and stays landed by month' }) +
+                    label:'Pitches sent and stays landed by month' })
+            /* zero in every month draws a flat line along the axis, which looks
+               like a reading and is not one */
+            : '<p class="ukCard_sub">Nothing to plot yet. Both lines start the week ' +
+              'you send your first pitch.</p>') +
         '</section>' +
 
         '<section class="ukCard c5"><div class="ukCard_h">' +
@@ -474,11 +489,12 @@
   function earn() {
     var e = D.earnings;
     var booked = D.pitches.filter(function (p) { return p.status === 'Booked'; }).length;
-    var rate = Math.round(booked / D.pitches.length * 100);
+    var rate = D.pitches.length ? Math.round(booked / D.pitches.length * 100) : 0;
     var months = e.months.map(function (r, i, arr) {
       return { k:r.m, v:r.pitches, hi:i === arr.length - 1 };
     });
-    var lastM = e.months[e.months.length - 1], prevM = e.months[e.months.length - 2];
+    var lastM = e.months[e.months.length - 1] || { pitches:0 };
+    var prevM = e.months[e.months.length - 2] || { pitches:0 };
     var delta = lastM.pitches - prevM.pitches;
 
     return '<div class="ukDashTop"><div>' +
@@ -496,7 +512,9 @@
               d:(delta >= 0 ? '+' : '') + delta, down:delta < 0 }) +
         kpi({ l:'Stays landed', v:e.stays, n:'in the last six months', go:'collabs' }) +
         kpi({ l:'Nights hosted', v:e.nights, n:'rooms you did not pay for', go:'collabs' }) +
-        kpi({ l:'Pitch to booking', v:rate + '%', n:'roughly one in every ' + Math.round(D.pitches.length / booked), go:'pitch' }) +
+        kpi({ l:'Pitch to booking', v:rate + '%',
+              n: booked ? 'roughly one in every ' + Math.round(D.pitches.length / booked) : 'nothing sent yet',
+              go:'pitch' }) +
         (function () {
           var A = window.UKATTRIB;
           if (!A) return '';

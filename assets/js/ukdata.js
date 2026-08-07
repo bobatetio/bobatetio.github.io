@@ -1036,6 +1036,13 @@ window.UK = (function () {
     });
   }
 
+  /* ---- which account are we looking at? ----
+     In the first-time view none of THIS property's activity has happened yet:
+     no stays offered, no collaborations, no content owned, no bookings traced.
+     The creator roster is untouched — it is the market, it does not belong to
+     this hotel, and it is the reason they signed up. See ukdemo.js. */
+  if (window.UKDEMO) window.UKDEMO.strip([stays, collabs, assets, attribution]);
+
   /* ---- the stays this property is actually offering ----
      Every live stay goes into the shared registry, which is what the creator app
      reads its Discover list out of. Before this the creator side carried its own

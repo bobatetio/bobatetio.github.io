@@ -130,6 +130,26 @@ of the market after `ukcdata.js` runs, so the registry is hydrated from there �
 hydrating earlier let a hotel stay take an id before the property that already
 owned it had loaded.
 
+### Two demo views
+
+The seeded data describes an **established** account. To see the first hour
+instead — which is the experience every real user actually has — append
+`?as=new`, or use **Demo view** at the bottom of the account menu.
+
+    /app/?as=new        a hotel that signed up five minutes ago
+    /creator/?as=new    a creator who has done nothing yet
+    /app/?as=live       the default: an account that has been running a while
+
+The cut is **yours versus the market**. In the first-time view your own activity
+is empty — no stays, no collaborations, no content, no pitches, no earnings —
+but the creator network and the published stays are untouched, because they do
+not belong to you and they are the reason you signed up. `ukdemo.js` does the
+stripping; the view also implies the onboarding state, since an established
+account has by definition already onboarded.
+
+This is a review control, not a product feature. Delete `ukdemo.js`, its two
+`strip()` calls and the menu slot to remove it.
+
 ### Onboarding
 
 Sign-up lands you in the app, not on a form. Two tiers, in `ukonboard.js`:

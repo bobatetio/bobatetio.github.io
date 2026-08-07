@@ -620,6 +620,21 @@ window.UKC = (function () {
     placeStays();
     hydrateFavs && hydrateFavs();
   }
+  /* ---- which account are we looking at? ----
+     In the first-time view this creator has done nothing yet: no collaborations,
+     no pitches out, no delivered work, nothing earned. The stays on offer are
+     untouched — they belong to hotels, not to her, and they are what she came
+     for. See ukdemo.js. */
+  if (window.UKDEMO && window.UKDEMO.isNew()) {
+    window.UKDEMO.strip([collabs, pitches, me.work, me.topStays, me.partnerWork, me.plats]);
+    earnings.stays = 0; earnings.nights = 0; earnings.value = 0;
+    earnings.months = (earnings.months || []).map(function (m) {
+      return { m: m.m, pitches: 0, booked: 0 };
+    });
+    me.verified = false; me.member = false; me.freePitchUsed = false;
+    me.itinerary = null;
+  }
+
   /* ---- one home, one state ----
      The same hotel relationship was being tracked in two places with two state
      models that disagreed: Fjordheim Lodge was "Complete" in Your collabs and
