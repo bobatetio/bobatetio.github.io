@@ -4908,3 +4908,134 @@ body.is-onboarding #ukDemoDock{right:auto;left:18px}
 body.is-onboarding .ukDock{align-items:flex-start}
 body.is-onboarding .ukDock_tab{align-self:flex-start}
 @media (max-width:560px){ body.is-onboarding #ukDemoDock{left:12px} }
+
+
+/* ---- the platform connector and the welcome peek, shared ----
+   Both were written for the creator's start page and lived in ukcreator.css.
+   Onboarding runs inside both apps now, and the connector is one implementation
+   used by the start page and the in-app gate, so its styles belong in the sheet
+   both read. */
+.ukBuckets{display:grid;gap:9px;margin:0 0 12px}
+.ukBucket{
+  padding:9px 10px 10px;border-radius:15px;
+  background:var(--surface-2);border:1.5px dashed transparent;
+  transition:border-color .15s ease,background .15s ease;
+}
+.ukBucket.is-over{border-color:var(--uk-gold);background:var(--hover)}
+.ukBucket .ukPlatRow{background:var(--surface);border:1px solid var(--line);cursor:grab}
+.ukBucket .ukPlatRow + .ukPlatRow{margin-top:7px}
+.ukBucket--main{background:var(--active-bg);box-shadow:inset 0 0 0 1px var(--active-ring)}
+.ukBucket--sec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ukBucket--sec .ukBucket_l{grid-column:1/-1}
+.ukBucket--sec .ukBucket_e{grid-column:1/-1}
+.ukBucket--sec .ukPlatRow,
+.ukBucket--sec .ukPlatRow + .ukPlatRow{margin:0}
+.ukBucket--sec .ukPlatRow_n,
+.ukBucket--sec .ukPlatRow_h{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukBucket_l{
+  margin:0 0 7px 2px;font:700 10px/1 'Lato',sans-serif;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-3);
+}
+.ukBucket_e{margin:2px 2px 4px;font:400 12.5px/1.5 'Lato',sans-serif;color:var(--text-3)}
+.ukPlatRow{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 12px;border-radius:13px;
+  background:var(--surface-2);border:1px solid var(--line);
+}
+.ukPlatRow.is-main{box-shadow:inset 0 0 0 1px var(--active-ring)}
+.ukPlatRow.is-dragging{opacity:.45;cursor:grabbing}
+.ukPlatRow_b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.ukPlatRow_n{font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukPlatRow_n{display:flex;align-items:center;gap:7px}
+.ukPlatRow_h{
+  font:400 12px/1.35 'Lato',sans-serif;color:var(--text-3);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ukPlatRow_f{flex:0 0 auto;font:700 13.5px/1 'Lato',sans-serif;color:var(--text);white-space:nowrap}
+.ukPlatRow_x{
+  flex:0 0 auto;width:26px;height:26px;border-radius:8px;cursor:pointer;
+  border:0;background:none;color:var(--text-3);font:400 17px/1 'Lato',sans-serif;
+}
+.ukPlatRow_x:hover{background:var(--hover);color:var(--text)}
+.ukPlatRow_x:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukPlatMark{flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:block}
+.ukGrip{
+  flex:0 0 auto;width:10px;height:16px;opacity:.42;
+  background:radial-gradient(circle,currentColor 1.1px,transparent 1.2px) 0 0/5px 5px;
+  color:var(--text-3);
+}
+.ukPick--plat{display:inline-flex;align-items:center;gap:8px}
+.ukPick--plat.is-busy{opacity:.75;cursor:progress}
+.ukChoice--plats{gap:8px}
+.ukChoice--plats .ukPick[disabled]{opacity:.45;cursor:default}
+.ukOAuth_scrim{
+  position:fixed;inset:0;z-index:80;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  background:rgba(6,24,41,.56);backdrop-filter:blur(2px);
+}
+.ukOAuth_card{
+  width:min(380px,100%);border-radius:20px;background:var(--card-solid);
+  box-shadow:0 30px 70px rgba(4,16,22,.4);padding:26px 24px 24px;
+  animation:ukOAuthIn .22s ease both;
+}
+.ukOAuth_mid{display:flex;flex-direction:column;align-items:center;gap:16px;padding:20px 4px 8px;text-align:center}
+.ukOAuth_spin{
+  width:30px;height:30px;border-radius:50%;
+  border:3px solid var(--line);border-top-color:var(--uk-gold);
+  animation:ukOAuthSpin .8s linear infinite;
+}
+.ukOAuth_t{margin:0;font:600 14px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukOAuth_who{display:flex;align-items:center;gap:10px;font:700 13px/1 'Lato',sans-serif;color:var(--text-2)}
+.ukOAuth_who .ukPlatMark{width:26px;height:26px}
+.ukOAuth_h{
+  margin:16px 0 0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:20px;line-height:1.3;color:var(--text);text-wrap:balance;
+}
+.ukOAuth_list{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:9px}
+.ukOAuth_list li{
+  position:relative;padding-left:20px;font:400 13.5px/1.45 'Lato',sans-serif;color:var(--text-2);
+}
+.ukOAuth_list li::before{
+  content:'';position:absolute;left:2px;top:6px;width:5px;height:5px;
+  border-radius:50%;background:var(--uk-gold);
+}
+.ukOAuth_row{display:flex;gap:10px;margin-top:22px}
+.ukOAuth_row .ukGhost,.ukOAuth_row .ukBtn{flex:1 1 0;justify-content:center}
+.ukOAuth_p{margin:8px 0 0;font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text-3)}
+.ukPeek{margin-top:18px}
+.ukPeek_row{display:flex;gap:10px;flex-wrap:wrap}
+.ukPeek_card{
+  flex:1 1 120px;max-width:150px;display:flex;flex-direction:column;gap:6px;
+  border-radius:14px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);
+}
+.ukPeek_card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.ukPeek_n{padding:0 10px 9px;font:600 11.5px/1.3 'Lato',sans-serif;color:var(--text-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ukPeek_cap{margin:9px 0 0;font:400 12.5px/1.5 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
+.ukHint--drag{margin:10px 0 0;color:var(--text-3)}
+
+
+/* ---- the onboarding progress bar ----
+   A filled bar with Back on its left and the count on its right, in place of a
+   row of numbered dots. Dots put every step on screen at once, which makes a
+   four-step flow read as a form with four sections; a bar says only how far
+   along you are, which is the one thing worth saying. */
+.ukObBar{margin:0 0 20px}
+.ukObBar_t{height:4px;border-radius:9999px;background:var(--tag-done-bg);overflow:hidden}
+.ukObBar_t i{display:block;height:100%;border-radius:9999px;background:var(--uk-gold);
+  transition:width .35s cubic-bezier(.4,0,.2,1)}
+.ukObBar_r{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.ukObBar_back{display:inline-flex;align-items:center;gap:5px;border:0;background:none;padding:0;
+  cursor:pointer;font:700 12.5px/1 'Lato',sans-serif;color:var(--accent)}
+.ukObBar_back svg{width:14px;height:14px}
+.ukObBar_back:hover{color:var(--text)}
+.ukObBar_back:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px;border-radius:4px}
+.ukObBar_n{font:700 12.5px/1 'Lato',sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.ukObBar_n em{font-style:normal;color:var(--text-3)}
+@media (prefers-reduced-motion:reduce){ .ukObBar_t i{transition:none} }
+
+/* the connector and the peek, inside the gate's modal */
+.ukOb_modal .ukBuckets{margin-top:4px}
+.ukOb_modal .ukChoice--plats{margin-top:12px}
+.ukOb_modal .ukPeek{margin-top:18px}
+.ukOb_modal .ukOAuth_scrim{position:fixed;inset:0;z-index:95}

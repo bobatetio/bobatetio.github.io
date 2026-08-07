@@ -160,11 +160,18 @@ nothing else references it.
 Sign-up lands you in the app, not on a form. Two tiers, in `ukonboard.js`:
 
 **Tier one** is a short gate — a modal over the live app, one question per
-screen. It asks only for what the product needs in order to tell the truth: a
-creator's subjects and size band (every fit score is computed against the band),
-a hotel's name, city and category (what creators read, and what the match runs
-on). Four screens for a hotel, three for a creator, deliberately asymmetric — a
-property signing up has made a considered decision, a creator is phone-first.
+screen, with a filled progress bar rather than a row of numbered dots.
+
+    creator   welcome → what you shoot → what you make → connect your platforms
+    hotel     welcome → what brings you here → name → city → what you are known for
+
+It asks only for what the product needs in order to tell the truth. Note that
+the creator never types a follower count: `ukplatconnect.js` is the connector the
+onboarding page has always used — two buckets with a main profile, drag to change
+which is main, and an OAuth stand-in that redirects, asks consent, sometimes
+fails and can be retried. A connected platform gives the real handle and the real
+number, and the **size band falls out of it** rather than being estimated. That
+module is shared by the start page and the gate; do not write a second one.
 
 Behind the modal sits the **marketplace**, not the user's own dashboard. A new
 account's dashboard is empty; the creator network and the live stays are not,

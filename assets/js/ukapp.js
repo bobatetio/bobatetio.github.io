@@ -647,8 +647,11 @@
     window.UKONBOARD.set('hotel', patch);
     /* the Continue button enables on the first keystroke, so it is never a dead
        control sitting there as an instruction you cannot follow */
+    var ready = window.UKONBOARD.steps('hotel')[obAt].done(window.UKONBOARD.get('hotel'));
     var go = document.querySelector('[data-ob-next]');
-    if (go) go.disabled = !window.UKONBOARD.steps('hotel')[obAt].done(window.UKONBOARD.get('hotel'));
+    if (go) go.disabled = !ready;
+    var hint = document.querySelector('[data-ob-enter]');
+    if (hint) hint.hidden = !ready;
   });
 
   function go(next) {

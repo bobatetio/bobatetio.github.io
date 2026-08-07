@@ -43,8 +43,16 @@ window.UKONBOARD = (function () {
      account's full data behind a first-time gate, which is a state no real
      account is ever in. */
   var SEEDED = {
-    hotel:   { intent:'fill',  name:'MiraGrace Estate', city:'Miami, Florida', cat:'Wellness & spa' },
-    creator: { intent:'pitch', shoots:['Wellness & spa'], band:'5K - 25K' }
+    hotel:   { intent:'fill', name:'MiraGrace Estate', city:'Miami, Florida', cat:'Wellness & spa' },
+    /* Matches the STEPS above, not an older set of them. When the creator flow
+       gained "what do you make" and swapped a self-declared band for connected
+       platforms, this was left describing the old questions — so an established
+       account came up with the gate in front of it, having answered everything
+       the gate no longer asked. */
+    creator: { shoots:['Wellness & spa','Luxury & design'],
+               formats:['Reels','Photos'],
+               plats:[{ k:'ig', handle:'amaratravels', f:12400 },
+                      { k:'tt', handle:'amaratravels', f:8600 }] }
   };
   function get(side) {
     var v = load()[side];
@@ -77,20 +85,19 @@ window.UKONBOARD = (function () {
 
   var CREATOR = [
     {
-      k: 'intent',
-      /* Borrowed from the original creator onboarding, unchanged. It is the one
-         question that earns a screen without filling a field: it decides what we
-         show first, so the rest of the session is shaped by the answer. */
-      render: function (f) {
-        return ask('What are you hoping to do here?',
-          'No wrong answer — this just helps us show you the right thing first.',
-          intents(f.intent, [
-            { k:'pitch',   t:'Find hotels to pitch',     s:'Jump straight into real matches.' },
-            { k:'look',    t:'See how this works first', s:'Look around before setting anything up.' },
-            { k:'profile', t:'Build my profile',         s:'Get my work and platforms set up.' }
-          ]));
+      k: 'welcome',
+      /* The original onboarding opened on a welcome, not a question, and it was
+         right to: the first screen has to say what this is before it asks for
+         anything. Same words, same peek at three real hotels already on the
+         platform — nothing shown here turns out to have been staged. */
+      render: function () {
+        return ask('Welcome to Ukreate',
+          'Hotels host creators on nights they would rather see used than empty — you shoot, ' +
+          'they host, you keep everything you make. Two minutes gets you set up so they can ' +
+          'find you.', peek('creator'));
       },
-      done: function (f) { return !!f.intent; }
+      done: function () { return true; },
+      cta: 'Get started'
     },
     {
       k: 'shoots',
@@ -107,21 +114,57 @@ window.UKONBOARD = (function () {
       done: function (f) { return (f.shoots || []).length > 0; }
     },
     {
-      k: 'band',
+      k: 'formats',
+      /* This was missing entirely, and it is a different question. What you
+         shoot says whose world this is; what you make says what a hotel actually
+         receives — a wellness creator might be reels-only or might shoot reels,
+         photo sets and a drone pass, and a hotel that needs UGC video is not
+         served by a photo-only creator however well the niche fits. Same
+         vocabulary the hotel's own deliverables use, so a creator's answer and a
+         hotel's ask are always the same words. */
       render: function (f) {
-        var B = (window.UKC && window.UKC.BANDS) || ['Under 5K','5K - 25K','25K - 100K','100K+'];
-        return ask('How big is your audience?',
-          'Roughly is fine. Hotels match against this, and plenty of stays go to ' +
-          'creators at the smaller end — a following that actually watches is ' +
-          'worth more than a big one that scrolls past.',
-          picks(B, f.band ? [f.band] : [], 'band', 1) +
-          '<p class="ukWhy">Connect your platforms later and this is replaced by the real number.</p>');
+        var picked = f.formats || [];
+        var CAP = (window.UKVOCAB && window.UKVOCAB.MAX_PICKS) || 5;
+        return ask('And what do you make?',
+          'Reels, photo sets, drone passes. This is what a hotel actually receives, ' +
+          'and it is a different question from what you shoot.',
+          '<p class="ukField_l">What kind of content' +
+            '<span class="ukCount2">' + picked.length + ' of ' + CAP + '</span></p>' +
+          picks(((window.UKVOCAB || {}).FORMATS || []), picked, 'formats', CAP));
       },
-      done: function (f) { return !!f.band; }
+      done: function (f) { return (f.formats || []).length > 0; }
+    },
+    {
+      k: 'plats',
+      /* The real connector, the one the onboarding page has always used — two
+         buckets, drag to change which is main, and an OAuth stand-in that
+         redirects, asks consent and sometimes fails. It replaces a pill asking
+         the creator to estimate their own audience: a connected platform gives
+         the real number, and the band falls out of it. */
+      render: function (f) {
+        var P = window.UKPLATCONNECT;
+        if (!P) return ask('Where do you post?', '', '');
+        return ask('Let’s start with where you post.',
+          'Pick the profiles you already post from. We read your work from them, ' +
+          'so there is nothing to upload.',
+          P.body(liveState(f)));
+      },
+      done: function (f) { return (f.plats || []).length > 0; }
     }
   ];
 
   var HOTEL = [
+    {
+      k: 'welcome',
+      render: function () {
+        return ask('Welcome to Ukreate',
+          'Creators shoot your property in exchange for nights you were unlikely to sell, and ' +
+          'you keep everything they make. A minute gets you set up so they can find you.',
+          peek('hotel'));
+      },
+      done: function () { return true; },
+      cta: 'Get started'
+    },
     {
       k: 'intent',
       render: function (f) {
@@ -164,6 +207,38 @@ window.UKONBOARD = (function () {
       done: function (f) { return !!f.cat; }
     }
   ];
+
+  /* A glimpse, not a pitch — real rows already on the platform, so nothing on
+     the welcome screen turns out to have been staged. The original onboarding's
+     .ukPeek, with each side looking at the other side of the market. */
+  function peek(side) {
+    var rows = side === 'creator'
+      ? ((window.UKC && window.UKC.stays) || []).slice(0, 3).map(function (s2) {
+          return { img: s2.img, n: s2.hotel }; })
+      : ((window.UK && window.UK.creators) || []).slice(0, 3).map(function (c) {
+          return { img: c.img, n: c.n }; });
+    if (!rows.length) return '';
+    return '<div class="ukPeek" aria-hidden="true"><div class="ukPeek_row">' +
+      rows.map(function (r) {
+        return '<span class="ukPeek_card"><img src="' + r.img + '" alt="" loading="lazy" ' +
+          'decoding="async"><span class="ukPeek_n">' + esc(r.n) + '</span></span>';
+      }).join('') + '</div>' +
+      '<p class="ukPeek_cap">' + (side === 'creator'
+        ? 'A few of the hotels already on Ukreate, looking for creators right now'
+        : 'A few of the creators already on Ukreate, looking for stays right now') +
+      '</p></div>';
+  }
+
+  /* The connector mutates its own state object as the OAuth beats play out, so
+     it needs a live one rather than a fresh read of storage each paint. */
+  var LIVE = {};
+  function liveState(f) {
+    if (!LIVE.plats) LIVE.plats = (f.plats || []).slice();
+    return LIVE;
+  }
+  function flushPlats(side) {
+    if (LIVE.plats) set(side, { plats: LIVE.plats.slice() });
+  }
 
   /* ---- the pieces, all of them already in the product ---- */
   function ask(h, p, body) {
@@ -210,18 +285,25 @@ window.UKONBOARD = (function () {
     return list.length - 1;
   }
 
+  /* A filled bar with Back on its left and the count on its right, rather than a
+     row of numbered dots. Dots put every step on screen at once, which makes a
+     four-step flow look like a form with four sections; a bar says only how far
+     along you are, which is the one thing worth saying. */
   function railHtml(side, at) {
-    var f = get(side);
-    return '<ol class="ukStart_rail ukOb_rail" aria-label="Progress">' +
-      steps(side).map(function (s, i) {
-        var done = i < at && s.done(f);
-        return '<li class="' + (done ? 'is-done' : i === at ? 'is-now' : '') + '">' +
-          '<span class="ukStart_dot">' + (done
-            ? '<svg class="ukTick" viewBox="0 0 12 12" aria-hidden="true">' +
-              '<path d="M2.6 6.35 4.85 8.6 9.4 3.75" fill="none" stroke="currentColor" ' +
-              'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-            : i + 1) + '</span></li>';
-      }).join('') + '</ol>';
+    var list = steps(side);
+    var pct = Math.round((at) / (list.length - 1) * 100);
+    return '<div class="ukObBar">' +
+        '<div class="ukObBar_t" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="ukObBar_r">' +
+          (at > 0
+            ? '<button class="ukObBar_back" type="button" data-ob-back>' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+              'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              '<path d="m15 18-6-6 6-6"/></svg>Back</button>'
+            : '<span></span>') +
+          '<span class="ukObBar_n">' + (at + 1) + '<em>/' + list.length + '</em></span>' +
+        '</div>' +
+      '</div>';
   }
 
   /* The modal, in the hotel app's own .ukModalWrap / .ukModal shell so it is the
@@ -236,18 +318,19 @@ window.UKONBOARD = (function () {
     return '<div class="ukModalWrap ukOb" data-ob-wrap>' +
       '<div class="ukModal ukOb_modal" role="dialog" aria-modal="true" aria-label="Set up your account">' +
         railHtml(side, at) +
-        '<p class="ukOb_count">' + (at + 1) + ' of ' + list.length + '</p>' +
         s.render(f) +
         '<div class="ukNav ukOb_nav">' +
-          (at > 0
-            ? '<button class="ukGhost ukNav_back" type="button" data-ob-back>Back</button>'
-            : '<span></span>') +
+          '<span></span>' +
           '<button class="ukBtn ukNav_go" type="button" data-ob-next' + (ready ? '' : ' disabled') + '>' +
-            (last ? 'Finish' : 'Continue') + '</button>' +
-          /* the original onboarding said this next to its Continue, and the
-             keystroke works here too */
-          (ready && s.k !== 'intent' && !last
-            ? '<span class="ukEnter"><kbd class="ukEnter_k">&#8629;</kbd>Or press Enter</span>'
+            (s.cta || (last ? 'Finish' : 'Continue')) + '</button>' +
+          /* Only where there is something to type. On a screen of pills, "or
+             press Enter" is an instruction about a key you were never using.
+             Rendered hidden until the field has something in it, and revealed by
+             the same input handler that enables the button — repainting the whole
+             modal on a keystroke would take the caret with it. */
+          (!last && s.render(f).indexOf('data-ob-field') > -1
+            ? '<span class="ukEnter" data-ob-enter' + (ready ? '' : ' hidden') + '>' +
+              '<kbd class="ukEnter_k">&#8629;</kbd>Or press Enter</span>'
             : '') +
         '</div>' +
       '</div></div>';
@@ -266,7 +349,18 @@ window.UKONBOARD = (function () {
         if (M) { M.cats = f.shoots.slice(); M.type = f.shoots[0]; }
         if (me) { me.cats = f.shoots.slice(); me.type = f.shoots[0]; }
       }
-      if (f.band) { if (M) M.band = f.band; if (me) me.band = f.band; }
+      if (f.formats && f.formats.length && me) me.makes = f.formats.slice();
+      /* Connected platforms give the real handle and the real follower count, so
+         the band is read off them rather than asked for. */
+      var P = window.UKPLATCONNECT;
+      if (P && (f.plats || []).length) {
+        var plats = f.plats.map(function (r) {
+          return { k:r.k, n:P.platOf(r.k).n, f:r.f };
+        });
+        if (M)  { M.plats = plats; M.band = P.bandFor(P.total({ plats:f.plats })); }
+        if (me) { me.plats = plats.slice(); me.band = M ? M.band : me.band;
+                  me.h = '@' + (f.plats[0].handle || 'you'); }
+      }
     } else {
       var p = window.UK && window.UK.property;
       if (!p) return;
@@ -337,6 +431,9 @@ window.UKONBOARD = (function () {
   return {
     steps: steps, get: get, set: set, reset: reset,
     complete: complete, firstOpen: firstOpen,
-    modalHtml: modalHtml, apply: apply, checklist: checklist, tasks: tasks
+    modalHtml: modalHtml, apply: apply, checklist: checklist, tasks: tasks,
+    /* the connector mutates this as its OAuth beats play out */
+    live: function () { return liveState(get('creator')); },
+    flush: flushPlats
   };
 })();

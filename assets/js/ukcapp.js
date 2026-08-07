@@ -358,6 +358,33 @@
       window.UKONBOARD.apply("creator");
       return paintOnboard();
     }
+    /* the platform connector's own controls, run by the shared module */
+    if ((el = e.target.closest('[data-doconnect]'))) {
+      window.UKPLATCONNECT.start(window.UKONBOARD.live(), el.dataset.doconnect, paintOnboard);
+      return;
+    }
+    if (e.target.closest('[data-oauth-allow]') || e.target.closest('[data-oauth-retry]')) {
+      var st0 = window.UKONBOARD.live();
+      if (e.target.closest('[data-oauth-retry]')) st0.oauth.stage = 'consent';
+      window.UKPLATCONNECT.allow(st0, D.me.n, function () {
+        /* saved BEFORE the repaint: the Finish button asks storage whether the
+           step is answered, so painting first left it disabled with a platform
+           visibly connected above it */
+        window.UKONBOARD.flush('creator');
+        paintOnboard();
+      });
+      return;
+    }
+    if (e.target.closest('[data-oauth-cancel]') || e.target.closest('[data-oauth-scrim]')) {
+      if (e.target.closest('[data-oauth-card]')) return;
+      window.UKPLATCONNECT.cancel(window.UKONBOARD.live(), paintOnboard);
+      return;
+    }
+    if ((el = e.target.closest('[data-unplat]'))) {
+      window.UKPLATCONNECT.drop(window.UKONBOARD.live(), Number(el.dataset.unplat));
+      window.UKONBOARD.flush('creator');
+      return paintOnboard();
+    }
     if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
     if (e.target.closest('[data-ob-next]')) {
       var list = window.UKONBOARD.steps('creator');
@@ -385,8 +412,11 @@
     window.UKONBOARD.set('creator', patch);
     /* the Continue button enables on the first keystroke, so it is never a dead
        control sitting there as an instruction you cannot follow */
+    var ready = window.UKONBOARD.steps('creator')[obAt].done(window.UKONBOARD.get('creator'));
     var go = document.querySelector('[data-ob-next]');
-    if (go) go.disabled = !window.UKONBOARD.steps('creator')[obAt].done(window.UKONBOARD.get('creator'));
+    if (go) go.disabled = !ready;
+    var hint = document.querySelector('[data-ob-enter]');
+    if (hint) hint.hidden = !ready;
   });
 
   function go(next) { pushTrail(next); view = next; paintNav(); paintView(); closeSide(); closeMenu(); }
