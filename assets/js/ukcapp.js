@@ -331,6 +331,7 @@
     if (!obNeeded()) { host.innerHTML = ''; document.body.classList.remove('is-onboarding'); return; }
     document.body.classList.add('is-onboarding');
     host.innerHTML = window.UKONBOARD.modalHtml('creator', obAt);
+    if (window.UKSTAY && window.UKSTAY.clamp) window.UKSTAY.clamp(host);
     var first = host.querySelector('input');
     if (first) first.focus();
   }
@@ -415,8 +416,6 @@
     var ready = window.UKONBOARD.steps('creator')[obAt].done(window.UKONBOARD.get('creator'));
     var go = document.querySelector('[data-ob-next]');
     if (go) go.disabled = !ready;
-    var hint = document.querySelector('[data-ob-enter]');
-    if (hint) hint.hidden = !ready;
   });
 
   function go(next) { pushTrail(next); view = next; paintNav(); paintView(); closeSide(); closeMenu(); }

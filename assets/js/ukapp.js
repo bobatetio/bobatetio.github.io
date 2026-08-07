@@ -593,8 +593,17 @@
     if (!obNeeded()) { host.innerHTML = ''; document.body.classList.remove('is-onboarding'); return; }
     document.body.classList.add('is-onboarding');
     host.innerHTML = window.UKONBOARD.modalHtml('hotel', obAt);
+    /* The welcome renders real cards, and a real card only knows how many of its
+       categories fit once it has been laid out. Without this the clamp never ran
+       inside the modal and the card showed "Covers…" with nothing after it. */
+    if (window.UKSTAY && window.UKSTAY.clamp) window.UKSTAY.clamp(host);
     var first = host.querySelector('input');
-    if (first) first.focus();
+    if (first) {
+      first.focus();
+      /* at the end, not the start: a repaint mid-word must not send the caret
+         back to the beginning of what you were typing */
+      try { first.setSelectionRange(first.value.length, first.value.length); } catch (err) {}
+    }
   }
 
   document.addEventListener('click', function (e) {
@@ -620,6 +629,30 @@
       window.UKONBOARD.apply("hotel");
       return paintOnboard();
     }
+    /* Picking a place stores the KEY as well as the label. The label is what the
+       property page prints; the key is what a filter can actually match on, and
+       it is the reason this is a list rather than a text box. */
+    if ((el = e.target.closest('[data-ob-placepick]'))) {
+      var P = window.UKPLACE, d = P && P.byKey(el.dataset.obPlacepick);
+      if (d) {
+        window.UKONBOARD.set('hotel', { city: P.label(d), cityK: d.k, cc: d.cc || '' });
+        var cq = window.UKONBOARD.cityq(); cq.q = ''; cq.open = false;
+        window.UKONBOARD.apply('hotel');
+      }
+      return paintOnboard();
+    }
+    /* Anywhere outside the field closes the list, the same as the hire brief. */
+    if (window.UKONBOARD.cityq().open && !e.target.closest('.ukPlace')) {
+      var cq2 = window.UKONBOARD.cityq(); cq2.open = false; cq2.q = '';
+      paintOnboard();
+    }
+    if ((el = e.target.closest('[data-ob-unshot]'))) {
+      var shots = (window.UKONBOARD.get('hotel').photos || []).slice();
+      shots.splice(Number(el.dataset.obUnshot), 1);
+      window.UKONBOARD.set('hotel', { photos: shots });
+      window.UKONBOARD.apply('hotel');
+      return paintOnboard();
+    }
     if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
     if (e.target.closest('[data-ob-next]')) {
       var list = window.UKONBOARD.steps('hotel');
@@ -633,6 +666,23 @@
     }
   });
 
+  /* Photographs picked in the gate. Object URLs rather than data URLs: a hotel
+     dropping in eight photographs of a resort would put several megabytes of
+     base64 through localStorage, which is neither what it is for nor big enough.
+     These live for the session, which is exactly as long as the demo data does. */
+  document.addEventListener('change', function (e) {
+    var el = e.target.closest && e.target.closest('[data-ob-shots]');
+    if (!el || !window.UKONBOARD) return;
+    var add = Array.prototype.slice.call(el.files || [])
+      .filter(function (f) { return /^image\//.test(f.type); })
+      .map(function (f) { return URL.createObjectURL(f); });
+    if (!add.length) return;
+    var shots = (window.UKONBOARD.get('hotel').photos || []).concat(add).slice(0, 12);
+    window.UKONBOARD.set('hotel', { photos: shots });
+    window.UKONBOARD.apply('hotel');
+    paintOnboard();
+  });
+
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter') return;
     if (!e.target.closest || !e.target.closest('[data-ob-field]')) return;
@@ -641,6 +691,20 @@
   });
 
   document.addEventListener('input', function (e) {
+    if (!window.UKONBOARD) return;
+    /* The place field repaints on every keystroke, because the list under it IS
+       the response to the keystroke. The caret survives because paintOnboard
+       restores focus and the caret sits at the end of what was just typed. */
+    var pq = e.target.closest && e.target.closest('[data-ob-placeq]');
+    if (pq) {
+      var cq = window.UKONBOARD.cityq();
+      cq.q = pq.value; cq.open = true;
+      /* typing after a pick un-picks it: the field no longer names a real place */
+      if (window.UKONBOARD.get('hotel').cityK) {
+        window.UKONBOARD.set('hotel', { city: '', cityK: '', cc: '' });
+      }
+      return paintOnboard();
+    }
     var el = e.target.closest && e.target.closest('[data-ob-field]');
     if (!el || !window.UKONBOARD) return;
     var patch = {}; patch[el.dataset.obField] = el.value;
@@ -650,8 +714,6 @@
     var ready = window.UKONBOARD.steps('hotel')[obAt].done(window.UKONBOARD.get('hotel'));
     var go = document.querySelector('[data-ob-next]');
     if (go) go.disabled = !ready;
-    var hint = document.querySelector('[data-ob-enter]');
-    if (hint) hint.hidden = !ready;
   });
 
   function go(next) {

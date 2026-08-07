@@ -43,7 +43,12 @@ window.UKONBOARD = (function () {
      account's full data behind a first-time gate, which is a state no real
      account is ever in. */
   var SEEDED = {
-    hotel:   { intent:'fill', name:'MiraGrace Estate', city:'Miami, Florida', cat:'Wellness & spa' },
+    /* Must answer every step there IS. Adding the photographs question without
+       adding it here is what put the gate back in front of an account that had
+       already onboarded. */
+    hotel:   { intent:'fill', name:'MiraGrace Estate', city:'Miami, Florida',
+               cityK:'c-us-miami', cc:'us', cat:'Wellness & spa',
+               photos:['/assets/img/fc2/hero-hotel.jpg'] },
     /* Matches the STEPS above, not an older set of them. When the creator flow
        gained "what do you make" and swapped a self-declared band for connected
        platforms, this was left describing the old questions — so an established
@@ -92,9 +97,10 @@ window.UKONBOARD = (function () {
          platform — nothing shown here turns out to have been staged. */
       render: function () {
         return ask('Welcome to Ukreate',
-          'Hotels host creators on nights they would rather see used than empty — you shoot, ' +
-          'they host, you keep everything you make. Two minutes gets you set up so they can ' +
-          'find you.', peek('creator'));
+          'Hotels have nights they would rather fill than leave empty, and they will trade ' +
+          'them for content. You shoot the property, they host your stay, and everything ' +
+          'you make stays yours to post. Two minutes here is all it takes for them to ' +
+          'start finding you.', peek('creator'), { mark: true });
       },
       done: function () { return true; },
       cta: 'Get started'
@@ -158,9 +164,10 @@ window.UKONBOARD = (function () {
       k: 'welcome',
       render: function () {
         return ask('Welcome to Ukreate',
-          'Creators shoot your property in exchange for nights you were unlikely to sell, and ' +
-          'you keep everything they make. A minute gets you set up so they can find you.',
-          peek('hotel'));
+          'Travel creators shoot your property in exchange for nights you were unlikely to ' +
+          'sell, and everything they make is yours to keep and post. A minute here is all ' +
+          'it takes for them to start finding you.',
+          peek('hotel'), { mark: true });
       },
       done: function () { return true; },
       cta: 'Get started'
@@ -169,7 +176,7 @@ window.UKONBOARD = (function () {
       k: 'intent',
       render: function (f) {
         return ask('What brings you to Ukreate?',
-          'No wrong answer — this just helps us show you the right thing first.',
+          'There is no wrong answer here. It only decides what we show you first.',
           intents(f.intent, [
             { k:'fill',    t:'Fill rooms I was not going to sell', s:'Trade quiet nights for content.' },
             { k:'content', t:'Get content for my own channels',    s:'Photography and video I keep and use.' },
@@ -189,10 +196,23 @@ window.UKONBOARD = (function () {
     },
     {
       k: 'city',
+      /* Chosen from the list, never typed free. Creators filter on place, and a
+         filter cannot tell that "Miami FL" and "Miami, Florida" are one city.
+         UKPLACE is the picker the hire brief already uses: type, and the matches
+         drop down with their flag beside the name. */
       render: function (f) {
+        var P = window.UKPLACE;
+        var chosen = P ? P.byKey(f.cityK) : null;
         return ask('Where is ' + esc(String(f.name || '').trim() || 'your property') + '?',
-          'Creators search by place, and it is the first thing they filter on.',
-          field('obCity', 'city', f.city || '', 'Miami, Florida', 'City', 'address-level2'));
+          'Start typing and pick it from the list. Creators search by place, and it ' +
+          'is the first thing they filter on.',
+          P ? P.html({
+                id: 'obCity', q: CITYQ.q, open: CITYQ.open, chosen: chosen,
+                value: f.city || '', ph: 'Try Miami, Lisbon, Kyoto…',
+                aria: 'Where the property is',
+                qAttr: 'data-ob-placeq', pickAttr: 'data-ob-placepick'
+              })
+            : field('obCity', 'city', f.city || '', 'Miami, Florida', 'City', 'address-level2'));
       },
       done: function (f) { return !!String(f.city || '').trim(); }
     },
@@ -205,33 +225,55 @@ window.UKONBOARD = (function () {
           picks(((window.UKVOCAB || {}).SHOOTS || []), f.cat ? [f.cat] : [], 'cat', 1));
       },
       done: function (f) { return !!f.cat; }
+    },
+    {
+      k: 'photos',
+      /* Asked here rather than left on the checklist. A creator deciding whether
+         to pitch looks at the photographs before they read a word, so a property
+         with none is not really listed. It was the one setup task that gated
+         everything after it, and leaving it for later meant the first thing a
+         hotel published was a stay nobody could see. */
+      render: function (f) {
+        var shots = f.photos || [];
+        return ask('Now some photographs of the property.',
+          'Creators look at these before they read anything else. Three or four ' +
+          'is plenty to start, and you can add the rest later.',
+          shotGrid(shots));
+      },
+      done: function (f) { return (f.photos || []).length > 0; }
     }
   ];
 
-  /* A glimpse, not a pitch — real rows already on the platform, so nothing on
-     the welcome screen turns out to have been staged. The original onboarding's
-     .ukPeek, with each side looking at the other side of the market. */
+  /* The welcome carries one image, and it is not built from data.
+
+     It held two real cards for a while - the actual stay card and the actual
+     creator card, rendered live. They were the right components and the wrong
+     idea: a welcome screen is the one place in the product that should say what
+     this IS, and two dense cards full of engagement rates and stat rows answer a
+     question nobody has asked yet. The cards are what you meet on the very next
+     screen, in the app behind this modal.
+
+     So it is a single image, and the artwork is supplied rather than assembled.
+     Until it lands this renders a plain placeholder at the right size, because
+     inventing a stand-in is how a mockup gets shipped by accident.
+
+     // PLUG-IN POINT - drop the artwork at /assets/img/onboard-welcome-<side>.jpg
+     // and it is picked up here. */
   function peek(side) {
-    var rows = side === 'creator'
-      ? ((window.UKC && window.UKC.stays) || []).slice(0, 3).map(function (s2) {
-          return { img: s2.img, n: s2.hotel }; })
-      : ((window.UK && window.UK.creators) || []).slice(0, 3).map(function (c) {
-          return { img: c.img, n: c.n }; });
-    if (!rows.length) return '';
-    return '<div class="ukPeek" aria-hidden="true"><div class="ukPeek_row">' +
-      rows.map(function (r) {
-        return '<span class="ukPeek_card"><img src="' + r.img + '" alt="" loading="lazy" ' +
-          'decoding="async"><span class="ukPeek_n">' + esc(r.n) + '</span></span>';
-      }).join('') + '</div>' +
-      '<p class="ukPeek_cap">' + (side === 'creator'
-        ? 'A few of the hotels already on Ukreate, looking for creators right now'
-        : 'A few of the creators already on Ukreate, looking for stays right now') +
-      '</p></div>';
+    var src = '/assets/img/onboard-welcome-' + side + '.jpg';
+    return '<div class="ukObArt" data-obart>' +
+      '<img class="ukObArt_i" src="' + src + '" alt="" ' +
+        'onerror="this.closest(\'[data-obart]\').classList.add(\'is-empty\');this.remove()">' +
+      '<span class="ukObArt_ph" aria-hidden="true">Image</span>' +
+    '</div>';
   }
 
   /* The connector mutates its own state object as the OAuth beats play out, so
      it needs a live one rather than a fresh read of storage each paint. */
   var LIVE = {};
+  /* How you found the place is view state, not an answer, so it lives here and
+     not in the saved record. */
+  var CITYQ = { q: '', open: false };
   function liveState(f) {
     if (!LIVE.plats) LIVE.plats = (f.plats || []).slice();
     return LIVE;
@@ -241,8 +283,15 @@ window.UKONBOARD = (function () {
   }
 
   /* ---- the pieces, all of them already in the product ---- */
-  function ask(h, p, body) {
-    return '<section class="ukStart_ask">' +
+  /* The mark sits above the heading on the welcome, not inside it. A screen that
+     opens by naming the product should show the product's own mark first. */
+  function ask(h, p, body, o) {
+    o = o || {};
+    return '<section class="ukStart_ask' + (o.mark ? ' ukStart_ask--mark' : '') + '">' +
+      (o.mark
+        ? '<img class="ukOb_logo" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" ' +
+          'width="132" height="30">'
+        : '') +
       '<h1 class="ukStart_h">' + h + '</h1>' +
       '<p class="ukStart_p">' + p + '</p>' + body +
     '</section>';
@@ -264,6 +313,38 @@ window.UKONBOARD = (function () {
         'aria-pressed="' + on + '"' + (full ? ' disabled' : '') + '>' + esc(n) + '</button>';
     }).join('') + '</div>';
   }
+  /* The uploader. A real file input behind a drop area, because that is the one
+     control every operating system already agrees on; what it adds are object
+     URLs, so a photo picked here is the photo shown on the very next screen
+     rather than a filename in a list.
+
+     // PLUG-IN POINT - a real upload. These are object URLs, alive for this
+     // session only. Swapping in a signed upload means changing where src comes
+     // from and nothing else. */
+  function shotGrid(shots) {
+    return '<div class="ukShots">' +
+      '<div class="ukShots_g">' +
+        shots.map(function (src, i) {
+          return '<figure class="ukShot"' + (i === 0 ? ' data-cover="1"' : '') + '>' +
+            '<img src="' + esc(src) + '" alt="">' +
+            (i === 0 ? '<figcaption class="ukShot_c">Cover</figcaption>' : '') +
+            '<button class="ukShot_x" type="button" data-ob-unshot="' + i + '" ' +
+              'aria-label="Remove photo ' + (i + 1) + '">&times;</button>' +
+          '</figure>';
+        }).join('') +
+        '<label class="ukShot ukShot--add">' +
+          '<input type="file" accept="image/*" multiple data-ob-shots hidden>' +
+          '<span class="ukShot_plus" aria-hidden="true">+</span>' +
+          '<span class="ukShot_l">' + (shots.length ? 'Add more' : 'Add photos') + '</span>' +
+        '</label>' +
+      '</div>' +
+      (shots.length
+        ? '<p class="ukHint">' + shots.length + (shots.length === 1 ? ' photo' : ' photos') +
+          '. The first one is the cover creators see.</p>'
+        : '') +
+    '</div>';
+  }
+
   function field(id, k, v, ph, label, ac) {
     return '<label class="ukField"><span class="ukField_l ukSrOnly">' + esc(label) + '</span>' +
       '<input class="ukField_i" id="' + id + '" data-ob-field="' + esc(k) + '" value="' + esc(v) + '" ' +
@@ -321,17 +402,11 @@ window.UKONBOARD = (function () {
         s.render(f) +
         '<div class="ukNav ukOb_nav">' +
           '<span></span>' +
+          /* No "or press Enter" hint. Enter still advances a field, because it
+             should, but captioning it puts a keyboard instruction next to the
+             button that already says what to do. */
           '<button class="ukBtn ukNav_go" type="button" data-ob-next' + (ready ? '' : ' disabled') + '>' +
             (s.cta || (last ? 'Finish' : 'Continue')) + '</button>' +
-          /* Only where there is something to type. On a screen of pills, "or
-             press Enter" is an instruction about a key you were never using.
-             Rendered hidden until the field has something in it, and revealed by
-             the same input handler that enables the button — repainting the whole
-             modal on a keystroke would take the caret with it. */
-          (!last && s.render(f).indexOf('data-ob-field') > -1
-            ? '<span class="ukEnter" data-ob-enter' + (ready ? '' : ' hidden') + '>' +
-              '<kbd class="ukEnter_k">&#8629;</kbd>Or press Enter</span>'
-            : '') +
         '</div>' +
       '</div></div>';
   }
@@ -366,7 +441,10 @@ window.UKONBOARD = (function () {
       if (!p) return;
       if (String(f.name || '').trim()) p.name = String(f.name).trim();
       if (String(f.city || '').trim()) p.city = String(f.city).trim();
+      if (f.cc) p.cc = f.cc;
       if (f.cat) { p.cat = f.cat; p.type = p.type || f.cat; }
+      /* the first one is the cover, which is what every card in the product uses */
+      if ((f.photos || []).length) { p.shots = f.photos.slice(); p.img = f.photos[0]; }
     }
   }
 
@@ -390,13 +468,14 @@ window.UKONBOARD = (function () {
     }
     var UK = window.UK || {};
     var R = window.UKSTAYS;
+    /* Photographs are asked for in the gate now, so the line for them is gone
+       from here: a checklist should never repeat a question already answered.
+       The guest guide is off it too. It is written once the first creator is
+       actually coming, and putting it in front of a hotel on day one asked them
+       to write arrival notes for a stay that did not exist yet. */
     return [
       { t:'Publish your first stay', s:'Until one is live, creators cannot find you.',
         go:'host', done:!!(R && R.forProperty((UK.property || {}).name).length) },
-      { t:'Add photos of the property', s:'Properties with photos get about three times the applications.',
-        go:'property', done:!!(UK.property && UK.property.img) },
-      { t:'Write your guest guide', s:'Answers the questions every creator asks on arrival.',
-        go:'guides', done:!!(UK.guides && UK.guides[0] && UK.guides[0].live) },
       { t:'Invite a creator', s:'You do not have to wait to be found.',
         go:'creators', done:!!(window.UKINVITE && window.UKINVITE.all().length) }
     ];
@@ -434,6 +513,7 @@ window.UKONBOARD = (function () {
     modalHtml: modalHtml, apply: apply, checklist: checklist, tasks: tasks,
     /* the connector mutates this as its OAuth beats play out */
     live: function () { return liveState(get('creator')); },
+    cityq: function () { return CITYQ; },
     flush: flushPlats
   };
 })();

@@ -4804,7 +4804,36 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
    The app's own modal shell, holding the same step card the original onboarding
    used. One question per screen with the rail above it, because the same
    questions in one long form read as far more work. */
-.ukOb_modal{max-width:560px;width:min(560px,calc(100vw - 32px));padding:26px 28px 22px}
+/* ---- ONE SIZE, EVERY STEP ----
+   The card does not resize between questions. A modal that grows and shrinks as
+   you answer makes Continue move under the cursor and turns one flow into five
+   different dialogs; holding it still means the only thing that changes on
+   screen is the thing being asked. The height is the tallest step's, and a
+   shorter one simply has room under it.
+
+   The question is the only part that scrolls, so the progress bar stays at the
+   top and Continue stays exactly where it was on the screen before. */
+.ukOb_modal{max-width:600px;width:min(600px,calc(100vw - 32px));
+  height:min(604px,calc(100vh - 48px));padding:26px 28px 22px;
+  display:flex;flex-direction:column;overflow:hidden}
+.ukOb_modal .ukStart_ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  padding-right:6px;margin-right:-6px}
+.ukObBar,.ukOb_nav{flex:0 0 auto}
+
+/* The welcome's artwork. A fixed slot, so the step is the same height whether
+   the image has landed yet or not. */
+.ukObArt{position:relative;margin-top:4px;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+  background:var(--hover);border:1px solid var(--line);display:grid;place-items:center}
+.ukObArt_i{width:100%;height:100%;object-fit:cover;display:block;grid-area:1/1}
+.ukObArt_ph{grid-area:1/1;display:none;font:600 12px/1 'Lato',sans-serif;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.14em}
+.ukObArt.is-empty{border-style:dashed}
+.ukObArt.is-empty .ukObArt_ph{display:block}
+/* The product's own mark, above the line that names it. */
+.ukOb_logo{display:block;height:28px;width:auto;margin:0 0 16px}
+@media (prefers-color-scheme:dark){.ukOb_logo{filter:invert(1) brightness(1.6)}}
+:root[data-theme="dark"] .ukOb_logo{filter:invert(1) brightness(1.6)}
+:root[data-theme="light"] .ukOb_logo{filter:none}
 .ukOb_rail{margin:0 0 4px;gap:8px}
 .ukOb_rail li{flex:1 1 0}
 .ukOb_rail .ukStart_dot{margin:0}
@@ -4812,7 +4841,10 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
   letter-spacing:.12em;color:var(--text-3)}
 .ukOb_modal .ukStart_ask{padding:0;background:none;border:0;box-shadow:none;max-width:none}
 .ukOb_modal .ukStart_h{font-size:clamp(22px,2.6vw,28px);margin:0 0 8px}
-.ukOb_modal .ukStart_p{margin:0 0 18px;max-width:44ch;text-wrap:pretty}
+/* No measure cap here. 44ch inside a 560px card left every line short of the
+   right edge, so the text sat as a narrow column in a wide box with the
+   whole right side empty. The card is already the measure. */
+.ukOb_modal .ukStart_p{margin:0 0 18px;max-width:none;text-wrap:pretty}
 .ukOb_modal .ukChoice{margin-top:4px}
 .ukOb_modal .ukWhy{margin-top:14px}
 .ukOb_nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
@@ -5003,7 +5035,15 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
 .ukOAuth_row .ukGhost,.ukOAuth_row .ukBtn{flex:1 1 0;justify-content:center}
 .ukOAuth_p{margin:8px 0 0;font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text-3)}
 .ukPeek{margin-top:18px}
-.ukPeek_row{display:flex;gap:10px;flex-wrap:wrap}
+/* Real cards, two across, each taking half the row. They are the components
+   the rest of the product renders, not a picture with a caption. */
+.ukPeek_row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.ukPeek_c{min-width:0}
+.ukPeek_c > *{width:100%;margin:0}
+/* inert: the welcome is not somewhere a stay can be opened yet */
+.ukPeek_c{pointer-events:none}
+@media (max-width:600px){.ukPeek_row{grid-template-columns:minmax(0,1fr)}
+  .ukPeek_c:nth-child(n+2){display:none}}
 .ukPeek_card{
   flex:1 1 120px;max-width:150px;display:flex;flex-direction:column;gap:6px;
   border-radius:14px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);
@@ -5039,3 +5079,42 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
 .ukOb_modal .ukChoice--plats{margin-top:12px}
 .ukOb_modal .ukPeek{margin-top:18px}
 .ukOb_modal .ukOAuth_scrim{position:fixed;inset:0;z-index:95}
+
+/* ---- onboarding: the place picker ----
+   The same .ukPlace the hire brief uses, without the globe beneath it: the
+   gate asks where the property is, not where to look. */
+.ukOb_modal .ukPlace{margin-top:4px}
+.ukOb_modal .ukPlace_drop{max-height:240px}
+.ukOb_modal .ukPlace_list{max-height:232px}
+
+/* ---- onboarding: the property's photographs ----
+   A grid of what has been added with the adder as the last cell, so the control
+   sits where the next photo will land rather than above the pile. The first cell
+   is labelled Cover, because it is the one every card in the product renders and
+   a hotel should know that while it is choosing. */
+.ukShots{margin-top:4px}
+.ukShots_g{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px}
+.ukShot{position:relative;margin:0;aspect-ratio:4/3;border-radius:12px;overflow:hidden;
+  background:var(--hover);border:1px solid var(--line)}
+.ukShot img{width:100%;height:100%;object-fit:cover;display:block}
+.ukShot_c{position:absolute;left:7px;bottom:7px;padding:3px 8px;border-radius:999px;
+  background:rgba(17,24,39,.72);color:#fff;font:700 9.5px/1 'Lato',sans-serif;
+  text-transform:uppercase;letter-spacing:.1em}
+.ukShot_x{position:absolute;top:6px;right:6px;width:22px;height:22px;border:0;border-radius:50%;
+  background:rgba(17,24,39,.66);color:#fff;font-size:15px;line-height:1;cursor:pointer;
+  display:grid;place-items:center;opacity:0;transition:opacity .15s ease,transform .15s ease}
+.ukShot:hover .ukShot_x,.ukShot_x:focus-visible{opacity:1}
+.ukShot_x:hover{transform:scale(1.08)}
+.ukShot_x:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukShot--add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  cursor:pointer;border-style:dashed;background:transparent;
+  transition:background .15s ease,border-color .15s ease}
+.ukShot--add:hover{background:var(--hover);border-color:var(--uk-gold)}
+.ukShot--add:focus-within{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukShot_plus{font:300 26px/1 'Lato',sans-serif;color:var(--text-3)}
+.ukShot_l{font:600 12px/1.2 'Lato',sans-serif;color:var(--text-2)}
+
+/* Before the first photo there is nothing to sit beside, so the adder takes the
+   whole area rather than being one small tile against a lot of white. */
+.ukShots_g:has(.ukShot--add:only-child){grid-template-columns:1fr}
+.ukShots_g:has(.ukShot--add:only-child) .ukShot--add{aspect-ratio:16/9}

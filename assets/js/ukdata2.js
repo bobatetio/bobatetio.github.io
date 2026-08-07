@@ -270,6 +270,22 @@
         safety:'Reception dial 0. Local emergency 911. Nearest clinic is eight minutes by car and reception will call one.'
       } }
   ];
+  /* ---- the first-time view, for the property's OWN content ----
+     ukdata.js strips the activity lists, but the property's photo and its guest
+     guide were written before that runs and were left standing. The visible
+     result was the setup checklist ticking "Add photos of the property" and
+     "Write your guest guide" on an account that had done neither: the onboarding
+     never asked for them, and the dashboard said they were done. A checklist
+     that congratulates you for work you have not done is worse than no
+     checklist, because every other line on it stops being believable too.
+
+     Both belong to this hotel, so both go, and the pages behind them show their
+     empty state, which is what a new account actually sees. */
+  if (window.UKDEMO && window.UKDEMO.isNew()) {
+    D.guides.length = 0;
+    if (D.property) D.property.img = '';
+  }
+
   D.guideById = function (id) { return D.guides.filter(function (g) { return g.id === id; })[0] || null; };
   D.addGuide = function (prop) {
     var g = { id:'g' + (D.guides.length + 1), prop:prop || D.property.n || 'Your property',

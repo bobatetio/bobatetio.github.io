@@ -24,16 +24,31 @@
 window.UKDEMO = (function () {
   var KEY = 'uk_demo_mode_v1';
 
+  var FRESH = false;
   function read() {
-    /* a URL flag wins once and is then remembered, so ?as=new can be pasted to
-       somebody and the pages they navigate to afterwards stay in that view */
+    /* A URL flag wins once and is then remembered, so ?as=new can be pasted to
+       somebody and the pages they navigate to afterwards stay in that view.
+       It also counts as an explicit switch: arriving on ?as=new with answers
+       from a previous session left platforms already connected on a screen that
+       is meant to be someone's first, which is the opposite of what the flag
+       was asked for. */
     try {
       var q = new URLSearchParams(location.search).get('as');
-      if (q === 'new' || q === 'live') { localStorage.setItem(KEY, q); return q; }
+      if (q === 'new' || q === 'live') {
+        FRESH = true;
+        localStorage.setItem(KEY, q);
+        return q;
+      }
       return localStorage.getItem(KEY) || 'live';
     } catch (e) { return 'live'; }
   }
   var MODE = read();
+  /* ukonboard.js loads after this, so the clearing waits for it */
+  if (FRESH) {
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.UKONBOARD) window.UKONBOARD.reset();
+    });
+  }
 
   function mode() { return MODE; }
   function isNew() { return MODE === 'new'; }

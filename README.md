@@ -61,6 +61,10 @@ Modules worth knowing before you touch anything:
   record, so the creator sees the yes or the no. Distinct from `ukpitchin.js`: a
   pitch has no stay behind it and asks "shall I build one", an application hangs
   off a published stay and asks "yes or no".
+- `assets/js/ukplace.js` — **the** place picker. Type, and matching cities drop
+  down with their flag; picking one stores a `UKMARKETS` key. Used by the hire
+  brief and by onboarding. A city is never free text: typed by hand it arrives as
+  four spellings of one place, and a filter cannot tell they are the same.
 - `assets/js/ukstaycard.js` — **the** stay card. Both apps render it. A hotel
   card is the same component with the stay's own detail left off. Do not write a
   second one.
@@ -172,6 +176,16 @@ which is main, and an OAuth stand-in that redirects, asks consent, sometimes
 fails and can be retried. A connected platform gives the real handle and the real
 number, and the **size band falls out of it** rather than being estimated. That
 module is shared by the start page and the gate; do not write a second one.
+The city is not typed either: `ukplace.js` is the combobox the hire brief uses, so
+a place is chosen from `UKMARKETS` with its flag beside it and stored as a key
+rather than a spelling. The hotel's photographs are asked for here rather than
+left on the checklist, because a property with none is not really listed.
+
+**The modal is one size on every screen** and does not resize between questions,
+so Continue never moves under the cursor. The question scrolls; the progress bar
+and the buttons do not. The welcome carries a single supplied image rather than
+assembled data — drop it at `assets/img/onboard-welcome-{hotel,creator}.jpg` and
+it is picked up; until then the slot renders a plain placeholder.
 
 Behind the modal sits the **marketplace**, not the user's own dashboard. A new
 account's dashboard is empty; the creator network and the live stays are not,
@@ -182,6 +196,13 @@ exactly this.
 of the live records — "Publish your first stay" is done when the registry holds
 one. It stops rendering entirely once nothing is left, because a finished
 checklist is clutter.
+
+Nothing the gate already asked appears on it, and nothing appears on it that a
+first-time account has not genuinely left undone. The seeded property's photo and
+guest guide survived the first-time strip for a while, so the checklist ticked two
+lines of work nobody had done; `ukdata2.js` clears both under `?as=new`. The guest
+guide is off the checklist entirely — it is written when a creator is actually
+coming, not on day one for a stay that does not exist yet.
 
 Nothing in it is a new component. The step card, progress rail, intent picker,
 pill choices, fields and nav buttons are the ones `/start/` already used, inside
