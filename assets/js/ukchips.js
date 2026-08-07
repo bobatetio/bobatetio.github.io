@@ -32,6 +32,17 @@ window.UKCHIPS = (function () {
   }
   var CAP = 5;               /* five is a claim; fifty is noise */
 
+  /* The flag every market carries elsewhere in the product: .ukCrFlag, which is a
+     15x11 rectangle with a 2px radius and a hairline ring, from the same
+     /assets/img/flags set the cards and the "+N" popup use. Not a circle, and not
+     an emoji: those are the two ways this has gone wrong before. */
+  function flag(x) {
+    return x && x.cc
+      ? '<img class="ukCrFlag" src="/assets/img/flags/' + esc(x.cc) + '.svg" alt="" ' +
+        'loading="lazy" decoding="async">'
+      : '';
+  }
+
   function rank(pool, q) {
     return pool.filter(function (x) {
       return x.n.toLowerCase().indexOf(q) > -1 || (x.sub || '').toLowerCase().indexOf(q) > -1;
@@ -66,7 +77,11 @@ window.UKCHIPS = (function () {
         hits.map(function (x) {
           return '<li><button class="ukPickr_o" type="button" role="option" ' +
             'aria-selected="false" data-chip="' + esc(o.key) + '" data-val="' + esc(x.k) + '">' +
-            '<span class="ukPickr_on">' + esc(x.n) + '</span>' +
+            /* inside the name, not beside it: .ukPickr_o is a COLUMN flex, so a
+               flag as its own child stacks above the name and takes its height
+               from the flex basis rather than the image. Same shape the cards
+               use, where the flag sits in the line it belongs to. */
+            '<span class="ukPickr_on">' + flag(x) + esc(x.n) + '</span>' +
             (x.sub ? '<span class="ukPickr_os">' + esc(x.sub) + '</span>' : '') +
             '</button></li>';
         }).join('') + '</ul>'
@@ -76,7 +91,7 @@ window.UKCHIPS = (function () {
       (o.chosen.length
         ? '<ul class="ukPickr_chips">' + o.chosen.map(function (k) {
             var x = o.find(k);
-            return '<li class="ukChip">' + esc(x ? x.n : k) +
+            return '<li class="ukChip">' + flag(x) + esc(x ? x.n : k) +
               '<button class="ukChip_x" type="button" data-unchip="' + esc(o.key) + '" data-val="' + esc(k) + '" ' +
               'aria-label="Remove ' + esc(x ? x.n : k) + '">&times;</button></li>';
           }).join('') + '</ul>'

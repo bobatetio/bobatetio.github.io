@@ -5166,3 +5166,9 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
    which this file already defines for /start/. There is no second set of
    styles for it. The block that used to sit here invented a .ukShot that
    collided with the content library's card of the same name. */
+
+/* The market picker's flags use .ukCrFlag's own 15x11 treatment rather than a
+   second one. No flex sizing on either: the chip is a row and the option is a
+   COLUMN, so a basis there sets the flag's height and stacks it above the name. */
+.ukChip .ukCrFlag{margin-right:2px;vertical-align:-1px;flex:0 0 auto}
+.ukPickr_on .ukCrFlag{margin-right:7px;vertical-align:-1px}
