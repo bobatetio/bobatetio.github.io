@@ -125,6 +125,14 @@ stay in *To pitch* and added a row in *Waiting*. Casa Azul Tulum sat in both at
 once. Discover's composer additionally pushed a stage-0 row into `D.collabs`,
 which `reconcilePipeline()` then quietly undid on the next load.
 
+**The composer is the hotel's page from the other side.** It uses the hotel
+portal's own components, because the hotel portal is the reference: `.ukBack`,
+`head()`, `.ukStatusBadge` for whose move it is, `ukGrid--thread` with `.ukFlow`
+and `.ukSideCol`, a `.ukPanel_head` carrying the tone as a `.ukSeg` segmented
+control, the three facts of the trade as a `.ukPitchIn--row`, and a `.ukComposer`
+whose secondary actions sit left and whose send sits right. It reads top to
+bottom as the pitch, what goes with it, then send.
+
 **Pitch Pilot is a capability, not a destination.** It finds the hotels, scores
 them and writes the letter; the score is on the card and the letter is in the
 composer. Nothing in the product routes to it as a place.

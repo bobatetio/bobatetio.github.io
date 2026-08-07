@@ -290,6 +290,8 @@
     /* the stay card measures itself once it is on the page — this is what puts
        the "+N" on a list that does not fit, and it never ran on this side */
     if (window.UKSTAY) { window.UKSTAY.clamp(dyn); placeStayPop(); }
+    /* the letter sizes itself to what is in it, which only the browser knows */
+    if (window.UKCGROW) window.UKCGROW(dyn);
     if (!keep) window.scrollTo(0, 0);   // instant: a smooth reset moves hit targets mid-click
     paintOnboard();
   }

@@ -60,18 +60,31 @@ window.UKCP = (function () {
      is taken as six days old and the rest are measured back from it — the
      spacing between them is real, which is all the follow-up rule needs. */
   var MON = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  /* The month has to BE a month. "3 days ago" matched this regex as day "3" and
+     month "day", so MON['day'] was undefined, undefined * 31 was NaN, and dayNum
+     returned NaN rather than null. NaN passed the "not null" filter below, and
+     one NaN in Math.max makes the whole answer NaN — so NEWEST was NaN, every
+     pitch's age was NaN, every "days >= 7" was false, and no pitch has ever been
+     due a nudge. The strip could still say two were, because it counts rows with
+     due:true and there were none to count. */
   function dayNum(on) {
     var m = String(on || '').match(/(\d{1,2})\s+([A-Za-z]{3})/);
-    if (!m) return null;
+    if (!m || MON[m[2]] === undefined) return null;
     return MON[m[2]] * 31 + Number(m[1]);
   }
-  var NEWEST = (function () {
-    var ns = (D.pitches || []).map(function (p) { return dayNum(p.on); }).filter(function (n) { return n !== null; });
+  /* Computed on demand, not at load. D.pitches is populated by ukcdata.js, and a
+     value frozen at module-init would be whatever the list was before it filled. */
+  function newest() {
+    var ns = (D.pitches || []).map(function (p) { return dayNum(p.on); })
+      .filter(function (n) { return n !== null && !isNaN(n); });
     return ns.length ? Math.max.apply(null, ns) : 0;
-  })();
+  }
   function daysAgo(p) {
     var n = dayNum(p.on);
-    return n === null ? 0 : (NEWEST - n) + 6;
+    if (n !== null) return (newest() - n) + 6;
+    /* A relative date is already the answer: "3 days ago" is three days ago. */
+    var rel = String(p.on || '').match(/(\d+)\s+day/);
+    return rel ? Number(rel[1]) : 0;
   }
   var NUDGE_AFTER = 7;        /* one follow-up, after a week. Two is pushing it. */
 
@@ -108,7 +121,19 @@ window.UKCP = (function () {
     return (D.pitches || []).map(function (p) {
       var state = p.converted ? 'booked'
                 : p.status === 'Responded' ? 'replied' : 'waiting';
-      return { stay: null, pitch: p, state: state,
+      /* A nudge is written FROM a stay: its nights and its inclusions are what
+         the follow-up restates. `stay` stays null here on purpose, because that
+         is what decides which LANE this row is in and a property-level pitch is
+         not one of the property's stays. But if the property does have one
+         published, that is what the letter is written from, so it is carried
+         separately.
+
+         Without this the nudge button could never appear: row() offered it on
+         `r.due && r.stay`, and r.stay was null on every row this function makes.
+         The strip above the list would say two pitches were due a nudge and the
+         lane it sent you to had no way to send one. */
+      var from = (D.stays || []).filter(function (x) { return x.hotel === p.hotel; })[0] || null;
+      return { stay: null, from: from, pitch: p, state: state,
                days: daysAgo(p),
                due: !p.converted && p.status === 'Sent' && daysAgo(p) >= NUDGE_AFTER && !p.nudged };
     });
@@ -172,13 +197,15 @@ window.UKCP = (function () {
       'I am a travel creator shooting ' + String(D.me.niche).toLowerCase() + ', and ' + s.hotel +
       ' has been on my list for a while.\n\n' +
       'I would like to propose a hosted stay: ' + s.nights + ' night' + (String(s.nights) === '1' ? '' : 's') +
-      ', and in return you get ' + give + ' — yours to keep and post on your own channels, however you like.\n\n' +
+      ', and in return you get ' + give + '. All of it is yours to keep and post on your own ' +
+      'channels, however you like.\n\n' +
       'I shoot, edit and deliver on my own, within ten days of checking out. Happy to send recent work if it is useful.\n\n' +
       'Would this be worth a short conversation?\n\n' + D.me.n + '\n' + D.me.h;
   }
   function nudgeLetter(s, p) {
     return 'Hi ' + s.hotel + ' team,\n\n' +
-      'Following up on my note from ' + p.on + ' about a hosted stay — I know inboxes get away from all of us.\n\n' +
+      'Following up on my note from ' + p.on + ' about a hosted stay. I know inboxes get away ' +
+      'from all of us.\n\n' +
       'The offer stands: ' + s.nights + ' night' + (String(s.nights) === '1' ? '' : 's') +
       ' in exchange for content you keep and use on your own channels.\n\n' +
       'If it is not the right time, a no is genuinely useful and I will stop taking up your inbox.\n\n' +
@@ -321,12 +348,11 @@ window.UKCP = (function () {
         ? '<button class="ukBtn ukPL_go" type="button" data-write="' + esc(s.id) + '">' +
             (locked ? 'See the draft' : 'Write the pitch') + '</button>'
       : lane === 'waiting'
-        /* A nudge is written FROM the stay — its nights, its inclusions. A pitch
-           logged against a hotel that is not on the roster has no stay behind it,
-           so there is nothing to write from and offering the button would have
-           been a control that quietly did nothing. It still needs to be moved
-           along, so it gets the status controls instead. */
-        ? (r.due && s
+        /* A pitch logged against a hotel with nothing published has no stay to
+           write a follow-up from, so offering the button would be a control that
+           quietly did nothing. It still needs moving along, so it gets the status
+           controls instead. */
+        ? (r.due && (s || r.from)
             ? '<button class="ukBtn ukPL_go" type="button" data-nudge="' + esc(p.id) + '">Send a nudge</button>'
             : s
               ? '<span class="ukPL_wait">' + r.days + ' days out</span>'
@@ -399,12 +425,21 @@ window.UKCP = (function () {
   }
 
   /* ================= the composer =================
-     Full width, and the same two-column shape as a collaboration thread: the
-     thing you are writing on the left, who you are writing to on the right. The
-     old build put this in a grid cell 340px wide. */
+     THE HOTEL'S SHAPE, because the hotel portal is the reference. Its inbound
+     pitch thread is the same page from the other side: a status badge saying
+     whose move it is, then ukGrid--thread with ukFlow on the left carrying a
+     ukPanel_head, a ukPitchIn--row of the three facts of the trade, and a
+     ukComposer whose secondary actions sit left and whose send sits right. The
+     subject of it all is a stay card in ukSideCol.
+
+     What was here instead: a bare textarea with no panel head, custom tone pills
+     that existed nowhere else, and three same-weight buttons in a row with
+     "Copy it" as the primary. Nothing about it said which of the three actually
+     sent the pitch, and the answer was none of them until this file started
+     writing UKAPPLY. */
   function composer(st) {
     var s = D.stay(openId);
-    if (!s) { openId = null; return pitch(st); }
+    if (!s) { openId = null; return ''; }   /* the page repaints without it */
     var p = (D.pitches || []).filter(function (x) { return x.hotel === s.hotel; })[0];
     var kind = openKind;
     var tone = st.tone || 'warm';
@@ -412,28 +447,88 @@ window.UKCP = (function () {
     if (drafts[key] === undefined) drafts[key] = letterFor(s, p, kind, tone);
     var free = !D.me.member;
     var locked = free && D.me.freePitchUsed && !(p && kind === 'nudge');
+    /* A follow-up needs the pitch it follows. Without one there is nothing to
+       follow up on, so it is a first letter. */
+    var nudge = kind === 'nudge' && !!p;
+    var goes = (D.me.work || []).slice(0, 3);
 
-    return UKCV.head(kind === 'nudge' ? 'Follow up with ' + s.hotel : 'Write to ' + s.hotel,
-      kind === 'nudge'
-        ? 'Short, warm, and it gives them an easy way out. That is what gets answered.'
-        : 'Change anything you like. It is kept as you type, so you can leave it and come back.') +
-      '<div class="ukGrid ukGrid--thread">' +
-        '<section class="ukPanel ukWrite">' +
-          (kind === 'nudge' ? '' :
-            '<div class="ukTones" role="group" aria-label="Tone">' + TONES.map(function (t) {
-              return '<button class="ukTone' + (t.k === tone ? ' is-on' : '') + '" type="button" ' +
-                'data-ptone="' + t.k + '">' + t.t + '</button>';
-            }).join('') + '</div>') +
-          '<label class="ukField ukWrite_f"><span class="ukSrOnly">Your pitch</span>' +
-            '<textarea class="ukField_i ukWrite_ta" data-draft="' + esc(key) + '" ' +
-            'aria-label="Your pitch">' + esc(drafts[key]) + '</textarea></label>' +
-          '<div class="ukWrite_act">' +
-            '<button class="ukBtn" type="button" data-copydraft="' + esc(key) + '">Copy it</button>' +
-            (kind === 'nudge'
-              ? '<button class="ukGhost" type="button" data-sentnudge="' + esc(p.id) + '">I sent the nudge</button>'
-              : '<button class="ukGhost" type="button" data-sent="' + esc(s.id) + '">I sent it</button>') +
-            '<button class="ukGhost" type="button" data-closewrite>Back to the list</button>' +
+    return '<button class="ukBack" type="button" data-writeclose>&larr; Back to stays</button>' +
+      UKCV.head(nudge ? 'Follow up with ' + esc(s.hotel) : 'Write to ' + esc(s.hotel),
+        nudge
+          ? 'Short, warm, and it gives them an easy way out. That is what gets answered.'
+          : 'Change anything you like. It is kept as you type, so you can leave it and come back.') +
+
+      /* Whose move it is, in the hotel's own badge. Before it is sent the move is
+         obviously yours; once it is out, this is the only line that says how long
+         they have had it. */
+      (nudge && p
+        ? '<div class="ukStatusBadge" role="status">' +
+            '<span class="ukStatusBadge_lb">Waiting on them</span>' +
+            '<span class="ukStatusBadge_s">Sent ' + esc(p.on) + ', ' + daysAgo(p) + ' days out</span>' +
+          '</div>'
+        : '') +
+
+      '<div class="ukGrid ukGrid--thread"><section class="ukFlow">' +
+        '<section class="ukPanel ukFlowThread">' +
+          '<div class="ukPanel_head">' +
+            '<h3 class="ukPanel_title">' + (nudge ? 'Your follow-up' : 'Your pitch') + '</h3>' +
+            (nudge ? '' :
+              /* the hotel's segmented control, not a set of pills invented here */
+              '<div class="ukSeg" role="group" aria-label="Tone">' + TONES.map(function (t) {
+                var on = t.k === tone;
+                return '<button class="ukSeg_b' + (on ? ' is-on' : '') + '" type="button" ' +
+                  'aria-pressed="' + on + '" data-ptone="' + t.k + '">' + t.t + '</button>';
+              }).join('') + '</div>') +
           '</div>' +
+
+          /* The three facts of the trade, on one row, the way the hotel states
+             the same three from its side. They used to sit in a panel on the
+             right called "What they are offering", which put the terms of the
+             deal further from the sentence describing them than the tips were. */
+          '<dl class="ukPitchIn ukPitchIn--row">' +
+            '<div><dt>You are asking for</dt><dd>' + s.nights + ' night' +
+              (String(s.nights) === '1' ? '' : 's') + ', ' + esc(String(s.room || s.rooms || '').toLowerCase()) + '</dd></div>' +
+            '<div><dt>You would deliver</dt><dd>' + esc((s.del || []).map(function (d) {
+              return d.q + ' × ' + d.t.toLowerCase(); }).join(', ')) + '</dd></div>' +
+            '<div><dt>Included</dt><dd>' + esc(s.inc) + '</dd></div>' +
+          '</dl>' +
+
+          '<section class="ukComposer">' +
+            '<label class="ukSrOnly" for="ukWriteTa">' +
+              (nudge ? 'Your follow-up to ' : 'Your pitch to ') + esc(s.hotel) + '</label>' +
+            '<textarea id="ukWriteTa" class="ukWrite_ta" data-draft="' + esc(key) + '" ' +
+              'data-grow>' + esc(drafts[key]) + '</textarea>' +
+          /* Under the letter, because it goes WITH the letter. On the right it read
+             as a note about the pitch rather than part of it, and it left the
+             left column one panel deep against four. */
+          (goes.length
+            ? '<section class="ukWriteWork"><div class="ukWriteWork_h">' +
+                '<p class="ukWriteWork_t">What goes with it</p>' +
+                '<span class="ukCount">' + goes.length +
+                  (goes.length === 1 ? ' piece' : ' pieces') + '</span></div>' +
+                '<div class="ukReels ukReels--sm">' + goes.map(function (w) {
+                  return '<figure class="ukReel">' + UKCV.pic(
+                    ((D.MEDIA && D.MEDIA[w.m]) || {}).src || '', w.t, '9x16') + '</figure>';
+                }).join('') + '</div>' +
+                '<p class="ukWhy">Your most-watched work is attached automatically. This is the ' +
+                'part that lands.</p></section>'
+            : '') +
+            '<div class="ukComposer_row">' +
+              '<div class="ukComposer_actions">' +
+                '<button class="ukGhost ukGhost--sm" type="button" data-copydraft="' + esc(key) + '">Copy it</button>' +
+                '<p class="ukHint">' + (nudge
+                  ? 'One follow-up is worth it. Two is pushing it.'
+                  : 'It reaches ' + esc(s.hotel) + ' as an application, with your recent work attached.') +
+                '</p>' +
+              '</div>' +
+              '<div class="ukComposer_send">' +
+                (nudge
+                  ? '<button class="ukBtn" type="button" data-sentnudge="' + esc(p.id) + '">Send the follow-up</button>'
+                  : '<button class="ukBtn" type="button" data-sent="' + esc(s.id) + '">Send this pitch</button>') +
+              '</div>' +
+            '</div>' +
+          '</section>' +
+
           (locked
             ? '<div class="ukSeam"><p class="ukSeam_t">That was your free one.</p>' +
               '<p class="ukSeam_p">Verified members get this on every hotel: three tones, the contact that ' +
@@ -441,38 +536,30 @@ window.UKCP = (function () {
               '<button class="ukBtn" type="button" data-goto="member">See what verified gets you</button></div>'
             : '') +
         '</section>' +
+      '</section>' +
 
-        '<aside class="ukSideCol">' +
-          window.UKSTAY.hotelCard(s, {
-            eager: true,
-            tag: '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>',
-            foot: '<p class="ukCard_sub">' + esc(why(s)) + '</p>'
-          }) +
-          '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">What they are offering</h3></div>' +
-            '<dl class="ukFacts ukFacts--stack">' +
-              '<div><dt>The stay</dt><dd>' + s.nights + ' nights, ' + esc(String(s.room).toLowerCase()) + '</dd></div>' +
-              '<div><dt>Included</dt><dd>' + esc(s.inc) + '</dd></div>' +
-              '<div><dt>They want</dt><dd>' + esc((s.del || []).map(function (d) {
-                return d.q + ' × ' + d.t.toLowerCase(); }).join(', ')) + '</dd></div>' +
-            '</dl>' +
-          '</section>' +
-          '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">Angles that fit this one</h3></div>' +
-            '<p class="ukAsk">Read off what this stay actually includes, not a general list.</p>' +
-            '<div class="ukChips">' + angles(s).map(function (a) {
-              return '<span class="ukChip">' + esc(a) + '</span>'; }).join('') + '</div>' +
-          '</section>' +
-          '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">When to send it</h3></div>' +
-            '<ul class="ukTips">' +
-              '<li><strong>Tuesday or Wednesday morning</strong>, their time. Monday inboxes are a graveyard.</li>' +
-              '<li><strong>Follow up once, after a week.</strong> Pitch Pilot will tell you when.</li>' +
-              '<li><strong>Email beats a DM here</strong> — this one has a real marketing contact.</li>' +
-            '</ul>' +
-          '</section>' +
-        '</aside>' +
-      '</div>';
+      '<aside class="ukSideCol">' +
+        window.UKSTAY.hotelCard(s, {
+          eager: true,
+          tag: '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>',
+          foot: '<p class="ukCard_sub">' + esc(why(s)) + '</p>'
+        }) +
+        '<section class="ukPanel"><div class="ukPanel_head">' +
+          '<h3 class="ukPanel_title">Angles that fit this one</h3></div>' +
+          '<p class="ukAsk">Read off what this stay actually includes, not a general list.</p>' +
+          '<div class="ukChips">' + angles(s).map(function (a) {
+            return '<span class="ukChip">' + esc(a) + '</span>'; }).join('') + '</div>' +
+        '</section>' +
+        '<section class="ukPanel"><div class="ukPanel_head">' +
+          '<h3 class="ukPanel_title">When to send it</h3></div>' +
+          '<ul class="ukTips">' +
+            '<li><strong>Tuesday or Wednesday morning</strong>, their time. Monday inboxes are a graveyard.</li>' +
+            '<li><strong>Follow up once, after a week.</strong> You will be told when.</li>' +
+            '<li><strong>Email beats a DM here</strong>, and this one has a real marketing contact.</li>' +
+          '</ul>' +
+        '</section>' +
+      '</aside>' +
+    '</div>';
   }
 
   /* ================= events ================= */
@@ -583,8 +670,23 @@ window.UKCP = (function () {
   /* the letter is kept as it is typed, so leaving the page does not lose it */
   document.addEventListener('input', function (e) {
     var ta = e.target.closest && e.target.closest('[data-draft]');
-    if (ta) drafts[ta.dataset.draft] = ta.value;
+    if (!ta) return;
+    drafts[ta.dataset.draft] = ta.value;
+    grow(ta);
   });
+
+  /* A letter is not a scrolling field. The box was a fixed height and the last
+     two lines of every draft sat below the fold of it, cut through the middle of
+     a line, which reads as broken rather than as scrollable. It takes the height
+     of what is in it. */
+  function grow(ta) {
+    if (!ta) return;
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  }
+  window.UKCGROW = function (root) {
+    (root || document).querySelectorAll('[data-grow]').forEach(grow);
+  };
 
   return {
     /* the pipeline, for the one page that renders it */

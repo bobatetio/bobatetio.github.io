@@ -1204,8 +1204,11 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 /* the letter. Full width of the thread column, and it is a real field. */
 .ukWrite{display:flex;flex-direction:column;gap:14px}
 .ukWrite_f{margin:0}
-.ukWrite_ta{min-height:clamp(320px,44vh,520px);resize:vertical;line-height:1.7;
-  font-family:'Lato',sans-serif;font-size:14px}
+/* The letter takes the height of what is in it (see UKCGROW). A minimum so an
+   empty one is still a letter-shaped box, and no maximum, because a scrollbar
+   through the middle of a sentence is what this was fixing. */
+.ukWrite_ta{min-height:280px;overflow:hidden;resize:none;line-height:1.7;
+  font:400 14.5px/1.7 'Lato',sans-serif}
 .ukWrite_act{display:flex;gap:9px;flex-wrap:wrap}
 .ukTips{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .ukTips li{font:400 12.5px/1.55 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
@@ -1266,3 +1269,20 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
    hotel's initial rather than sitting empty. */
 .ukPL_ph{display:grid;place-items:center;font:600 15px/1 'Lato',sans-serif;
   color:var(--text-3);background:var(--hover);border:1px solid var(--line)}
+
+/* the work that rides along with a pitch, in the side column */
+/* Thumbnails, not a gallery. At their native 9:16 across a wide panel these were
+   500px tall each and took over the page they were a footnote to. The ratio has
+   to be overridden on .ukM itself: it is the element carrying aspect-ratio, and
+   a height on the figure around it only made the two disagree. */
+.ukWriteWork .ukReels{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ukWriteWork .ukReel{margin:0;height:148px;border-radius:10px;overflow:hidden;display:block}
+.ukWriteWork .ukM{width:100%;height:100%;aspect-ratio:auto;display:block;border-radius:0}
+.ukWriteWork .ukM img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* What rides along with the letter, directly under it. */
+.ukWriteWork{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.ukWriteWork_h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 10px}
+.ukWriteWork_t{margin:0;font:700 11px/1 'Lato',sans-serif;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--text-3)}
+.ukWriteWork .ukWhy{margin-top:10px}
