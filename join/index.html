@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>Get Started · Ukreate</title>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport">
+<meta name="description" content="Create a Ukreate account. Hotels fill empty rooms with content they own. Creators get booked by hotels that want their work.">
+<link href="/favicon.ico" rel="icon">
+<link href="/favicon.svg" rel="icon" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=340">
+<link rel="stylesheet" href="/assets/css/ukdash.css?v=11">
+<link rel="stylesheet" href="/assets/css/ukfront.css?v=53">
+<script>
+/* Sign-up is always light. It is the first thing a new person sees, so it does not
+   inherit the stored theme or the OS preference. */
+document.documentElement.setAttribute('data-theme','light');
+</script>
+</head>
+<body class="ukApp ukAuthPage" data-ukjoin>
+<a class="ukSkip" href="#main">Skip to content</a>
+
+<div class="ukAuth ukAuth--solo">
+  <header class="ukAuth_top">
+    <a class="ukAuth_brand" href="/" aria-label="Ukreate home">
+      <img class="ukLogo ukLogo--onDark" src="/assets/img/ukreate-logo-white.svg" alt="Ukreate" width="510" height="166">
+      <img class="ukLogo ukLogo--onLight" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" width="510" height="166">
+    </a>
+    <p class="ukAuth_cross">Already have an account? <a class="ukAuth_link" href="/signin/">Log in</a></p>
+  </header>
+
+  <main class="ukAuth_pane" id="main">
+    <div class="ukAuth_card">
+      <h1 class="ukAuth_h">Get Started</h1>
+      <p class="ukAuth_sub">Welcome to uKreate - Let&rsquo;s create your account.</p>
+
+      <fieldset class="ukAuth_pick">
+        <legend class="ukSrOnly">Which side are you on?</legend>
+
+        <label class="ukSide2">
+          <input type="radio" name="ukside" value="creator">
+          <span class="ukSide2_b">
+            <span class="ukSide2_t">Sign up as a creator</span>
+            <span class="ukSide2_s">Get booked by hotels that want your work.</span>
+          </span>
+        </label>
+
+        <label class="ukSide2">
+          <input type="radio" name="ukside" value="hotel">
+          <span class="ukSide2_b">
+            <span class="ukSide2_t">Sign up as a hotel</span>
+            <span class="ukSide2_s">Fill unsold nights with content you own.</span>
+          </span>
+        </label>
+      </fieldset>
+
+      <section class="ukJoin_stage" id="ukJoinForm" aria-live="polite" hidden></section>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="/assets/js/ukicons.js?v=9" defer></script>
+<script src="/assets/js/ukauthx.js?v=11" defer></script>
+<script src="/assets/js/ukjoin.js?v=17" defer></script>
+</body>
+</html>

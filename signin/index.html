@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>Log in · Ukreate</title>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport">
+<meta name="robots" content="noindex,follow">
+<link href="/favicon.ico" rel="icon">
+<link href="/favicon.svg" rel="icon" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=340">
+<link rel="stylesheet" href="/assets/css/ukdash.css?v=11">
+<link rel="stylesheet" href="/assets/css/ukfront.css?v=53">
+</head>
+<body class="ukApp ukAuthPage" data-uksignin>
+<a class="ukSkip" href="#main">Skip to content</a>
+
+<div class="ukAuth ukAuth--solo">
+  <header class="ukAuth_top">
+    <a class="ukAuth_brand" href="/" aria-label="Ukreate home">
+      <img class="ukLogo ukLogo--onDark" src="/assets/img/ukreate-logo-white.svg" alt="Ukreate" width="510" height="166">
+      <img class="ukLogo ukLogo--onLight" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" width="510" height="166">
+    </a>
+    <p class="ukAuth_cross">Not got an account yet? <a class="ukAuth_link" href="/join/">Create one</a></p>
+  </header>
+
+  <main class="ukAuth_pane" id="main">
+    <p class="ukSignedOut" id="ukOut" hidden>You&rsquo;re signed out. Log back in whenever you&rsquo;re ready.</p>
+
+    <div class="ukAuth_card">
+      <h1 class="ukAuth_h">Welcome back</h1>
+      <p class="ukAuth_sub" id="ukLede">Log in and we&rsquo;ll take you to the right place.</p>
+
+      <div id="ukGoogleWrap"></div>
+
+      <form id="ukForm" novalidate>
+        <label class="ukField"><span class="ukField_l">Email</span>
+          <input class="ukField_i" name="email" type="email" placeholder="you@yourwork.com" autocomplete="email" required></label>
+
+        <label class="ukField"><span class="ukField_l" id="ukPwLabel">Password</span><span class="ukAuth_pw"><input class="ukField_i" name="password" type="password" placeholder="your password" autocomplete="current-password" required><button class="ukAuth_reveal" type="button" data-reveal aria-label="Show password" aria-pressed="false"><span data-icon="eye"></span></button></span></label>
+
+          <p class="ukAuth_reset"><button class="ukAuth_link ukAuth_linkBtn" type="button" data-reset>Reset your password</button></p>
+
+        <div id="ukKnown" hidden>
+          <button class="ukBtn ukStart_go" type="submit">Log in</button>
+        </div>
+
+        <div id="ukPick" hidden>
+          <p class="ukField_l">Which account is it?</p>
+          <p class="ukSignin_lead">Hotels host. Creators make the content.</p>
+          <div class="ukSignin_pick">
+            <button class="ukPathBtn" type="submit" data-side="hotel">Log in to my hotel account</button>
+            <button class="ukPathBtn" type="submit" data-side="creator">Log in to my creator account</button>
+          </div>
+          <p class="ukHint">We&rsquo;ll remember this next time so you only pick once.</p>
+        </div>
+      </form>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script src="/assets/js/ukicons.js?v=9" defer></script>
+<script src="/assets/js/ukauthx.js?v=11" defer></script>
+<script src="/assets/js/uksignin.js?v=13" defer></script>
+</body>
+</html>

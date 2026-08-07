@@ -1,0 +1,463 @@
+/* ===== Ukreate front door — role choice + one sign-in ===== */
+/* Tokens come from ukapp.css. Media ratios come from ukcreator.css. Nothing here is redefined. */
+
+/* ---------- front door ---------- */
+.ukFront{background:var(--bg);color:var(--text);min-height:100vh}
+
+.ukFront_main{
+  max-width:1140px;margin:0 auto;padding:8px 20px 64px;
+}
+.ukFront_lede{max-width:640px;margin:0 auto 34px;text-align:center}
+.ukFront_h{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,4.6vw,46px);line-height:1.12;letter-spacing:-.01em;
+  margin:0 0 12px;color:var(--text);text-wrap:balance;
+}
+.ukFront_p{
+  margin:0;font-size:16px;line-height:1.6;color:var(--text-2);text-wrap:balance;
+}
+
+.ukFront_grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start;
+}
+
+.ukPath{
+  display:flex;flex-direction:column;min-width:0;
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.ukPath_m{display:block;width:100%;background:var(--surface-2)}
+.ukPath_m img{width:100%;height:100%;object-fit:cover;display:block}
+
+.ukPath_b{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1;min-width:0}
+
+.ukPath_k{
+  margin:0 0 10px;font-size:11.5px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--gold-ink);
+}
+.ukPath_t{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(21px,2.3vw,26px);line-height:1.2;letter-spacing:-.005em;
+  margin:0 0 12px;color:var(--text);text-wrap:balance;
+}
+.ukPath_p{
+  margin:0 0 16px;font-size:14.5px;line-height:1.62;color:var(--text-2);text-wrap:balance;
+}
+.ukPath_l{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:9px}
+.ukPath_l li{
+  position:relative;padding-left:24px;font-size:14px;line-height:1.5;color:var(--text-2);
+  text-wrap:pretty;
+}
+.ukPath_l li::before{
+  content:"";position:absolute;left:2px;top:.52em;width:9px;height:9px;
+  border-radius:50%;background:var(--uk-gold);opacity:.85;
+}
+.ukPath_go{margin-top:auto;width:100%;justify-content:center;text-align:center}
+.ukPath_alt{
+  margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--text-3);text-align:center;
+}
+
+.ukFront_foot{
+  max-width:620px;margin:32px auto 0;text-align:center;
+  font-size:13.5px;line-height:1.6;color:var(--text-3);text-wrap:balance;
+}
+
+/* ---------- shared sign-in ----------
+   Now uses the same two-column shell as the hotel and creator doors, so all three
+   auth screens share one layout, one field treatment and one button rhythm. */
+.ukSignin_switch{margin-top:10px}
+.ukSignin_known{
+  margin:4px 0 16px;padding:12px 14px;border-radius:12px;
+  background:var(--todo-bg);font-size:13.5px;line-height:1.55;color:var(--text-2);
+  text-wrap:pretty;
+}
+.ukSignin_known strong{color:var(--text);font-weight:700}
+.ukSignin_switch{
+  width:100%;justify-content:center;text-align:center;font-size:13.5px;
+}
+.ukSignin_pick{display:grid;gap:10px;margin:10px 0 12px}
+
+/* Choice buttons carry the action only; the qualifier sits above as a lead-in line. */
+.ukSignin_lead{margin:2px 0 10px;font-size:13px;line-height:1.5;color:var(--text-2);text-wrap:pretty}
+.ukPathBtn{
+  display:block;width:100%;text-align:center;cursor:pointer;
+  padding:14px 16px;border-radius:13px;
+  background:var(--input-bg);border:1px solid var(--input-line);
+  color:var(--text);font:700 14.5px/1.3 'Lato',sans-serif;
+  transition:border-color .15s ease,background .15s ease,transform .12s ease;
+}
+.ukPathBtn:hover{border-color:var(--active-ring);background:var(--hover)}
+.ukPathBtn:active{transform:translateY(1px)}
+.ukPathBtn:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukPathBtn_t{display:block;font-size:15px;font-weight:700;line-height:1.3;color:var(--text)}
+.ukPathBtn_s{display:block;margin-top:3px;font-size:13px;line-height:1.4;color:var(--text-2)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .ukFront_grid{grid-template-columns:minmax(0,1fr);gap:18px}
+  .ukPath{max-width:560px;margin:0 auto;width:100%}
+}
+@media (max-width:560px){
+  .ukFront_main{padding:4px 16px 48px}
+  .ukPath_b{padding:18px 18px 20px}
+  .ukSignin{padding:24px 20px 22px;border-radius:16px}
+}
+@media (pointer:coarse){
+  .ukPathBtn{padding:16px}
+  .ukSignin_switch{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ukPathBtn{transition:none}
+  .ukPathBtn:active{transform:none}
+}
+
+/* ===================== SIGN UP: one page, inline form =====================
+   Replaces the full-screen two-card split. The choice is small and quiet; the form
+   unfolds under it on the same page. One primary action, one small text link. */
+.ukJoin{max-width:560px;margin-inline:auto;padding-bottom:72px}
+.ukJoin_h{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(27px,3.4vw,36px);line-height:1.12;letter-spacing:-.01em;
+  margin:0 0 8px;color:var(--text);text-wrap:balance;
+}
+.ukJoin_p{margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--text-2);text-wrap:balance}
+
+.ukJoin_pick{border:0;padding:0;margin:0 0 22px;display:grid;gap:10px}
+@media (min-width:620px){.ukJoin_pick{grid-template-columns:1fr 1fr}}
+
+.ukSide2{display:block;cursor:pointer;min-width:0}
+.ukSide2 input{position:absolute;opacity:0;width:0;height:0}
+.ukSide2_b{
+  display:block;padding:15px 14px;border-radius:14px;
+  background:var(--surface);border:1.5px solid var(--line);
+  transition:border-color .15s ease,background .15s ease;
+}
+.ukSide2:hover .ukSide2_b{border-color:var(--active-ring)}
+.ukSide2 input:focus-visible + .ukSide2_b{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukSide2 input:checked + .ukSide2_b{
+  border-color:var(--uk-gold);background:var(--active-bg);
+}
+.ukSide2_t{
+  display:flex;align-items:center;gap:10px;
+  font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text);
+}
+.ukSide2_t::before{
+  content:"";flex:0 0 auto;
+  width:17px;height:17px;border-radius:50%;
+  border:1.5px solid var(--input-line);background:var(--input-bg);
+}
+.ukSide2 input:checked + .ukSide2_b .ukSide2_t::before{
+  border-color:var(--uk-gold);
+  background:radial-gradient(circle at 50% 50%,var(--uk-gold) 0 4.5px,transparent 4.5px);
+}
+.ukSide2_s{
+  display:block;margin:5px 0 0 27px;font:400 12.5px/1.5 'Lato',sans-serif;
+  color:var(--text-3);text-wrap:balance;
+}
+
+.ukJoin_stage{padding:0;border:0;background:none;box-shadow:none}
+.ukJoin_stage.is-on{
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--line-soft);
+}
+.ukJoin_ft{
+  margin:0 0 5px;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:21px;line-height:1.2;color:var(--text);text-wrap:balance;
+}
+.ukJoin_ft:focus-visible{outline:2px solid var(--uk-gold);outline-offset:4px;border-radius:6px}
+.ukJoin_fl{margin:0 0 18px;font-size:13.5px;line-height:1.55;color:var(--text-2);text-wrap:balance}
+.ukJoin_stage .ukStart_go{width:100%;justify-content:center;text-align:center;margin-top:4px}
+.ukJoin_alt{
+  margin:20px 0 0;text-align:center;font-size:13.5px;line-height:1.5;color:var(--text-3);
+}
+@media (max-width:560px){
+  .ukJoin_stage{padding:18px 16px 20px}
+}
+@media (pointer:coarse){
+  .ukSide2_b{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ukSide2_b{transition:none}
+}
+
+/* ===================== AUTH SHELL — form left, media right =====================
+   Arrangement only: the form on the left, a full-bleed image panel on the right.
+   The whole screen is one viewport: nothing extends past it and the page never
+   scrolls on desktop. If a short viewport ever needs it, only the form column
+   scrolls, so the image stays put. */
+.ukAuthPage{min-height:100vh;background:var(--bg);overflow:hidden}
+.ukAuth{
+  position:relative;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:0;height:100vh;padding:16px;
+}
+@media (min-width:1500px){.ukAuth{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)}}
+
+/* ---------- left: the form pane ---------- */
+.ukAuth_pane{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:16px clamp(14px,3vw,44px);min-width:0;min-height:0;overflow-y:auto;
+}
+/* pinned to the top-left of the page, the way the dashboard sits, rather than
+   riding along with the vertically-centred card */
+.ukAuth_brand{position:absolute;top:28px;left:34px;z-index:5;margin:0}
+.ukAuth_brand .ukLogo{height:42px;width:auto}
+.ukAuth_card{
+  width:100%;max-width:440px;padding:22px 24px 22px;border-radius:18px;
+  background:var(--auth-card);border:1px solid var(--line);
+}
+.ukAuth_h{
+  /* Marcellus ships one weight. Asking for 700 makes the browser synthesise a bold,
+     which smears the serif's stroke contrast; a hairline stroke in the same ink
+     thickens every stem evenly and keeps the letterforms intact. Degrades to the
+     plain 400 anywhere text-stroke is unsupported. */
+  margin:0 0 6px;font:400 clamp(25px,2.5vw,31px)/1.18 'Marcellus',Georgia,serif;
+  -webkit-text-stroke:.75px currentColor;paint-order:stroke fill;
+  letter-spacing:0;color:var(--text);text-wrap:balance;text-align:center;
+}
+/* The neutral strapline is longer than the column, so nowrap was ellipsising it and
+   hiding the end of the sentence. It wraps and balances instead: the copy always
+   shows in full, and the two lines stay even. */
+.ukAuth_sub{margin:0 0 18px;font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-2);
+  text-align:center;text-wrap:balance}
+.ukAuth_foot{
+  width:100%;max-width:440px;margin:14px 0 0;text-align:center;
+  font:400 13px/1.5 'Lato',sans-serif;color:var(--text-3);
+}
+
+/* the choice sits at the top of the card, both cards on one line */
+.ukAuth_pick{
+  border:0;padding:0;margin:0 0 16px;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.ukAuth_card .ukField{margin-bottom:11px}
+.ukAuth_card .ukStart_go{width:100%;justify-content:center;text-align:center}
+
+/* ---------- right: media ---------- */
+.ukAuth_media{
+  position:relative;border-radius:20px;overflow:hidden;isolation:isolate;
+  background:var(--uk-deep-3);min-height:0;
+}
+.ukAuth_slide{position:absolute;inset:0;margin:0;opacity:0;transition:opacity .5s ease}
+.ukAuth_slide.is-on{opacity:1}
+.ukAuth_slide img{width:100%;height:100%;object-fit:cover;display:block}
+.ukAuth_cap{
+  position:absolute;left:20px;right:20px;bottom:78px;
+  padding:20px 20px 22px;border-radius:16px;
+  background:rgba(8,22,29,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.14);
+}
+.ukAuth_capT{
+  margin:0 0 8px;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(20px,2vw,27px);line-height:1.16;color:#fff;text-wrap:balance;
+}
+.ukAuth_capP{
+  margin:0;font:400 13.5px/1.55 'Lato',sans-serif;color:rgba(255,255,255,.9);text-wrap:balance;
+}
+.ukAuth_nav{
+  position:absolute;left:20px;right:20px;bottom:20px;z-index:3;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.ukAuth_dots{display:flex;gap:7px}
+.ukAuth_dot{
+  width:24px;height:5px;border-radius:999px;border:0;padding:0;cursor:pointer;
+  background:rgba(255,255,255,.34);transition:background .2s ease,width .2s ease;
+}
+.ukAuth_dot.is-on{background:#fff;width:36px}
+.ukAuth_dot:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukAuth_arrows{display:flex;gap:8px}
+.ukAuth_arrow{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);color:#fff;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  font:400 16px/1 'Lato',sans-serif;
+}
+.ukAuth_arrow:hover{background:rgba(255,255,255,.28)}
+.ukAuth_arrow:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+/* ---------- stacked below 980: the page scrolls normally again ---------- */
+@media (max-width:980px){
+  .ukAuthPage{overflow:visible}
+  .ukAuth{grid-template-columns:minmax(0,1fr);height:auto;min-height:100vh;padding:12px}
+  .ukAuth_media{order:-1;min-height:190px;margin-bottom:6px}
+  .ukAuth_cap{left:12px;right:12px;bottom:64px;padding:14px 14px 16px}
+  .ukAuth_capP{display:none}
+  .ukAuth_nav{left:12px;right:12px;bottom:14px}
+  .ukAuth_pane{padding:16px 4px 34px;justify-content:flex-start;overflow:visible}
+  .ukAuth_brand{position:static;text-align:center;margin:0 0 16px}
+}
+@media (max-width:520px){
+  .ukAuth_media{min-height:160px}
+  .ukAuth_capT{font-size:18px}
+  .ukAuth_pick{grid-template-columns:1fr}
+  .ukAuth_arrow{width:34px;height:34px}
+}
+@media (prefers-reduced-motion:reduce){.ukAuth_slide{transition:none}}
+
+/* side kicker inside the auth card */
+.ukAuth_kick{
+  margin:0 0 10px;font:700 11.5px/1.4 'Lato',sans-serif;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--gold-ink);
+}
+.ukAuth_card .ukAuth_row{margin:2px 0 18px}
+.ukAuth_card .ukAuth_alt{margin:16px 0 0;text-align:center;font-size:13.5px;color:var(--text-3)}
+.ukAuth_pane > .ukSignedOut{width:100%;max-width:470px;margin:0 0 14px}
+.ukAuth_card .ukSignin_pick{margin:10px 0 12px}
+.ukAuth_card .ukPathBtn{width:100%}
+
+/* Short viewports (a 768-tall laptop) need a little less air, not a scrollbar. */
+@media (min-width:981px) and (max-height:860px){
+  .ukAuth{padding:12px}
+  .ukAuth_brand{top:22px;left:28px}
+  .ukAuth_brand .ukLogo{height:36px;width:auto}
+  .ukAuth_card{padding:18px 20px 18px;border-radius:16px}
+  .ukAuth_h{margin-bottom:5px;font-size:23px}
+  .ukAuth_pick{margin-bottom:12px;gap:8px}
+  .ukSide2_b{padding:11px 13px}
+  .ukSide2_s{margin-top:3px;font-size:12px}
+  .ukAuth_card .ukField{margin-bottom:8px}
+  .ukJoin_stage.is-on{margin-top:14px;padding-top:14px}
+  .ukTerms{margin:2px 0 12px;padding:7px 10px}
+  .ukOr{margin:12px 0 10px}
+  .ukGoogle{padding:10px 16px}
+  .ukAuth_foot{margin-top:10px}
+  .ukAuth_cap{bottom:70px;padding:16px 18px 18px}
+  .ukAuth_capT{font-size:22px;margin-bottom:6px}
+}
+@media (min-width:981px) and (max-height:760px){
+  .ukAuth_capP{display:none}
+  .ukAuth_card .ukField{margin-bottom:6px}
+  .ukAuth_h{margin-bottom:4px;font-size:21px}
+}
+
+/* The descriptions do their job on the empty page. Once a side is chosen they have
+   been read and are only taking room the form needs, so they step aside. */
+.ukAuth_pick.is-picked .ukSide2_s{display:none}
+.ukAuth_pick.is-picked .ukSide2_b{padding:12px 14px}
+
+/* ===================== SOLO AUTH — one centred column =====================
+   Sign-up and log in drop the media panel: the card is the whole page, centred in
+   the viewport. The logo keeps the top-left corner it has everywhere else, and the
+   one link to the other door sits opposite it, so the card holds nothing but the
+   thing you came to do. */
+.ukAuth--solo{display:block;height:100vh;padding:0}
+.ukAuth_top{
+  position:absolute;top:0;left:0;right:0;z-index:5;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:10px clamp(20px,3.4vw,46px);
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.ukAuth--solo .ukAuth_brand{position:static;display:inline-flex;align-items:center}
+.ukAuth_cross{
+  margin:0;font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+}
+/* the door pages' role-swap line sits on the sky as well */
+.ukAuth--solo .ukAuth_foot{color:var(--text-2)}
+/* The header floats over the pane. The reserve is matched top and bottom so the card
+   sits on the true centre line of the viewport rather than a little below it, and the
+   top half still clears the logo once the form is open and the card is tall. */
+.ukAuth--solo .ukAuth_pane{
+  height:100%;width:100%;
+  padding:clamp(76px,9vh,104px) 20px;
+  align-items:center;justify-content:center;
+}
+.ukAuth--solo .ukAuth_card{max-width:480px;margin-inline:auto}
+.ukAuth--solo .ukSignedOut{max-width:480px;text-align:center}
+
+@media (max-width:980px){
+  .ukAuth--solo{height:auto;min-height:100vh}
+  .ukAuth--solo .ukAuth_pane{padding-block:88px 40px;justify-content:center;overflow:visible}
+}
+@media (max-width:560px){
+  .ukAuth_top{padding:10px 18px;gap:12px}
+  .ukAuth_cross{white-space:normal;text-align:right;text-wrap:balance}
+}
+@media (min-width:981px) and (max-height:860px){
+  .ukAuth_top{padding:8px clamp(20px,3.4vw,46px)}
+  .ukAuth--solo .ukAuth_pane{padding-block:72px}
+}
+
+/* In one centred column the picker's supporting copy was the only thing still
+   running to the left edge. Input labels stay left, because they label a field you
+   are about to type in; these three head a pair of buttons instead. */
+.ukAuth--solo #ukPick .ukField_l,
+.ukAuth--solo .ukSignin_lead,
+.ukAuth--solo #ukPick .ukHint{text-align:center}
+
+/* The two door pages wrap their form in .ukStart_ask, which caps fields at 360px —
+   a width that made sense beside a media panel and reads as a mistake in a centred
+   column, where the inputs ended up narrower than the button under them. */
+.ukAuth--solo .ukAuth_card .ukStart_ask .ukField,
+.ukAuth--solo .ukAuth_card .ukStart_ask .ukWhy,
+.ukAuth--solo .ukAuth_card .ukStart_ask .ukHint,
+.ukAuth--solo .ukAuth_card .ukStart_ask .ukStart_p{max-width:none}
+.ukAuth--solo .ukAuth_kick{text-align:center}
+
+/* ---------- the sky behind the card ----------
+   A fixed layer rather than a background on the page, so it can carry its own opacity
+   without dragging the header and the card down with it. The card keeps its solid
+   fill, so nothing that has to be read sits on the photograph. */
+.ukAuth--solo::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url('/assets/img/uk/auth-sky.jpg') center/cover no-repeat;
+  opacity:.24;
+}
+/* only the pane needs lifting; the header is already positioned and stacked, and
+   giving it position:relative here put it back in flow and pushed the page long */
+.ukAuth--solo .ukAuth_pane{position:relative;z-index:1}
+/* the same photograph at full strength on a near-black page reads as a hole in it */
+@media (prefers-reduced-transparency:reduce){.ukAuth--solo::before{opacity:.12}}
+
+/* Google sat 3px under the primary: the two carry different padding and font sizes,
+   and only one of them has a border. An exact height on both settles it, the same way
+   the onboarding nav buttons are matched. */
+.ukAuth--solo .ukAuth_card .ukStart_go,
+.ukAuth--solo .ukAuth_card .ukGoogle,
+.ukAuth--solo .ukAuth_card .ukPathBtn{
+  height:47px;box-sizing:border-box;padding-block:0;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- one rhythm down the form ----------
+   Input to input is 11px of space, a 10px label, then 7px. The button now takes the
+   same 28px from the password field that the password field takes from the email
+   field, so the three read as one evenly spaced stack. The keep-signed-in row moved
+   under the primary; sitting between the field and the button it was 24px tall and
+   made that gap almost twice the other. */
+/* Matched on empty space, not on box-to-box distance. Input to input is 28px, but
+   10px of that is the label: only 18px of it is actually blank. The button has no
+   label in its gap, so 28px there read as the bigger space. 18px sits level.
+   (Collapses with the field's own 11px bottom margin, so this is the whole gap.) */
+.ukAuth--solo .ukAuth_card #ukForm .ukStart_go{margin-top:18px}
+.ukAuth--solo .ukAuth_card .ukAuth_row{margin:16px 0 0}
+
+/* Reset sits at the bottom-left of the password field, close enough to read as that
+   field's own affordance rather than a separate line in the stack. */
+.ukAuth--solo .ukAuth_card .ukAuth_reset{
+  /* the field carries 11px below it; -1 brings that to the 10 used under the link */
+  margin:-1px 0 0;text-align:left;
+}
+.ukAuth--solo .ukAuth_card .ukAuth_reset .ukAuth_linkBtn{
+  font:400 13px/1.5 'Lato',sans-serif;padding:0;
+}
+
+/* With the reset line under the field the 18px reads as a gap on top of a gap, so the
+   button closes up to it. Scoped to that pairing, so sign-up (terms then button)
+   keeps its own spacing. */
+/* Same gap above and below the reset line, so it reads as one step in the stack
+   rather than a line stuck to the field with a hole under it. On /signin/ the action
+   is wrapped in #ukKnown, so it is not the link's direct sibling — that is why the
+   adjacency rule alone left it at 18. */
+.ukAuth--solo .ukAuth_card #ukForm .ukAuth_reset + .ukStart_go,
+.ukAuth--solo .ukAuth_card #ukForm .ukAuth_reset + #ukKnown .ukStart_go,
+.ukAuth--solo .ukAuth_card #ukForm .ukAuth_reset + #ukPick{margin-top:10px}
+
+/* the reset panel is centred like the card it replaces, and its own field and copy
+   run the full width rather than the onboarding column cap */
+.ukAuth--solo .ukAuth_card #ukResetForm .ukField,
+.ukAuth--solo .ukAuth_card .ukAuth_sent .ukHint{max-width:none}
+.ukAuth--solo .ukAuth_card .ukAuth_sent,
+.ukAuth--solo .ukAuth_card .ukAuth_sent .ukHint{text-align:center}
+/* the tick is a grid box, so text-align cannot move it — it centres on its margin */
+.ukAuth--solo .ukAuth_card .ukAuth_sentIco{margin-inline:auto}
+.ukAuth--solo .ukAuth_card .ukAuth_alt{margin-top:14px}

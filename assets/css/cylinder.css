@@ -1,0 +1,78 @@
+/* Cylinder carousel — vanilla port of the CylinderCarousel React component.
+   Cards sit on the wall of a cylinder: each is turned by i x (1turn / n) and
+   pushed back along Z by the ring radius, so the whole set reads as one solid
+   drum. The drum's rotation is driven from JS rather than a CSS animation,
+   because we need the live angle to know which cards face the viewer (those
+   play; the rest stay paused) and to ease the spin to a stop on hover.
+   Self-contained: /for-creators/ does not load surfer.css, so the creator
+   profile chip is restyled here for the larger card. */
+
+.ukCyl{
+  --n:10;                       /* card count, re-set from JS */
+  --w:320px;                    /* card width before perspective */
+  --gap:0.5em;                  /* breathing room between neighbours */
+  --ba:calc(1turn / var(--n));  /* angle between cards */
+  position:relative;
+  /* Full bleed: break out of the hero's max-width and inline padding so the arc
+     runs edge to edge. .fcHero already clips, so 100vw cannot cause overflow. */
+  width:100vw;
+  max-width:none;
+  margin-inline:calc(50% - 50vw);
+  /* Pulled up under the copy. This tracks the hero's top padding one-for-one:
+     the copy needed pushing clear of the navbar, and this cancels that shift so
+     the arc itself stays exactly where it was. */
+  margin-top:clamp(-112px,-6.6vw,-46px);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  /* Purely decorative since the hover chips came out, and its box overlaps the
+     CTA row by ~46px because of the negative top margin. Without this it eats
+     hover and clicks on the buttons. */
+  pointer-events:none;
+  /* perspective is set from JS, tied to the ring radius */
+  /* Fixed height, not min-height: a card's layout box is its unprojected size
+     (--w x 10/7), which is far taller than anything the perspective actually
+     draws, so the container would otherwise reserve ~200px of dead space. The
+     drum is centred, so clipping is symmetrical. */
+  height:clamp(340px,32vw,460px);   /* tall enough for the full edge cards, so nothing is sliced */
+  /* No edge mask — the arc runs to both screen edges at full opacity. */
+}
+
+.ukCyl_drum{
+  display:grid;
+  place-items:center;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+
+.ukCyl_card{
+  grid-area:1/1;
+  width:var(--w);
+  aspect-ratio:9/16;
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+  background:#14110f;
+  backface-visibility:hidden;
+  box-shadow:0 26px 55px rgba(0,0,0,.5);
+  /* set from JS: rotateY(i * step) translateZ(-radius) */
+}
+.ukCyl_card img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(.92);
+}
+.ukCyl_card video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(.92);
+}
+.ukCyl_card::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top right,rgba(0,0,0,.28),transparent 60%);
+}
+
+@media (max-width:960px){
+  .ukCyl{--w:240px;height:340px}
+}
+@media (max-width:560px){
+  .ukCyl{--w:190px;height:275px}
+}

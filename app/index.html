@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard · Ukreate</title>
+<meta content="width=device-width,initial-scale=1" name="viewport">
+<meta name="robots" content="noindex,nofollow">
+<link href="/favicon.ico" rel="icon">
+<link href="/favicon.svg" rel="icon" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=344">
+<link rel="stylesheet" href="/assets/css/ukdash.css?v=27">
+<link rel="stylesheet" href="/assets/css/ukcalc.css?v=4">
+</head>
+<body class="ukApp" data-ukapp>
+
+<a class="ukSkip" href="#ukMain">Skip to content</a>
+
+<aside class="ukSide" id="ukSide" aria-label="Sections">
+  <div class="ukSide_brand">
+    <a href="/" aria-label="Ukreate home">
+      <img class="ukLogo ukLogo--onDark" src="/assets/img/ukreate-logo-white.svg" alt="Ukreate" width="510" height="166">
+      <img class="ukLogo ukLogo--onLight" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" width="510" height="166">
+      <img class="ukMark" src="/assets/img/ukreate-mark.svg" alt="Ukreate" width="123" height="148">
+    </a>
+  </div>
+  <button class="ukSide_tab" type="button" data-siderail
+          aria-label="Collapse the menu" aria-expanded="true" title="Collapse the menu">
+    <svg viewBox="0 0 12 24" aria-hidden="true" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8.2 5.5 4 12l4.2 6.5"/>
+    </svg>
+  </button>
+
+  <nav class="ukSide_scroll" id="ukNav" aria-label="Main"></nav>
+  <div class="ukSide_foot" id="ukSideCard"></div>
+</aside>
+
+<header class="ukTop">
+  <button class="ukTop_burger" type="button" aria-label="Sections" data-burger>
+    <span data-icon="list"></span>
+  </button>
+  <nav class="ukCrumb" id="ukCrumb" aria-label="Breadcrumb"></nav>
+
+  <div class="ukAskBar" data-ask></div>
+
+  <div class="ukNotify">
+    <button class="ukTop_icon" type="button" data-notify-toggle aria-expanded="false"
+            aria-haspopup="true" aria-controls="ukNotifyPanel" aria-label="Notifications">
+      <svg class="ukBell" viewBox="0 0 15.9998 20" aria-hidden="true"><path d="M10.5767 17.5C10.8102 17.5001 10.9993 17.6893 10.9995 17.9229C10.9995 17.9735 10.9912 18.0244 10.9722 18.0713C10.5148 19.199 9.35604 20 7.99951 20C6.64308 19.9999 5.48517 19.1989 5.02783 18.0713C5.00879 18.0243 4.99951 17.9735 4.99951 17.9229C4.99974 17.6893 5.1897 17.5 5.42333 17.5H10.5767ZM8.10009 2.00098C8.03462 2.32381 7.99951 2.65784 7.99951 3C7.99951 5.76134 10.2382 7.99986 12.9995 8C13.4577 8 13.9021 7.93868 14.3237 7.82324L14.6645 10.8389C14.7503 11.5952 15.0575 12.3068 15.5444 12.8799C16.5778 14.0962 15.7388 16 14.1694 16H1.82958C0.260461 15.9998 -0.577777 14.0961 0.455561 12.8799C0.94233 12.3068 1.24873 11.5951 1.33447 10.8389L1.67919 7.79395C2.0534 4.49088 4.77058 2.00013 7.99951 2C8.03285 2 8.06686 2.00045 8.10009 2.00098ZM12.9995 0C14.6564 0 15.9995 1.34315 15.9995 3C15.9995 4.65685 14.6564 6 12.9995 6C11.3428 5.99986 9.99951 4.65677 9.99951 3C9.99951 1.34323 11.3428 0.000135543 12.9995 0Z" fill="currentColor"/></svg>
+      <span class="ukTop_dot" hidden></span>
+    </button>
+    <div class="ukNotifyPanel" id="ukNotifyPanel" hidden></div>
+  </div>
+
+  <div class="ukAcct">
+    <button class="ukAcct_btn" type="button" data-menu-toggle aria-expanded="false" aria-haspopup="true" aria-controls="ukMenu">
+      <span class="ukSide_avatar">RT</span>
+      <span class="ukAcct_who">
+        <span class="ukAcct_prop">MiraGrace Estate</span>
+        <span class="ukAcct_plan">Hotel Access</span>
+      </span>
+      <svg class="ukAcct_car" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="ukMenu" id="ukMenu" role="menu" hidden>
+      <p class="ukMenu_head">Signed in as<strong>Robert Torres</strong></p>
+      <button class="ukMenu_i" type="button" role="menuitem" data-goto="property">Property profile</button>
+      <button class="ukMenu_i" type="button" role="menuitem" data-goto="hire">Who to host</button>
+      <button class="ukMenu_i" type="button" role="menuitem" data-goto="settings">Settings</button>
+      <button class="ukMenu_i" type="button" role="menuitem" data-goto="settings">Plan &amp; billing</button>
+      <div class="ukMenu_rule"></div>
+      <button class="ukMenu_i ukMenu_i--out" type="button" role="menuitem" data-signout>Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main class="ukMain" id="ukMain">
+  <section class="ukView" aria-live="polite"></section>
+</main>
+
+<script src="/assets/vendor/lottie-light.min.js?v=1" defer></script>
+<script src="/assets/js/uklottie.js?v=1" defer></script>
+<script src="/assets/js/ukicons.js?v=9" defer></script>
+<script src="/assets/js/ukshared.js?v=3" defer></script>
+<!-- THE stay card, rendered by both apps. See the file header. -->
+<script src="/assets/js/ukstaycard.js?v=2" defer></script>
+<script src="/assets/js/ukattrib.js?v=5" defer></script>
+<script src="/assets/js/ukpitchin.js?v=5" defer></script>
+<script src="/assets/js/uknotify.js?v=1" defer></script>
+<script src="/assets/js/ukfavs.js?v=1" defer></script>
+<script src="/assets/js/ukreviews.js?v=1" defer></script>
+<script src="/assets/js/ukinvite.js?v=2" defer></script>
+<script src="/assets/js/ukmarkets.js?v=1" defer></script>
+<script src="/assets/js/ukdata.js?v=95" defer></script>
+<script src="/assets/js/ukviews.js?v=215" defer></script>
+<script src="/assets/js/ukroi.js?v=48" defer></script>
+<script src="/assets/js/ukcreators.js?v=113" defer></script>
+<script src="/assets/js/ukchart.js?v=7" defer></script>
+<script src="/assets/js/ukdash.js?v=21" defer></script>
+<script src="/assets/js/ukdata2.js?v=9" defer></script>
+<script src="/assets/js/ukdotmap.js?v=10" defer></script>
+<script src="/assets/js/ukhire.js?v=8" defer></script>
+<script src="/assets/js/ukguide.js?v=1" defer></script>
+<script src="/assets/js/ukapp.js?v=175" defer></script>
+<script src="/assets/js/ukaskbrain.js?v=1" defer></script>
+<script src="/assets/js/ukask.js?v=35" defer></script>
+<script src="/assets/js/ukcalc.js?v=4" defer></script>
+</body>
+</html>

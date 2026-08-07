@@ -1,0 +1,12 @@
+# design-review captures
+temporary screenshots/
+
+# node — only ever needed for the Playwright capture tool, never for the site
+node_modules/
+
+# local env
+.env
+.env.local
+
+# macOS
+.DS_Store

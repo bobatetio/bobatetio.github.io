@@ -1,0 +1,576 @@
+/* ===== Ukreate dashboards — bento layout, KPI cards, charts =====
+   Sits on top of ukapp.css. Every colour resolves to an existing Ukreate token
+   except the three chart series steps, which are new because charts did not
+   exist before; both sets were validated rather than eyeballed. */
+
+/* ---------- chart series, per theme ---------- */
+:root,
+:root:root[data-theme="light"]{
+  --c1:#1596b0; --c2:#d7a543; --c3:#2fae8f;
+  --c1-soft:rgba(21,150,176,.28);
+  --c1-track:rgba(16,46,55,.09);
+  /* off-white, not pure white: lifts off the cream page without going stark */
+  --auth-card:#fcfbf8;
+  --dash-hero:linear-gradient(150deg,#123c49,#0a2029);
+  --dash-hero-line:rgba(215,165,67,.4);
+  --dash-ink-bg:linear-gradient(150deg,var(--uk-deep) 0%,var(--uk-deep-2) 55%,var(--uk-deep-3) 100%);
+  --dash-ink-line:rgba(255,255,255,.12);
+}
+
+/* ---------- page head ---------- */
+.ukDashTop{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;margin:0 0 22px;
+}
+.ukDashTop_h{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(26px,3vw,36px);line-height:1.1;letter-spacing:-.01em;
+  margin:0 0 6px;color:var(--text);text-wrap:balance;
+}
+.ukDashTop_p{margin:0;font-size:14.5px;line-height:1.55;color:var(--text-2);text-wrap:balance}
+.ukDashTop_act{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ---------- bento ---------- */
+.ukBento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin:0 0 16px}
+.ukBento > *{min-width:0}
+.c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
+.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+
+/* ---------- KPI ---------- */
+.ukK{
+  position:relative;display:flex;flex-direction:column;gap:2px;
+  padding:18px 18px 16px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.ukK_l{
+  margin:0 46px 10px 0;font-size:12.5px;font-weight:700;line-height:1.35;
+  color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ukK_v{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:38px;line-height:1;
+  letter-spacing:-.015em;color:var(--text);margin:0 0 10px;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.ukK_v small{font-size:.55em;letter-spacing:0;opacity:.6;margin-left:2px}
+.ukK_n{margin:auto 0 0;font-size:12.5px;line-height:1.4;color:var(--text-3);display:flex;align-items:center;gap:7px}
+.ukK_d{
+  display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;
+  padding:3px 7px;border-radius:999px;font-size:11.5px;font-weight:700;
+  background:var(--tag-you-bg);color:var(--tag-you-ink);white-space:nowrap;
+}
+.ukK_d.is-down{background:var(--tag-wait-bg);color:var(--tag-wait-ink)}
+.ukK_go{
+  position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;
+  background:var(--hover);border:1px solid var(--line);color:var(--text-2);
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.ukK_go:hover{background:var(--active-bg);color:var(--text);border-color:var(--active-ring)}
+.ukK_go:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukK_go svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* the one filled card in the row */
+.ukK--hero{background:var(--dash-hero);border-color:var(--dash-hero-line)}
+.ukK--hero .ukK_l{color:rgba(255,255,255,.72)}
+.ukK--hero .ukK_v{color:#fff}
+.ukK--hero .ukK_n{color:rgba(255,255,255,.66)}
+.ukK--hero .ukK_d{background:rgba(215,165,67,.24);color:#f0cd83}
+.ukK--hero .ukK_go{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff}
+.ukK--hero .ukK_go:hover{background:rgba(255,255,255,.2)}
+
+/* ---------- card ---------- */
+.ukCard{
+  display:flex;flex-direction:column;padding:18px 18px 18px;border-radius:18px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+}
+.ukCard_h{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+.ukCard_h+ul.ukRow{margin-top:-6px}
+.ukCard_t{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;line-height:1.2;
+  margin:0;color:var(--text);flex:1;min-width:0;
+}
+/* .ukCard is also a flex column with its own 14px `gap` (ukapp.css), which stacks on
+   top of .ukCard_h's own margin-bottom between every pair of children — so closing
+   the headline-to-subhead space needs to cancel both the flex gap and the headline's
+   margin, not just look like a plausible offset. */
+/* Scoped to the bento cards this file actually styles. Unscoped, it reached
+   every .ukCard_sub in the product — pulling subtitles 22px up onto their own
+   titles on the stay card, the ROI link cards and anywhere else that reuses the
+   shared card. Fixed here rather than patched at each victim. */
+.ukBento .ukCard_sub{margin:-22px 0 14px;font-size:13px;line-height:1.5;color:var(--text-3);text-wrap:balance}
+/* the same double-count happens again between the subhead and whatever comes next
+   (chart/list) — scoped to the bento grids (dashboard + ROI) so it doesn't touch the
+   creator-side cards that reuse .ukCard_sub with different spacing intent. */
+.ukBento .ukCard_sub{margin-bottom:0}
+.ukCard > .ukCh{flex:1}
+.ukCard_more{
+  flex:0 0 auto;background:none;border:0;cursor:pointer;padding:4px 2px;
+  font:700 13px 'Lato',sans-serif;color:var(--accent);
+}
+.ukCard_more:hover{text-decoration:underline}
+.ukCard_more:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px;border-radius:6px}
+.ukCard_pill{
+  flex:0 0 auto;padding:5px 11px;border-radius:999px;border:1px solid var(--line);
+  background:var(--hover);font:700 12px 'Lato',sans-serif;color:var(--text-2);cursor:pointer;
+}
+.ukCard_pill:hover{border-color:var(--active-ring);color:var(--text)}
+
+/* dark accent card, the one deliberate high-contrast block per screen */
+.ukCard--ink{background:var(--dash-ink-bg);border-color:var(--dash-ink-line);color:#fff;position:relative;overflow:hidden}
+.ukCard--ink .ukCard_t{color:#fff}
+.ukCard--ink .ukCard_sub,.ukCard--ink .ukInk_n{color:rgba(255,255,255,.66)}
+.ukInk_v{
+  font-family:'Marcellus',Georgia,serif;font-size:40px;line-height:1;margin:6px 0 8px;
+  color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.015em;
+}
+.ukInk_n{margin:0 0 10px;font-size:13px;line-height:1.5;text-wrap:balance}
+.ukInk_link{
+  align-self:flex-start;padding:0;border:0;background:none;cursor:pointer;
+  font:700 12.5px 'Lato',sans-serif;color:var(--uk-gold-2);
+  text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(239,196,112,.5);
+}
+.ukInk_link:hover{color:#fff;text-decoration-color:currentColor}
+.ukInk_link:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px;border-radius:4px}
+.ukCalcBtn{
+  display:flex;align-items:center;gap:10px;width:100%;margin-top:6px;padding:8px 12px;
+  border:1px solid rgba(215,165,67,.38);border-radius:12px;
+  background:linear-gradient(135deg,rgba(215,165,67,.22),rgba(215,165,67,.1));
+  color:#fff;cursor:pointer;text-align:left;transition:background .15s ease,border-color .15s ease;
+}
+.ukCalcBtn:hover{border-color:rgba(215,165,67,.56);background:linear-gradient(135deg,rgba(215,165,67,.3),rgba(215,165,67,.14))}
+.ukCalcBtn:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukCalcBtn:disabled{cursor:default;opacity:.72}
+.ukCalcBtn_ic{
+  flex:none;width:36px;height:36px;border-radius:8px;overflow:hidden;display:block;
+}
+.ukCalcBtn span{font:600 12px/1.35 'Lato',sans-serif;color:rgba(255,255,255,.88)}
+
+/* ---------- charts ---------- */
+.ukCh{color:var(--text);display:flex;flex-direction:column}
+.ukCh--caps{flex:1;min-height:150px}
+.ukCh_plot{flex:1;display:flex;gap:10px;min-height:120px}
+.ukCh_axis{flex:0 0 auto;display:flex;flex-direction:column;justify-content:space-between;
+  padding:2px 0;font-size:11px;font-weight:700;color:var(--text-3);font-variant-numeric:tabular-nums;
+  text-align:right;line-height:1}
+.ukCh_grid{flex:1;position:relative;min-width:0;
+  background-image:repeating-linear-gradient(to top, var(--line) 0, var(--line) 1px, transparent 1px, transparent 25%);
+  background-position:top;background-repeat:no-repeat}
+.ukBars{flex:1;display:flex;align-items:flex-end;gap:6px;min-height:120px;height:100%}
+.ukBars_c{flex:1;min-width:0;display:flex;align-items:flex-end;justify-content:center;height:100%}
+.ukBars_b{
+  width:100%;max-width:34px;border-radius:999px;cursor:pointer;
+  background:var(--c1-soft);border:0;padding:0;
+  transition:opacity .15s ease,transform .15s ease;
+}
+.ukBars_b.is-hi{background:var(--c1)}
+.ukBars_b.is-pending{
+  background:repeating-linear-gradient(45deg,var(--text-3) 0 3px,transparent 3px 8px);
+  opacity:.42;
+}
+.ukBars_b:hover{opacity:.82}
+.ukBars_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukCh_keys{
+  display:flex;gap:6px;margin-top:10px;font-size:12px;font-weight:700;color:var(--text-3);
+}
+.ukCh_keys span{flex:1;min-width:0;text-align:center;white-space:nowrap}
+
+.ukCh--gauge{display:flex;flex-direction:column;align-items:center}
+.ukCh_dial{position:relative;width:100%;max-width:230px}
+.ukCh--gauge svg{width:100%;display:block}
+.ukCh_arc{cursor:pointer;transition:opacity .15s ease}
+.ukCh_arc:hover,.ukCh_arc:focus-visible{opacity:.8;outline:none}
+.ukCh_mid{position:absolute;left:0;right:0;bottom:2px;text-align:center;pointer-events:none}
+.ukCh_mid strong{
+  display:block;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:30px;
+  line-height:1;color:var(--text);font-variant-numeric:tabular-nums;
+}
+.ukCh_mid span{display:block;margin-top:3px;font-size:12px;color:var(--text-3);white-space:nowrap}
+.ukCh_lg{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;width:100%}
+.ukCh_lg li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--text-2)}
+.ukCh_lg_l{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukCh_lg_v{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ukCh_sw{width:11px;height:11px;border-radius:3px;flex:0 0 auto;background:var(--c1)}
+.ukCh_sw[data-c="2"]{background:var(--c2)}
+.ukCh_sw[data-c="3"]{background:var(--c3)}
+.ukCh_sw[data-c="4"]{background:var(--c1);opacity:.55}
+.ukCh_sw[data-c="5"]{background:var(--c2);opacity:.55}
+.ukCh_sw[data-c="6"]{background:var(--c3);opacity:.55}
+.ukCh_sw.is-hatch{
+  background:repeating-linear-gradient(45deg,var(--text-3) 0 2px,transparent 2px 5px);
+  opacity:.7;
+}
+
+.ukCh--ring{position:relative;width:100%;max-width:180px;margin:0 auto}
+.ukCh--ring svg{width:100%;display:block}
+.ukCh_ticks{color:var(--text)}
+.ukCh_mid--c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ukCh--ring .ukCh_mid{top:0;bottom:0;display:grid;place-content:center}
+
+.ukSeg{display:flex;gap:3px;height:38px}
+.ukSeg_i{
+  display:grid;place-items:center;border-radius:999px;min-width:0;cursor:pointer;
+  background:var(--c1);color:#06181d;font:700 12px 'Lato',sans-serif;
+  transition:opacity .15s ease;
+}
+.ukSeg_i[data-c="2"]{background:var(--c2)}
+.ukSeg_i[data-c="3"]{background:var(--c3)}
+/* Beyond three the palette was wrapping back to the first colour, so a
+   four-stage bar drew Inquiry and Complete in exactly the same teal. */
+.ukSeg_i[data-c="4"]{background:var(--c1);opacity:.55}
+.ukSeg_i[data-c="5"]{background:var(--c2);opacity:.55}
+.ukSeg_i[data-c="6"]{background:var(--c3);opacity:.55}
+/* A hatched segment is a pending one, and its own hatching was running straight
+   through the number written on it. The stripes sit behind the label rather than
+   across it, so the value stays readable at any width. */
+.ukSeg_i.is-hatch{
+  background:repeating-linear-gradient(45deg,var(--text-3) 0 3px,transparent 3px 8px);
+  color:var(--text);border:1px solid var(--line);
+}
+.ukSeg_i.is-hatch span{background:var(--surface);border-radius:9999px;padding:2px 8px}
+.ukSeg_i:hover,.ukSeg_i:focus-visible{opacity:.85;outline:none}
+.ukSeg_i span{padding:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukSeg_k{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+.ukSeg_k li{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-2);white-space:nowrap}
+
+.ukCh--area{flex:1}
+.ukCh_plot{position:relative;flex:1;min-height:118px}
+.ukCh--area svg{width:100%;height:100%;display:block}
+.ukCh_dot{
+  position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;padding:0;
+  border-radius:50%;background:var(--surface);border:2.4px solid var(--c1);cursor:pointer;
+}
+.ukCh_dot:hover{background:var(--c1)}
+.ukCh_dot:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+/* the second series on a two-line chart, in the palette's own second colour */
+.ukCh_dot--b{border-color:var(--c2)}
+.ukCh_dot--b:hover{background:var(--c2)}
+.ukCh_sw--b{background:var(--c2)}
+/* Two lines have to say which is which. One does not: the card's title already
+   named it, and a legend of one is a label with extra steps. */
+.ukCh_leg{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px}
+.ukCh_leg_i{display:inline-flex;align-items:center;gap:8px;
+  font:600 12.5px/1 'Lato',sans-serif;color:var(--text-2)}
+
+/* tooltip */
+.ukTip{
+  position:fixed;z-index:90;pointer-events:none;opacity:0;transform:translateY(3px);
+  transition:opacity .12s ease,transform .12s ease;
+  padding:8px 11px;border-radius:10px;background:#0a1c25;color:#fff;
+  box-shadow:0 12px 30px rgba(0,0,0,.34);max-width:220px;
+}
+.ukTip.is-on{opacity:1;transform:none}
+.ukTip_k{display:block;font-size:11px;color:rgba(255,255,255,.66);white-space:nowrap}
+.ukTip_v{display:block;font-size:14px;font-weight:700;white-space:nowrap}
+
+/* ---------- compact list used across the cards ---------- */
+.ukRow{list-style:none;margin:0;padding:0;display:grid;gap:0px}
+/* min-width:0 so a long name truncates instead of forcing the row wider than the
+   viewport — grid items default to min-width:auto */
+.ukRow{min-width:0}
+.ukRow li{min-width:0;
+  display:flex;align-items:center;gap:12px;padding:6px 8px;border-radius:12px;
+  cursor:pointer;transition:background .15s ease;
+}
+.ukRow li:hover{background:var(--hover)}
+.ukRow_b{flex:1;min-width:0}
+.ukRow_n{display:block;font-size:14px;font-weight:700;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukRow_m{display:block;font-size:12.5px;color:var(--text-3);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukRow_r{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+  font-size:12.5px;font-weight:700;color:var(--text-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ukDot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;background:var(--c1)}
+.ukDot[data-c="2"]{background:var(--c2)}
+.ukDot[data-c="3"]{background:var(--c3)}
+
+/* icon tile for the list rows that want one */
+.ukTile{
+  width:38px;height:38px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;
+  background:var(--hover);color:var(--text-2);
+}
+.ukTile svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* tall video tile, 9:16 aspect */
+.ukTile--video{
+  width:100%;height:auto;aspect-ratio:9/16;padding:0;border-radius:12px;
+  background:var(--surface);overflow:hidden;
+}
+.ukTile--video img{width:100%;height:100%;object-fit:cover}
+
+/* dropdown filter in card header — matches the profile menu (.ukMenu) pattern, scaled down */
+.ukChFilter{position:relative;flex:0 0 auto}
+.ukChFilter_btn{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--line);background:var(--surface);font:600 12px 'Lato',sans-serif;
+  color:var(--text-2);cursor:pointer;transition:border-color .15s ease,color .15s ease;
+}
+.ukChFilter_btn:hover{border-color:var(--active-ring);color:var(--text)}
+.ukChFilter_btn:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukChFilter_btn svg{flex:0 0 auto;transition:transform .15s ease}
+.ukChFilter_btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.ukChFilter_menu{left:auto;right:0;min-width:170px}
+.ukChFilter_menu .ukMenu_i.is-active{background:var(--hover);color:var(--uk-gold);font-weight:700}
+
+/* horizontally scrollable row */
+.ukRow--scroll{
+  display:flex;gap:12px;overflow-x:auto;padding:4px 0;margin:-4px -8px;margin-right:-8px;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;
+}
+.ukRow--scroll li{flex:0 0 auto;width:140px;aspect-ratio:9/16;padding:0;flex-direction:column;gap:0;margin:0;position:relative;
+  border-radius:10px;overflow:hidden;background:var(--surface);border:1px solid var(--line)}
+.ukRow--scroll li img{aspect-ratio:9/16;object-fit:cover;border-radius:10px;display:block;width:100%;height:100%;position:absolute;inset:0}
+.ukRow--scroll .ukRow_b{position:absolute;bottom:0;left:0;right:0;padding:8px;margin:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.6));color:#fff}
+.ukRow--scroll .ukRow_n{font-size:12px;font-weight:700;color:#fff}
+.ukRow--scroll .ukRow_m{font-size:11px;color:rgba(255,255,255,.9)}
+.ukRow_badge{
+  position:absolute;top:8px;right:8px;padding:4px 9px;border-radius:999px;
+  background:rgba(10,28,35,.55);backdrop-filter:blur(4px);color:#fff;
+  font-size:11px;font-weight:600;letter-spacing:.01em;z-index:1;
+}
+
+/* video gallery with 9:16 aspect cards */
+.ukGallery{display:flex;gap:12px;overflow-x:auto;padding:2px 0;margin:-2px 0;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;list-style:none;margin:0;padding:0}
+.ukGallery--video{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:10px;display:grid;padding:0}
+.ukGallery--video .ukShot{aspect-ratio:9/16;position:relative;overflow:hidden;
+  border-radius:12px;cursor:pointer;background:var(--hover)}
+
+/* video shot with overlay metadata */
+.ukShot{display:flex;flex-direction:column;border-radius:12px;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line);cursor:pointer;
+  transition:transform .15s ease;flex:1;position:relative}
+.ukShot:hover{transform:scale(1.02)}
+.ukShot_img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:1}
+.ukShot_play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:40px;height:40px;background:rgba(0,0,0,.6);border-radius:50%;
+  display:grid;place-items:center;color:#fff;font-size:14px;pointer-events:none;z-index:2}
+.ukShot_len{position:absolute;bottom:8px;right:8px;font-size:11px;font-weight:700;
+  background:rgba(0,0,0,.7);color:#fff;padding:3px 6px;border-radius:4px;pointer-events:none;z-index:3}
+.ukShot_meta{position:absolute;bottom:0;left:0;right:0;padding:10px 10px;
+  background:linear-gradient(180deg,transparent,rgba(0,0,0,.4));color:#fff;
+  font-size:12px;display:flex;flex-direction:column;gap:2px;z-index:3}
+.ukShot_meta--overlay{position:absolute;inset:0;padding:14px;display:flex;
+  flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,.7));
+  color:#fff;gap:4px;z-index:2}
+.ukShot_t{font-weight:700;font-size:14px;line-height:1.3;overflow:hidden;
+  text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;color:#fff}
+.ukShot_by{font-size:12px;opacity:.95;color:#fff}
+
+/* ---------- responsive ---------- */
+@media (max-width:1180px){
+  .c3{grid-column:span 6}.c4{grid-column:span 6}.c5{grid-column:span 6}
+  .c7{grid-column:span 12}.c8{grid-column:span 12}
+}
+@media (max-width:720px){
+  .ukBento{gap:12px}
+  .c3,.c4,.c5,.c6,.c7,.c8{grid-column:span 12}
+  .ukK_v{font-size:32px}
+  .ukDashTop{margin-bottom:16px}
+  .ukDashTop_act{width:100%}
+  .ukDashTop_act .ukBtn,.ukDashTop_act .ukGhost{flex:1;justify-content:center;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .ukCh_bar,.ukCh_arc,.ukSeg_i,.ukTip,.ukK_go,.ukRow li{transition:none}
+}
+
+/* ---------- sidebar accent card ---------- */
+.ukSideCard{
+  position:relative;overflow:hidden;isolation:isolate;
+  margin:0;padding:16px 15px 14px;border-radius:15px;
+  background:var(--dash-ink-bg);border:1px solid var(--dash-ink-line);
+}
+.ukSideCard::before{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:url('/assets/img/hero_bg_room.jpg') center/cover no-repeat;
+}
+.ukSideCard::after{
+  content:'';position:absolute;inset:0;z-index:0;
+  background:linear-gradient(165deg,rgba(11,47,82,.55) 0%,rgba(8,35,61,.78) 55%,rgba(6,24,41,.92) 100%);
+}
+.ukSideCard_t,.ukSideCard_p,.ukSideCard_b{position:relative;z-index:1}
+.ukSideCard_t{
+  margin:0 0 6px;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:16px;line-height:1.2;color:#fff;
+}
+.ukSideCard_p{
+  margin:0 0 12px;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.66);
+  text-wrap:pretty;
+}
+.ukSideCard_b{
+  width:100%;padding:9px 12px;border-radius:10px;cursor:pointer;border:0;
+  background:linear-gradient(180deg,var(--uk-gold-2),var(--uk-gold));
+  color:var(--uk-on-gold);font:700 12.5px 'Lato',sans-serif;
+}
+.ukSideCard_b:hover{filter:brightness(1.05)}
+.ukSideCard_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+/* ---------- distribution fixes ---------- */
+/* the bars get room to breathe on a wide card */
+.ukBars_b{max-width:52px}
+/* gauge sits centred in whatever height the row gives it */
+.ukCard > .ukCh--gauge{justify-content:center}
+/* the ink card spreads its own copy rather than pooling at the top */
+.ukCard--ink{justify-content:flex-start}
+.ukCard--ink > .ukRow{margin-top:14px}
+
+/* status chips inside dashboard rows read as words, not shouting */
+.ukRow .ukTag{text-transform:none;letter-spacing:0;font-size:12px;padding:5px 10px}
+/* the gauge headline is the point of the card, so give it the weight */
+.ukCh_mid strong{font-size:34px}
+.ukCh--gauge .ukCh_mid{bottom:6px}
+
+/* ---------- creator: the "pitch next" card ---------- */
+.ukCNext_m{display:block;border-radius:13px;overflow:hidden;margin:0 0 13px}
+.ukCNext_n{
+  margin:0 0 3px;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:18px;
+  line-height:1.25;color:var(--text);
+}
+.ukCNext_m2{margin:0;font-size:12.5px;color:var(--text-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+
+/* "Ask in plain English" used to have a page-local box here (.ukAsk2 and friends,
+   one on Pitch Pilot, one on the Creators network). Both are retired in favour of
+   the global header search — see assets/css/ukapp.css's .ukAsk block and
+   assets/js/ukask.js. */
+
+
+/* A dashboard card that is only a frame for a shared component: the component
+   brings its own surface, so this one stops drawing a second one inside itself. */
+/* .ukBento .ukCard_sub pulls a subtitle 22px UP, because on a dashboard card the
+   subtitle sits under a heading that lives in its own header row. Inside a
+   SHARED component the sub simply follows its title in normal flow, and that
+   -22px dragged the name, the place and the line under them into one another.
+   Scoped to the card rather than to one page that happened to embed it — this
+   bit twice, because the first fix named the wrapper instead of the card. */
+.ukBento .ukCard--stay .ukCard_sub{margin:0}
+.ukBento .ukCard--stay .ukCard_pad > .ukCard_sub + .ukCard_sub{margin-top:8px}
+/* a dashboard card that is only a frame for the shared component: the component
+   brings its own surface, so this one stops drawing a second one inside itself */
+.ukBento .ukCard--stay{border:0;box-shadow:none;background:none;margin:0;
+  flex:1 1 auto;min-height:0}
+.ukBento .ukCard--stay .ukCard_pad{padding-left:0;padding-right:0;padding-bottom:0;
+  flex:0 0 auto}
+/* The bento row sets this card's height, so something inside has to absorb the
+   difference. It is the photograph — text that is squeezed does not get smaller,
+   it overlaps the line under it, which is exactly what it did. The picture gives
+   up its fixed aspect here and takes whatever is left instead. */
+.ukBento .ukCard--stay .ukLst_m{flex:1 1 0;min-height:130px;overflow:hidden;display:flex}
+.ukBento .ukCard--stay .ukCard_img{aspect-ratio:auto;height:100%;width:100%;
+  min-height:0;object-fit:cover}
+/* and nothing that carries words is allowed to shrink */
+.ukBento .ukCard--stay .ukCard_pad > *{flex:0 0 auto}
+.ukBento .ukStayCell_act{margin-top:14px}
+
+
+/* =============== shapes built from the reference dashboards ===============
+   Same three colours the rest of the charts use. Nothing new was invented for
+   these: --c1 is the live reading, --c2 the one waiting on someone, --c3 the
+   settled one, and the ink card supplies the dark treatment where a reference
+   used one. */
+
+/* RANKED — the rows under a big total */
+.ukRank2{display:flex;flex-direction:column;gap:2px}
+.ukRank2_i{display:grid;grid-template-columns:auto auto 1fr auto;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:12px;transition:background .15s ease}
+.ukRank2_i:hover{background:var(--hover)}
+.ukRank2_ph{width:15px;height:11px;border-radius:2px;background:var(--tag-done-bg);display:block}
+.ukRank2_n{font:600 13.5px/1.3 'Lato',sans-serif;color:var(--text);white-space:nowrap}
+.ukRank2_bar{display:block;height:6px;border-radius:9999px;background:var(--c1-track);overflow:hidden}
+.ukRank2_bar i{display:block;height:100%;border-radius:9999px;background:var(--c1)}
+.ukRank2_v{font:700 13px/1 'Lato',sans-serif;color:var(--text);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.ukCard--ink .ukRank2_i:hover{background:rgba(255,255,255,.06)}
+.ukCard--ink .ukRank2_n,.ukCard--ink .ukRank2_v{color:#fff}
+.ukCard--ink .ukRank2_bar{background:rgba(255,255,255,.14)}
+
+/* BUBBLES — a split where the sizes carry it */
+/* taller, because the discs are bigger and they overlap rather than sit apart */
+.ukBub{position:relative;height:265px;margin:6px 0 2px}
+.ukBub_i{position:absolute;transform:translate(-50%,-50%);border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  text-align:center;cursor:default;padding:8px;box-sizing:border-box}
+.ukBub_i[data-c="1"]{background:var(--c1);color:#fff}
+.ukBub_i[data-c="2"]{background:var(--c2);color:#06181d}
+.ukBub_i[data-c="3"]{background:var(--c3);color:#06181d}
+.ukBub_i[data-c="4"]{background:var(--tag-done-bg);color:var(--text)}
+.ukBub_i:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukBub_v{font-family:"Marcellus",serif;font-size:clamp(17px,3.2vw,30px);line-height:1}
+.ukBub_k{font:700 10.5px/1.2 'Lato',sans-serif;opacity:.85;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* PODIUM — first, second, third, laid on its side so the names fit */
+.ukPod{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.ukPod_i{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line)}
+.ukPod_i:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukPod_r{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:0 0 24px;
+  background:var(--c1);color:#fff;font:700 12px/1 'Lato',sans-serif}
+.ukPod_i[data-c="2"] .ukPod_r{background:var(--c2);color:#06181d}
+.ukPod_i[data-c="3"] .ukPod_r{background:var(--c3);color:#06181d}
+.ukPod_m{width:46px;height:46px;border-radius:12px;object-fit:cover;display:block;flex:0 0 46px}
+.ukPod_b{min-width:0;display:flex;flex-direction:column;gap:7px}
+/* the title is somebody's own name for their work, so it wraps rather than
+   getting cut — "Walking the old town" was becoming "Walking the old..." */
+.ukPod_k{font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukPod_bar{display:block;height:7px;border-radius:9999px;background:var(--c1-track);overflow:hidden}
+.ukPod_bar i{display:block;height:100%;border-radius:9999px;background:var(--c1)}
+.ukPod_i[data-c="2"] .ukPod_bar i{background:var(--c2)}
+.ukPod_i[data-c="3"] .ukPod_bar i{background:var(--c3)}
+.ukPod_n{display:flex;flex-direction:column;align-items:flex-end;gap:2px;text-align:right}
+.ukPod_v{font-family:"Marcellus",serif;font-size:20px;line-height:1.1;color:var(--text);white-space:nowrap}
+.ukPod_s{font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
+
+/* SPLIT — one stacked bar and the table that reads it out */
+.ukSplit_t{margin:0;font-family:"Marcellus",serif;font-size:30px;line-height:1;color:var(--text)}
+.ukSplit_ts{margin:5px 0 0;font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-3)}
+.ukSplit_bar{display:flex;gap:4px;height:14px;margin:14px 0 4px}
+.ukSplit_s{border-radius:9999px;background:var(--c1);min-width:8px;cursor:default}
+.ukSplit_s[data-c="2"]{background:var(--c2)}
+.ukSplit_s[data-c="3"]{background:var(--c3)}
+.ukSplit_s[data-c="4"]{background:var(--c1);opacity:.55}
+.ukSplit_s[data-c="5"]{background:var(--c2);opacity:.55}
+.ukSplit_s[data-c="6"]{background:var(--c3);opacity:.55}
+.ukSplit_s[data-c="7"],.ukSplit_s[data-c="8"]{background:var(--tag-done-bg)}
+.ukSplit_s:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukSplit_rows{display:flex;flex-direction:column}
+.ukSplit_h,.ukSplit_r{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center}
+.ukSplit_h{padding:12px 0 8px}
+.ukSplit_h span{font:700 9.5px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.11em;
+  color:var(--text-3)}
+.ukSplit_h span:not(:first-child),.ukSplit_p,.ukSplit_v{text-align:right;min-width:56px}
+.ukSplit_r{padding:11px 0;border-top:1px solid var(--line)}
+.ukSplit_n{display:flex;align-items:center;gap:9px;font:600 13px/1.3 'Lato',sans-serif;color:var(--text);
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukSplit_d{width:9px;height:9px;border-radius:3px;flex:0 0 9px;background:var(--c1)}
+.ukSplit_d[data-c="2"]{background:var(--c2)}
+.ukSplit_d[data-c="3"]{background:var(--c3)}
+.ukSplit_d[data-c="4"]{background:var(--c1);opacity:.55}
+.ukSplit_d[data-c="5"]{background:var(--c2);opacity:.55}
+.ukSplit_d[data-c="6"]{background:var(--c3);opacity:.55}
+.ukSplit_d[data-c="7"],.ukSplit_d[data-c="8"]{background:var(--text-3)}
+.ukSplit_p,.ukSplit_v{font:700 12.5px/1 'Lato',sans-serif;color:var(--text);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.ukSplit_p{color:var(--text-2)}
+
+/* SCORE — a mark out of a hundred */
+.ukScoreArc{position:relative;display:flex;flex-direction:column;align-items:center;
+  width:100%;max-width:190px;margin:0 auto}
+.ukScoreArc svg{width:100%;display:block}
+.ukScoreArc_v{margin-top:-26px;font-family:"Marcellus",serif;font-size:34px;line-height:1;color:var(--text)}
+.ukScoreArc_v em{font-style:normal;font-size:14px;color:var(--text-3)}
+.ukScoreArc_s{margin-top:4px;font:400 12px/1.3 'Lato',sans-serif;color:var(--text-3);text-align:center}
+
+/* METER — one proportion, plainly */
+.ukMeter_lb{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;
+  font:600 12px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukMeter_t{height:10px;border-radius:9999px;background:var(--c1-track);overflow:hidden}
+.ukMeter_t i{display:block;height:100%;border-radius:9999px;background:var(--c1)}
+
+@media (max-width:560px){
+  .ukPod_m{width:38px;height:38px;flex:0 0 38px}
+  .ukBub{height:220px}
+}

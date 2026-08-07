@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>Set up your property · Ukreate</title>
+<meta content="width=device-width,initial-scale=1" name="viewport">
+<meta name="robots" content="noindex,nofollow">
+<link href="/favicon.ico" rel="icon">
+<link href="/favicon.svg" rel="icon" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=340">
+</head>
+<body class="ukApp ukStart" data-ukstart>
+
+<a class="ukSkip" href="#main">Skip to content</a>
+
+<header class="ukStart_top">
+  <a href="/" aria-label="Ukreate home">
+    <img class="ukLogo ukLogo--onDark" src="/assets/img/ukreate-logo-white.svg" alt="Ukreate" width="510" height="166">
+    <img class="ukLogo ukLogo--onLight" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" width="510" height="166">
+  </a>
+</header>
+
+<main class="ukStart_main" id="main">
+  <ol class="ukStart_rail" id="ukRail" aria-label="Progress"></ol>
+  <div class="ukStart_stage" id="ukStage" aria-live="polite"></div>
+</main>
+
+<!-- The globe is built once and then moved into whichever step wants it. It lives
+     outside #ukStage because that element is rewritten on every keystroke, which
+     would otherwise tear down and rebuild the canvas each time you type. -->
+<div class="ukGlobeHold" id="ukGlobeHold" aria-hidden="true">
+  <div id="ukGlobe" class="ukGlobe"></div>
+  <div id="ukCityMarks" class="ukCityMarks"></div>
+</div>
+
+<script src="/assets/js/vendor/three.min.js" defer></script>
+<script src="/assets/js/globe-originkit.js?v=4" defer></script>
+<script src="/assets/js/ukicons.js?v=9" defer></script>
+<script src="/assets/js/ukdata.js?v=95" defer></script>
+<script src="/assets/js/ukcitymap.js?v=7" defer></script>
+<script src="/assets/js/ukbench.js?v=8" defer></script>
+<script src="/assets/js/ukstart.js?v=84" defer></script>
+</body>
+</html>
