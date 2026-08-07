@@ -227,7 +227,9 @@ nothing and can run down past the copy and behind the button. It is contained,
 never cropped, because the fade under it is part of the artwork rather than a
 gradient drawn here. Drop a cutout PNG at
 `assets/img/onboard-welcome-{hotel,creator}.png` and flip its entry in `ART`;
-until then that side renders a placeholder in the same band.
+a side without one renders a placeholder in the same band rather than requesting
+a file that is not there, because a 404 on every first paint produces a fallback
+that looks exactly like real artwork having failed. Both sides have theirs now.
 
 Behind the modal sits the **marketplace**, not the user's own dashboard. A new
 account's dashboard is empty; the creator network and the live stays are not,

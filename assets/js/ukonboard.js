@@ -272,7 +272,7 @@ window.UKONBOARD = (function () {
      PNG, not JPG: these are cutouts with a transparent background, and
      flattening one onto white would put a white slab inside a card that is not
      always white. */
-  var ART = { hotel: true, creator: false };
+  var ART = { hotel: true, creator: true };
   function peek(side) {
     if (!ART[side]) {
       return '<div class="ukObArt is-empty" data-obart>' +
