@@ -35,7 +35,7 @@ private `S` object.
 | Route | What it is |
 | --- | --- |
 | `/app/` | Hotel dashboard — stays, creators, collaborations, content library, bookings & ROI |
-| `/creator/` | Creator dashboard — pitching, collaborations, earnings, media kit |
+| `/creator/` | Creator dashboard — stays, collaborations, earnings, media kit |
 | `/login/` · `/signin/` · `/join/` | Hotel-side auth |
 | `/creator/login/` | Creator-side auth |
 | `/start/` · `/creator/start/` | Onboarding for each side |
@@ -101,23 +101,44 @@ written by both apps. Nothing is duplicated per side.
 To watch a full loop: publish a stay in `/app/`, open `/creator/` in another tab,
 apply to it from Discover, then answer it back in `/app/`.
 
-**One object, one home, one state.** The creator side has two lists and they
-hand off rather than overlap:
+**One object, one home, one state.** This rule is enforced twice on the creator
+side, at two different seams.
 
-- **Pitch Pilot** owns the outbound phase — to pitch, waiting, replied. While a
-  pitch is out there is no collaboration, only a hope.
-- **Your collabs** owns the collaboration, and it begins at *Onboarding*, the
-  moment a hotel says yes.
+**A stay lives on one page.** There used to be two: *Discover stays* and *Pitch
+Pilot*, rendering the same `D.stays` list. Pitch a hotel from Discover and its
+real home silently became the other page, which is the most reliable way to make
+someone lose track of something. State is an attribute of an object, not another
+place to keep it, so the lanes now filter one list:
 
-So the creator's list has no Inquiry stage. On the hotel side Inquiry is a real
-decision point; from this side it means "waiting on them", which is Pitch
-Pilot's Waiting lane. Having it in both places is what let one hotel sit in two
+    To pitch → Waiting → Replied → Became collabs
+
+`ukcviews.stays()` owns the page; `ukcpitch.js` owns the pipeline behind it and
+no longer renders a page of its own. The rail does not appear until something is
+in it, so a creator who has sent nothing meets stays rather than four empty lanes
+explaining a pipeline they have not started. The browse lane is cards, ranked by
+fit, and everything past it is rows, because a record reads as rows.
+
+There is **one composer**, and it writes `UKAPPLY`. There used to be two, writing
+to different records: Pitch Pilot's called `D.addPitch` (property-level) while
+its own lanes read `UKAPPLY` (stay-specific), so pressing "I sent it" left the
+stay in *To pitch* and added a row in *Waiting*. Casa Azul Tulum sat in both at
+once. Discover's composer additionally pushed a stage-0 row into `D.collabs`,
+which `reconcilePipeline()` then quietly undid on the next load.
+
+**Pitch Pilot is a capability, not a destination.** It finds the hotels, scores
+them and writes the letter; the score is on the card and the letter is in the
+composer. Nothing in the product routes to it as a place.
+
+**Your collabs** owns the collaboration, and it begins at *Onboarding*, the
+moment a hotel says yes. While a pitch is out there is no collaboration, only a
+hope. So the creator's list has no Inquiry stage. On the hotel side Inquiry is a real
+decision point; from this side it means "waiting on them", which is the Waiting
+lane. Having it in both places is what let one hotel sit in two
 lists with two different answers — Fjordheim Lodge was `Complete` in one and
 `Responded` in the other. `reconcilePipeline()` in `ukcdata.js` enforces the
 handoff: an unanswered "collaboration" is recorded as a pitch and leaves the
 collab list, and a pitch whose hotel now has a live collaboration stops carrying
-a state and carries a pointer to it. Pitch Pilot's last lane is a receipt, not a
-status.
+a state and carries a pointer to it. The last lane is a receipt, not a status.
 
 Note that a stay's state comes from an **application**, which is stay-specific,
 never from a pitch, which is property-level. MiraGrace offers thirteen stays;

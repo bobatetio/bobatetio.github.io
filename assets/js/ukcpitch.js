@@ -1,4 +1,4 @@
-/* Ukreate — Pitch Pilot.
+/* Ukreate — the pipeline behind the Stays page.
 
    WHAT WAS WRONG WITH THE OLD ONE, because the shape of this file is a direct
    answer to it:
@@ -20,7 +20,21 @@
 
    A hotel is in exactly one of them, so a hotel you have pitched cannot be
    offered to you again, and the tracker is not a separate place — it is the same
-   list further along. What needs doing today sits above it, because the real
+   list further along.
+
+   AND THAT PAGE IS NOW "Stays". This file used to render one of its own, beside
+   Discover, and the two rendered the SAME D.stays list. A stay's home changed
+   silently the moment you pitched it, which is the one reliable way to make
+   people lose track of things. Worse, each page had its own composer writing to
+   a different record: this one called D.addPitch (property-level) while the
+   lanes read UKAPPLY (stay-specific), so pressing "I sent it" left the stay in
+   To pitch AND put a row in Waiting. Casa Azul Tulum sat in both at once — the
+   exact failure described at the top of this file, back again one stage earlier
+   because the fix had been applied to the lanes and not to the door into them.
+
+   So there is one composer, it writes UKAPPLY, and this file no longer owns a
+   page. It owns the pipeline: the rows, the lanes, the letters and the composer.
+   ukcviews.stays() renders them. What needs doing today sits above it, because the real
    question a creator opens this with is "what do I do now", not "show me
    hotels". Writing takes over the page, in the same two-column shape the
    collaboration thread uses, and the letter is editable and kept.
@@ -193,61 +207,56 @@ window.UKCP = (function () {
     return firstLetter(s);
   }
 
-  /* ================= the page ================= */
-  function pitch(st) {
-    if (openId) return composer(st);
-
-    var list = all();
-    var lane = LANES.some(function (l) { return l.id === st.lane; }) ? st.lane : 'to';
-    var due = list.filter(function (r) { return r.due; });
-    var toAnswer = list.filter(function (r) { return r.state === 'replied'; });
-
-    var counts = {};
+  /* ================= the parts the Stays page renders =================
+     No page function any more. ukcviews.stays() owns the page; this hands it the
+     lane rail, the rows for a lane, the strip of what is due, and the composer. */
+  function counts() {
+    var list = all(), out = {};
     LANES.forEach(function (l) {
-      counts[l.id] = list.filter(function (r) { return r.state === l.id; }).length;
+      out[l.id] = list.filter(function (r) { return r.state === l.id; }).length;
     });
-
+    return out;
+  }
+  /* Has anything happened yet? The rail does not exist until it would hold
+     something: a creator who has sent nothing should meet a page of stays, not
+     four empty lanes explaining a pipeline they have not started. */
+  function started() {
+    var c = counts();
+    return (c.waiting + c.replied + c.booked) > 0;
+  }
+  /* The stays not yet pitched, which is what the browse lane shows. */
+  function unpitched() {
+    return rows().filter(function (r) { return r.state === 'to'; })
+                 .map(function (r) { return r.stay; });
+  }
+  function laneRows(lane, st) {
+    var list = all();
     var q = String(st.q || '').toLowerCase();
-    var fs = st.fstyle || 'Any style', fb = st.fbudget || 'Any budget';
     var shown = list.filter(function (r) {
       if (r.state !== lane) return false;
       var s = r.stay;
       var name = (s ? s.hotel + ' ' + s.city + ' ' + s.style : r.pitch.hotel + ' ' + r.pitch.city).toLowerCase();
-      if (q && name.indexOf(q) < 0) return false;
-      if (fs !== 'Any style' && (!s || s.style !== fs)) return false;
-      if (fb !== 'Any budget' && (!s || s.budget !== fb)) return false;
-      return true;
+      return !q || name.indexOf(q) > -1;
     });
-    /* the ones most worth writing to first, then the ones waiting longest */
-    shown.sort(function (a, b) {
-      if (lane === 'to') return (b.stay ? D.scoreFor(b.stay) : 0) - (a.stay ? D.scoreFor(a.stay) : 0);
-      return b.days - a.days;
-    });
-
-    /* Seventeen at once is the overwhelm this tool exists to remove. The best
-       eight are the shortlist; the rest are one press away for anyone who wants
-       to work through them. Only "to pitch" is capped — the other lanes are a
-       record, and a record you cannot see all of is not one. */
-    var CAP = 8;
-    var capped = lane === 'to' && !st.showAll && shown.length > CAP;
-    var visible = capped ? shown.slice(0, CAP) : shown;
-
-    return UKCV.head('Pitch Pilot',
-      'The outbound half of your work: who is worth writing to, what you have sent, and who owes ' +
-      'you an answer. The moment one says yes it becomes a collaboration and moves to Your collabs.') +
-      todayStrip(due, toAnswer, counts) +
-      lanes(lane, counts) +
-      bar(st, fs, fb, shown.length, lane) +
-      (shown.length
-        ? '<div class="ukPanel ukPitchList"><ul class="ukPL">' +
-            visible.map(function (r) { return row(r, lane); }).join('') + '</ul>' +
-            (capped
-              ? '<button class="ukGhost ukPL_more" type="button" data-ppf="showAll" data-ppv="1">' +
-                'Show the other ' + (shown.length - CAP) + '</button>'
-              : '') +
-          '</div>'
-        : emptyLane(lane, st));
+    shown.sort(function (a, b) { return b.days - a.days; });
+    return shown;
   }
+  function laneList(lane, st) {
+    var shown = laneRows(lane, st);
+    return shown.length
+      ? '<div class="ukPanel ukPitchList"><ul class="ukPL">' +
+          shown.map(function (r) { return row(r, lane); }).join('') + '</ul></div>'
+      : emptyLane(lane, st);
+  }
+  function dueStrip() {
+    var list = all();
+    return todayStrip(list.filter(function (r) { return r.due; }),
+                      list.filter(function (r) { return r.state === 'replied'; }),
+                      counts());
+  }
+  function writing() { return openId; }
+  function write(id, kind) { openId = id; openKind = kind || 'first'; }
+  function close() { openId = null; }
 
   /* ---- the only thing above the list that is not the list ----
      Shown when something is genuinely due. When nothing is, it says so in one
@@ -297,44 +306,6 @@ window.UKCP = (function () {
       }).join('') + '</div>';
   }
 
-  /* ---- narrowers, built from the stays that actually exist ----
-     The old list offered Boutique, Luxury, Eco lodge and City hotel, none of
-     which matched a single stay: four of five options could only ever return
-     nothing. */
-  function opts(key) {
-    var seen = {};
-    (D.stays || []).forEach(function (s) { if (s[key]) seen[s[key]] = 1; });
-    return Object.keys(seen).sort();
-  }
-  var CHEV = '<svg class="ukDrop_car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
-    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
-  function drop(label, none, list, val, key) {
-    return '<div class="ukDrop"><button class="ukDrop_b" type="button" data-drop-toggle ' +
-      'aria-haspopup="menu" aria-expanded="false">' +
-      '<span class="ukDrop_k">' + esc(label) + '</span>' +
-      '<span class="ukDrop_v">' + esc(val) + '</span>' + CHEV + '</button>' +
-      '<div class="ukDropMenu" hidden role="menu">' +
-        [none].concat(list).map(function (o) {
-          return '<button class="ukDropMenu_i' + (o === val ? ' is-sel' : '') + '" role="menuitem" ' +
-            'data-ppf="' + esc(key) + '" data-ppv="' + esc(o) + '">' + esc(o) + '</button>';
-        }).join('') + '</div></div>';
-  }
-  function bar(st, fs, fb, n, lane) {
-    var narrowed = fs !== 'Any style' || fb !== 'Any budget' || st.q;
-    return '<div class="ukToolbar ukToolbar--split ukCrBar">' +
-        '<div class="ukCrBar_l">' +
-          '<label class="ukSearch"><span data-icon="search"></span>' +
-          '<input type="search" placeholder="Search a hotel or a city" value="' + esc(st.q || '') +
-          '" data-q aria-label="Search"></label>' +
-          '<span class="ukCrBar_gap" aria-hidden="true"></span>' +
-          drop('Kind of stay', 'Any style', opts('style'), fs, 'fstyle') +
-          drop('Budget', 'Any budget', opts('budget'), fb, 'fbudget') +
-          (narrowed ? '<button class="ukGhost ukGhost--sm" type="button" data-clearpp>Clear</button>' : '') +
-        '</div>' +
-        '<span class="ukCount">' + n + ' ' + (lane === 'to' ? 'to write to' : 'here') + '</span>' +
-      '</div>';
-  }
-
   /* ---- a row, not a card ----
      Twenty-two cards is a wall. A row is scannable, and the thing that matters
      on it — what you do next — sits in the same place on every one. */
@@ -380,12 +351,23 @@ window.UKCP = (function () {
       lane === 'to' ? esc(tradeLine(s))
       : lane === 'booked'
         ? 'They said yes \u2014 this is a collaboration now, and it is tracked in Your collabs.'
+      /* The note is an annotation ("follow up on the 13th"), not the pitch. One
+         seeded row carried the whole letter in it and printed it across two
+         lines while every other row was one, which is what a row is for. The
+         letter lives in the composer; anything long enough to be one is not a
+         note and is left off. */
       : (p.via ? esc(p.via) + ' · ' : '') + 'sent ' + esc(p.on) +
         (r.state === 'waiting' ? ' · no reply yet' : '') +
-        (p.note ? ' · ' + esc(p.note) : '');
+        (p.note && String(p.note).length <= 60 ? ' · ' + esc(p.note) : '');
 
     return '<li class="ukPL_i' + (r.due ? ' is-due' : '') + '">' +
-      (s ? UKCV.pic(s.img, name, '1x1', 'ukM--sm') : '<span class="ukPL_ph" aria-hidden="true"></span>') +
+      /* A pitch made to a property with nothing published has no photograph to
+         show, and four empty grey squares in a column read as a loading state
+         that never finishes. The initial is not decoration: it is the only
+         thing about the hotel we actually hold. */
+      (s ? UKCV.pic(s.img, name, '1x1', 'ukM--sm')
+         : '<span class="ukPL_ph" aria-hidden="true">' +
+           esc(String(name || '?').trim().charAt(0).toUpperCase()) + '</span>') +
       '<span class="ukPL_b">' +
         '<span class="ukPL_top">' +
           '<span class="ukPL_n">' + esc(name) + '</span>' +
@@ -494,7 +476,7 @@ window.UKCP = (function () {
   }
 
   /* ================= events ================= */
-  function go() { return window.UKCGO('pitch'); }
+  function go() { return window.UKCGO('stays'); }
 
   document.addEventListener('click', function (e) {
     var root = document.querySelector('[data-ukc]');
@@ -515,7 +497,7 @@ window.UKCP = (function () {
     if (e.target.closest('[data-closewrite]')) { openId = null; return go(); }
 
     if ((el = e.target.closest('[data-ptone]'))) {
-      var stt = (window.UKCSTATE && window.UKCSTATE('pitch')) || null;
+      var stt = (window.UKCSTATE && window.UKCSTATE('stays')) || null;
       if (stt) stt.tone = el.dataset.ptone;
       return go();
     }
@@ -534,7 +516,22 @@ window.UKCP = (function () {
       var ss = D.stay(el.dataset.sent);
       if (!ss) return;
       if (!D.me.member) D.me.freePitchUsed = true;
-      D.addPitch({ hotel: ss.hotel, city: ss.city, on: 'today', via: 'Email', status: 'Sent', note: '' });
+      /* UKAPPLY, because that is what the lanes read. This used to write
+         D.addPitch, which is property-level and belongs to pitches made to a
+         hotel with nothing published: a different record, answering a different
+         question. Sending therefore never moved the stay out of To pitch, and
+         added a second row in Waiting for the same hotel. The application is
+         also what reaches the hotel, so this is the send actually arriving. */
+      var draftKey = 'first:' + ss.id + ':';
+      var text = drafts[draftKey + 'warm'] || drafts[draftKey + 'short'] ||
+                 drafts[draftKey + 'story'] || firstLetter(ss);
+      if (window.UKAPPLY) {
+        window.UKAPPLY.send({
+          stay: ss.id, creatorName: D.me.n, creatorHandle: D.me.h,
+          creatorImg: D.me.img, creatorCity: D.me.city || '',
+          creatorReach: D.me.band || null, msg: text, at: 'just now'
+        });
+      }
       /* the pitch actually ARRIVES: it used to be recorded only in the creator's
          own tracker, so the hotel had no way to see it */
       if (window.UKPITCHIN && ss.hotel === window.UKPITCHIN.PROPERTY) {
@@ -570,13 +567,14 @@ window.UKCP = (function () {
     }
 
     if ((el = e.target.closest('[data-lane]'))) {
-      var s2 = (window.UKCSTATE && window.UKCSTATE('pitch')) || null;
+      var s2 = (window.UKCSTATE && window.UKCSTATE('stays')) || null;
       if (s2) { s2.lane = el.dataset.lane; s2.q = ''; s2.showAll = 0; }
       openId = null;
       return go();
     }
+    if (e.target.closest('[data-writeclose]')) { openId = null; return go(); }
     if (e.target.closest('[data-clearpp]')) {
-      var s4 = (window.UKCSTATE && window.UKCSTATE('pitch')) || null;
+      var s4 = (window.UKCSTATE && window.UKCSTATE('stays')) || null;
       if (s4) { s4.q = ''; s4.fstyle = 'Any style'; s4.fbudget = 'Any budget'; s4.showAll = 0; }
       return go();
     }
@@ -588,5 +586,12 @@ window.UKCP = (function () {
     if (ta) drafts[ta.dataset.draft] = ta.value;
   });
 
-  return { pitch: pitch };
+  return {
+    /* the pipeline, for the one page that renders it */
+    LANES: LANES, counts: counts, started: started, unpitched: unpitched,
+    laneRows: laneRows, laneList: laneList, dueStrip: dueStrip, lanes: lanes,
+    emptyLane: emptyLane, scoreOf: function (s) { return D.scoreFor(s); },
+    /* the composer */
+    composer: composer, writing: writing, write: write, close: close
+  };
 })();

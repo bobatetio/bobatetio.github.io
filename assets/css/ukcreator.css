@@ -1261,3 +1261,8 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukCollabCell .ukStatusBadge{max-width:100%}
 .ukCollabCell .ukPreview{margin-top:12px}
 .ukCollabCell .ukDot{position:absolute;top:12px;right:12px;z-index:2}
+
+/* A pitch with no stay behind it has no photograph, so the tile carries the
+   hotel's initial rather than sitting empty. */
+.ukPL_ph{display:grid;place-items:center;font:600 15px/1 'Lato',sans-serif;
+  color:var(--text-3);background:var(--hover);border:1px solid var(--line)}

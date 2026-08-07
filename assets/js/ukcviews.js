@@ -231,8 +231,8 @@ window.UKCV = (function () {
     var list = D.collabs.filter(function (c) { return String(c.stage) === f; });
     return head('Your collabs',
       'Every stay a hotel has said yes to, from the package through to sign-off. ' +
-      'Anything still waiting on an answer is in Pitch Pilot.',
-      '<button class="ukGhost" type="button" data-goto="pitch">Pitch Pilot</button>') +
+      'Anything still waiting on an answer is in Stays, under Waiting.',
+      '<button class="ukGhost" type="button" data-lane="waiting">See what is waiting</button>') +
       invitations(st) +
       (st.sent ? '<p class="ukCheer" role="status">Pitch sent. Nice one. Hotels usually reply within a few days, and no reply for a week is normal rather than a no.</p>' : '') +
       '<div class="ukToolbar"><div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Filter your collaborations by lifecycle stage">' +
@@ -258,8 +258,8 @@ window.UKCV = (function () {
           }) + '</div>';
       }).join('') + '</div>'
         : empty('Nothing at that stage',
-                'Try another stage. Anything you are still waiting to hear about is in Pitch Pilot.',
-                '<button class="ukBtn" type="button" data-goto="pitch">Open Pitch Pilot</button>'));
+                'Try another stage. Anything you are still waiting to hear about is in Stays, under Waiting.',
+                '<button class="ukBtn" type="button" data-lane="waiting">See what is waiting</button>'));
   }
 
   /* The hotel's .ukStatusBadge, not a second component doing its job. Both sides
@@ -568,22 +568,66 @@ window.UKCV = (function () {
     return '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What you delivered</h3><span class="ukCount">' + c.delivered.length + ' pieces</span></div><div class="ukReels">' + c.delivered.map(function (id) { var w = D.work(id); return w ? '<figure class="ukReel">' + m(w.m, w.t) + '<figcaption><span class="ukReel_t">' + esc(w.t) + '</span></figcaption></figure>' : ''; }).join('') + '</div></section>';
   }
 
-  /* ============================ 3 — discover stays ============================ */
+  /* ============================ 3 — stays ============================
+     ONE PAGE. This was "Discover stays" and there was a second page, Pitch
+     Pilot, rendering the same D.stays list with lanes over it. Two destinations
+     for one object: pitch a hotel from here and its real home silently became
+     the other page, which is how people lose track of things. State is an
+     attribute of a stay, not another place to keep it.
+
+     So the lanes filter this list rather than splitting it, and the browse lane
+     is what this page always was. The rail only appears once there is something
+     in it, because a creator who has sent nothing should meet stays, not four
+     empty lanes explaining a pipeline they have not started. */
+  var LANE_SUB = {
+    waiting: 'Sent, and no answer yet. One follow-up after a week is worth it; two is pushing it.',
+    replied: 'They came back to you. Answer these before you send anything new.',
+    booked:  'They said yes. Each of these is a collaboration now, tracked in Your collabs.'
+  };
   function stays(st) {
+    var P = window.UKCP;
+    if (P && P.writing()) return P.composer(st);
     if (st.open) return stayDetail(st);
+
+    var started = !!(P && P.started());
+    var lane = started && st.lane && st.lane !== 'to' ? st.lane : 'to';
+    var counts = P ? P.counts() : {};
+
     var view = st.view || 'grid';
     var q = (st.q || '').toLowerCase(), sf = st.style || 'all';
-    var list = D.stays.filter(function (s) {
+    /* Already-pitched stays leave this lane. They have not gone anywhere: they
+       are one press away on the rail, under the state they are actually in. */
+    var pool = P ? P.unpitched() : D.stays;
+    var list = pool.filter(function (s) {
       if (st.saved && !s.saved) return false;
       if (q && (s.hotel + ' ' + s.city + ' ' + s.style).toLowerCase().indexOf(q) < 0) return false;
       if (sf !== 'all' && s.style !== sf) return false;
       return true;
     });
-    var styles = ['all'].concat(D.stays.map(function (s) { return s.style; })
+    var styles = ['all'].concat(pool.map(function (s) { return s.style; })
       .filter(function (v, i, a) { return a.indexOf(v) === i; }));
+    /* Ranked by fit, best first. This is what Pitch Pilot's shortlist was, and it
+       belongs on the cards that already carry the score rather than on a second
+       page listing the same hotels in a different order. */
+    list = list.slice().sort(function (a, b) { return D.scoreFor(b) - D.scoreFor(a); });
 
-    return head('Discover stays', 'Hotels that actually want to work with creators like you.',
-      '<button class="ukBtn" type="button" data-goto="pitch">Open Pitch Pilot</button>') +
+    /* Anything past "to pitch" is a record, and a record reads as rows. The
+       browse lane is cards, because that is a decision and you need the photo. */
+    if (lane !== 'to') {
+      return head('Stays', LANE_SUB[lane]) +
+        P.dueStrip() + P.lanes(lane, counts) +
+        '<div class="ukToolbar ukToolbar--split ukCrBar"><div class="ukCrBar_l">' +
+          '<label class="ukSearch"><span data-icon="search"></span>' +
+          '<input type="search" placeholder="Search a hotel or a city" value="' + esc(st.q || '') +
+          '" data-q aria-label="Search"></label></div>' +
+          '<span class="ukCount">' + P.laneRows(lane, st).length + ' here</span></div>' +
+        P.laneList(lane, st);
+    }
+
+    return head('Stays', started
+        ? 'Hotels that want creators like you, and where everything you have sent stands.'
+        : 'Hotels that actually want to work with creators like you.') +
+      (started ? P.dueStrip() + P.lanes(lane, counts) : '') +
       '<div class="ukToolbar ukToolbar--split ukCrBar">' +
         '<div class="ukCrBar_l">' +
           '<label class="ukSearch"><span data-icon="search"></span>' +
@@ -756,45 +800,6 @@ window.UKCV = (function () {
   }
 
   /* ============================ 4 — apply ============================ */
-  function apply(st) {
-    var s = D.stay(st.stay);
-    var draft = 'Hi ' + s.hotel + ' team,\n\nI would love to be considered for the ' +
-      s.nights + '-night stay in ' + s.city.split(',')[0] + '. I shoot ' + D.me.niche.toLowerCase() +
-      ', and I can deliver ' + s.del.map(function (d) { return d.q + ' ' + d.t.toLowerCase(); }).join(' and ') +
-      ' within ten days of checking out.\n\nHappy to work to whatever brief you set.\n\n' + D.me.n;
-
-    return '<button class="ukBack" type="button" data-back>&larr; Back to the stay</button>' +
-      head('Pitch ' + esc(s.hotel), 'One message. We have written a first draft from your profile — change anything.') +
-      '<div class="ukGrid ukGrid--thread"><div>' +
-        '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Your message</h3></div>' +
-          '<label class="ukSrOnly" for="ukApplyMsg">Your pitch message</label>' +
-          '<textarea class="ukField_i" id="ukApplyMsg" rows="9">' + esc(draft) + '</textarea>' +
-          '<p class="ukWhy">Short beats clever. Say what you shoot, what you will deliver, and when.</p>' +
-        '</section>' +
-        '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What they will see</h3></div>' +
-          '<div class="ukReels">' + D.me.work.slice(0, 4).map(function (w) {
-            return '<figure class="ukReel">' + m(w.m, w.t) + '</figure>'; }).join('') + '</div>' +
-          '<p class="ukWhy">Your three most-saved pieces go with every pitch. This is the part that lands.</p>' +
-        '</section>' +
-        '<div class="ukNav2"><span></span><div class="ukNav2_r">' +
-          '<button class="ukGhost" type="button" data-ack="Saved">Save as draft</button>' +
-          (window.UKAPPLY && window.UKAPPLY.applied(s.id)
-            ? '<button class="ukGhost" type="button" data-goto="collabs">Already applied \u2014 open the thread</button>'
-            : '<button class="ukBtn" type="button" data-sendapply="' + s.id + '">Send my pitch</button>') +
-          '</div></div>' +
-      '</div>' +
-      '<aside class="ukPanel ukSticky"><div class="ukPanel_head"><h3 class="ukPanel_title">The trade</h3></div>' +
-        '<div class="ukTrade"><div class="ukTrade_side"><p class="ukTrade_l">You get</p>' +
-          '<p class="ukTrade_v">' + s.nights + ' nights</p><p class="ukTrade_s">' + esc(s.inc) + '</p></div>' +
-          '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
-          '<div class="ukTrade_side"><p class="ukTrade_l">You create</p>' +
-          '<p class="ukTrade_v">' + s.del.reduce(function (a, d) { return a + d.q; }, 0) + ' pieces</p>' +
-          '<p class="ukTrade_s">They keep and post them</p></div></div>' +
-        '<p class="ukWhy">No money changes hands on a hosted stay. You are trading your work for the room, ' +
-        'and the content stays useful to you both.</p>' +
-        '<p class="ukLead">Nothing is locked in. They reply, then you agree dates together.</p>' +
-      '</aside></div>';
-  }
 
   /* ============================ 7 — earnings ============================ */
   /* earn() used to live here and drew its own bar chart out of divs
@@ -973,7 +978,7 @@ window.UKCV = (function () {
         '<h3 class="ukCheerBig_t">Hotels can see you properly now</h3>' +
         '<p class="ukCheerBig_p">Your badge is live, you are in the recommendations hotels see, and Pitch Pilot ' +
         'is fully unlocked. Renews at ' + D.money(p.month) + ' a month.</p>' +
-        '<div class="ukHero_cta"><button class="ukBtn" type="button" data-goto="pitch">Open Pitch Pilot</button>' +
+        '<div class="ukHero_cta"><button class="ukBtn" type="button" data-goto="stays">Find your next stay</button>' +
         '<button class="ukGhost" type="button" data-ack="Opened">Manage billing</button></div></div>' +
         '<div class="ukCheerBig_m">' + ['reel1','reel3','shot2'].map(function (k) { return m(k, ''); }).join('') + '</div>' +
         '</section>';
@@ -1063,7 +1068,7 @@ window.UKCV = (function () {
 
   return {
     /* earn is not here: ukcdash.js owns that view and assigns V.earn itself */
-    home:home, collabs:collabs, stays:stays, apply:apply, profile:profile,
+    home:home, collabs:collabs, stays:stays, profile:profile,
     kit:kit, academy:academy, community:community, member:member, account:account,
     empty:empty, media:m, pic:pic, head:head, track:track, paginate:paginate,
     /* the shared stay card as this side dresses it, so the dashboard, Pitch Pilot

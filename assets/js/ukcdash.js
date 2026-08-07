@@ -390,7 +390,7 @@
       '<div class="ukBento">' +
         '<section class="ukCard c7"><div class="ukCard_h">' +
           '<h3 class="ukCard_t">Pitches against stays</h3>' +
-          '<button class="ukCard_more" type="button" data-goto="pitch">Pitch tracker</button></div>' +
+          '<button class="ukCard_more" type="button" data-lane="waiting">See your pitches</button></div>' +
           '<p class="ukCard_sub">Pitching is a numbers game at every size. More out means more back.' +
             (D.earnings.nights
               ? ' The stays that landed came to ' + D.earnings.nights + ' nights you did not pay for.'
@@ -439,7 +439,7 @@
           }).join('') + '</ul>'
             : '<p class="ukCard_sub">Everything is with the hotels right now. That is the normal shape of it, ' +
               'and a good moment to get a couple more pitches out.</p>' +
-              '<button class="ukGhost" type="button" data-goto="pitch" style="width:100%;margin-top:auto">Open Pitch Pilot</button>') +
+              '<button class="ukGhost" type="button" data-goto="stays" style="width:100%;margin-top:auto">Find a stay to pitch</button>') +
         '</section>' +
 
         '<section class="ukCard c4"><div class="ukCard_h">' +

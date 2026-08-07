@@ -16,10 +16,13 @@
       { id:'home',    title:'Dashboard',   icon:'home' },
       { id:'collabs', title:'Your collabs',icon:'chat' }
     ]},
+    /* ONE PAGE FOR A STAY, not two. "Discover stays" and "Pitch Pilot" rendered
+       the same D.stays list from two places, and a stay's home silently changed
+       the moment you pitched it. State is an attribute of an object, not another
+       place to keep it, so the lanes filter one list rather than splitting it. */
     { group:'Find work', items:[
-      { id:'stays',  title:'Discover stays', icon:'search' },
-      { id:'pitch',  title:'Pitch Pilot',    icon:'star' },
-      { id:'earn',   title:'Earnings',       icon:'bag' }
+      { id:'stays',  title:'Stays',    icon:'search' },
+      { id:'earn',   title:'Earnings', icon:'bag' }
     ]},
     { group:'You', items:[
       { id:'boards',  title:'Mood boards',  icon:'eye' },
@@ -32,7 +35,7 @@
   /* "Your profile" and "Account" are reachable from the account menu now, not
      the left rail — but the account menu still routes to them by id, so their
      page titles have to resolve even without a matching NAV entry. */
-  var TITLES = { member:'Membership', apply:'Apply for this stay', editme:'How you travel',
+  var TITLES = { member:'Membership', editme:'How you travel',
                  hotel:'Hotel', board:'Board', guide:'Guest guide',
                  profile:'Your profile', account:'Account' };
   NAV.forEach(function (g) { g.items.forEach(function (i) { TITLES[i.id] = i.title; }); });
@@ -171,8 +174,6 @@
     if (view === 'home')     return V.home(s);
     if (view === 'collabs')  return V.collabs(s);
     if (view === 'stays')    return V.stays(s);
-    if (view === 'apply')    return V.apply(s);
-    if (view === 'pitch')    return window.UKCP.pitch(s);
     if (view === 'earn')     return V.earn(s);
     if (view === 'profile')  return V.profile(s);
     if (view === 'kit')      return V.kit(s);
@@ -418,7 +419,15 @@
     if (go) go.disabled = !ready;
   });
 
-  function go(next) { pushTrail(next); view = next; paintNav(); paintView(); closeSide(); closeMenu(); }
+  /* 'pitch' and 'apply' were pages of their own and are now lanes and a composer
+     inside 'stays'. Aliased rather than hunted down: eight buttons across the
+     dashboard and the hotel page said data-goto="pitch", and every one of them
+     still means "take me to my pipeline". */
+  var ALIAS = { pitch:'stays', apply:'stays' };
+  function go(next) {
+    next = ALIAS[next] || next;
+    pushTrail(next); view = next; paintNav(); paintView(); closeSide(); closeMenu();
+  }
   /* the gate rides on every paint, so it survives navigation */
   
   function repaint() { paintView(true); }
@@ -632,8 +641,12 @@
        answered FIRST: closest('[data-open]') from a button inside the card finds
        the card, so "Pitch this stay" was opening the stay detail rather than
        starting an application. */
+    /* "Pitch this stay", from wherever it is pressed, opens THE composer. It used
+       to open a second one that wrote to a different record than the lanes read,
+       which is how a stay ended up in To pitch and Waiting at the same time. */
     if ((el = e.target.closest('[data-apply]'))) {
-      view = 'apply'; st().stay = el.dataset.apply; paintNav(); return paintView();
+      window.UKCP.write(el.dataset.apply);
+      return go('stays');
     }
     if ((el = e.target.closest('[data-hotel]'))) { view = 'hotel'; st().stay = el.dataset.hotel; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-open]'))) { s.open = el.dataset.open; return paintView(); }
@@ -665,31 +678,13 @@
     if (e.target.closest('[data-editme]')) { go('editme'); return; }
     if ((el = e.target.closest('[data-board]'))) { view = 'board'; st().board = el.dataset.board; paintNav(); return paintView(); }
     if ((el = e.target.closest('[data-guide]'))) { view = 'guide'; st().guide = el.dataset.guide; paintNav(); return paintView(); }
-    if ((el = e.target.closest('[data-sendapply]'))) {
-      var sid = el.dataset.sendapply;
-      var msg = (root.querySelector('#ukApplyMsg') || {}).value ||
-                'I would love to be considered for this stay.';
-
-      /* The application used to be pushed into this app's own collaboration list
-         and stop there: the hotel never learned that anyone had applied, and the
-         creator watched a thread that existed on their machine and nowhere else.
-         It goes to the shared record first, and the local row is built from what
-         comes back — so both sides are reading the same application. */
-      var me = D.me, sent = null;
-      if (window.UKAPPLY) {
-        sent = window.UKAPPLY.send({
-          stay: sid, creator: window.UKAPPLY.ME,
-          creatorName: me.n, creatorHandle: me.h, creatorImg: me.img,
-          creatorCity: me.city,
-          creatorReach: (me.plats || []).reduce(function (a, p) { return a + (p.f || 0); }, 0),
-          msg: msg
-        });
-      }
-      D.collabs.unshift({ id: (sent && sent.id) || ('k' + Date.now()), stay:sid, stage:0,
-        when:'just now', unread:0, fresh:true, application: sent && sent.id,
-        msgs:[{ by:'me', at:'just now', tx: msg }] });
-      view = 'collabs'; S.collabs = { sent:true }; paintNav(); return paintView();
-    }
+    /* [data-sendapply] is gone. It was the second send: it wrote UKAPPLY and then
+       ALSO pushed a stage-0 row into D.collabs and navigated there, which
+       contradicts the pipeline this app already settled on. Your collabs begins
+       at Onboarding, the moment a hotel says yes; before that there is no
+       collaboration, only a hope. reconcilePipeline() in ukcdata.js was quietly
+       undoing this on the next load. Sending now writes the application and the
+       stay moves to Waiting, which is where a sent pitch actually is. */
     if ((el = e.target.closest('[data-thread]'))) { s.thread = el.dataset.thread; s.delivering = null; s.picked = null; return paintView(); }
 
     if ((el = e.target.closest('[data-send]'))) {
