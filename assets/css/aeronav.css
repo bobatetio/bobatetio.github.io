@@ -115,23 +115,57 @@
 .aeroNav_burger.is-open .aeroNav_burgerLine.top{transform:translateX(-50%) translateY(2px)}
 .aeroNav_burger.is-open .aeroNav_burgerLine.bottom{transform:translateX(-50%) translateY(-3px)}
 
+/* The overlay menu's own header: a logo and a close button. It only belongs to
+   the overlay, and it was never hidden on desktop, so a 360x108 logo rendered
+   inside the desktop bar and the close button rendered as a stray white square.
+   The bar is a flex row, so that block took space from the links and squeezed
+   them to 44px: "For Travel Brands" clipped to "For Trav". Hidden here and
+   shown inside the overlay, exactly as .aeroNav_mobileCta already was. */
+.aeroNav_mobileTop{display:none}
 .aeroNav_mobileCta{display:none}
 
 /* ---- responsive: collapse to overlay below lg ---- */
 @media (max-width:1023px){
   .aeroNav{--aero-h:72px}
+  /* The overlay is position:fixed with inset:0, but .aeroNav_center is
+     transformed to centre the links on desktop, and a transform makes an element
+     the containing block for fixed descendants. So inset:0 resolved to that
+     element's box, which is 0x0 here, and the "full screen" menu was a zero-size
+     panel: the items rendered on top of the page with nothing behind them.
+     The centring is a desktop job; at this width the links are an overlay. */
+  .aeroNav_center{position:static; transform:none}
   .aeroNav_burger{display:block}
   .aeroNav_btns{display:none}
   .aeroNav_links{
     position:fixed; inset:0; flex-direction:column; justify-content:center; align-items:center; gap:14px;
-    background:var(--aero-mid); color:var(--aero-white); z-index:80;
+    background:var(--aero-mid); color:var(--aero-white); z-index:1;
     opacity:0; pointer-events:none; transition:opacity .3s cubic-bezier(.66,0,.34,1);
   }
   .aeroNav_links.is-open{opacity:1; pointer-events:auto}
+  /* The overlay's own z-index is scoped inside .aeroNav's stacking context, so
+     raising it there did nothing: the promo banner sits at 120 and .aeroNav at
+     80, which put the banner over the open menu and swallowed taps on its close
+     button. The whole nav lifts while the menu is open, and only then. */
+  .aeroNav:has(.aeroNav_links.is-open){z-index:130}
+  /* the overlay has its own close button, so the burger behind it is a second
+     control for the same job sitting on top of the menu */
+  .aeroNav:has(.aeroNav_links.is-open) .aeroNav_burger{opacity:0; pointer-events:none}
   .aeroNav_links .aeroNav_link{font-family:'Quaria Display',serif; font-size:44px}
   .aeroNav_links .aeroNav_link span{height:auto; overflow:visible}
   .aeroNav_links .aeroNav_link span strong:before{display:none}
   .aeroNav_links .aeroNav_link:hover span strong{transform:none}
+  .aeroNav_mobileTop{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    position:absolute; top:0; left:0; right:0; height:72px; padding:0 20px;
+  }
+  .aeroNav_mobileLogo{height:30px; width:auto; filter:brightness(0) invert(1)}
+  .aeroNav_mobileClose{
+    flex:0 0 40px; width:40px; height:40px; display:grid; place-items:center; padding:0;
+    border:0; border-radius:9999px; background:rgba(255,255,255,.10);
+    color:var(--aero-white); cursor:pointer;
+  }
+  .aeroNav_mobileClose svg{width:18px; height:18px}
+  .aeroNav_mobileClose:hover{background:rgba(255,255,255,.18)}
   .aeroNav_mobileCta{display:flex; margin-top:24px}
 }
 @media (prefers-reduced-motion:reduce){

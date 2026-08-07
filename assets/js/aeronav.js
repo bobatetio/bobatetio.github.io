@@ -18,7 +18,11 @@
         setOpen(!burger.classList.contains('is-open'));
       });
       links.addEventListener('click', function (e) {
-        if (e.target.closest('a')) setOpen(false);
+        /* the overlay's own close button, and any link in it, shut the menu.
+           The button was in the markup with nothing listening to it, so the only
+           way out of the menu on a phone was the burger behind it or Escape,
+           which a phone does not have. */
+        if (e.target.closest('a') || e.target.closest('.aeroNav_mobileClose')) setOpen(false);
       });
       addEventListener('keydown', function (e) {
         if (e.key === 'Escape') setOpen(false);
