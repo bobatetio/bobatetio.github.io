@@ -48,8 +48,10 @@ file starts with `uk`, it belongs to the app.
 Modules worth knowing before you touch anything:
 
 - `assets/js/ukshared.js` — the vocabularies both sides must agree on (what a
-  creator shoots, what they make, where they post) and `UKShared`, the single
-  record for a collaboration that genuinely exists on both sides.
+  creator shoots, what they make, where they post), `UKME` (the signed-in
+  creator's public record — the hotel's roster row and her own profile both
+  derive from it) and `UKShared`, the single record for a collaboration that
+  genuinely exists on both sides.
 - `assets/js/ukstays.js` — **the stay registry.** A stay published by a hotel is
   written here, and the creator app reads its Discover list out of it. One shape,
   two readings: `toHotel()` and `toCreator()` are the only translation in the
@@ -94,6 +96,16 @@ written by both apps. Nothing is duplicated per side.
 
 To watch a full loop: publish a stay in `/app/`, open `/creator/` in another tab,
 apply to it from Discover, then answer it back in `/app/`.
+
+**Two id spaces overlap.** Both apps seed stays starting at `s1`, and they mean
+different properties — the hotel's `s7` is MiraGrace's, the creator's `s7` is
+Casa Boa Vista's. Where a published stay collides with a seeded one belonging to
+a *different* property, the incoming stay is namespaced `mg-…` rather than
+replacing it. Where the property matches, what the hotel published wins, because
+the seed's copy was out of date. Order matters here: `ukcmatch.js` adds the rest
+of the market after `ukcdata.js` runs, so the registry is hydrated from there —
+hydrating earlier let a hotel stay take an id before the property that already
+owned it had loaded.
 
 ## The marketing pages
 

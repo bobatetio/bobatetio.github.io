@@ -61,10 +61,10 @@ window.UK = (function () {
   }
 
   var creators = [
-    { id:'c1', lat:38.72, lng:-9.14, langs:'English, Portuguese', plats:[{k:'ig',n:'Instagram',f:94000},{k:'tt',n:'TikTok',f:34000}], age:'25-34 (58%)', gender:'71% women', tops:'Portugal, UK, Germany', reach:'31K per post', resp:'within 4 hours', worked:[{h:'Casa Azul Tulum',out:'3 videos, 12 photos'},{h:'Riad Amber',out:'1 video, 8 photos'}], been:[{n:'Lisbon',lat:38.72,lng:-9.14},{n:'Marrakesh',lat:31.63,lng:-8.0},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Milan',lat:45.46,lng:9.19}], n:'Amara Mensah',   h:'@amaratravels', loc:'Lisbon, Portugal',  img:AV+'av-01.jpg',
-      f:128000, p:['ig','tt'], type:'Wellness & spa', stays:23, ontime:100, eng:'6.4%', rating:4.9,
-      free:'From 12 Mar', bio:'Slow travel and design-led properties. Shoots, edits and delivers solo.',
-      proof:'Her last resort feature drove 340 saves and a 3-week booking bump for the property.' },
+    /* Amara is the signed-in creator of the OTHER app. Her public record is in
+       ukshared.js so both sides read one set of numbers; the derivation below
+       fills this row from it. Anything left here is hotel-side only. */
+    { id:'c1', img:AV+'av-01.jpg', free:'From 12 Mar' },
     { id:'c2', lat:25.76, lng:-80.19, langs:'English, Spanish', plats:[{k:'tt',n:'TikTok',f:61000},{k:'yt',n:'YouTube',f:25400}], age:'18-24 (44%)', gender:'55% women', tops:'USA, Canada, Mexico', reach:'22K per post', resp:'within 2 hours', worked:[{h:'Palms Dania Beach',out:'2 videos, 10 photos'},{h:'Bondi Sands Hotel',out:'4 videos'}], been:[{n:'Miami',lat:25.76,lng:-80.19},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Sydney',lat:-33.87,lng:151.21}], n:'Kelvis Carter',  h:'@kelvisc',      loc:'Miami, USA',        img:AV+'av-02.jpg',
       f:86400,  p:['tt','yt'], type:'Hotel & resort UGC', stays:41, ontime:98, eng:'5.1%', rating:4.7,
       free:'Available now', bio:'High-volume UGC. Fast turnaround, raw files always included.',
@@ -102,6 +102,31 @@ window.UK = (function () {
       free:'Available now', bio:'Riads and desert camps. Works in Arabic, French and English.',
       proof:'28 stays, none late. Multilingual delivery if you need copy in more than one language.' }
   ];
+
+  /* ---- the signed-in creator, from the one shared record ----
+     Her row used to carry its own follower counts, its own subject and its own
+     band, and every one of them disagreed with what she sees on her own profile.
+     The fit score is computed from the band, so the two apps did not even agree
+     on whether she matched a stay. */
+  (function () {
+    var M = window.UKME;
+    if (!M) return;
+    var c = creators.filter(function (x) { return x.id === M.id; })[0];
+    if (!c) return;
+    c.n = M.n; c.h = M.h; c.loc = M.city; c.img = M.img || c.img;
+    c.type = M.type; c.cats = (M.cats || []).slice();
+    c.langs = M.langs; c.bio = M.bio;
+    c.plats = (M.plats || []).map(function (p) { return { k:p.k, n:p.n, f:p.f }; });
+    c.p = c.plats.map(function (p) { return p.k; });
+    c.f = M.total();
+    c.stays = M.stays; c.ontime = M.ontime; c.eng = M.eng; c.rating = M.rating;
+    c.reach = M.reach; c.resp = M.resp;
+    c.age = M.age; c.gender = M.gender; c.tops = M.tops;
+    c.been = (M.been || []).slice(); c.worked = (M.worked || []).slice();
+    c.proof = M.proof; c.vetted = M.verified;
+    c.lat = (M.been && M.been[0] && M.been[0].lat); c.lng = (M.been && M.been[0] && M.been[0].lng);
+  })();
+
 
 
   /* What each creator offers a property. The hotel chooses between these. */
@@ -764,6 +789,9 @@ window.UK = (function () {
     var EXTRA = PL.filter(function (p) { return ['ig','tt','yt'].indexOf(p.k) < 0; });
     if (!EXTRA.length) return;
     creators.forEach(function (c, i) {
+      /* the signed-in creator's channels come from the shared record, not from
+         a rule applied twice with two different index bases */
+      if (window.UKME && c.id === window.UKME.id) return;
       var have = (c.plats || []).map(function (p) { return p.k; });
       var lead = (c.plats && c.plats[0] && c.plats[0].f) || 20000;
       var add = 1 + (i % 2);                       /* one or two, never more */
@@ -789,6 +817,7 @@ window.UK = (function () {
     c.cats = (CATS[c.id] || [c.type]).slice(0, MAXP);
     c.type = c.cats[0];   // the filter chip and the card now say the same word
   });
+
 
   /* More approved work, so the library has enough in it to show what a real
      content shelf looks like — and enough video that the video tab is a grid
@@ -1006,6 +1035,34 @@ window.UK = (function () {
       });
     });
   }
+
+  /* ---- the stays this property is actually offering ----
+     Every live stay goes into the shared registry, which is what the creator app
+     reads its Discover list out of. Before this the creator side carried its own
+     idea of what MiraGrace offers — one stay, with the wrong nights, the wrong
+     inclusions and the wrong deliverables — and a creator could apply to a stay
+     the hotel had never published. The hotel's own list is the truth about what
+     the hotel offers; this is how it gets there. */
+  (function () {
+    var R = window.UKSTAYS;
+    if (!R) return;
+    stays.forEach(function (s) {
+      if (s.status !== 'live') return;
+      if (R.get(s.id)) return;                 /* already published, leave it */
+      R.publish({
+        id: s.id, t: s.t,
+        property: { name:property.name, city:property.city, cc:property.cc || null,
+                    lat:property.lat, lng:property.lng, img:property.img, cat:property.cat },
+        shots: (s.shots && s.shots.length ? s.shots : [s.img]).filter(Boolean),
+        img: s.img,
+        nights: s.nights, capacity: s.capacity, rooms: s.rooms,
+        incList: s.incList || String(s.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean),
+        inc: s.inc, del: s.del, rights: s.rights,
+        from: s.from, to: s.to, reach: s.reach, type: s.type,
+        visibility: 'public'
+      });
+    });
+  })();
 
   /* ---- stays this property has actually published ----
      The seeded stays above are demonstration data and live only in memory. A

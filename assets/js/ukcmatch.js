@@ -174,8 +174,13 @@
     s.why = s.why || '';
     if (!D.stays.some(function (x) { return x.id === s.id; })) D.stays.push(s);
   });
-  /* these arrive after ukcdata.js has run, so they get placed on the globe here */
+  /* These arrive after ukcdata.js has run, so they get placed on the globe here.
+     The published-stay registry is re-read at the same point, and for the same
+     reason: it hydrated before this file existed, so a hotel's stay and one of
+     these could not be compared and the id collision between them was resolved
+     the wrong way round — the hotel's s7 shut out Casa Boa Vista's. */
   if (D.placeStays) D.placeStays();
+  if (D.hydrateStays) D.hydrateStays();
   if (D.hydrateFavs) D.hydrateFavs();
 
   /* ---------------- the matcher ---------------- */

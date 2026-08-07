@@ -32,12 +32,22 @@ window.UKC = (function () {
   };
 
   /* ---------- the signed-in creator ---------- */
+  /* The creator's own record. Everything a hotel can also see comes from the
+     one shared profile in ukshared.js — the two used to disagree about her
+     follower count, her subject and her size band, which is the number the
+     hotel's fit score is computed from. What stays here is genuinely private to
+     this side: her work, her drafts, her membership, what she has not published. */
+  var M = window.UKME || {};
   var me = {
-    n:'Amara Mensah', h:'@amaratravels', img:A+'av-01.jpg',
-    city:'Lisbon, Portugal', niche:'Wellness & slow travel',
-    plats:[{k:'ig',n:'Instagram',f:12400},{k:'tt',n:'TikTok',f:8600}],
-    bio:'Slow mornings, good light, hotels worth waking up early for.',
-    verified:false, member:false, band:'5K - 25K', freePitchUsed:false,
+    id: M.id || 'c1',
+    n: M.n, h: M.h, img: M.img,
+    city: M.city, niche: M.niche, type: M.type,
+    cats: (M.cats || []).slice(),
+    langs: M.langs, bio: M.bio,
+    plats: (M.plats || []).map(function (p) { return { k:p.k, n:p.n, f:p.f }; }),
+    band: M.band, verified: M.verified,
+    age: M.age, gender: M.gender, tops: M.tops,
+    member:false, freePitchUsed:false,
     work:[
       { id:'w1', m:'reel1', t:'Sunrise at the riad',      plays:41200, saves:1860, on:'2 weeks ago' },
       { id:'w2', m:'reel2', t:'Room tour, garden suite',  plays:28700, saves:1140, on:'3 weeks ago' },
@@ -403,18 +413,8 @@ window.UKC = (function () {
      eight, so a profile that can only ever show two is describing the seed
      rather than the person. Follower counts are a fraction of the lead channel:
      a second platform is a second audience, not a copy of the first. */
-  (function () {
-    var PL = (window.UKVOCAB && window.UKVOCAB.PLATFORMS) || [];
-    if (!PL.length || !me.plats || !me.plats.length) return;
-    var have = me.plats.map(function (p) { return p.k; });
-    var lead = me.plats[0].f || 12000;
-    ['yt', 'fb'].forEach(function (k, i) {
-      if (have.indexOf(k) > -1) return;
-      var meta = PL.filter(function (x) { return x.k === k; })[0];
-      if (!meta) return;
-      me.plats.push({ k:meta.k, n:meta.n, f: Math.round(lead * (i ? 0.31 : 0.52)) });
-    });
-  })();
+  /* her channels are in the shared record now, so nothing is widened here */
+
 
   /* Every piece of work declares WHAT IT IS, in the same eight formats the
      creator onboarding asks about. The record already knew whether a piece was a
@@ -586,15 +586,44 @@ window.UKC = (function () {
     if (!R) return;
     var have = {};
     stays.forEach(function (s) { have[s.id] = 1; });
-    R.forCreator('c1').forEach(function (rec) {
-      if (have[rec.id]) return;
-      have[rec.id] = 1;
-      stays.unshift(rec);
+    /* Reversed, because each row is unshifted: walking the registry forwards put
+       the NEWEST stay at the bottom of the list, which is the opposite of what a
+       creator opening Discover should see. */
+    R.forCreator('c1').slice().reverse().forEach(function (rec) {
+      /* The registry WINS over a seeded row of the same id. The seed carried its
+         own idea of what MiraGrace offers — stay s1 had the wrong nights, the
+         wrong inclusions and the wrong deliverables — so a creator could read
+         one trade and apply to another. What the hotel published is the trade. */
+      var at = stays.map(function (x) { return x.id; }).indexOf(rec.id);
+      if (at > -1 && stays[at].hotel === rec.hotel) {
+        /* the same stay at the same property: what the hotel published wins,
+           because the seed's idea of it was out of date. Only what is genuinely
+           this side's survives — whether she saved it. */
+        rec.saved = stays[at].saved;
+        stays[at] = rec;
+      } else if (have['mg-' + rec.id]) {
+        return;                       /* already brought in, under its namespace */
+      } else if (at > -1) {
+        /* SAME ID, DIFFERENT PROPERTY. The two apps grew separate id spaces that
+           both start at s1, so MiraGrace's seventh stay and Casa Boa Vista's
+           seventh stay are both "s7". Replacing by id destroyed the other
+           property's listing. The incoming one is namespaced instead, and every
+           reference to it in this app follows the new id. */
+        rec.id = 'mg-' + rec.id;
+        if (!have[rec.id]) { stays.unshift(rec); have[rec.id] = 1; }
+      } else {
+        stays.unshift(rec);
+        have[rec.id] = 1;
+      }
     });
     placeStays();
     hydrateFavs && hydrateFavs();
   }
-  hydrateStays();
+  /* NOT called here. ukcmatch.js adds the rest of the market after this file
+     runs, and the registry has to be able to compare a published stay against
+     those before deciding an id collision — hydrating first let the hotel's s7
+     take the id and shut out the property that already had it. ukcmatch calls
+     hydrateStays() once it has finished. */
   hydrateApplications();
 
   return {
