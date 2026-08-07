@@ -174,8 +174,12 @@ the creator never types a follower count: `ukplatconnect.js` is the connector th
 onboarding page has always used — two buckets with a main profile, drag to change
 which is main, and an OAuth stand-in that redirects, asks consent, sometimes
 fails and can be retried. A connected platform gives the real handle and the real
-number, and the **size band falls out of it** rather than being estimated. That
-module is shared by the start page and the gate; do not write a second one.
+number, and the **size band falls out of it** rather than being estimated. It also
+brings the creator's recent posts across, which is the step's own promise ("we
+read your work from them, so there is nothing to upload") being kept: `work()`
+returns them newest-and-biggest first, deduped across accounts, in the shape
+`ukcdata.js` already stores. That module is shared by the start page and the
+gate; do not write a second one.
 The city is not typed either: `ukplace.js` is the combobox the hire brief uses, so
 a place is chosen from `UKMARKETS` with its flag beside it and stored as a key
 rather than a spelling. The hotel's photographs are asked for here rather than
@@ -203,6 +207,11 @@ guest guide survived the first-time strip for a while, so the checklist ticked t
 lines of work nobody had done; `ukdata2.js` clears both under `?as=new`. The guest
 guide is off the checklist entirely — it is written when a creator is actually
 coming, not on day one for a stay that does not exist yet.
+
+The creator's list lost two lines for the same reason. "Connect a platform" is
+what the gate asks, and "Add three pieces of work" described a product where you
+posted your own samples; connecting is what brings the work across. What is left
+on each side is only what the account holder still has to decide.
 
 Nothing in it is a new component. The step card, progress rail, intent picker,
 pill choices, fields and nav buttons are the ones `/start/` already used, inside

@@ -97,10 +97,9 @@ window.UKONBOARD = (function () {
          platform — nothing shown here turns out to have been staged. */
       render: function () {
         return ask('Welcome to Ukreate',
-          'Hotels have nights they would rather fill than leave empty, and they will trade ' +
-          'them for content. You shoot the property, they host your stay, and everything ' +
-          'you make stays yours to post. Two minutes here is all it takes for them to ' +
-          'start finding you.', peek('creator'), { mark: true });
+          'Hotels trade nights they would rather fill for content. You shoot the ' +
+          'property, they host your stay, and everything you make stays yours to post. ' +
+          'Two minutes and they can start finding you.', peek('creator'), { mark: true });
       },
       done: function () { return true; },
       cta: 'Get started'
@@ -434,7 +433,11 @@ window.UKONBOARD = (function () {
         });
         if (M)  { M.plats = plats; M.band = P.bandFor(P.total({ plats:f.plats })); }
         if (me) { me.plats = plats.slice(); me.band = M ? M.band : me.band;
-                  me.h = '@' + (f.plats[0].handle || 'you'); }
+                  me.h = '@' + (f.plats[0].handle || 'you');
+                  /* Connecting reads the work; the creator does not upload it.
+                     This is the step's own promise being kept, and it is why
+                     there is no "add three pieces of work" task anywhere. */
+                  if (P.work) me.work = P.work(f.plats); }
       }
     } else {
       var p = window.UK && window.UK.property;
@@ -453,13 +456,14 @@ window.UKONBOARD = (function () {
      ticks drifts the moment anything is deleted, and then it is lying too. */
   function tasks(side) {
     if (side === 'creator') {
-      var me = (window.UKC && window.UKC.me) || {};
       var A = window.UKAPPLY;
+      /* Neither "connect a platform" nor "add three pieces of work" belongs here.
+         The gate asks for the connection, and the connection is what brings the
+         work across - the creator never uploads any of it. Both lines described
+         a product where you declared a rough size and posted your own samples,
+         and that product stopped existing when the real connector went in. What
+         is left is the two things only the creator can decide. */
       return [
-        { t:'Connect a platform', s:'Swaps your rough size for the real number.',
-          go:'profile', done:(me.plats || []).some(function (x) { return x.f; }) },
-        { t:'Add three pieces of work', s:'This is what hotels are actually buying.',
-          go:'profile', done:(me.work || []).length >= 3 },
         { t:'Save a stay you like', s:'Anything you save is one press from a pitch.',
           go:'stays', done:(window.UKFAVS ? window.UKFAVS.count('stays') : 0) > 0 },
         { t:'Send your first pitch', s:'Four to a yes is a good ratio, not a bad one.',

@@ -47,6 +47,47 @@ window.UKPLATCONNECT = (function () {
     }, 620);
   }
 
+  /* What a connect actually brings back besides a number. The step says "we read
+     your work from them, so there is nothing to upload", and this is that
+     sentence being true: connecting fills the creator's recent posts, which is
+     what a hotel looks at first and what the media kit is built from.
+
+     Seeded per platform for the same reason the follower count is - connecting
+     the same account twice should not invent a different history.
+
+     // PLUG-IN POINT - a real provider's media endpoint replaces this. The shape
+     // is what ukcdata.js already stores: { id, m, t, plays, saves, on }. */
+  var POSTS = {
+    ig: [['reel1','Sunrise at the riad',41200,1860,'2 weeks ago'],
+         ['shot1','Pool, late afternoon',9100,520,'a month ago'],
+         ['reel3','Breakfast on the terrace',19400,840,'a month ago'],
+         ['shot2','Spa detail',7300,390,'2 months ago']],
+    tt: [['reel2','Room tour, garden suite',28700,1140,'3 weeks ago'],
+         ['reel4','Walking the old town',33500,1420,'6 weeks ago'],
+         ['reel5','Checking in, no talking',52100,2600,'2 months ago']],
+    yt: [['reel6','Three days, one hotel',18800,910,'a month ago'],
+         ['reel1','What a hosted stay is',12400,640,'2 months ago']],
+    fb: [['shot3','The terrace at golden hour',6100,280,'3 weeks ago']],
+    sc: [['shot4','Morning, off the balcony',4200,190,'a month ago']],
+    x:  [['shot2','Where I stayed this week',3100,140,'3 weeks ago']],
+    li: [['shot1','What hotels get wrong about creators',2800,210,'a month ago']],
+    pi: [['shot3','Saved: rooms with a view',5400,470,'6 weeks ago']]
+  };
+  /* Newest first across every connected account, deduped: the same post is often
+     cross-posted, and a media kit that lists it twice reads as padding. */
+  function work(plats) {
+    var out = [], seen = {};
+    (plats || []).forEach(function (r) {
+      (POSTS[r.k] || []).forEach(function (row) {
+        if (seen[row[1]]) return;
+        seen[row[1]] = 1;
+        out.push({ id: 'w' + (out.length + 1), m: row[0], t: row[1],
+                   plays: row[2], saves: row[3], on: row[4], from: r.k });
+      });
+    });
+    return out.sort(function (a, b) { return b.plays - a.plays; });
+  }
+
   function platMark(p) {
     return p.s
       ? '<img class="ukPlatMark" src="' + p.s + '" alt="" width="20" height="20">'
@@ -210,6 +251,7 @@ window.UKPLATCONNECT = (function () {
   return {
     body: body, oauthModal: oauthModal, platRow: platRow, platMark: platMark,
     start: start, allow: allow, cancel: cancel, drop: drop, makeMain: makeMain,
-    total: total, bandFor: bandFor, platforms: platforms, platOf: platOf, fmt: fmt
+    total: total, bandFor: bandFor, platforms: platforms, platOf: platOf, fmt: fmt,
+    work: work
   };
 })();
