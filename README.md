@@ -79,6 +79,13 @@ Modules worth knowing before you touch anything:
   score arc, meter.
 - `assets/js/ukdata.js` / `ukcdata.js` — seeded demo data for each side. **This
   is where the fake data lives.** Wiring a real API means replacing these two.
+- `assets/js/uktrack.js` — **is this hotel's booking tracking actually live.**
+  Hotel side only. Three states (`none` / `pending` / `live`) held as real state
+  on the property record, plus the copy every surface uses to explain the two
+  that are not live. Attribution depends on a property's booking flow being
+  instrumented, and before this file the build had no way to say whether it was,
+  so every hotel was shown attributed revenue as though it were fully wired. See
+  "Booking tracking status" below.
 - `assets/js/ukattrib.js` — booking attribution. `ukinvite.js`, `ukreviews.js`,
   `ukfavs.js`, `uknotify.js`, `ukpitchin.js` are the cross-app records, all
   backed by `localStorage` under the shared origin.
@@ -193,6 +200,52 @@ the gate's own buttons.
 This is a review control, not a product feature. Delete `ukdemo.js` and its two
 `strip()` calls to remove it — it mounts itself and handles its own clicks, so
 nothing else references it.
+
+### Booking tracking status
+
+Attribution only works if a property's booking flow is instrumented: the tracked
+link survives checkout, and each booking's outcome (booked, cancelled, no-show,
+consumed) comes back through Partnerize. `uktrack.js` holds whether that is true
+for this property, as `property.tracking` on the hotel record:
+
+    none      nothing set up. No attribution data can exist.
+    pending   setup underway. Data not yet reliable, so it is held back.
+    live      confirmed working. The figures are real. The demo default.
+
+**It is real state, not an inference.** A hotel with working tracking and zero
+bookings is a different sentence from a hotel we cannot see, and the product has
+to be able to say which one it is. Read it through `D.trackingLive()` rather than
+off the record.
+
+Every surface that would otherwise print an attributed figure reads it:
+
+| Surface | When tracking is not live |
+| --- | --- |
+| Bookings & ROI | The whole page becomes the explanation. No tabs, no figures. |
+| Dashboard | The Direct bookings tile holds a dash; the trend and top-creator cards are replaced by the short form of the explanation; "Kept, not paid out" states the rates instead of a total. |
+| Property profile | The two booking charts do not render. |
+| Settings → Booking tracking | Status, the identifiers Ukreate reconciles you against, and the route onward. |
+| Tracked link panels | Keep the link, gain a line saying nothing is reported back through it yet. |
+| Affordability calculator | Opens on a plain default rate rather than one derived from bookings that never happened. |
+
+The not-started and pending states are reachable from the **Booking tracking**
+section of the demo dock, or by appending the flag:
+
+    /app/?tracking=none      nothing instrumented
+    /app/?tracking=pending   setup underway
+    /app/?tracking=live      the default
+
+**There is deliberately no connector UI**, for a PMS or for Partnerize. Which
+booking engine a property runs, whether it can preserve a click ID and whether it
+can post lifecycle events out are an engineering and commercial conversation
+handled off-platform, not a self-serve button. This is status and honesty. The
+plumbing is not the app's job.
+
+`// PLUG-IN POINT` — `UKTRACK.status()` should read the property's real
+instrumentation record: confirmed link-through on the booking engine plus
+Partnerize reconciliation health. Replace the seed and the `localStorage`
+override with that read; everything downstream already routes through the three
+states.
 
 ### How marketing hands off to the app
 
@@ -312,13 +365,28 @@ the app's own modal shell.
 
 | Route | Status |
 | --- | --- |
-| `/for-creators/` | Finished — the Creator Pro membership page |
-| `/` | **Placeholder.** An index of the repo, not a real home page |
+| `/` | **For Travel Brands** — the hotel-facing home page |
+| `/for-creators/` | The Creator Pro membership page |
 | `/philosophy-demo/` | Motion prototype |
 
 These load their own stack — `aeronav`, `forcreators`, `cylinder`, `magnetic`,
-`creator-orbit`, `philovideo`, `fc-shared` — plus their own media under
+`creator-orbit`, `philovideo`, `fc-shared`, `surfer` — plus their own media under
 `assets/img/fc`, `assets/img/fc2` and `assets/video`. None of it is `uk`-prefixed.
+
+**`/` came out of the Izanami tree**, which is where the marketing site was
+started. That page was the Ukreate hero and creator surfer wrapped in Izanami's
+own sections, header, drawer and footer, which is why the whole folder read as
+Izanami. Everything Izanami is stripped: the philosophy, projects, school, craft,
+retreat and company sections, its site header and menu, its footer with the Dubai
+and Tokyo offices, its analytics and its Open Graph tags. What is left is the
+hero, the trust strip and the creator surfer.
+
+It still carries two build artefacts from that tree, `index.By0AFpwc.css` and
+`index.B6uyWDS7.js`, which is what the hero's mesh backgrounds, the preloader and
+the scroll smoothing run on. **That bundle is 865KB and is the last Izanami thing
+in the repo.** Replacing it means rebuilding the hero on the marketing stack the
+rest of the page already uses; `surfer.js` and `surfer.css`, which drive the
+creator cards, are hand-written and stay either way.
 
 The only files shared with the app are `globe-originkit.js`, the `assets/img/fc`
 photography and `assets/js/vendor/`. If the marketing site is ever split into its
@@ -347,7 +415,10 @@ own repository, those three are the whole of the untangling.
 
 ## Known gaps
 
-- The marketing home page at `/` is a placeholder.
+- `/`'s hero depends on an 865KB build artefact inherited from the Izanami tree
+  (see above). Everything else on that page is ours.
+- `Creator Academy`, `Membership` and `About` in the marketing nav have no pages
+  yet and point at `#`.
 - The in-app assistant (`ukask.js` / `ukaskbrain.js`) runs a local, deterministic
   conversation engine. `serve.py` has an Anthropic-backed path, but with no API
   key present it falls back to the local engine and the response carries
