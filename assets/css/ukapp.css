@@ -4775,3 +4775,76 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 /* the property profile's own readings, above the form */
 .ukBento--prop{margin-bottom:clamp(16px,2vw,22px)}
+
+
+/* ---- onboarding components, shared ----
+   The intent picker and its counter were written for the creator's start page and
+   lived in ukcreator.css, which the hotel app never loads. Onboarding now runs
+   inside both apps, so they belong in the sheet both of them read. */
+
+
+/* ---- onboarding components, shared ----
+   The intent picker and its counter were written for the creator's start page and
+   lived in ukcreator.css, which the hotel app does not load. Onboarding runs
+   inside both apps now, so they belong in the sheet both of them read. */
+.ukIntents{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.ukIntent{
+  display:flex;flex-direction:column;gap:3px;text-align:left;cursor:pointer;
+  padding:14px 16px;border-radius:14px;border:1px solid var(--input-line);background:var(--surface-2);
+}
+.ukIntent:hover{background:var(--hover)}
+.ukIntent:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukIntent.is-on{background:var(--active-bg);border-color:var(--active-ring)}
+.ukIntent_t{font:700 14px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukIntent_s{font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukCount2{margin-left:8px;font:400 10.5px/1 'Lato',sans-serif;color:var(--text-3);letter-spacing:0}
+
+
+/* ---- onboarding: the tier-one gate ----
+   The app's own modal shell, holding the same step card the original onboarding
+   used. One question per screen with the rail above it, because the same
+   questions in one long form read as far more work. */
+.ukOb_modal{max-width:560px;width:min(560px,calc(100vw - 32px));padding:26px 28px 22px}
+.ukOb_rail{margin:0 0 4px;gap:8px}
+.ukOb_rail li{flex:1 1 0}
+.ukOb_rail .ukStart_dot{margin:0}
+.ukOb_count{margin:0 0 14px;font:700 10.5px/1 'Lato',sans-serif;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--text-3)}
+.ukOb_modal .ukStart_ask{padding:0;background:none;border:0;box-shadow:none;max-width:none}
+.ukOb_modal .ukStart_h{font-size:clamp(22px,2.6vw,28px);margin:0 0 8px}
+.ukOb_modal .ukStart_p{margin:0 0 18px;max-width:44ch;text-wrap:pretty}
+.ukOb_modal .ukChoice{margin-top:4px}
+.ukOb_modal .ukWhy{margin-top:14px}
+.ukOb_nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+.ukOb_nav .ukNav_go{min-width:120px;justify-content:center}
+.ukOb_nav .ukBtn[disabled]{opacity:.45;pointer-events:none}
+
+/* ---- onboarding: the tier-two checklist ----
+   Sits at the top of the dashboard while there is anything left in it, and stops
+   rendering entirely once every line is done — a finished checklist is clutter. */
+.ukObList{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:20px 22px;margin-bottom:clamp(16px,2vw,22px)}
+.ukObList_head{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
+.ukObList_t{margin:0;font-family:"Marcellus",serif;font-weight:400;font-size:19px;color:var(--text)}
+.ukObList_c{margin:0;font:600 12.5px/1 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
+.ukObList_bar{height:6px;border-radius:9999px;background:var(--c1-track,var(--tag-done-bg));
+  overflow:hidden;margin:12px 0 4px}
+.ukObList_bar i{display:block;height:100%;border-radius:9999px;background:var(--uk-gold);
+  transition:width .3s ease}
+.ukObList_l{list-style:none;margin:0;padding:0}
+.ukObTask{display:flex;align-items:center;gap:13px;padding:13px 0;border-top:1px solid var(--line)}
+.ukObTask_tick{flex:0 0 22px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+  border:1.5px solid var(--input-line);background:var(--surface)}
+.ukObTask.is-done .ukObTask_tick{background:var(--uk-gold);border-color:var(--uk-gold);
+  color:var(--uk-on-gold)}
+.ukObTask_tick svg{width:12px;height:12px;display:block}
+.ukObTask_b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ukObTask_t{font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukObTask.is-done .ukObTask_t{color:var(--text-3);text-decoration:line-through}
+.ukObTask_s{font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+.ukObTask .ukGhost{flex:0 0 auto}
+@media (prefers-reduced-motion:reduce){ .ukObList_bar i{transition:none} }
+@media (max-width:560px){
+  .ukObTask{flex-wrap:wrap}
+  .ukObTask .ukGhost{margin-left:35px}
+}

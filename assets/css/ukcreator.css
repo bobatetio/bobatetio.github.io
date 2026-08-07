@@ -628,7 +628,6 @@
 }
 .ukPickr_full{margin:0;font:600 13px/1.5 'Lato',sans-serif;color:var(--gold-ink)}
 
-.ukCount2{margin-left:8px;font:400 10.5px/1 'Lato',sans-serif;color:var(--text-3);letter-spacing:0}
 
 /* the one reactive line */
 .ukNote{margin:0 0 18px;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
@@ -862,16 +861,6 @@
    here, and each is tapped once, not toggled, so there is no multi-select chip
    language to match either. Same border/radius/is-on language as .ukDel and
    every other "pick one of these cards" control already in the product. */
-.ukIntents{display:flex;flex-direction:column;gap:10px;margin-top:6px}
-.ukIntent{
-  display:flex;flex-direction:column;gap:3px;text-align:left;cursor:pointer;
-  padding:14px 16px;border-radius:14px;border:1px solid var(--input-line);background:var(--surface-2);
-}
-.ukIntent:hover{background:var(--hover)}
-.ukIntent:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukIntent.is-on{background:var(--active-bg);border-color:var(--active-ring)}
-.ukIntent_t{font:700 14px/1.3 'Lato',sans-serif;color:var(--text)}
-.ukIntent_s{font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-2)}
 
 /* ---------- the proof step's live search ----------
    Real cards, not a form — this is the moment the platform has to show it works

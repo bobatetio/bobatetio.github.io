@@ -290,6 +290,7 @@
        the "+N" on a list that does not fit, and it never ran on this side */
     if (window.UKSTAY) { window.UKSTAY.clamp(dyn); placeStayPop(); }
     if (!keep) window.scrollTo(0, 0);   // instant: a smooth reset moves hit targets mid-click
+    paintOnboard();
   }
 
   function placeStayPop() {
@@ -298,7 +299,99 @@
     if (!window.UKSTAY.place(s2.stayPop, document)) s2.stayPop = null;
   }
 
+  /* ---------------- onboarding ----------------
+     The gate is a modal over the live app rather than a page of its own, so the
+     product is visible behind the questions instead of being withheld until
+     after them. It only asks for what the app needs in order to tell the truth
+     — see ukonboard.js — and everything else is a checklist on the dashboard. */
+  var obAt = 0;
+  /* Open is its own state, not "are the answers complete". Deriving it from
+     completeness meant the modal tore itself down the moment the last question
+     was answered — the Finish button vanished from under the cursor, and the
+     answers were never applied. It opens when the gate is unmet and closes when
+     the person says it is done. */
+  var obOpen = !!window.UKONBOARD && !window.UKONBOARD.complete('creator');
+  function obNeeded() { return obOpen; }
+  /* What sits behind the gate matters. A brand-new account's own dashboard is
+     empty — no stays, no collaborations, nothing to look at — so blurring that
+     behind the questions teases an empty room. The marketplace is not theirs and
+     is already full: the stays on offer — the reason a creator signed up, and they already exist. */
+  function obBackdrop() {
+    if (!obNeeded()) return;
+    if (view === 'home' || view === 'dash') view = 'stays';
+  }
+
+  function paintOnboard() {
+    var host = q('#ukObHost') || (function () {
+      var d = document.createElement('div');
+      d.id = 'ukObHost';
+      document.body.appendChild(d);
+      return d;
+    })();
+    if (!obNeeded()) { host.innerHTML = ''; document.body.classList.remove('is-onboarding'); return; }
+    document.body.classList.add('is-onboarding');
+    host.innerHTML = window.UKONBOARD.modalHtml('creator', obAt);
+    var first = host.querySelector('input');
+    if (first) first.focus();
+  }
+
+  document.addEventListener('click', function (e) {
+    if (!window.UKONBOARD) return;
+    var el;
+    if ((el = e.target.closest('[data-ob-set]'))) {
+      window.UKONBOARD.set('creator', (function (o) { o[el.dataset.obSet] = el.dataset.obVal; return o; })({}));
+      window.UKONBOARD.apply("creator");
+      return paintOnboard();
+    }
+    if ((el = e.target.closest('[data-ob-pick]'))) {
+      var k = el.dataset.obPick, v = el.dataset.obVal, cap = Number(el.dataset.obCap) || 1;
+      var cur = window.UKONBOARD.get('creator')[k];
+      var next;
+      if (cap === 1) { next = cur === v ? '' : v; }
+      else {
+        next = Array.isArray(cur) ? cur.slice() : [];
+        var at = next.indexOf(v);
+        if (at > -1) next.splice(at, 1); else if (next.length < cap) next.push(v);
+      }
+      var patch = {}; patch[k] = next;
+      window.UKONBOARD.set('creator', patch);
+      window.UKONBOARD.apply("creator");
+      return paintOnboard();
+    }
+    if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
+    if (e.target.closest('[data-ob-next]')) {
+      var list = window.UKONBOARD.steps('creator');
+      if (obAt < list.length - 1) { obAt += 1; return paintOnboard(); }
+      window.UKONBOARD.apply('creator');
+      obOpen = false;
+      obAt = 0;
+      paintOnboard();
+      paintNav();
+      return paintView();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    if (!e.target.closest || !e.target.closest('[data-ob-field]')) return;
+    var go = document.querySelector('[data-ob-next]');
+    if (go && !go.disabled) { e.preventDefault(); go.click(); }
+  });
+
+  document.addEventListener('input', function (e) {
+    var el = e.target.closest && e.target.closest('[data-ob-field]');
+    if (!el || !window.UKONBOARD) return;
+    var patch = {}; patch[el.dataset.obField] = el.value;
+    window.UKONBOARD.set('creator', patch);
+    /* the Continue button enables on the first keystroke, so it is never a dead
+       control sitting there as an instruction you cannot follow */
+    var go = document.querySelector('[data-ob-next]');
+    if (go) go.disabled = !window.UKONBOARD.steps('creator')[obAt].done(window.UKONBOARD.get('creator'));
+  });
+
   function go(next) { pushTrail(next); view = next; paintNav(); paintView(); closeSide(); closeMenu(); }
+  /* the gate rides on every paint, so it survives navigation */
+  
   function repaint() { paintView(true); }
   window.UKCGO = go;
 
@@ -676,6 +769,7 @@
   });
 
 
+  obBackdrop();
   paintNav();
   paintView();
   icons();

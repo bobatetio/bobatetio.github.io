@@ -362,7 +362,8 @@
     var delta = lastM.pitches - prevM.pitches;
     var rate  = Math.round(replied.length / D.pitches.length * 100);
 
-    return '<div class="ukDashTop"><div>' +
+    return (window.UKONBOARD ? window.UKONBOARD.checklist('creator') : '') +
+      '<div class="ukDashTop"><div>' +
         '<h2 class="ukDashTop_h">Morning, ' + esc(D.me.n.split(' ')[0]) + '.</h2>' +
         '<p class="ukDashTop_p">' +
           (needs.length ? needs.length + (needs.length === 1 ? ' collab needs' : ' collabs need') + ' you today.'

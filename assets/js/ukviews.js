@@ -302,7 +302,7 @@ window.UKV = (function () {
     var t = D.roiTotals(D.attribution);
     var recent = D.assets.slice(0, 5);
 
-    return head('Good morning, Robert',
+    return (window.UKONBOARD ? window.UKONBOARD.checklist('hotel') : '') + head('Good morning, Robert',
       needsYou.length + ' collaborations need you, and a set of content has just landed.') +
 
       (ready.length ? (function () {

@@ -679,6 +679,10 @@ window.UKC = (function () {
   hydrateApplications();
   reconcilePipeline();
 
+  /* answers given in the onboarding gate, applied before anything reads the
+     record — they are the record, not a copy of it */
+  if (window.UKONBOARD) window.UKONBOARD.apply('creator');
+
   return {
     hydrateStays: hydrateStays,
     MEDIA: MEDIA, me: me, stays: stays, STAGES: STAGES, collabs: collabs,

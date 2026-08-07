@@ -58,7 +58,8 @@
     ].filter(function (s) { return s.v > 0 || s.l === 'Waiting on you'; });
     var pipeTotal = done.length + active.length || 1;
 
-    return '<div class="ukDashTop"><div>' +
+    return (window.UKONBOARD ? window.UKONBOARD.checklist('hotel') : '') +
+      '<div class="ukDashTop"><div>' +
         '<h2 class="ukDashTop_h">Good morning, Robert</h2>' +
         '<p class="ukDashTop_p">' +
           (needsYou.length ? needsYou.length + (needsYou.length === 1 ? ' collaboration needs' : ' collaborations need') + ' you today.' : 'Nothing is waiting on you today.') +

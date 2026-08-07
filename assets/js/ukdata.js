@@ -1089,6 +1089,10 @@ window.UK = (function () {
     hydrateApplications();
   })();
 
+  /* answers given in the onboarding gate, applied before anything reads the
+     record — they are the record, not a copy of it */
+  if (window.UKONBOARD) window.UKONBOARD.apply('hotel');
+
   return {
     STAGES: STAGES, creators: creators, stays: stays, collabs: collabs, packages: packages,
     attribution: attribution, COMMISSION: COMMISSION, money: money, roiTotals: roiTotals,

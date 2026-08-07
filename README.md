@@ -130,6 +130,31 @@ of the market after `ukcdata.js` runs, so the registry is hydrated from there �
 hydrating earlier let a hotel stay take an id before the property that already
 owned it had loaded.
 
+### Onboarding
+
+Sign-up lands you in the app, not on a form. Two tiers, in `ukonboard.js`:
+
+**Tier one** is a short gate — a modal over the live app, one question per
+screen. It asks only for what the product needs in order to tell the truth: a
+creator's subjects and size band (every fit score is computed against the band),
+a hotel's name, city and category (what creators read, and what the match runs
+on). Four screens for a hotel, three for a creator, deliberately asymmetric — a
+property signing up has made a considered decision, a creator is phone-first.
+
+Behind the modal sits the **marketplace**, not the user's own dashboard. A new
+account's dashboard is empty; the creator network and the live stays are not,
+and they are the reason someone signed up. `obBackdrop()` switches the view for
+exactly this.
+
+**Tier two** is a checklist at the top of the dashboard, and every line is asked
+of the live records — "Publish your first stay" is done when the registry holds
+one. It stops rendering entirely once nothing is left, because a finished
+checklist is clutter.
+
+Nothing in it is a new component. The step card, progress rail, intent picker,
+pill choices, fields and nav buttons are the ones `/start/` already used, inside
+the app's own modal shell.
+
 ## The marketing pages
 
 | Route | Status |
