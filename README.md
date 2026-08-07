@@ -133,8 +133,8 @@ owned it had loaded.
 ### Two demo views
 
 The seeded data describes an **established** account. To see the first hour
-instead — which is the experience every real user actually has — append
-`?as=new`, or use **Demo view** at the bottom of the account menu.
+instead — which is the experience every real user actually has — use the **Demo
+view** dock at the bottom-right of either app, or append `?as=new`.
 
     /app/?as=new        a hotel that signed up five minutes ago
     /creator/?as=new    a creator who has done nothing yet
@@ -147,8 +147,13 @@ not belong to you and they are the reason you signed up. `ukdemo.js` does the
 stripping; the view also implies the onboarding state, since an established
 account has by definition already onboarded.
 
-This is a review control, not a product feature. Delete `ukdemo.js`, its two
-`strip()` calls and the menu slot to remove it.
+The dock is collapsed until you open it, sits above everything including the
+onboarding gate, and steps to the left while the gate is up so it never lands on
+the gate's own buttons.
+
+This is a review control, not a product feature. Delete `ukdemo.js` and its two
+`strip()` calls to remove it — it mounts itself and handles its own clicks, so
+nothing else references it.
 
 ### Onboarding
 

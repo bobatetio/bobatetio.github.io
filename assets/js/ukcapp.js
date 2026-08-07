@@ -321,16 +321,6 @@
     if (view === 'home' || view === 'dash') view = 'stays';
   }
 
-  /* the demo switcher, in the account menu — a review control, not a feature */
-  (function () {
-    var slot = document.querySelector('#ukDemoSwitch');
-    if (slot && window.UKDEMO) slot.innerHTML = window.UKDEMO.menuHtml();
-  })();
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest && e.target.closest('[data-demo]');
-    if (el && window.UKDEMO) window.UKDEMO.set(el.dataset.demo);
-  });
-
   function paintOnboard() {
     var host = q('#ukObHost') || (function () {
       var d = document.createElement('div');

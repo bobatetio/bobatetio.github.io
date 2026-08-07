@@ -238,14 +238,6 @@ window.UKONBOARD = (function () {
         railHtml(side, at) +
         '<p class="ukOb_count">' + (at + 1) + ' of ' + list.length + '</p>' +
         s.render(f) +
-        /* The gate covers the account menu, and the demo switcher lives in it —
-           so in the first-time view there would be no way back to the
-           established one without clearing storage. This line is a review
-           control, not product: it only exists in that view. */
-        (window.UKDEMO && window.UKDEMO.isNew()
-          ? '<p class="ukOb_demo">Viewing the first-time account. ' +
-            '<button type="button" class="ukLinkBtn" data-demo="live">Switch to the established one</button></p>'
-          : '') +
         '<div class="ukNav ukOb_nav">' +
           (at > 0
             ? '<button class="ukGhost ukNav_back" type="button" data-ob-back>Back</button>'
