@@ -1,6 +1,6 @@
 /* Ukreate — connecting where a creator posts. One implementation, two homes.
 
-   This was written for the creator onboarding page (ukcstart.js) and it is the
+   This was written for the standalone creator onboarding page and it is the
    only real version of this interaction in the product: two buckets with a main
    profile and the rest, drag to change which is main, and an OAuth stand-in that
    redirects, asks for consent, sometimes fails, and can be retried.

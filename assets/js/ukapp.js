@@ -1344,7 +1344,7 @@
     /* a crumb always lands on that page's top level, so clicking "Collaborations"
        while a thread is open closes the thread rather than being a no-op */
     /* the card's "+N" overflow, anchored beside the button that opened it — same
-       behaviour as the creator's own card (see positionPopup in ukcstart.js) */
+       behaviour as the creator's own card */
     /* A clip plays inside its own frame on the card. Done against the DOM rather
        than through state and a repaint: re-rendering the grid to start a video
        would rebuild every card and drop the element that was just asked to play.

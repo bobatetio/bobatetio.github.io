@@ -1592,7 +1592,7 @@
 .ukStart_rail li + li::before{content:"";width:26px;height:1px;background:var(--line);margin-right:10px}
 /* the welcome/intent/proof screens ahead of creator onboarding's identity steps
    aren't counted progress, so the rail that tracks that progress stays off the
-   page until they're past — see STEP_YOU in ukcstart.js. Targets the #ukRail id
+   page until they're past. Targets the #ukRail id
    rather than .ukStart_rail: the dark-frame rail variant further down this file
    (.ukStart[data-ukstart] .ukStart_rail) outweighs a two-class selector, and an
    id is the plain way to outweigh it back without a specificity arms race. */
@@ -2240,7 +2240,7 @@
 @media (prefers-reduced-motion:reduce){.ukGoogle{transition:none}}
 
 /* ---------- onboarding globe ----------
-   Parked off-screen in the page shell, moved into step one's mirror by ukstart.js.
+   Parked off-screen in the page shell, moved into step one's mirror.
    Never rebuilt, so the three.js scene survives every re-render. */
 .ukGlobeHold{position:relative;width:100%;aspect-ratio:1/1;max-height:380px;margin:0 auto}
 .ukGlobeHold[hidden]{display:none !important}

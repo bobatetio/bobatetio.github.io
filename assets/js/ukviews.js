@@ -89,7 +89,7 @@ window.UKV = (function () {
 
   /* ============================ the creator card ============================
      One component, everywhere a creator is shown. It is the same card the
-     creator builds during onboarding (.ukCrCard in ukcstart.js) and the same one
+     creator builds during onboarding (.ukCrCard) and the same one
      the marketing site browses, so a creator sees the exact object a hotel will
      judge them by. Any surface that needs a creator renders this — the network
      grid, the collaboration thread — rather than inventing its own arrangement. */

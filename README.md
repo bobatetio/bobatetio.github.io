@@ -36,9 +36,9 @@ private `S` object.
 | --- | --- |
 | `/app/` | Hotel dashboard — stays, creators, collaborations, content library, bookings & ROI |
 | `/creator/` | Creator dashboard — stays, collaborations, earnings, media kit |
-| `/login/` · `/signin/` · `/join/` | Hotel-side auth |
+| `/login/` · `/join/` | Hotel-side auth |
+| `/signin/` | The shared door back in, after signing out of either app |
 | `/creator/login/` | Creator-side auth |
-| `/start/` · `/creator/start/` | Standalone onboarding. Superseded, nothing routes here |
 | `/terms/` | Terms of service |
 
 **Everything the app loads is prefixed `uk`** — `ukapp.js`, `ukcdash.js`,
@@ -63,10 +63,10 @@ Modules worth knowing before you touch anything:
   off a published stay and asks "yes or no".
 - `assets/js/ukchips.js` — **the** multi-select picker for a long list. Type,
   and matches are ranked by where they sit in the name, then by size of place.
-  Used by `/creator/start/` and by the creator gate for markets covered.
+  Used by the creator gate for markets covered.
 - `assets/js/ukshots.js` — **the** photograph uploader. Drop or browse, tiles with
   remove and Reframe, and a crop editor you drag to set the focal point, which
-  writes the cropped file through a canvas. Used by `/start/` and the hotel gate.
+  writes the cropped file through a canvas. Used by the hotel gate.
 - `assets/js/ukplace.js` — **the** place picker. Type, and matching cities drop
   down with their flag; picking one stores a `UKMARKETS` key. Used by the hire
   brief and by onboarding. A city is never free text: typed by hand it arrives as
@@ -214,11 +214,12 @@ thing that opened the gate was `?as=new`, so a genuine sign-up landed in the app
 and was never asked anything, while the in-app onboarding was reachable only
 through the review control.
 
-Sign-up used to submit to `/start/` and `/creator/start/`. Those came before
-onboarding moved into the app, and nothing they write is read by the gate, so a
-new account answered five screens on a page of its own, landed in the app, and was
-asked the same things again. They still work and still render; nothing routes to
-them.
+Sign-up used to submit to `/start/` and `/creator/start/`, standalone onboarding
+pages that predate onboarding moving into the app. Nothing they wrote was read by
+the gate, so a new account answered five screens on a page of its own, landed in
+the app, and was asked the same things again. **Those pages are deleted.** What was
+worth keeping came out first: `ukshots.js`, `ukchips.js` and `ukplatconnect.js` are
+theirs, and the gate renders them.
 
 ### Onboarding
 
@@ -244,7 +245,7 @@ gate; do not write a second one.
 The city is not typed either: `ukplace.js` is the combobox the hire brief uses, so
 a place is chosen from `UKMARKETS` with its flag beside it and stored as a key
 rather than a spelling. The creator's **markets you cover** uses `ukchips.js`, the
-multi-select picker `/creator/start/` has always used: 1,469 markets ranked on
+multi-select picker the standalone creator onboarding used: 1,469 markets ranked on
 where the match sits in the name before how big the place is, so Lagos beats a
 village that merely contains those letters. Nothing lists until you type, because
 fifteen hundred entries are a wall to read rather than a help. The answer reaches
@@ -360,7 +361,7 @@ own repository, those three are the whole of the untangling.
 
     app/            hotel dashboard
     creator/        creator dashboard (+ start/, login/)
-    start/ join/ login/ signin/ terms/
+    join/ login/ signin/ terms/
     for-creators/   marketing
     philosophy-demo/
     index.html      placeholder home page

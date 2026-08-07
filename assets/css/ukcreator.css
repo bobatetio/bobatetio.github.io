@@ -892,7 +892,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukMoreDot--plat{color:var(--text-2)}
 
 /* the two shoot tags on the panel's own card never truncate and never wrap — see
-   fitTags() in ukcstart.js, which measures and drops the second tag for a plain
+   fitTags(), which measures and drops the second tag for a plain
    count rather than letting either one clip mid-word */
 .ukStart_pane--card .ukCrTags{flex-wrap:nowrap;overflow:hidden}
 .ukStart_pane--card .ukCrTags .ukCrTag{
@@ -909,7 +909,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
    heading, a close control. Markets keep their flag; what they shoot is a plain
    list, since a niche has nothing to show a flag for. */
 /* A popover beside its button, not a dialog over the page. Fixed and hidden until
-   positionPopup() (in ukcstart.js) places it against the real button — measuring
+   positionPopup() places it against the real button — measuring
    after paint is the only way to know where that button actually landed. */
 .ukPop_card{
   position:fixed;top:0;left:0;z-index:80;visibility:hidden;
