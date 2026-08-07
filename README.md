@@ -61,6 +61,12 @@ Modules worth knowing before you touch anything:
   record, so the creator sees the yes or the no. Distinct from `ukpitchin.js`: a
   pitch has no stay behind it and asks "shall I build one", an application hangs
   off a published stay and asks "yes or no".
+- `assets/js/ukchips.js` — **the** multi-select picker for a long list. Type,
+  and matches are ranked by where they sit in the name, then by size of place.
+  Used by `/creator/start/` and by the creator gate for markets covered.
+- `assets/js/ukshots.js` — **the** photograph uploader. Drop or browse, tiles with
+  remove and Reframe, and a crop editor you drag to set the focal point, which
+  writes the cropped file through a canvas. Used by `/start/` and the hotel gate.
 - `assets/js/ukplace.js` — **the** place picker. Type, and matching cities drop
   down with their flag; picking one stores a `UKMARKETS` key. Used by the hire
   brief and by onboarding. A city is never free text: typed by hand it arrives as
@@ -211,8 +217,14 @@ returns them newest-and-biggest first, deduped across accounts, in the shape
 gate; do not write a second one.
 The city is not typed either: `ukplace.js` is the combobox the hire brief uses, so
 a place is chosen from `UKMARKETS` with its flag beside it and stored as a key
-rather than a spelling. The hotel's photographs are asked for here rather than
-left on the checklist, because a property with none is not really listed.
+rather than a spelling. The creator's **markets you cover** uses `ukchips.js`, the
+multi-select picker `/creator/start/` has always used: 1,469 markets ranked on
+where the match sits in the name before how big the place is, so Lagos beats a
+village that merely contains those letters. Nothing lists until you type, because
+fifteen hundred entries are a wall to read rather than a help. The answer reaches
+`me.dests`, which is what the matcher scores a stay's city against. The hotel's
+photographs are asked for here rather than left on the checklist, because a
+property with none is not really listed.
 
 **The modal is one size on every screen** and does not resize between questions,
 so Continue never moves under the cursor. The question scrolls; the progress bar
