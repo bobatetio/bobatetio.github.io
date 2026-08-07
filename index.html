@@ -46,6 +46,11 @@
   .sect{margin-top:clamp(44px,5vw,64px);padding-top:28px;border-top:1px solid var(--line)}
   .sect h3{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:17px;
            margin:0 0 6px;color:var(--teal)}
+  .list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+  .list li{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;font-size:14px}
+  .list a{color:var(--gold-lite);text-decoration:none;border-bottom:1px solid rgba(239,196,112,.3)}
+  .list a:hover{border-bottom-color:var(--gold-lite)}
+  .list em{font-style:normal;color:var(--text);font-size:13px}
   @media (prefers-reduced-motion:reduce){ .card{transition:none} }
 </style>
 </head>
@@ -79,9 +84,23 @@
   </div>
 
   <div class="sect">
+    <h3>The way in</h3>
+    <p class="note" style="margin:0 0 14px">Both marketing pages hand off to the app through these.
+    Signing up lands you in the app with onboarding waiting; signing in goes straight to the
+    dashboard.</p>
+    <ul class="list">
+      <li><a href="/join/?side=hotel">Sign up as a hotel</a> <em>&rarr; /app/, onboarding gate opens</em></li>
+      <li><a href="/join/?side=creator">Sign up as a creator</a> <em>&rarr; /creator/, onboarding gate opens</em></li>
+      <li><a href="/login/">Sign in, hotel</a> <em>&rarr; /app/</em></li>
+      <li><a href="/creator/login/">Sign in, creator</a> <em>&rarr; /creator/</em></li>
+    </ul>
+  </div>
+
+  <div class="sect">
     <h3>Everything else</h3>
-    <p class="note">Sign-in and onboarding live at <code>/login/</code>, <code>/signin/</code>,
-    <code>/join/</code>, <code>/start/</code> and <code>/creator/start/</code>.
+    <p class="note"><code>/signin/</code> is a side-agnostic sign-in.
+    <code>/start/</code> and <code>/creator/start/</code> are the standalone onboarding pages
+    that came before onboarding moved into the app; nothing routes to them now.
     <code>/philosophy-demo/</code> is a motion prototype. <code>/terms/</code> is the terms page.
     See the README for how the two halves are laid out.</p>
   </div>

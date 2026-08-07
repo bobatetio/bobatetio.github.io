@@ -38,7 +38,7 @@ private `S` object.
 | `/creator/` | Creator dashboard — stays, collaborations, earnings, media kit |
 | `/login/` · `/signin/` · `/join/` | Hotel-side auth |
 | `/creator/login/` | Creator-side auth |
-| `/start/` · `/creator/start/` | Onboarding for each side |
+| `/start/` · `/creator/start/` | Standalone onboarding. Superseded, nothing routes here |
 | `/terms/` | Terms of service |
 
 **Everything the app loads is prefixed `uk`** — `ukapp.js`, `ukcdash.js`,
@@ -193,6 +193,32 @@ the gate's own buttons.
 This is a review control, not a product feature. Delete `ukdemo.js` and its two
 `strip()` calls to remove it — it mounts itself and handles its own clicks, so
 nothing else references it.
+
+### How marketing hands off to the app
+
+The two marketing pages reach the app through their sign-in and sign-up buttons,
+and each one goes to **its own audience's door**:
+
+| From | Sign in | Sign up |
+| --- | --- | --- |
+| `/` (for travel brands) | `/login/` | `/join/?side=hotel` |
+| `/for-creators/` | `/creator/login/` | `/join/?side=creator` |
+
+`/join/` reads `?side=` and opens straight into that form. Signing up lands in
+`/app/` or `/creator/` and sets `uk_fresh_v1`; the app opens its onboarding gate
+on the strength of that and clears it when the gate is finished, so a returning
+account is never asked again.
+
+**That flag is the product signal, not the demo one.** Until it existed the only
+thing that opened the gate was `?as=new`, so a genuine sign-up landed in the app
+and was never asked anything, while the in-app onboarding was reachable only
+through the review control.
+
+Sign-up used to submit to `/start/` and `/creator/start/`. Those came before
+onboarding moved into the app, and nothing they write is read by the gate, so a
+new account answered five screens on a page of its own, landed in the app, and was
+asked the same things again. They still work and still render; nothing routes to
+them.
 
 ### Onboarding
 

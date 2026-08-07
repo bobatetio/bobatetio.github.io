@@ -61,10 +61,30 @@ window.UKONBOARD = (function () {
                plats:[{ k:'ig', handle:'amaratravels', f:12400 },
                       { k:'tt', handle:'amaratravels', f:8600 }] }
   };
+  /* ---- has this account actually onboarded? ----
+     Set by sign-up, cleared when the gate is finished. A REAL signal, separate
+     from the demo control: until this existed the only thing that opened the
+     gate was ?as=new, so a genuine sign-up landed in the app and was never asked
+     anything. The demo flag is for reviewing the two views; this is for the
+     account in front of you.
+
+     // PLUG-IN POINT - session. A real backend says whether the account has
+     // onboarded and this reads it from there. */
+  var FRESH_KEY = 'uk_fresh_v1';
+  function fresh() {
+    try { return localStorage.getItem(FRESH_KEY) === '1'; } catch (e) { return false; }
+  }
+  function markFresh() {
+    try { localStorage.setItem(FRESH_KEY, '1'); } catch (e) {}
+  }
+  function clearFresh() {
+    try { localStorage.removeItem(FRESH_KEY); } catch (e) {}
+  }
   function get(side) {
     var v = load()[side];
     if (v && Object.keys(v).length) return v;
-    var established = !window.UKDEMO || !window.UKDEMO.isNew();
+    /* a brand-new account has answered nothing; an established one is seeded */
+    var established = !fresh() && (!window.UKDEMO || !window.UKDEMO.isNew());
     return established ? Object.assign({}, SEEDED[side] || {}) : {};
   }
   function set(side, patch) {
@@ -586,6 +606,7 @@ window.UKONBOARD = (function () {
     modalHtml: modalHtml, apply: apply, checklist: checklist, tasks: tasks,
     /* the connector mutates this as its OAuth beats play out */
     live: function () { return liveState(get('creator')); },
+    fresh: fresh, markFresh: markFresh, clearFresh: clearFresh,
     cityq: function () { return CITYQ; },
     destq: function () { return DESTQ; },
     shots: function () { return SHOTS; },

@@ -82,7 +82,8 @@
       if (!UKAUTHX.validate(root, { isNew: isNew, prop: false && isNew })) return;
       // Tell the shared door which side this device last used, so /signin/ can skip the picker.
       try { localStorage.setItem('uk_side', 'creator'); } catch (err) {}
-      UKAUTHX.go(isNew ? '/creator/start/' : '/creator/', root.querySelector('#ukSubmit'),
+      if (isNew) { try { localStorage.setItem('uk_fresh_v1','1'); } catch (e) {} }
+      UKAUTHX.go('/creator/', root.querySelector('#ukSubmit'),
         isNew ? 'Setting you up\u2026' : 'Signing you in\u2026');
     });
     form.addEventListener('input', function () { UKAUTHX.clear(root); });

@@ -5,7 +5,12 @@
    that still applies. There is no navigation between choosing and filling.
 
    Role separation is unchanged: this page only decides which door to hand off to.
-   Hotel submits to /start/, creator to /creator/start/, exactly as before.
+   Hotel submits to /app/, creator to /creator/, and onboarding happens there.
+
+   It used to submit to /start/ and /creator/start/, the standalone onboarding
+   pages. Those came before onboarding moved into the app, and nothing they write
+   is read by the in-app gate, so a new account did five screens of questions on
+   a page of their own, landed in the app, and got asked the same things again.
 
    The cards are real radio inputs behind labels, so keyboard support, arrow keys and
    screen-reader semantics are the platform's rather than something hand-rolled. */
@@ -23,7 +28,7 @@
       lede: 'Two minutes, and you’ll see hotels you could pitch this week.',
       cta: 'Create my account',
       busy: 'Setting you up…',
-      go: '/creator/start/'
+      go: '/creator/'
     },
     hotel: {
       label: 'Sign up as a hotel',
@@ -33,7 +38,7 @@
       lede: 'Two minutes, then we show you the creators who already cover your city.',
       cta: 'Create account',
       busy: 'Creating your account…',
-      go: '/start/'
+      go: '/app/'
     }
   };
 
@@ -185,6 +190,9 @@
     try {
       localStorage.setItem('uk_side', f.side);
       localStorage.setItem('uk_name', (f.first + ' ' + f.last).trim());
+      /* the app opens its onboarding gate on the strength of this */
+      if (window.UKONBOARD) window.UKONBOARD.markFresh();
+      else localStorage.setItem('uk_fresh_v1', '1');
     } catch (err) {}
     X.go(s.go, root.querySelector('#ukSubmit'), s.busy);
   });

@@ -659,6 +659,8 @@
       var list = window.UKONBOARD.steps('hotel');
       if (obAt < list.length - 1) { obAt += 1; return paintOnboard(); }
       window.UKONBOARD.apply('hotel');
+      /* onboarded: the gate does not open again on the next visit */
+      window.UKONBOARD.clearFresh();
       obOpen = false;
       obAt = 0;
       paintOnboard();
