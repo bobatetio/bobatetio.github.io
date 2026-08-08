@@ -421,10 +421,14 @@ own repository, those three are the whole of the untangling.
 
 ## Known gaps
 
-- `/`'s hero depends on an 844KB build artefact inherited from the Izanami tree
-  (see above), and it is the page's slowest thing by a distance: measured from
-  here it took 16.6s to transfer off GitHub Pages. Everything else on that page
-  is ours. Replacing it is the single biggest win available on this page.
+- `/` still loads an 844KB build artefact inherited from the Izanami tree (see
+  above) for its scroll smoothing and reveals. Its Three.js half is no longer
+  used: the hero background is a plain `<img>` and the `[data-webgl]` canvas is
+  gone from the markup. **Do not put either back** — the WebGL plane ran the page
+  at 11fps against 61fps now, and side by side the two are indistinguishable.
+- The bundle logs "GSAP target null not found" repeatedly and throws one
+  `getBoundingClientRect` TypeError. Both are it reaching for Izanami sections
+  that no longer exist. Harmless, and they go when the bundle does.
 - The marketing pages carry 51MB of UGC video across thirty `<video>` tags.
   **`preload="metadata"` is load-bearing and must stay**: at rest a card shows a
   still frame, and without metadata there is no frame to show, only black.
