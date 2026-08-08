@@ -82,6 +82,18 @@
       var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
       last = now;
 
+      /* The page runs swup, which replaces the whole content container. When it
+         does, every node this closure captured becomes detached: the loop goes
+         on transforming cards nobody can see, while the fresh cards sit wherever
+         the stylesheet leaves them, which is the top-left corner. It only shows
+         up where the bundle is slow enough to swap after this has started, so it
+         was invisible on localhost and obvious on GitHub Pages.
+
+         Re-initialise against the new nodes and let this loop die. */
+      if (!document.contains(surfer)) {
+        var fresh = document.querySelector('.surfer[data-surfer]');
+        if (fresh && fresh !== surfer) { fresh.removeAttribute('data-ready'); init(); return; }
+      }
       if (!slot || !document.contains(slot)) { slot = document.querySelector('.surferSlot'); philo = null; }
       if (!slot) {
         surfer.style.display = 'none';
@@ -204,5 +216,15 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
-  document.addEventListener('swup:contentReplaced', init);
+  /* swup renamed this hook; listen for both, and for the DOM being swapped by
+     anything else, so a replaced container is always picked back up. */
+  ['swup:contentReplaced', 'swup:page:view', 'swup:enable'].forEach(function (ev) {
+    document.addEventListener(ev, function () { setTimeout(init, 0); });
+  });
+  if (window.MutationObserver) {
+    new MutationObserver(function () {
+      var el = document.querySelector('.surfer[data-surfer]');
+      if (el && el.dataset.ready !== '1') init();
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  }
 })();
