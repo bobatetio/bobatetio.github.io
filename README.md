@@ -421,8 +421,14 @@ own repository, those three are the whole of the untangling.
 
 ## Known gaps
 
-- `/`'s hero depends on an 865KB build artefact inherited from the Izanami tree
-  (see above). Everything else on that page is ours.
+- `/`'s hero depends on an 844KB build artefact inherited from the Izanami tree
+  (see above), and it is the page's slowest thing by a distance: measured from
+  here it took 16.6s to transfer off GitHub Pages. Everything else on that page
+  is ours. Replacing it is the single biggest win available on this page.
+- The marketing pages carry 51MB of UGC video across thirty `<video>` tags. They
+  are `preload="none"` with no `autoplay`, and `surfer.js` and `expand-cards.js`
+  start them from an IntersectionObserver when their section is reached, so
+  nothing is fetched until it is needed. Do not put `autoplay` back.
 - `Creator Academy`, `Membership` and `About` in the marketing nav have no pages
   yet and point at `#`, as do the in-page links on `/` that are not sign-up or
   sign-in: case-study links, FAQ entries and the newsletter form.

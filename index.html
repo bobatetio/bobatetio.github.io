@@ -1,20 +1,41 @@
 <!doctype html><html lang="en"><head><meta charset="UTF-8"><title>Ukreate — find elite travel creators for your hotel</title><meta content="notranslate" name="google"><meta content="width=device-width,initial-scale=1" name="viewport"><meta content="telephone=no, email=no, address=no" name="format-detection"><meta content="website" property="og:type"><meta content="Ukreate" property="og:title"><meta content="Ukreate" property="og:site_name"><meta content="summary_large_image" name="twitter:card"><link href="/favicon.ico" rel="icon"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><link href="/assets/img/favicon-96x96.png" rel="icon" type="image/png" sizes="96x96"><link href="/assets/img/web-app-manifest-192x192.png" rel="icon" type="image/png" sizes="192x192"><link href="/assets/img/web-app-manifest-512x512.png" rel="icon" type="image/png" sizes="512x512"><link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">  <script>
-/* The intro loader is driven by the site bundle and only lifts when its own
-   progress finishes. On a fast local server that is a couple of seconds; over a
-   slow connection, with the bundle and the hero artwork still in flight, it can
-   sit there long enough to read as a blank page. This is a floor, not a
-   replacement: whatever happens, the page is visible after six seconds. */
+/* A ceiling on the intro loader.
+
+   The loader and the "-wait" class that freezes scrolling are both put up by the
+   site bundle, which is 844KB. Until that arrives there is nothing to lift, so a
+   single timer started at page load fires into an empty document and does
+   nothing: exactly the slow connection it was meant to protect. This watches for
+   the class instead, and lifts it a bounded time after it actually appears, with
+   an absolute cap measured from first byte.
+
+   Not a replacement for the animation. On any normal connection the bundle
+   finishes its own sequence long before either limit. */
 (function () {
-  var LIMIT = 6000;
+  var AFTER_APPEARS = 3500;   /* once the loader is up, this is its longest run */
+  var ABSOLUTE      = 12000;  /* and this is the longest anyone waits, full stop */
+  var start = Date.now(), seen = 0, done = false;
+
   function lift() {
+    if (done) return; done = true;
     document.documentElement.classList.remove('-wait');
     var l = document.querySelector('.loader');
-    if (l) { l.style.transition = 'opacity .5s ease'; l.style.opacity = '0';
-             setTimeout(function () { l.style.display = 'none'; }, 550); }
+    if (l) {
+      l.style.transition = 'opacity .45s ease';
+      l.style.opacity = '0';
+      setTimeout(function () { l.style.display = 'none'; }, 500);
+    }
+    /* the bundle stops the smooth-scroll library while it waits; start it back */
+    try { if (window.lenis && window.lenis.start) window.lenis.start(); } catch (e) {}
   }
-  setTimeout(function () {
-    if (document.documentElement.classList.contains('-wait')) lift();
-  }, LIMIT);
+
+  var tick = setInterval(function () {
+    var waiting = document.documentElement.classList.contains('-wait');
+    if (waiting && !seen) seen = Date.now();
+    if (done || (!waiting && seen)) { clearInterval(tick); return; }
+    if ((seen && Date.now() - seen > AFTER_APPEARS) || Date.now() - start > ABSOLUTE) {
+      clearInterval(tick); lift();
+    }
+  }, 200);
 })();
 </script>
 <script type="module" crossorigin src="/assets/js/index.B6uyWDS7.js"></script>
