@@ -1,5 +1,5 @@
 /* Scroll-clip reveal for the interstitial image under Featured Creators —
-   recreates the Izanami "mesh clip" feel without WebGL: the framed image opens
+   a "mesh clip" reveal without WebGL: the framed image opens
    from a thin centre band to full height while the picture eases from a slight
    zoom back to 1:1, scrubbed to scroll position. Pure clip-path + transform. */
 (function () {
