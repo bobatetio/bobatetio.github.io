@@ -11,8 +11,8 @@
    Not a replacement for the animation. On any normal connection the bundle
    finishes its own sequence long before either limit. */
 (function () {
-  var AFTER_APPEARS = 3500;   /* once the loader is up, this is its longest run */
-  var ABSOLUTE      = 12000;  /* and this is the longest anyone waits, full stop */
+  var AFTER_APPEARS = 9000;   /* once the loader is up, this is its longest run */
+  var ABSOLUTE      = 20000;  /* and this is the longest anyone waits, full stop */
   var start = Date.now(), seen = 0, done = false;
 
   function lift() {
