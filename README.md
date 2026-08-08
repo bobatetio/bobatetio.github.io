@@ -14,6 +14,18 @@ They share `assets/`, and they are told apart by file prefix (see below).
 
 ---
 
+## What is published
+
+`main` is the whole repository. **GitHub Pages serves the `deploy` branch**, which
+is `main` with the marketing pages taken out: the two dashboards, the auth pages,
+the terms page, and a plain route index at `/`.
+
+    git checkout deploy && git merge main     # take on new work
+    git push pages deploy:main                # publish
+
+`origin` is the private repository. `pages` is `bobatetio.github.io`, which is
+public, so anything on that branch is public.
+
 ## Running it
 
     python3 serve.py
