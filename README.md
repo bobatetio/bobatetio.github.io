@@ -425,10 +425,14 @@ own repository, those three are the whole of the untangling.
   (see above), and it is the page's slowest thing by a distance: measured from
   here it took 16.6s to transfer off GitHub Pages. Everything else on that page
   is ours. Replacing it is the single biggest win available on this page.
-- The marketing pages carry 51MB of UGC video across thirty `<video>` tags. They
-  are `preload="none"` with no `autoplay`, and `surfer.js` and `expand-cards.js`
-  start them from an IntersectionObserver when their section is reached, so
-  nothing is fetched until it is needed. Do not put `autoplay` back.
+- The marketing pages carry 51MB of UGC video across thirty `<video>` tags.
+  **`preload="metadata"` is load-bearing and must stay**: at rest a card shows a
+  still frame, and without metadata there is no frame to show, only black.
+  `autoplay` is off, because `surfer.js` plays the docked hero card and
+  `expand-cards.js` plays the expanded one, and those files pause everything
+  else on the next tick. With `autoplay` in the markup, ten files streamed in
+  full before the JS could stop them, which is what starved the hero.
+  Actual transfer for a cold load of `/` is about 5MB.
 - `Creator Academy`, `Membership` and `About` in the marketing nav have no pages
   yet and point at `#`, as do the in-page links on `/` that are not sign-up or
   sign-in: case-study links, FAQ entries and the newsletter form.
