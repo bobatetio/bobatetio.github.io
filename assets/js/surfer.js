@@ -11,6 +11,7 @@
    - Hover: the card under the cursor turns to FACE the viewer (yaw -> 0),
      springy, on top of the magnetic scale. */
 (function () {
+  try { window.__surferRan = (window.__surferRan||0) + 1; } catch (e) {}
   function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
   function smooth(t) { return t * t * (3 - 2 * t); }
 
@@ -31,6 +32,7 @@
     var cards = Array.prototype.slice.call(surfer.querySelectorAll('.surfer_card'));
     if (!scene || !track || !cards.length) return;
     surfer.dataset.ready = '1';
+    try { window.__surferInit = (window.__surferInit||0) + 1; } catch (e) {}
 
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var forced = parseFloat(new URLSearchParams(location.search).get('surf'));
