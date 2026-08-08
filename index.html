@@ -1,108 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Ukreate — hosted stays for travel creators</title>
-<meta content="width=device-width,initial-scale=1" name="viewport">
-<meta name="robots" content="noindex,nofollow">
-<meta name="description" content="Ukreate connects hotels with travel creators: a hosted stay in exchange for content the property keeps and uses on its own channels.">
-<link href="/favicon.ico" rel="icon">
-<link href="/favicon.svg" rel="icon" type="image/svg+xml">
-<link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/fc-shared.css">
-<link rel="stylesheet" href="/assets/css/aeronav.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ukreate</title>
+<meta name="robots" content="noindex">
+<!-- The published build opens on Get Started, where you choose creator or hotel.
+     A redirect rather than a copy of that page: /join/ is the real door, it owns
+     the side choice and the link across to signing in, and there should not be a
+     second copy of it drifting out of step. Three ways over, because a static
+     host cannot send a 301: the header for browsers that honour it, the script
+     for the rest, and a plain link for anyone with neither. -->
+<meta http-equiv="refresh" content="0; url=/join/">
+<link rel="canonical" href="/join/">
+<script>location.replace('/join/' + location.search + location.hash);</script>
 <style>
-  /* The marketing home page is not built yet. Rather than leave `/` broken —
-     every page in the repo links back to it — this is an honest index of what
-     the repository actually contains, in the marketing palette so it does not
-     look like a stray file. Replace it wholesale when the real home page lands. */
-  :root{ --ink:#0d2026; --panel:#102734; --gold:#d7a543; --gold-lite:#efc470;
-         --teal:#65d2e9; --line:rgba(255,255,255,.10); --text:rgba(255,255,255,.72); }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--ink);color:#fff;font-family:'Lato',system-ui,sans-serif;
-       -webkit-font-smoothing:antialiased}
-  .wrap{max-width:1080px;margin:0 auto;padding:clamp(120px,14vh,200px) 24px clamp(70px,9vh,110px)}
-  .eyebrow{font-weight:700;text-transform:uppercase;letter-spacing:.22em;
-           font-size:clamp(11px,1vw,13px);color:var(--gold);margin:0 0 18px}
-  h1{font-family:'Marcellus',Georgia,serif;font-weight:400;
-     font-size:clamp(38px,6vw,68px);line-height:1.06;margin:0;text-wrap:balance}
-  .lede{font-size:clamp(16px,1.4vw,19px);line-height:1.7;color:var(--text);
-        margin:22px 0 0;max-width:660px;text-wrap:pretty}
-  .note{margin:14px 0 0;font-size:14px;line-height:1.6;color:rgba(255,255,255,.5);max-width:660px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-        gap:16px;margin-top:clamp(44px,5vw,64px)}
-  .card{display:flex;flex-direction:column;gap:8px;padding:26px;border-radius:20px;
-        background:var(--panel);border:1px solid var(--line);text-decoration:none;color:#fff;
-        transition:border-color .25s ease,transform .25s ease}
-  .card:hover{border-color:rgba(215,165,67,.55);transform:translateY(-2px)}
-  .card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  .card h2{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:22px;margin:0}
-  .card p{margin:0;font-size:14px;line-height:1.6;color:var(--text)}
-  .card span{margin-top:8px;font-size:12px;font-weight:700;letter-spacing:.12em;
-             text-transform:uppercase;color:var(--gold-lite)}
-  .sect{margin-top:clamp(44px,5vw,64px);padding-top:28px;border-top:1px solid var(--line)}
-  .sect h3{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:17px;
-           margin:0 0 6px;color:var(--teal)}
-  .list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
-  .list li{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;font-size:14px}
-  .list a{color:var(--gold-lite);text-decoration:none;border-bottom:1px solid rgba(239,196,112,.3)}
-  .list a:hover{border-bottom-color:var(--gold-lite)}
-  .list em{font-style:normal;color:var(--text);font-size:13px}
-  @media (prefers-reduced-motion:reduce){ .card{transition:none} }
+  html,body{height:100%;margin:0}
+  body{display:grid;place-items:center;background:#f4f1ea;color:#0d2026;
+       font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  a{color:#0d2026}
 </style>
 </head>
 <body>
-
-<main class="wrap">
-  <p class="eyebrow">Ukreate 2.0</p>
-  <h1>Hosted stays, traded for content.</h1>
-  <p class="lede">A hotel offers nights it was unlikely to sell. A creator shoots the property
-  and hands over work the hotel keeps and posts on its own channels. Ukreate is the two sides
-  of that trade, and the record of it.</p>
-  <p class="note">This page is a placeholder index of the repository. The marketing home page
-  is still being designed — replace this file when it lands.</p>
-
-  <div class="grid">
-    <a class="card" href="/app/">
-      <h2>Hotel dashboard</h2>
-      <p>Offer stays, review creators, approve content, and trace the bookings it drove.</p>
-      <span>The web app &rarr;</span>
-    </a>
-    <a class="card" href="/creator/">
-      <h2>Creator dashboard</h2>
-      <p>Find stays worth pitching, write the pitch, run the collaboration, deliver the work.</p>
-      <span>The web app &rarr;</span>
-    </a>
-      <h2>For Creators</h2>
-      <p>The membership landing page — the one marketing page that is finished.</p>
-      <span>Marketing &rarr;</span>
-    </a>
-  </div>
-
-  <div class="sect">
-    <h3>The way in</h3>
-    <p class="note" style="margin:0 0 14px">Both marketing pages hand off to the app through these.
-    Signing up lands you in the app with onboarding waiting; signing in goes straight to the
-    dashboard.</p>
-    <ul class="list">
-      <li><a href="/join/?side=hotel">Sign up as a hotel</a> <em>&rarr; /app/, onboarding gate opens</em></li>
-      <li><a href="/join/?side=creator">Sign up as a creator</a> <em>&rarr; /creator/, onboarding gate opens</em></li>
-      <li><a href="/login/">Sign in, hotel</a> <em>&rarr; /app/</em></li>
-      <li><a href="/creator/login/">Sign in, creator</a> <em>&rarr; /creator/</em></li>
-    </ul>
-  </div>
-
-  <div class="sect">
-    <h3>Everything else</h3>
-    <p class="note"><code>/signin/</code> is the shared door back in after signing out of
-    either app; it remembers which side you were on. <code>/philosophy-demo/</code> is a motion
-    prototype. <code>/terms/</code> is the terms page. Onboarding happens inside the app, not on
-    a page of its own. See the README for how the two halves are laid out.</p>
-  </div>
-</main>
-
+  <p>Taking you to <a href="/join/">Get Started</a>.</p>
 </body>
 </html>
