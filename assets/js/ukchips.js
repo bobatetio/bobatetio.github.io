@@ -98,7 +98,9 @@ window.UKCHIPS = (function () {
         : '') +
 
       (full
-        ? '<p class="ukPickr_full">That’s your five. Remove one to swap it out.</p>'
+        ? '<p class="ukPickr_full">' + (cap === 1
+            ? 'That’s set. Remove it to pick a different one.'
+            : 'That’s your ' + cap + '. Remove one to swap it out.') + '</p>'
         : '<div class="ukPickr_wrap">' +
             '<input class="ukPickr_q" id="' + esc(o.key) + 'Q" data-k="' + esc(o.qkey) + '" ' +
             'data-opens="' + esc(o.key) + '" ' +

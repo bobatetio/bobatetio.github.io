@@ -61,35 +61,140 @@ window.UKC = (function () {
   /* ---------- hotels open to creators (mirror of the hotel side's stays) ---------- */
   var stays = [
     { id:'s1', wants:'5K - 25K', vibe:'Quiet & slow', budget:'Mid-range', hotel:'MiraGrace Estate',   city:'Miami, Florida',      img:L+'hero_bg_room.jpg', imgs:[L+'hero_bg_room.jpg',L+'hero_bg_outdoor.webp',L+'hero_bg_hotel.webp'],
-      lat:25.76, lng:-80.19, score:9, nights:2, room:'Garden suite',
+      lat:25.76, lng:-80.19, score:8, nights:2, room:'Garden suite', guests:1,
       inc:'Room, breakfast, one spa treatment', del:[{t:'UGC video',q:1},{t:'Photos',q:3}],
       rights:'They keep and use the content', style:'Wellness & spa',
       from:'04 Mar', to:'07 Mar', saved:false, why:'Wellness property, midweek nights, and they reply fast.' },
-    { id:'s2', wants:'25K - 100K', vibe:'Design led', budget:'Independent', hotel:'Casa Azul Tulum',    city:'Tulum, Mexico',       img:L+'hero_bg_outdoor.webp', imgs:[L+'hero_bg_outdoor.webp',L+'hero_bg_lobby.webp',L+'fc2/hero-alt.jpg'],
-      lat:20.21, lng:-87.46, score:10, nights:3, room:'Jungle cabana',
+    { id:'s2', wants:'25K - 100K', vibe:'Design led', budget:'Independent', hotel:'Casa Azul Tulum',    city:'Tulum, Mexico',       img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'fc2/hero-alt.jpg',L+'hero_bg_room.jpg',L+'hero_bg_hotel.webp'],
+      lat:20.21, lng:-87.46, score:10, nights:3, room:'Jungle cabana', guests:2,
       inc:'Room, all meals, cenote trip', del:[{t:'UGC video',q:2},{t:'Photos',q:6}],
       rights:'They keep and use the content', style:'Boutique & design',
-      from:'22 Jan', to:'25 Jan', saved:true, why:'Highest score near you. They host creators most months.' },
-    { id:'s3', wants:'25K - 100K', vibe:'Design led', budget:'High end', hotel:'Riad Amber',         city:'Marrakesh, Morocco',  img:L+'hero_bg_indoor.webp', imgs:[L+'hero_bg_indoor.webp',L+'hero_bg_custom.webp',L+'hero_bg_room.jpg'],
-      lat:31.63, lng:-8.00, score:10, nights:4, room:'Rooftop room',
+      from:'22 Jan', to:'25 Jan', saved:true, why:'Highest score near you. They host creators most months.',
+      guide:{
+        welcome:'Check-in is from 3pm at the jungle-facing reception. Cabanas sit a five-minute walk down the palm path, and your host Mariana will walk you over herself.',
+        access:'Network CasaAzul-Guest, password on the welcome card in your cabana. Your wristband opens the cenote shuttle pickup and the beach club until 9pm.',
+        local:'Cenote Cristal, 12 minutes by the property shuttle, best before 10am before the tour buses arrive. La Popular in town for tacos. Ba’ax Ca two doors down for sunset.',
+        house:'Quiet hours after 10pm along the cabana row. Drone shots are welcome over the cenote, not over neighbouring cabanas. Ask at reception before filming staff.',
+        safety:'Reception answers on channel 1 of the in-room radio, any hour. The nearest clinic is 15 minutes by the property shuttle. Cenote swims are supervised 8am to 5pm only.'
+      } },
+    { id:'s3', wants:'25K - 100K', vibe:'Design led', budget:'High end', hotel:'Riad Amber',         city:'Marrakesh, Morocco',  img:L+'fc2/hero-alt.jpg', imgs:[L+'fc2/hero-alt.jpg',L+'hero_bg_room.jpg',L+'hero_bg_lobby.webp'],
+      lat:31.63, lng:-8.00, score:8, nights:4, room:'Rooftop room', guests:2,
       inc:'Room, breakfast, hammam', del:[{t:'UGC video',q:2},{t:'Photos',q:8},{t:'Reels',q:2}],
       rights:'They keep and use the content', style:'Luxury & design',
       from:'04 Mar', to:'09 Mar', saved:false, why:'Your riad reel is the exact thing they are asking for.' },
-    { id:'s4', wants:'Under 5K', vibe:'Quiet & slow', budget:'Mid-range', hotel:'Fjordheim Lodge',    city:'Ålesund, Norway',     img:L+'hero_bg_grand.webp', imgs:[L+'hero_bg_grand.webp',L+'fc2/cta-bg.jpg',L+'hero_bg_lobby.webp'],
-      lat:62.47, lng:6.15, score:8, nights:3, room:'Fjord cabin',
+    { id:'s4', wants:'Under 5K', vibe:'Quiet & slow', budget:'Mid-range', hotel:'Fjordheim Lodge',    city:'Ålesund, Norway',     collabType:'Hosted stay + creative fee', fee:400,     img:L+'hero_bg_grand.webp', imgs:[L+'hero_bg_grand.webp',L+'fc2/cta-bg.jpg',L+'hero_bg_lobby.webp'],
+      lat:62.47, lng:6.15, score:6, nights:3, room:'Fjord cabin', guests:1,
       inc:'Room, breakfast, kayak morning', del:[{t:'UGC video',q:1},{t:'Photos',q:5}],
       rights:'They keep and use the content', style:'Eco & wellness',
       from:'18 Jun', to:'21 Jun', saved:false, why:'Quiet season. Rooms likely to sit empty, so they say yes more.' },
     { id:'s5', wants:'Under 5K', vibe:'Family friendly', budget:'Independent', hotel:'Palms Dania Beach',  city:'Dania Beach, Florida',img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'hero_bg_outdoor.webp',L+'hero_bg_custom.webp'],
-      lat:26.05, lng:-80.14, score:7, nights:2, room:'Standard king',
+      lat:26.05, lng:-80.14, score:6, nights:2, room:'Standard king', guests:3,
       inc:'Room and breakfast', del:[{t:'UGC video',q:1},{t:'Photos',q:4}],
       rights:'They keep and use the content', style:'Beach & city',
       from:'12 Apr', to:'14 Apr', saved:false, why:'Straightforward brief, good for a first collab.' },
     { id:'s6', wants:'100K+', vibe:'Adventure', budget:'High end', hotel:'Alpina Zermatt',     city:'Zermatt, Switzerland',img:L+'hero_bg_burj.webp', imgs:[L+'hero_bg_burj.webp',L+'hero_bg_lobby.webp',L+'fc2/cta-bg.jpg'],
-      lat:46.02, lng:7.75, score:6, nights:2, room:'Alpine double',
+      lat:46.02, lng:7.75, score:6, nights:2, room:'Alpine double', guests:2,
       inc:'Room, half board', del:[{t:'UGC video',q:2},{t:'Photos',q:6}],
       rights:'They keep and use the content', style:'Mountain & ski',
-      from:'01 Dec', to:'03 Dec', saved:false, why:'Season opening. Worth a pitch even if it feels like a stretch.' }
+      from:'01 Dec', to:'03 Dec', saved:false, why:'Season opening. Worth a pitch even if it feels like a stretch.' },
+    { id:'s7', wants:'25K - 100K', vibe:'Adventure', budget:'Mid-range', hotel:'Khao Sok Canopy Lodge', city:'Khao Sok, Thailand', img:L+'fc2/hero-hotel.jpg', imgs:[L+'fc2/hero-hotel.jpg',L+'hero_bg_room.jpg',L+'hero_bg_lobby.webp'],
+      lat:8.95, lng:98.53, score:7, nights:3, room:'Jungle stilt cabin', guests:2,
+      inc:'Room, breakfast, lake canoe morning', del:[{t:'UGC video',q:2},{t:'Photos',q:5}],
+      rights:'They keep and use the content', style:'Jungle & lake',
+      from:'10 May', to:'13 May', saved:false, why:'Limestone karst backdrop and a lake nobody else is shooting yet.' },
+    { id:'s8', wants:'5K - 25K', vibe:'Quiet & slow', budget:'Independent', hotel:'Turtle Bay House', city:'Zanzibar, Tanzania', collabType:'Paid campaign', fee:600, img:L+'fc2/pricing-bg.jpg', imgs:[L+'fc2/pricing-bg.jpg',L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg'],
+      lat:-6.16, lng:39.19, score:7, nights:4, room:'Beachfront banda', guests:2,
+      inc:'Room, breakfast, dhow sunset sail', del:[{t:'UGC video',q:1},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Beach & slow travel',
+      from:'02 Jul', to:'06 Jul', saved:true, why:'Barely posted about. First good creator set wins the whole season.' },
+    { id:'s9', wants:'100K+', vibe:'Design led', budget:'High end', hotel:'Dune Palace Doha', city:'Doha, Qatar', img:L+'hero_bg_burj.webp', imgs:[L+'hero_bg_burj.webp',L+'hero_bg_grand.webp',L+'hero_bg_room.jpg'],
+      lat:25.29, lng:51.53, score:6, nights:2, room:'Skyline suite', guests:2,
+      inc:'Room, all meals, spa access', del:[{t:'UGC video',q:2},{t:'Photos',q:8},{t:'Reels',q:1}],
+      rights:'They keep and use the content', style:'Luxury & skyline',
+      from:'14 Nov', to:'16 Nov', saved:false, why:'Opening season for the new wing. They want it seen before the crowds do.' },
+    { id:'s10', wants:'25K - 100K', vibe:'Quiet & slow', budget:'Mid-range', hotel:'Alpine Meadow Chalet', city:'Chamonix, France', img:L+'hero_bg_grand.webp', imgs:[L+'hero_bg_grand.webp',L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg'],
+      lat:45.92, lng:6.87, score:7, nights:3, room:'Meadow-view chalet', guests:2,
+      inc:'Room, breakfast, cable car pass', del:[{t:'UGC video',q:1},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Mountain & quiet',
+      from:'20 Aug', to:'23 Aug', saved:false, why:'Summer alpine light, and almost nobody pitches this place off-season.' },
+    { id:'s11', wants:'5K - 25K', vibe:'Design led', budget:'Independent', hotel:'Machiya Kyoto House', city:'Kyoto, Japan', img:L+'hero_bg_room.jpg', imgs:[L+'hero_bg_room.jpg',L+'hero_bg_lobby.webp',L+'fc2/hero-alt.jpg'],
+      lat:35.01, lng:135.77, score:8, nights:3, room:'Restored machiya room', guests:1,
+      inc:'Room, breakfast, tea ceremony', del:[{t:'UGC video',q:1},{t:'Photos',q:7},{t:'Reels',q:1}],
+      rights:'They keep and use the content', style:'Heritage & design',
+      from:'05 Apr', to:'08 Apr', saved:true, why:'Restored a century-old house properly. It photographs like nowhere else in the city.' },
+    { id:'s12', wants:'25K - 100K', vibe:'Family friendly', budget:'Mid-range', hotel:'Cape Vista Lodge', city:'Cape Town, South Africa', img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'hero_bg_hotel.webp',L+'hero_bg_room.jpg'],
+      lat:-33.92, lng:18.42, score:6, nights:3, room:'Table Mountain view room', guests:3,
+      inc:'Room, breakfast, vineyard shuttle', del:[{t:'UGC video',q:2},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Coastal & family',
+      from:'11 Sep', to:'14 Sep', saved:false, why:'Shoulder season, view rooms open, and they say yes to almost every pitch right now.' },
+    { id:'s13', wants:'25K - 100K', vibe:'Adventure', budget:'High end', hotel:'Nordlys Retreat', city:'Tromsø, Norway', img:L+'hero_bg_grand.webp', imgs:[L+'hero_bg_grand.webp',L+'hero_bg_lobby.webp',L+'hero_bg_hotel.webp'],
+      lat:69.65, lng:18.96, score:7, nights:2, room:'Glass-roof cabin', guests:2,
+      inc:'Room, breakfast, northern lights tour', del:[{t:'UGC video',q:2},{t:'Photos',q:5}],
+      rights:'They keep and use the content', style:'Arctic & aurora',
+      from:'19 Jan', to:'21 Jan', saved:false, why:'Aurora season, glass-roof cabins, and barely any creator coverage yet.' },
+    { id:'s14', wants:'5K - 25K', vibe:'Quiet & slow', budget:'Independent', hotel:'Al Noor Rooftop', city:'Fez, Morocco', img:L+'fc2/hero-alt.jpg', imgs:[L+'fc2/hero-alt.jpg',L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg'],
+      lat:34.03, lng:-5.00, score:7, nights:3, room:'Rooftop riad room', guests:2,
+      inc:'Room, breakfast, medina walking tour', del:[{t:'UGC video',q:1},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Heritage & design',
+      from:'02 Feb', to:'05 Feb', saved:false, why:'Quiet medina rooftop nobody has shot properly yet.' },
+
+    /* ---- inquiry-only stock: never given a stage 1+ collab elsewhere, so a
+       pitch to one of these can never be silently reconciled into "Booked"
+       and vanish from the Inquiry tab the way reusing a busier hotel would */
+    { id:'s15', wants:'25K - 100K', vibe:'Family friendly', budget:'Mid-range', hotel:'Sandpiper Dania Beach', city:'Dania Beach, Florida', img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg',L+'hero_bg_hotel.webp'],
+      lat:26.05, lng:-80.14, score:6, nights:2, room:'Standard king', guests:3,
+      inc:'Room and breakfast', del:[{t:'UGC video',q:1},{t:'Photos',q:4}],
+      rights:'They keep and use the content', style:'Beach & city',
+      from:'12 Apr', to:'14 Apr', saved:false, why:'Straightforward brief, good for a first collab.' },
+    { id:'s16', wants:'100K+', vibe:'Adventure', budget:'High end', hotel:'Riffelalp Lodge', city:'Zermatt, Switzerland', img:L+'hero_bg_burj.webp', imgs:[L+'hero_bg_burj.webp',L+'hero_bg_lobby.webp',L+'fc2/cta-bg.jpg'],
+      lat:46.02, lng:7.75, score:6, nights:2, room:'Alpine double', guests:2,
+      inc:'Room, half board', del:[{t:'UGC video',q:2},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Mountain & ski',
+      from:'01 Dec', to:'03 Dec', saved:false, why:'Season opening. Worth a pitch even if it feels like a stretch.' },
+    { id:'s17', wants:'25K - 100K', vibe:'Adventure', budget:'Mid-range', hotel:'Blue Cave Lodge', city:'Vis, Croatia', img:L+'hero_bg_hotel.webp', imgs:[L+'hero_bg_hotel.webp',L+'fc2/pricing-bg.jpg',L+'hero_bg_lobby.webp'],
+      lat:43.06, lng:16.18, score:7, nights:3, room:'Harbour-view room', guests:2,
+      inc:'Room, breakfast, sea cave boat trip', del:[{t:'UGC video',q:2},{t:'Photos',q:5}],
+      rights:'They keep and use the content', style:'Island & sea',
+      from:'15 Jun', to:'18 Jun', saved:false, why:'An island most creators skip for the bigger names nearby.' },
+    { id:'s18', wants:'5K - 25K', vibe:'Quiet & slow', budget:'Independent', hotel:'Casa Higuera', city:'Oaxaca, Mexico', img:L+'hero_bg_room.jpg', imgs:[L+'hero_bg_room.jpg',L+'fc2/hero-alt.jpg',L+'hero_bg_lobby.webp'],
+      lat:17.06, lng:-96.73, score:8, nights:3, room:'Courtyard room', guests:1,
+      inc:'Room, breakfast, mezcal tasting', del:[{t:'UGC video',q:1},{t:'Photos',q:6}],
+      rights:'They keep and use the content', style:'Heritage & design',
+      from:'08 Oct', to:'11 Oct', saved:true, why:'Day of the Dead season. They want it covered properly this year.' },
+    { id:'s19', wants:'25K - 100K', vibe:'Design led', budget:'High end', hotel:'Porto Loft Collective', city:'Porto, Portugal', img:L+'hero_bg_grand.webp', imgs:[L+'hero_bg_grand.webp',L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg'],
+      lat:41.15, lng:-8.61, score:7, nights:2, room:'River-view loft', guests:2,
+      inc:'Room, breakfast, port wine tasting', del:[{t:'UGC video',q:1},{t:'Photos',q:5}],
+      rights:'They keep and use the content', style:'Boutique & design',
+      from:'23 Sep', to:'25 Sep', saved:false, why:'New opening, no creator coverage at all yet.' }
+  ];
+
+  /* ---------- outreach: hotels not on Ukreate ----------
+     No campaign exists for any of these, so there is nothing here that a
+     D.stays item has — no nights, no deliverables, no inclusions. What a
+     places-style listing would actually give you: the name, where it is,
+     and how to reach them. Pitching one is a cold letter, not an
+     application to a posted stay — see D.addPitch / composer()'s isLead
+     branch. Names deliberately do not collide with any D.stays hotel, so
+     reconcilePipeline() never conflates an outreach pitch with a live one. */
+  var leads = [
+    { id:'lead1', hotel:'Casa Marbella', city:'Cartagena, Colombia', cc:'co',
+      img:L+'fc2/hero-hotel.jpg', website:'casamarbella.co', email:'hello@casamarbella.co',
+      socials:[{ k:'ig', handle:'@casamarbella' }] },
+    { id:'lead2', hotel:'Villa Nettuno', city:'Positano, Italy', cc:'it',
+      img:L+'hero_bg_grand.webp', website:'villanettuno.it', email:'info@villanettuno.it',
+      socials:[{ k:'ig', handle:'@villanettuno' }, { k:'tt', handle:'@villanettuno' }] },
+    { id:'lead3', hotel:'The Cedar House', city:'Aspen, Colorado', cc:'us',
+      img:L+'hero_bg_lobby.webp', website:'thecedarhouse.com', email:'stay@thecedarhouse.com',
+      socials:[{ k:'ig', handle:'@thecedarhouseaspen' }] },
+    { id:'lead4', hotel:'Kaya Beach Club', city:'Canggu, Bali', cc:'id',
+      img:L+'fc2/pricing-bg.jpg', website:'kayabeachclub.com', email:'bookings@kayabeachclub.com',
+      socials:[{ k:'ig', handle:'@kayabeachclub' }] },
+    { id:'lead5', hotel:'Auberge des Alpes', city:'Chamonix, France', cc:'fr',
+      img:L+'fc2/cta-bg.jpg', website:'aubergedesalpes.fr', email:'contact@aubergedesalpes.fr',
+      socials:[{ k:'ig', handle:'@aubergedesalpes' }] },
+    { id:'lead6', hotel:'Nomad House Accra', city:'Accra, Ghana', cc:'gh',
+      img:L+'hero_bg_hotel.webp', website:'nomadhouseaccra.com', email:'hi@nomadhouseaccra.com',
+      socials:[{ k:'ig', handle:'@nomadhouseaccra' }] }
   ];
 
   /* ---------- the lifecycle, from the creator's end ----------
@@ -108,6 +213,37 @@ window.UKC = (function () {
     { key:'complete',   short:'Complete',   mine:false,
       sayMine:'All wrapped up',                      say:'All wrapped up' }
   ];
+
+  /* ---- past the deadline ----
+     NOT a sixth stage, same as the hotel side's flag of the same name — a
+     collaboration that has run late is still at Creating, and delivering
+     tomorrow moves it on to Content exactly as it would have. This is the
+     creator's own view of the hotel's isOverdue: same brief deadline, same
+     "days late" math, so the two sides never disagree about whether a stay is
+     running behind. It matters more here than on the hotel side — it is the
+     creator's own work that is late, not someone else's. */
+  function briefDeadline(c) {
+    var b = (c && c.brief) || (window.UKC && window.UKC.packageBrief ? window.UKC.packageBrief(c) : null);
+    return (b && b.deadline) || null;
+  }
+  /* Same seeded clock as the hotel side (ukdata.js), so a linked collab reads
+     the same "now" from both apps. */
+  var NOW = '2027-03-20';
+  function daysLate(c) {
+    var d = briefDeadline(c);
+    if (!d) return 0;
+    var due = new Date(d);
+    if (isNaN(due)) return 0;
+    var now = new Date(NOW);
+    return Math.floor((now - due) / 86400000);
+  }
+  /* Only while shooting and nothing has been handed over yet. Once work is
+     delivered the creator is waiting on review, not still owing anything. */
+  function isOverdue(c) {
+    if (!c || c.passed || c.stage !== 2) return false;
+    if (c.delivered && c.delivered.length) return false;
+    return daysLate(c) > 0;
+  }
 
   function toISO(d) {
     if (!d) return '';
@@ -168,15 +304,15 @@ window.UKC = (function () {
 
   /* ---------- the shared mirror stay ---------- */
   stays[0] = {
-    id:'s1', wants:'10K - 50K', vibe:'Quiet & considered', budget:'Independent', hotel:'MiraGrace Estate', city:'Miami, Florida', img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg',L+'hero_bg_outdoor.webp'],
-    lat:25.76, lng:-80.19, score:9, nights:2, room:'Standard king',
+    id:'s1', wants:'5K - 25K', vibe:'Quiet & considered', budget:'Independent', hotel:'MiraGrace Estate', city:'Miami, Florida', img:L+'hero_bg_lobby.webp', imgs:[L+'hero_bg_lobby.webp',L+'hero_bg_room.jpg',L+'hero_bg_outdoor.webp'],
+    lat:25.76, lng:-80.19, score:7, nights:2, room:'Standard king', guests:1,
     inc:'Room and breakfast', del:[{t:'UGC video',q:1},{t:'Photos',q:5}],
     rights:'They keep and use the content', style:'Boutique & quiet',
     from:'12 Apr 2027', to:'14 Apr 2027', saved:false, why:'A returning host with a clear, tidy package and gentle spring dates.'
   };
 
   var collabs = [
-    { id:'k1', stay:'s5', stage:0, when:'3 days ago', unread:0,
+    { id:'k1', stay:'s15', stage:0, when:'3 days ago', unread:0,
       msgs:[{by:'me',at:'3 days ago',tx:'Hi! I would love to cover the April midweek stay. I shoot wellness and slow travel, and I deliver within ten days of checkout.'}] },
     { id:'k2', stay:'s1', stage:1, when:'yesterday', unread:0,
       dates:{ status:'accepted', from:'2027-04-12', to:'2027-04-14' },
@@ -187,7 +323,12 @@ window.UKC = (function () {
       dates:{ status:'accepted', from:'2027-01-22', to:'2027-01-25' },
       briefSent:true,
       brief:{ title:'Cenote and jungle cabana', deliverables:'2 UGC videos, 6 photos', deadline:'2027-02-01',
-              notes:'Lead with the cenote and the jungle cabana at golden hour.' },
+              notes:'Lead with the cenote and the jungle cabana at golden hour. We want the pool deck, the ' +
+                'open-air shower, and the walk down to the cenote shuttle pickup. Keep the pace slow: this is a ' +
+                'quiet, considered property, not a party resort, so nothing frantic or overly produced. One of ' +
+                'the two videos should be a straight walkthrough of the cabana with no music, just ambient ' +
+                'sound — we reuse that one on our own site. The other is yours to shoot however fits your feed.',
+              link:'https://casaazultulum.example/press-kit', file:'CasaAzul-BrandGuide.pdf' },
       msgs:[{by:'them',at:'4 days ago',tx:'Your package is finalised and ready to go.'},
             {by:'them',at:'2 days ago',tx:'Take your time with the brief — everything you need is there.'}] },
     { id:'k4', stay:'s3', stage:2, when:'today', unread:0,
@@ -199,11 +340,89 @@ window.UKC = (function () {
       msgs:[{by:'them',at:'a week ago',tx:'Everything is set. Ask for Yusuf at reception when you arrive.'},
             {by:'me',at:'today',tx:'Arrived and ready to start as soon as the light softens.'}] },
     { id:'k5', stay:'s4', stage:4, when:'6 weeks ago', unread:0,
-      delivered:['w1','w3'], contentStatus:'approved',
+      delivered:['w1','w3'], contentStatus:'published',
       msgs:[{by:'me',at:'7 weeks ago',tx:'All delivered, a little early. One video and five photos plus the raw files.'},
             {by:'them',at:'6 weeks ago',tx:'Approved and downloaded. Genuinely one of the best sets we have had. Come back for winter.'}] },
-    { id:'k6', stay:'s6', stage:0, when:'2 weeks ago', quiet:true,
-      msgs:[{by:'me',at:'2 weeks ago',tx:'Hi! Pitching for the season opening in December. Happy to work to whatever brief you set.'}] }
+    { id:'k6', stay:'s16', stage:0, when:'2 weeks ago', quiet:true,
+      msgs:[{by:'me',at:'2 weeks ago',tx:'Hi! Pitching for the season opening in December. Happy to work to whatever brief you set.'}] },
+
+    /* ---- more of every stage, so the board reads as a real, busy pipeline ---- */
+    { id:'k7', stay:'s17', stage:0, when:'yesterday', unread:0,
+      msgs:[{by:'me',at:'yesterday',tx:'Hi! I would love to cover the blue cave lodge for the June sea season. Adventure and slow-travel is my whole feed.'}] },
+    { id:'k8', stay:'s18', stage:0, when:'5 days ago', unread:0,
+      msgs:[{by:'me',at:'5 days ago',tx:'Hi! Oaxaca in Day of the Dead season is exactly my kind of quiet, considered content. Happy to shoot to whatever brief works for you.'}] },
+    { id:'k9', stay:'s19', stage:0, when:'today', unread:0, quiet:true,
+      msgs:[{by:'me',at:'today',tx:'Hi! Pitching for the new opening — I would love to be one of the first creators through the door.'}] },
+
+    { id:'k10', stay:'s9', stage:1, when:'3 days ago', unread:1,
+      dates:{ status:'accepted', from:'2027-11-14', to:'2027-11-16' },
+      briefSent:true,
+      brief:{ title:'Dune Palace Doha — opening week', deliverables:'2 UGC videos, 8 photos, 1 reel', deadline:'2027-11-24',
+              notes:'This is the new wing’s opening week, so we want it to feel like a first look, not a routine stay. ' +
+                'Lead with the skyline suite at night and the pool at blue hour.' },
+      msgs:[{by:'them',at:'4 days ago',tx:'Approved for opening week — your package is ready.'},
+            {by:'them',at:'3 days ago',tx:'Let us know your flight time and we will have the suite ready early.'}] },
+    { id:'k11', stay:'s11', stage:1, when:'today', unread:1,
+      dates:{ status:'accepted', from:'2027-04-05', to:'2027-04-08' },
+      briefSent:true,
+      brief:{ title:'Machiya restoration story', deliverables:'1 UGC video, 7 photos, 1 reel', deadline:'2027-04-18',
+              notes:'We spent two years restoring this house board by board. Would love the story told slowly — the ' +
+                'joinery, the garden, the tea ceremony — not a quick room tour.' },
+      msgs:[{by:'them',at:'today',tx:'Your stay package is confirmed. The tea ceremony is booked for your first morning.'}] },
+    { id:'k12', stay:'s14', stage:1, when:'2 days ago', unread:0,
+      dates:{ status:'accepted', from:'2027-02-02', to:'2027-02-05' },
+      briefSent:true,
+      msgs:[{by:'them',at:'3 days ago',tx:'Approved — welcome to Al Noor. Your rooftop room is booked.'},
+            {by:'me',at:'2 days ago',tx:'Thank you, really looking forward to this one.'}] },
+
+    { id:'k13', stay:'s10', stage:2, when:'today', unread:0,
+      creatingStarted:true,
+      briefSent:true,
+      brief:{ title:'Alpine Meadow Chalet', deliverables:'1 UGC video, 6 photos', deadline:'2027-08-30',
+              notes:'Golden-hour meadow shots and the cable car ride up are the two must-haves.' },
+      dates:{ status:'accepted', from:'2027-08-20', to:'2027-08-23' },
+      msgs:[{by:'them',at:'4 days ago',tx:'Everything is set for your arrival. Cable car passes are at reception.'},
+            {by:'me',at:'today',tx:'Shooting the meadow at sunrise tomorrow, then the cable car in the afternoon.'}] },
+    { id:'k14', stay:'s12', stage:2, when:'3 days ago', unread:0,
+      creatingStarted:false,
+      briefSent:true,
+      brief:{ title:'Cape Vista Lodge', deliverables:'2 UGC videos, 6 photos', deadline:'2027-03-08',
+              notes:'Table Mountain from the view room, and the vineyard shuttle if the light allows.' },
+      dates:{ status:'accepted', from:'2027-02-26', to:'2027-03-01' },
+      msgs:[{by:'them',at:'3 weeks ago',tx:'All set for your stay. Let us know if the vineyard shuttle timing needs adjusting.'}] },
+    { id:'k15', stay:'s6', stage:2, when:'today', unread:0,
+      creatingStarted:false,
+      briefSent:true,
+      brief:{ title:'Second Alpina story', deliverables:'1 UGC video, 4 photos', deadline:'2027-03-02',
+              notes:'A shorter follow-up set for the shoulder season, same brand guide as before.' },
+      dates:{ status:'accepted', from:'2027-02-20', to:'2027-02-22' },
+      msgs:[{by:'them',at:'a month ago',tx:'Loved the first set enough to ask for a second, if you are open to it.'},
+            {by:'me',at:'3 weeks ago',tx:'Always. Booked it in.'}] },
+
+    { id:'k16', stay:'s7', stage:3, when:'2 days ago', unread:0,
+      creatingStarted:true, delivered:['w2','w4'], contentStatus:null,
+      msgs:[{by:'me',at:'2 days ago',tx:'Delivered — one video and four photos, raw files included.'},
+            {by:'them',at:'2 days ago',tx:'Got it, taking a look this week.'}] },
+    { id:'k17', stay:'s5', stage:3, when:'today', unread:1,
+      creatingStarted:true, delivered:['w4','w6'], contentStatus:'changesRequested',
+      msgs:[{by:'me',at:'yesterday',tx:'Delivered the full set — let me know if anything needs a pass.'},
+            {by:'them',at:'today',tx:'Loving most of it — could you send one more shot of the pool at blue hour? Everything else is perfect.'}] },
+    { id:'k18', stay:'s6', stage:3, when:'yesterday', unread:1,
+      creatingStarted:true, delivered:['w1','w5','w6'], contentStatus:'approved',
+      msgs:[{by:'me',at:'3 days ago',tx:'Delivered — two videos and a full photo set from the opening weekend.'},
+            {by:'them',at:'yesterday',tx:'Approved, this is excellent. Go ahead and publish whenever suits you.'}] },
+
+    { id:'k19', stay:'s8', stage:4, when:'2 months ago', unread:0,
+      delivered:['w3','w4'], contentStatus:'published',
+      msgs:[{by:'me',at:'2 months ago',tx:'All delivered and published on my end too — tagged you in everything.'},
+            {by:'them',at:'2 months ago',tx:'Beautiful set. This is going straight into our own marketing.'}] },
+    { id:'k20', stay:'s13', stage:4, when:'3 months ago', unread:0,
+      delivered:['w1','w6'], contentStatus:'published',
+      msgs:[{by:'them',at:'3 months ago',tx:'Approved, downloaded, and already live on our site. Thank you for this one.'}] },
+    { id:'k21', stay:'s9', stage:4, when:'5 months ago', unread:0,
+      delivered:['w2','w5'], contentStatus:'published',
+      msgs:[{by:'me',at:'5 months ago',tx:'Wrapped up — thank you for having me, this was one of my favourite sets this year.'},
+            {by:'them',at:'5 months ago',tx:'Mutual. Come back any time.'}] }
   ];
   collabs.forEach(ensureLifecycle);
 
@@ -215,7 +434,10 @@ window.UKC = (function () {
       case 0: return false;
       case 1: return false;
       case 2: return !c.creatingStarted || !c.delivered;
-      case 3: return c.contentStatus === 'changesRequested';
+      /* Approved is the creator's move too, not the hotel's — publishing is
+         something only they can do, so this is a real "needs you" state, the
+         same way changesRequested already was. */
+      case 3: return c.contentStatus === 'changesRequested' || c.contentStatus === 'approved';
       default: return false;
     }
   }
@@ -226,7 +448,10 @@ window.UKC = (function () {
       if (!c.creatingStarted) return 'Mark when you start shooting';
       return c.delivered ? 'Your handover is ready' : 'Hand over your work when it is ready';
     }
-    if (c.stage === 3) return c.contentStatus === 'changesRequested' ? 'Your host would love a small tweak' : 'Your host is reviewing your work';
+    if (c.stage === 3) {
+      return c.contentStatus === 'changesRequested' ? 'Your host would love a small tweak' :
+        c.contentStatus === 'approved' ? 'Approved — publish it to finish up' : 'Your host is reviewing your work';
+    }
     return 'All wrapped up';
   }
 
@@ -250,7 +475,7 @@ window.UKC = (function () {
     c.briefSent = rec.briefSent != null ? !!rec.briefSent : c.stage >= 1;
     c.brief = hasBriefData(rec.brief) ? rec.brief : seedBrief;
     c.creatingStarted = !!rec.creatingStarted;
-    c.contentStatus = rec.contentStatus || (c.stage === 4 ? 'approved' : null);
+    c.contentStatus = rec.contentStatus || (c.stage === 4 ? 'published' : null);
     c.guideSent = !!rec.guideSent;
     c.guide = rec.guide || null;
     c.delivered = rec.deliveredIds || c.delivered || (c.stage >= 3 ? ['w1','w2'] : null);
@@ -360,6 +585,30 @@ window.UKC = (function () {
     return c;
   }
 
+  /* The creator's own move, once the hotel has approved: post it to their
+     channels, then say so here. This is what actually finishes the
+     collaboration — approval alone only transfers ownership of the files, it
+     was never supposed to mean "done". Only after this can proof of posting
+     (addProof, below) be submitted, since there is nothing live to link to
+     before it. */
+  function markPublished(collabId) {
+    var c = byId(collabs, collabId);
+    if (!c) return null;
+    var msg = { by:'creator', at:'just now', tx:'Published this to their channels.', kind:'published' };
+    if (c.link) {
+      pushSharedPatch(c, { stage:'complete', contentStatus:'published', publishedNow:true });
+      pushSharedMsg(c, msg);
+      hydrateFromShared(c);
+      c.stage = 4;
+      c.contentStatus = 'published';
+      return c;
+    }
+    c.stage = 4;
+    c.contentStatus = 'published';
+    c.msgs.push(Object.assign({}, msg, { by:'me' }));
+    return c;
+  }
+
   /* ---------- Pitch Pilot ---------- */
   var pitches = [
     { id:'p1', hotel:'Casa Azul Tulum',   city:'Tulum, Mexico',      on:'12 Jan', via:'Email',     status:'Booked',    note:'Replied in two days. Booked for January.' },
@@ -385,28 +634,36 @@ window.UKC = (function () {
   var academy = [
     { id:'m1', notes:'Hotels are not buying your audience. They are buying content they can post on their own feed, their booking page and their newsletter. That is what UGC means. A property with 40,000 followers of its own does not need yours, it needs something good to post. Which is why 8,000 people who actually watch you beats 80,000 who scroll past.', mod:'Start here', t:'Your content is the value, not your follower count',
       len:'6 min', done:true, m:'reel5',
-      d:'Why hotels buy content for their own channels, and why 8,000 engaged followers beats 80,000 quiet ones.' },
+      d:'Why hotels buy content for their own channels, and why 8,000 engaged followers beats 80,000 quiet ones.',
+      res:{ t:'Your media kit', s:'See how your own work is packaged for a hotel to judge.', go:'kit' } },
     { id:'m2', notes:'Pitch three hotels in your own city this month. You can travel there for nothing, you can reshoot if the light is bad, and you build a portfolio of real hotel work before you ask anyone far away. Local independents say yes far more often than chains.', mod:'Start here', t:'Practice on hotels in your own city',
       len:'8 min', done:true, m:'shot3',
-      d:'The lowest-risk way to build a portfolio before you pitch anywhere far.' },
+      d:'The lowest-risk way to build a portfolio before you pitch anywhere far.',
+      res:{ t:'Browse stays', s:'Filter to what is near you and see who is open to a first pitch.', go:'stays' } },
     { id:'m3', notes:'UGC is user generated content: content made for the brand to use themselves. No audience required, no posting obligation on your side unless you agree to it. It is the reason a creator with a small following can still be worth a room.', mod:'Start here', t:'What UGC actually means',
-      len:'5 min', done:false, m:'reel6',
-      d:'Content made for the hotel to post themselves. No audience required.' },
+      len:'5 min', done:true, m:'reel6',
+      d:'Content made for the hotel to post themselves. No audience required.',
+      res:{ t:'Your media kit', s:'This is what a hotel is actually judging — not your follower count.', go:'kit' } },
     { id:'m4', notes:'Midweek nights and off-season weeks are the ones hotels struggle to sell. A room that sits empty earns nothing, so trading it for content costs them very little. Look for Tuesday to Thursday, shoulder season, and anywhere that just opened.', mod:'Pitching', t:'Pitch hotels with empty rooms',
       len:'9 min', done:false, m:'reel2',
-      d:'Off-season and midweek is where the yeses live. How to spot them.' },
+      d:'Off-season and midweek is where the yeses live. How to spot them.',
+      res:{ t:'Browse stays', s:'Look for the ones with open dates and a lower score — they need this most.', go:'stays' } },
     { id:'m5', notes:'Subject line: short, specific, no hype. First sentence: who you are and what you shoot. Second: what you would deliver. Third: when. Never open by asking for something. Never attach a huge media kit to a cold email, link it instead.', mod:'Pitching', t:'The email that gets opened',
       len:'11 min', done:false, m:'shot4',
-      d:'Subject lines, first sentences, and the one thing to never put in a pitch.' },
+      d:'Subject lines, first sentences, and the one thing to never put in a pitch.',
+      res:{ t:'Pitch Pilot', s:'The hotel is scored and the pitch is drafted for you — you press send.', go:'pitch' } },
     { id:'m6', notes:'DM works when the hotel has no public marketing contact and an active Instagram. Keep it to four lines. Reference a specific post of theirs. Do not send a voice note.', mod:'Pitching', t:'Sliding into the DMs, properly',
       len:'7 min', done:false, m:'reel3',
-      d:'When Instagram beats email, and how to write one that does not get ignored.' },
+      d:'When Instagram beats email, and how to write one that does not get ignored.',
+      res:{ t:'Pitch Pilot', s:'Skip drafting from scratch — start from what it already wrote.', go:'pitch' } },
     { id:'m7', notes:'Shoot the room before you unpack, while it is still perfect. Then breakfast, then the amenity, then the exterior at golden hour. Leave the pool for the middle of the day when the light is worst for everything else.', mod:'On the stay', t:'Shooting a hotel in one morning',
       len:'12 min', done:false, m:'reel1',
-      d:'A shot list that covers the room, the food and the light before checkout.' },
+      d:'A shot list that covers the room, the food and the light before checkout.',
+      res:{ t:'Your collabs', s:'See a real brief and deliverables list from a live stay.', go:'collabs' } },
     { id:'m8', notes:'Usage rights say where and how long the hotel can use your work. In perpetuity means forever, on any of their own channels. That is standard for a hosted stay and it is fine. What you should not hand over is the right to resell it or pass it to another brand.', mod:'On the stay', t:'Usage rights, in plain English',
       len:'6 min', done:false, m:'shot2',
-      d:'What you are agreeing to when a hotel keeps your content, and why it is fine.' }
+      d:'What you are agreeing to when a hotel keeps your content, and why it is fine.',
+      res:{ t:'Your collabs', s:'The rights for a stay are stated right there in its brief.', go:'collabs' } }
   ];
 
   /* The creator posts on more than the two channels the seed hand-wrote, the same
@@ -467,10 +724,21 @@ window.UKC = (function () {
      copy, so the hotel sees the same evidence the creator submitted.
      // PLUG-IN POINT — a real build verifies the URL resolves to a live post and
      hands the placement to Partnerize so the click_id can be bound to it. */
+  /* Only reachable once the content is published — see composerContent/
+     deliveryConnection in ukcviews.js, which do not show this form until
+     c.contentStatus === 'published'. Deliberately the last step: review
+     happens on hosted-not-yet-public content, approval makes it the hotel's,
+     publishing is the creator's own move, and only once it is actually live
+     is there a real post to pull engagement from. */
   function addProof(collabId, proof) {
     var c = collabs.filter(function (x) { return x.id === collabId; })[0];
     if (!c) return null;
-    var rec = { url:proof.url, channel:proof.channel, placement:proof.placement, at:'just now' };
+    /* PLUG-IN POINT — real engagement fetch. Once the platform can call each
+       network's own API for a given post URL, replace this stand-in with that
+       read; everything downstream already reads `impressions` off the proof
+       record, so swapping this one line is the whole migration. */
+    var impressions = 800 + (proof.url.length * 137) % 4200;
+    var rec = { url:proof.url, channel:proof.channel, placement:proof.placement, at:'just now', impressions:impressions };
     c.proofs = (c.proofs || []).concat([rec]);
     if (c.link && window.UKShared) {
       window.UKShared.pushMsg(c.link, {
@@ -498,6 +766,19 @@ window.UKC = (function () {
     }
     var stay = stays.filter(function (s) { return s.id === stayId; })[0];
     if (!stay) return null;
+    /* The opening message promises "the brief is below" \u2014 it needs one to be
+       true. Whatever the hotel wrote into the invite (assets/js/ukviews.js
+       inviteStayPanel \u2014 notes, a link, an attached file's name) carries over
+       here; a stay's own deliverables fill in the part the invite never
+       collects, same as the title. */
+    var inv = window.UKINVITE && window.UKINVITE.forStay(stayId);
+    var brief = {
+      title: stay.hotel ? stay.hotel + ' collab' : 'Your brief',
+      deliverables: (stay.del || []).map(function (d) { return d.q + ' ' + d.t.toLowerCase(); }).join(', '),
+      notes: (inv && inv.brief && inv.brief.notes) || '',
+      link: (inv && inv.brief && inv.brief.link) || '',
+      file: (inv && inv.brief && inv.brief.file) || ''
+    };
     var c = {
       id: 'k' + (collabs.length + 1),
       stay: stayId,
@@ -508,6 +789,8 @@ window.UKC = (function () {
       creatingStarted: false,
       contentStatus: null,
       delivered: null,
+      briefSent: true,
+      brief: brief,
       msgs: [
         { by:'hotel', at:'just now',
           tx:'We came looking for you for this one \u2014 really glad you said yes. Dates and the brief are below.' },
@@ -698,19 +981,51 @@ window.UKC = (function () {
      record — they are the record, not a copy of it */
   if (window.UKONBOARD) window.UKONBOARD.apply('creator');
 
+  /* ---- badges: one per module, plus the certification for all of them ----
+     A module is a badge the moment every lesson in it is done — computed
+     live from the same .done flags the lesson cards already show, never a
+     separate flag that could say "earned" about a module nobody actually
+     finished. academyCert (existing) is the same idea one level up: every
+     lesson across every module. */
+  function academyModules() {
+    var by = {};
+    academy.forEach(function (l) { (by[l.mod] = by[l.mod] || []).push(l); });
+    return Object.keys(by).filter(function (mod) {
+      return by[mod].every(function (l) { return l.done; });
+    });
+  }
+  function academyProgress() {
+    var done = academy.filter(function (l) { return l.done; }).length;
+    return { done: done, total: academy.length };
+  }
+  /* Set once at load from whatever the seed already completed, the same way
+     academyCert would be if this account had finished the whole thing —
+     markLessonDone() keeps it live from here on. */
+  me.academyModules = academyModules();
+  if (window.UKME) window.UKME.academyModules = me.academyModules.slice();
+
   return {
     hydrateStays: hydrateStays,
     MEDIA: MEDIA, me: me, stays: stays, STAGES: STAGES, collabs: collabs,
     addProof: addProof, acceptInvite: acceptInvite,
     pitches: pitches, earnings: earnings, academy: academy, MEMBER_PRICE: MEMBER_PRICE,
-    stay: function (id) { return byId(stays, id); }, placeStays: placeStays, hydrateFavs: hydrateFavs,
+    academyModules: academyModules, academyProgress: academyProgress,
+    stay: function (id) {
+      var s = byId(stays, id);
+      if (s) return s;
+      var l = byId(leads, id);
+      return l ? Object.assign({ isLead:true }, l) : null;
+    },
+    leads: leads, lead: function (id) { return byId(leads, id); },
+    placeStays: placeStays, hydrateFavs: hydrateFavs,
     work: function (id) { return byId(me.work, id); },
     media: function (k) { return MEDIA[k] || MEDIA.reel1; },
     addPitch: function (p) { p.id = 'p' + (pitches.length + 1); pitches.unshift(p); return p; },
     dropPitch: function (id) { var i = pitches.map(function (x) { return x.id; }).indexOf(id); if (i > -1) pitches.splice(i, 1); },
     BANDS: BANDS, scoreFor: scoreFor, fitNote: fitNote,
-    markShooting: markShooting, sendMessage: sendMessage, deliverWork: deliverWork,
+    markShooting: markShooting, sendMessage: sendMessage, deliverWork: deliverWork, markPublished: markPublished,
     hydrateLinked: hydrateLinked, collabMine: collabMine, collabSay: collabSay, packageBrief: packageBrief, packageDates: packageDates, guideSnapshot: guideSnapshot,
+    isOverdue: isOverdue, daysLate: daysLate, briefDeadline: briefDeadline,
     fmt: fmt, money: money,
     initials: function (n) { return n.split(' ').map(function (w) { return w[0]; }).slice(0,2).join(''); }
   };

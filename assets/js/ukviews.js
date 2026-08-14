@@ -93,30 +93,18 @@ window.UKV = (function () {
      the marketing site browses, so a creator sees the exact object a hotel will
      judge them by. Any surface that needs a creator renders this — the network
      grid, the collaboration thread — rather than inventing its own arrangement. */
-/* One registry, the same eight the creator onboarding offers. Anything that shows
-   or filters a platform mark reads it from here — a second hardcoded list of three
-   is how a Snapchat creator ends up invisible in search. */
-  /* the shared list — the creator onboarding offers these same eight, and this
+/* One registry, the same four the creator onboarding offers. Anything that shows
+   or filters a platform mark reads it from here rather than a second hardcoded list. */
+  /* the shared list — the creator onboarding offers these same four, and this
      file used to keep its own copy of them */
   var PLATFORMS = ((window.UKVOCAB || {}).PLATFORMS || []).slice();
   var PLAT_MARK = {}, PLAT_NAME = {};
   PLATFORMS.forEach(function (p) { PLAT_MARK[p.k] = p.s; PLAT_NAME[p.k] = p.n; });
   /* the flag belongs to the country in their base, so it is read off that rather
-     than stored twice */
-  var CC = { Portugal:'pt', USA:'us', Mexico:'mx', Norway:'no', Japan:'jp',
-             India:'in', SA:'za', Italy:'it', Morocco:'ma', Spain:'es', France:'fr', UK:'gb' };
-  /* The flag for a place, from the country in its name. Used wherever a location
-     is written out, so no list of places is missing them. */
-  function flagFor(loc) {
-    var cc = ccOf(loc);
-    return cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + cc + '.svg" alt="" ' +
-      'loading="lazy" decoding="async">' : '';
-  }
-
-  function ccOf(loc) {
-    var country = String(loc || '').split(',').pop().trim();
-    return CC[country] || null;
-  }
+     than stored twice — the map and both helpers now live in ukshared.js, so
+     the creator side reads the same country list rather than keeping its own. */
+  function flagFor(loc) { return window.ukFlagFor(loc); }
+  function ccOf(loc) { return window.ukCCOf(loc); }
   /* free now, free soon, or not for a while — a colour alone is not a status, so
      every dot carries the same words in its label */
   function availOf(c) {
@@ -218,12 +206,20 @@ window.UKV = (function () {
         img(work[n], '', '', i < 2 && n < 2) + playMark('ukCrPlay') + '</button>';
     }).join('');
 
+    /* The lowest of whatever they have priced \u2014 one number, not all three,
+       because a 5-tile strip has room to say "there is a price" but not to
+       break it down by arrangement (that is the full profile's job). Takes
+       Stays' place rather than adding a sixth tile: the grid is a fixed
+       five wide, and stays-completed is still on the full profile. */
+    var rateVals = Object.keys(c.rates || {}).map(function (k) { return c.rates[k]; })
+      .filter(function (v) { return v || v === 0; });
+    var fromRate = rateVals.length ? Math.min.apply(null, rateVals) : null;
     var stats = [
       ['Audience',   D.fmt(c.f)],
       ['Avg reach',  String(c.reach || '\u2014').replace(/\s*per post/, '')],
       ['Engagement', c.eng || '\u2014'],
       ['Rating',     c.rating ? c.rating.toFixed(1) : '\u2014', true],
-      ['Stays',      c.stays != null ? String(c.stays) : '\u2014']
+      fromRate != null ? ['From', '$' + D.fmt(fromRate)] : ['Stays', c.stays != null ? String(c.stays) : '\u2014']
     ];
     var tag = opts.tag || 'article';
 
@@ -233,7 +229,9 @@ window.UKV = (function () {
           '<span class="ukCrAv_dot ' + av.c + '" title="' + esc(av.t) + '" role="img" aria-label="' + esc(av.t) + '"></span>' +
         '</span>' +
         '<span class="ukCrCard_id">' +
-          '<span class="ukCrCard_n">' + who(c, esc(c.n)) + (window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') + '</span>' +
+          '<span class="ukCrCard_n">' + who(c, esc(c.n)) +
+            (c.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
+            (c.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') + '</span>' +
           '<span class="ukCrCard_m">' +
             '<span class="ukCrCard_k">Covers</span>' +
             (markets.length
@@ -242,7 +240,7 @@ window.UKV = (function () {
                     (m.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + m.cc + '.svg" alt="" loading="lazy" decoding="async">' : '') +
                     esc(m.n) + '</span>';
                 }, 1)
-              : esc(c.loc)) +
+              : flagFor(c.loc) + esc(c.loc)) +
           '</span>' +
           /* What they shoot and what they make sit with the name and the markets,
              not in a band of their own — they are part of the same introduction.
@@ -353,7 +351,7 @@ window.UKV = (function () {
           '<button class="ukPanel_more" type="button" data-goto="creators">See the network</button></div>' +
           '<article class="ukSuggest">' + img(pick.img, pick.n, 'ukSuggest_img') +
             '<div><h4 class="ukSuggest_n">' + esc(pick.n) + '</h4>' +
-            '<p class="ukSuggest_m">' + esc(pick.type) + ' · ' + esc(pick.loc) + '</p>' +
+            '<p class="ukSuggest_m">' + esc(pick.type) + ' · ' + flagFor(pick.loc) + esc(pick.loc) + '</p>' +
             '<p class="ukSuggest_p">' + esc(pick.proof) + '</p>' +
             '<p class="ukWhy">Suggested because she matches your wellness positioning and is free now.</p>' +
             '<button class="ukGhost" type="button" data-creator="' + pick.id + '">View her profile</button></div>' +
@@ -860,6 +858,7 @@ window.UKV = (function () {
         '<p class="ukEntry_d">' + esc(m.proof.placement) + '</p>' +
         '<p class="ukEntry_d ukEntry_d--link"><a href="' + esc(m.proof.url) + '" target="_blank" rel="noopener">' +
           esc(m.proof.url) + '</a></p>' +
+        (m.proof.impressions ? '<p class="ukEntry_d">' + D.fmt(m.proof.impressions) + ' impressions so far</p>' : '') +
         '<p class="ukEntry_p">Their published post, tied to the tracked link for this stay.</p>' +
         '<p class="ukEntry_at">' + who + ' \u00b7 ' + esc(m.at) + '</p></div></div>';
     }
@@ -902,11 +901,21 @@ window.UKV = (function () {
      note you are writing — happens in the thread, in order, the way it actually
      happened. Splitting the package out into its own box made the thread look
      like a log of a process happening somewhere else. */
+  /* Hand-drawn the same way the map's own zoom/home buttons are
+     (ukworldmap.js) — a plain geometric glyph for a control this icon pack
+     has no symbol for, not a brand mark standing in for one that exists. */
+  var FOCUS_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H5a1 1 0 0 0-1 1v4M15 4h4a1 1 0 0 1 1 1v4M9 20H5a1 1 0 0 1-1-1v-4M15 20h4a1 1 0 0 0 1-1v-4"/></svg>';
+  var UNFOCUS_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4a1 1 0 0 0 1-1V4M20 9h-4a1 1 0 0 1-1-1V4M4 15h4a1 1 0 0 1 1 1v4M20 15h-4a1 1 0 0 0-1 1v4"/></svg>';
+
   function threadPanel(c, cr, mode, st) {
     var n = c.msgs.length;
-    return '<section class="ukPanel ukFlowThread" id="ukMsgPanel">' +
-      '<div class="ukPanel_head"><h3 class="ukPanel_title">Conversation</h3>' +
+    return '<section class="ukPanel ukFlowThread' + (st.focus ? ' is-focus' : '') + '" id="ukMsgPanel">' +
+      '<div class="ukPanel_head">' +
+      '<div class="ukPanel_headTxt"><h3 class="ukPanel_title">Conversation</h3>' +
       '<span class="ukCount">' + n + (n === 1 ? ' message' : ' messages') + '</span></div>' +
+      '<button class="ukFocusToggle' + (st.focus ? ' is-on' : '') + '" type="button" data-focus-toggle aria-pressed="' + !!st.focus + '">' +
+        (st.focus ? UNFOCUS_ICON : FOCUS_ICON) + '<span>' + (st.focus ? 'Exit focus' : 'Focus on this') + '</span></button>' +
+      '</div>' +
       (n
         ? '<div class="ukMsgs" id="ukMsgs">' + c.msgs.map(function (m) { return threadEntry(m, c, cr); }).join('') + '</div>'
         : '<div class="ukMsgs ukMsgs--empty" id="ukMsgs"><p class="ukEmpty_t">No messages yet</p><p class="ukEmpty_p">Say hello to your creator. A thoughtful line about why you chose them goes a long way.</p></div>') +
@@ -1092,18 +1101,28 @@ window.UKV = (function () {
 
   function composerReview(c, cr, mode) {
     var changes = c.contentStatus === 'changesRequested';
+    var approved = c.contentStatus === 'approved';
     var vids = (c.assets || []).filter(function (id) { return D.asset(id).k === 'video'; }).length;
     var pics = (c.assets || []).length - vids;
     var link = D.affiliateFor ? D.affiliateFor(c) : null;
     if (mode === 'message') return composerPlain(c, cr, { placeholder:'Write a message', actions:'<button class="ukGhost ukGhost--sm" type="button" data-composer-mode="review">Back to review</button>' });
-    return '<section class="ukPanel ukComposer ukComposer--review"><div class="ukPanel_head"><h3 class="ukPanel_title">' + (changes ? 'Changes requested' : 'Review the delivery') + '</h3></div>' +
+    /* Approved sits here, not at Complete — the files are owned, but the
+       collaboration is not finished until the creator has actually published.
+       Nothing left to decide on this screen, so no approve/request-changes
+       controls; it is a status update now. */
+    return '<section class="ukPanel ukComposer ukComposer--review"><div class="ukPanel_head"><h3 class="ukPanel_title">' +
+      (approved ? 'Approved — waiting to go live' : changes ? 'Changes requested' : 'Review the delivery') + '</h3></div>' +
       '<p class="ukAsk">' + esc(cr.n.split(' ')[0]) + ' delivered ' + (vids ? vids + (vids === 1 ? ' video' : ' videos') : '') + (vids && pics ? ' and ' : '') + (pics ? pics + (pics === 1 ? ' photo' : ' photos') : '') + '. ' +
-      (changes ? 'You have already asked for a small tweak. When the revised handover lands, review it here again.' : 'Approve and it is yours on every channel, forever. It lands in your content library the moment you do.') + '</p>' +
+      (approved ? 'It is yours in your library already, on every channel, forever. ' + esc(cr.n.split(' ')[0]) + ' still needs to publish it before this wraps up — you will see the live link here once they do.' :
+       changes ? 'You have already asked for a small tweak. When the revised handover lands, review it here again.' :
+       'Approve and it is yours on every channel, forever. It lands in your content library the moment you do.') + '</p>' +
       (c.assets && c.assets.length ? '<div class="ukPosts">' + c.assets.map(function (id, i) {
-        return postCard(D.asset(id), link, { eager: i < 2 });
+        return postCard(D.asset(id), link, { eager: i < 2, done: approved });
       }).join('') + '</div>' : '') +
       '<div class="ukComposer_row"><div class="ukComposer_actions"><button class="ukGhost ukGhost--sm" type="button" data-composer-mode="message">Send a message instead</button></div>' +
-        '<div class="ukComposer_send"><span class="ukHint">Approve or request changes from the top of this page.</span></div></div></section>';
+        '<div class="ukComposer_send"><span class="ukHint">' +
+          (approved ? 'Nothing to do here until it is live.' : 'Approve or request changes from the top of this page.') +
+        '</span></div></div></section>';
   }
 
   /* Complete is the only place the work is finished and owned, so the gallery
@@ -1254,15 +1273,31 @@ window.UKV = (function () {
     var title = kind === 'markets' ? 'Markets they cover'
               : kind === 'makes'   ? 'What they make'
               : 'What they shoot';
-    var rows = kind === 'markets'
-      ? (cr.markets || []).map(function (m) {
-          return '<li class="ukPop_row">' + (m.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + m.cc + '.svg" alt="" loading="lazy" decoding="async">' : '') + esc(m.n) + '</li>'; }).join('')
-      : ((kind === 'makes' ? cr.makes : cr.cats) || []).map(function (t) {
-          return '<li class="ukPop_row">' + esc(t) + '</li>'; }).join('');
+    function marketRow(m) {
+      return '<li class="ukPop_row">' + (m.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + m.cc + '.svg" alt="" loading="lazy" decoding="async">' : '') + esc(m.n) + '</li>';
+    }
+    var body;
+    if (kind === 'markets') {
+      /* c.markets is already built with index 0 as home — the same
+         onboarding data (`been = home.concat(dests)`, ukonboard.js) that
+         puts a creator's own home base first everywhere else it appears.
+         This just draws that split instead of one flat list, the same
+         "Home base" / "Also headed to" labels the onboarding picker uses. */
+      var mk = cr.markets || [];
+      var home = mk.slice(0, 1), rest = mk.slice(1);
+      body =
+        (home.length ? '<p class="ukPop_sec">Home base</p>' +
+          '<ul class="ukPop_list">' + home.map(marketRow).join('') + '</ul>' : '') +
+        (rest.length ? '<p class="ukPop_sec">Also headed to</p>' +
+          '<ul class="ukPop_list">' + rest.map(marketRow).join('') + '</ul>' : '');
+    } else {
+      body = '<ul class="ukPop_list">' + ((kind === 'makes' ? cr.makes : cr.cats) || []).map(function (t) {
+        return '<li class="ukPop_row">' + esc(t) + '</li>'; }).join('') + '</ul>';
+    }
     return '<div class="ukPop_card" role="dialog" aria-label="' + esc(title) + '" data-crpop-panel>' +
       '<div class="ukPop_head"><h2 class="ukPop_h">' + esc(title) + '</h2>' +
         '<button class="ukPop_x" type="button" data-crpop-close aria-label="Close">&times;</button></div>' +
-      '<ul class="ukPop_list">' + rows + '</ul></div>';
+      body + '</div>';
   }
 
   /* The decision is made here, not four hundred pixels further down: on the two
@@ -1373,10 +1408,21 @@ window.UKV = (function () {
             '<span class="ukCrAv_dot ' + av.c + '" title="' + esc(av.t) + '" role="img" aria-label="' + esc(av.t) + '"></span>',
             'ukCrAv ukCrAv--xl ukWho--av') +
           '<div class="ukCrD_id">' +
-            '<h2 class="ukCrD_n">' + who(cr, esc(cr.n)) + (window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
+            '<h2 class="ukCrD_n">' + who(cr, esc(cr.n)) +
+              (cr.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
+              (cr.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') +
               '<button class="ukCrD_open" type="button" data-creator="' + cr.id + '" ' +
                 'title="Open full profile" aria-label="Open ' + esc(cr.n) + '&rsquo;s full profile">' + OPEN_ICON + '</button>' +
             '</h2>' +
+            /* Earned Academy modules, stated by the creator and read off the
+               same record ukcprofile.js writes to — not the locked ones,
+               which belong to the Academy's own progress view, not a
+               hotel's read of who this person already is. */
+            (cr.academyModules && cr.academyModules.length
+              ? '<ul class="ukBadgeStrip">' + cr.academyModules.map(function (b) {
+                  return '<li class="ukChip2 is-key">' + window.ukVetBadge('ukChipVet') + esc(b) + '</li>';
+                }).join('') + '</ul>'
+              : '') +
             /* one line of plain facts: where they work, how much they have done,
                what they speak. The markets carry flags but no frames — only the
                overflow badge is a control. */
@@ -1466,7 +1512,8 @@ window.UKV = (function () {
     var c = D.collabs.filter(function (x) { return x.id === st.thread; })[0];
     var cr = D.creator(c.who), stay = D.stay(c.stay), mode = st.composerMode || null;
     var dates = D.packageDates ? D.packageDates(c) : (c.dates || {});
-    return creatorHead(c, cr, stay, dates, st) +
+    return '<div class="ukThreadPage' + (st.focus ? ' is-focus' : '') + '">' +
+      creatorHead(c, cr, stay, dates, st) +
       '<div class="ukGrid ukGrid--thread"><section class="ukFlow">' +
         (c.approvedNow ? ownedNow(c, cr) : '') + threadPanel(c, cr, mode, st) +
       '</section><aside class="ukSideCol">' +
@@ -1474,14 +1521,26 @@ window.UKV = (function () {
            stay, so wrapping it in a panel headed "The stay" would say it twice */
         stayCard(stay, dates) +
       '</aside></div>' +
+    '</div>' +
       (st.modalOpen === 'reqchanges' ? reqChangesModal(c) : '') +
       lightbox(st);
   }
 
+  /* Ownership and "wrapped up" are not the same moment any more: approving
+     hands the files over right away (this banner still fires the instant that
+     happens), but the collaboration is not finished until the creator has
+     actually published — see approve()/markPublished() in ukdata.js/ukcdata.js.
+     Saying "all wrapped up" and "they have been notified" before that has
+     happened would be telling the hotel something that has not happened yet. */
   function ownedNow(c, cr) {
     var n = (c.assets || []).length;
-    return '<section class="ukOwned" role="status"><div class="ukOwned_b"><p class="ukHero_eyebrow">All wrapped up</p><h3 class="ukOwned_t">' + n + ' assets are yours now</h3>' +
-      '<p class="ukOwned_p">Approved and added to your content library. Yours on every channel, in perpetuity, with no expiry. ' + esc(cr.n.split(' ')[0]) + ' has been notified.</p>' +
+    var done = c.stage === 4;
+    return '<section class="ukOwned" role="status"><div class="ukOwned_b"><p class="ukHero_eyebrow">' +
+      (done ? 'All wrapped up' : 'Approved') + '</p><h3 class="ukOwned_t">' + n + ' assets are yours now</h3>' +
+      '<p class="ukOwned_p">' + (done
+        ? 'Approved and added to your content library. Yours on every channel, in perpetuity, with no expiry. ' + esc(cr.n.split(' ')[0]) + ' has been notified.'
+        : 'Added to your content library, yours on every channel, in perpetuity, with no expiry. ' + esc(cr.n.split(' ')[0]) + ' still needs to publish it to their own channels before this wraps up.') +
+      '</p>' +
       '<div class="ukHero_cta"><button class="ukBtn" type="button" data-goto="library">Open your library</button><button class="ukGhost" type="button" data-back>Back to collaborations</button></div></div>' +
       '<div class="ukOwned_m">' + (c.assets || []).slice(0, 4).map(function (id) { return img(D.asset(id).img, D.asset(id).t, 'ukOwned_i'); }).join('') + '</div></section>';
   }
@@ -1493,7 +1552,7 @@ window.UKV = (function () {
      them — the two halves of the product were using different vocabularies. */
   var DELS = ((window.UKVOCAB && window.UKVOCAB.FORMATS) || []).slice();
   if (!DELS.length) DELS = ['UGC video','Photos','Reels','Stories'];
-  var REACH = ['10K-50K','25K-100K','50K-250K','100K+'];
+  var REACH = ['~10K-50K','25K-100K','50K-250K','100K+'];
   var TYPES = ['Wellness & spa','Food & beverage','Luxury & design','Travel & adventure','Boutique & budget'];
   var STEPS = ['Pick a starting point','The stay','Who you want','What they create','Preview'];
 
@@ -1509,7 +1568,7 @@ window.UKV = (function () {
     if (!st.form) {
       var std = D.packages.filter(function (p) { return p.rec; })[0];
       st.form = { pkg:'', nights:std.nights, inc:std.inc, reach:std.reach,
-                  type:D.property.cat, del:Object.assign({}, std.del), date:'' };
+                  type:D.property.cat, del:Object.assign({}, std.del), date:'', guests:1 };
     }
     return st.form;
   }
@@ -1549,7 +1608,7 @@ window.UKV = (function () {
   /* step 1 — three starting points, give and get on each */
   function hostPkg(f) {
     return '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Pick a starting point</h3></div>' +
-      '<p class="ukAsk">Three shapes that work, or start with nothing filled in. Whichever you pick, every value is still yours to change over the next three steps.</p>' +
+      '<p class="ukAsk">A few shapes that work, or start with nothing filled in. Whichever you pick, every value is still yours to change over the next three steps.</p>' +
       '<div class="ukPkgs">' + D.packages.map(function (p) {
         var got = Object.keys(p.del).reduce(function (a, k) { return a + p.del[k]; }, 0);
         return '<button class="ukPkg' + (f.pkg === p.id ? ' is-on' : '') + (p.rec ? ' is-rec' : '') + '" ' +
@@ -1603,12 +1662,50 @@ window.UKV = (function () {
     'Kayak or watersports', 'Parking', 'Pet friendly', 'Co-working desk'
   ];
 
+  /* One amount field, not two — an earlier version paired the fee with a
+     separate "budget" figure meant as a matching reference, but once a
+     hotel has actually committed to a number there is nothing left for a
+     second field to ask; it just repeated the same question. And the two
+     paid arrangements are not the same deal: a fee ON TOP of a hosted stay
+     versus a full campaign payment with no stay implied, so each gets its
+     own label and its own line explaining what it means, rather than both
+     sharing "Creative fee" regardless of which was picked. A third,
+     "Custom", existed briefly for whatever the two sides agree directly —
+     dropped along with the rest of D.COLLAB_TYPES, since it implied a
+     negotiation feature that isn't being built. */
+  var AMOUNT_BY_TYPE = {
+    'Hosted stay + creative fee': { l:'Creative fee',
+      why:'On top of the stay — the room and the fee together are the offer.' },
+    'Paid campaign': { l:'Campaign fee',
+      why:'The full payment for this campaign. No stay is included unless you add one separately.' }
+  };
+
   function hostStay(f, st) {
     st = st || {};
     var inc = Array.isArray(f.incList) ? f.incList : [];
     var shots = f.photos || [];
+    var collabType = f.collabType || 'Hosted stay';
+    var amount = AMOUNT_BY_TYPE[collabType];
     return '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What are you offering?</h3></div>' +
-      '<p class="ukAsk">Creators are offered a stay, never a fee. You are trading nights you already have.</p>' +
+      '<p class="ukAsk">A hosted stay is still the default. Add a fee on top, or run this as a paid ' +
+        'campaign instead, if that is the deal.</p>' +
+
+      /* Wrapped in .ukField like every other field in this form — without
+         it, this was the one group with no bottom margin of its own, so it
+         sat flush against Nights whenever Hosted stay was picked and no fee
+         field rendered in between to supply the gap by accident. */
+      '<div class="ukField"><span class="ukField_l">Arrangement</span><div class="ukChoice">' + D.COLLAB_TYPES.map(function (t) {
+        return '<button class="ukPick' + (collabType === t ? ' is-on' : '') + '" type="button" ' +
+          'data-pick="collabType" data-val="' + esc(t) + '">' + esc(t) + '</button>';
+      }).join('') + '</div></div>' +
+      (amount
+        ? '<div class="ukField"><span class="ukField_l">' + esc(amount.l) + '</span>' +
+            '<div class="ukInputPre"><span class="ukInputPre_p" aria-hidden="true">$</span>' +
+            '<input class="ukInputPre_i" type="number" inputmode="numeric" min="0" step="50" ' +
+              'data-f="fee" value="' + esc(f.fee || '') + '" placeholder="0" aria-label="' + esc(amount.l) + ', in dollars"></div>' +
+            '<p class="ukWhy">' + esc(amount.why) + '</p>' +
+          '</div>'
+        : '') +
 
       /* a count, typed as a count: steppers either side so it is obviously a
          number, and no keyboard needed to answer it */
@@ -1620,6 +1717,22 @@ window.UKV = (function () {
           '<button class="ukNum_b" type="button" data-nights="1" aria-label="One night more">+</button>' +
           '<span class="ukNum_u">' + (String(f.nights) === '1' ? 'night' : 'nights') + '</span>' +
         '</div>' +
+      '</div>' +
+
+      /* Assistant, not director: arrives already answered — one, the creator
+         themselves — rather than a blank a hotel has to think about before it
+         means anything. Creators ask this often enough that leaving it unset
+         just moves the question into the thread later. */
+      '<div class="ukField"><span class="ukField_l">Party size</span>' +
+        '<div class="ukNum">' +
+          '<button class="ukNum_b" type="button" data-guests="-1" aria-label="One fewer guest">&minus;</button>' +
+          '<input class="ukNum_i" type="number" inputmode="numeric" min="1" max="6" step="1" ' +
+            'data-f="guests" value="' + esc(f.guests || 1) + '" placeholder="1" aria-label="Party size"> ' +
+          '<button class="ukNum_b" type="button" data-guests="1" aria-label="One more guest">+</button>' +
+          '<span class="ukNum_u">' + (Number(f.guests || 1) === 1 ? 'guest' : 'guests') + '</span>' +
+        '</div>' +
+        '<p class="ukWhy">Room for the creator, plus anyone they bring — a partner, family, or a second shooter. ' +
+          'Shown on the stay before anyone applies, so nobody finds out too late.</p>' +
       '</div>' +
 
       /* several things, not one sentence */
@@ -1834,6 +1947,7 @@ window.UKV = (function () {
       rooms: f.type || D.property.cat || 'Room',
       inc: f.inc || 'Not set yet',
       incList: f.incList || null,
+      guests: f.guests || 1,
       rights: 'Yours in perpetuity, all channels',
       del: Object.keys(f.del || {}).filter(function (k) { return f.del[k]; })
              .map(function (k) { return { t:k, q:f.del[k] }; })
@@ -2015,6 +2129,19 @@ window.UKV = (function () {
         (nPicked > left ? 'That is ' + nPicked + ' invitations for ' + left + ' slot' + (left === 1 ? '' : 's') +
           ' \u2014 fine if you are expecting some to say no. They will each see that it is competitive.' : '') +
       '</span>' +
+      /* A brief was only ever writable later, when approving an inbound pitch
+         \u2014 a hosted stay going out to creators had nowhere to say what you
+         actually want shot. Same three options the approval brief has:
+         write it, link it, or attach it, none of them required. */
+      '<label class="ukField"><span class="ukField_l">Brief for whoever accepts (optional)</span>' +
+        '<textarea class="ukField_i" id="ukInviteBriefNotes" rows="4" ' +
+        'placeholder="What to shoot, the tone you want, anything they should know before they say yes">' +
+        esc((inv.brief && inv.brief.notes) || '') + '</textarea></label>' +
+      '<div class="ukBriefAlt"><p class="ukField_l">Optional link or file</p><div class="ukBriefAlt_row">' +
+        '<label class="ukUpload">' + CLIP_ICON + '<span>Attach a PDF</span>' +
+        '<input type="file" id="ukInviteBriefFile" accept="application/pdf" hidden></label>' +
+        '<input class="ukField_i" id="ukInviteBriefLink" value="' + esc((inv.brief && inv.brief.link) || '') +
+        '" placeholder="or paste a link"></div></div>' +
       '<button class="ukBtn" type="button" data-invitestay-send="' + stay.id + '">' +
         (nPicked ? 'Send ' + nPicked + ' invitation' + (nPicked === 1 ? '' : 's') : 'Send invitations') + '</button>' +
     '</section>';
@@ -2098,7 +2225,7 @@ window.UKV = (function () {
       id: s.id, t: s.t, img: s.img, shots: s.imgs || null,
       nights: s.nights, rooms: s.rooms, inc: s.inc, incList: s.incList || null,
       rights: s.rights, del: s.del,
-      status: s.status
+      status: s.status, collabType: s.collabType, fee: s.fee
     }, { from: s.from, to: s.to }, {
       eager: i < 3,
       shot: opts.shot,

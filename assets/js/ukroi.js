@@ -478,7 +478,8 @@
   /* the reference half: what commission is calculated on, the lifecycle, and how
      attribution is done — reading, not doing */
   function howItWorks() {
-    return basisPanel() +
+    return '<div class="ukHowPanels">' +
+      basisPanel() +
       '<section class="ukPanel"><div class="ukPanel_head">' +
       '<h3 class="ukPanel_title">How attribution works</h3></div>' +
       '<p class="ukAsk">Every collaboration gets its own tracked link and discount code, so two creators ' +
@@ -490,7 +491,8 @@
         '<p class="ukHow_p">Link in bio, code on screen. Both point at your own booking page, never an OTA.</p></div></li>' +
         '<li><span>3</span><div><p class="ukHow_t">Bookings are attributed here</p>' +
         '<p class="ukHow_p">Within a 90 day window, with the commission owed shown against each one.</p></div></li>' +
-      '</ol></section>';
+      '</ol></section>' +
+    '</div>';
   }
   /* the doing half: the links and codes themselves, with pagination */
   /* Copy belongs to the value it copies, so it lives inside the field as an icon

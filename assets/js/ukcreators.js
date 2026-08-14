@@ -14,7 +14,12 @@
   function head(t, s) {
     return '<div class="ukPageHead"><h2>' + t + '</h2>' + (s ? '<p>' + s + '</p>' : '') + '</div>';
   }
-  var PLAT = { ig:'Instagram', tt:'TikTok', yt:'YouTube' };
+  /* Read from the one shared platform list rather than hand-copied again — a
+     hardcoded three-only version of this used to sit here and silently had no
+     entry for Pinterest, so a creator whose second platform was Pinterest
+     would have rendered as "undefined" the moment this map was consulted. */
+  var PLAT = {};
+  ((window.UKVOCAB && window.UKVOCAB.PLATFORMS) || []).forEach(function (p) { PLAT[p.k] = p.n; });
 
   /* ---------- map ----------
      Equirectangular projection onto a styled SVG canvas with a graticule.
@@ -208,7 +213,9 @@
             '<dl class="ukFacts ukFacts--stack">' +
               '<div><dt>Age</dt><dd>' + esc(c.age) + '</dd></div>' +
               '<div><dt>Split</dt><dd>' + esc(c.gender) + '</dd></div>' +
-              '<div><dt>Top locations</dt><dd>' + esc(c.tops) + '</dd></div>' +
+              '<div><dt>Top locations</dt><dd>' + String(c.tops || '').split(',').map(function (n) {
+                n = n.trim(); return (window.ukFlagFor ? window.ukFlagFor(n) : '') + esc(n);
+              }).join(', ') + '</dd></div>' +
               '<div><dt>Content style</dt><dd>' + esc(c.type) + '</dd></div>' +
             '</dl>' +
             '<p class="ukWhy">Compare this against your own guest profile. Fit beats follower count every time.</p>' +
@@ -222,6 +229,23 @@
               '<div><dt>Stays completed</dt><dd>' + c.stays + '</dd></div>' +
             '</dl></section>' +
           trackedFor(c) +
+
+          (c.collabTypes && c.collabTypes.length
+            ? '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Arrangements they will accept</h3></div>' +
+                '<p class="ukAsk">Stated by ' + esc(c.n.split(' ')[0]) + ', not assumed — reach out with one of these.</p>' +
+                '<ul class="ukChips">' + c.collabTypes.map(function (t) {
+                  /* A hosted stay carries no figure — the stay is the payment
+                     there. Anything else shows the real number the creator
+                     set, or says plainly it is on request rather than
+                     leaving a blank a hotel might read as free. */
+                  var money = t !== 'Hosted stay';
+                  var r = (c.rates || {})[t];
+                  return '<li class="ukChip2 is-key">' + esc(t) +
+                    (money ? '<em class="ukChip2_rate">' +
+                      (r || r === 0 ? '$' + esc(r) : 'rate on request') + '</em>' : '') +
+                    '</li>'; }).join('') + '</ul>' +
+              '</section>'
+            : '') +
 
           '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What they offer</h3></div>' +
             '<p class="ukAsk">Pick a shape now or decide together later.</p>' +
@@ -302,7 +326,7 @@
             '<h3 class="ukPanel_title">Where their audience is</h3>' +
             '<span class="ukCount">Top ' + countries.length + '</span></div>' +
             '<ul class="ukRank">' + countries.map(function (n, i) {
-              return '<li><span class="ukRank_n">' + esc(n) + '</span>' +
+              return '<li><span class="ukRank_n">' + (window.ukFlagFor ? window.ukFlagFor(n) : '') + esc(n) + '</span>' +
                 '<span class="ukRank_bar"><span style="width:' + shares[i] + '%"></span></span>' +
                 '<span class="ukRank_v">' + shares[i] + '%</span></li>';
             }).join('') + '</ul>' +
@@ -592,8 +616,12 @@
     return '<div class="ukPanel ukTableWrap"><table class="ukTable">' +
       '<thead><tr><th scope="col">Creator</th><th scope="col">Content type</th><th scope="col">Reach</th>' +
       '<th scope="col">Engagement</th><th scope="col">On time</th><th scope="col">Stays</th>' +
+      '<th scope="col">From</th>' +
       '<th scope="col">Available</th></tr></thead><tbody>' +
       list.map(function (c) {
+        var rateVals = Object.keys(c.rates || {}).map(function (k) { return c.rates[k]; })
+          .filter(function (v) { return v || v === 0; });
+        var fromRate = rateVals.length ? Math.min.apply(null, rateVals) : null;
         return '<tr data-creator="' + c.id + '" tabindex="0" role="button" aria-label="Open ' + esc(c.n) + '&rsquo;s profile">' +
           '<th scope="row"><span class="ukTable_who">' + img(c.img, c.n, 'ukAv') +
             '<span><span class="ukTable_n">' + esc(c.n) + '</span>' +
@@ -603,6 +631,7 @@
           '<td><strong>' + c.eng + '</strong></td>' +
           '<td>' + c.ontime + '%</td>' +
           '<td>' + c.stays + '</td>' +
+          '<td>' + (fromRate != null ? '$' + D.fmt(fromRate) : '—') + '</td>' +
           '<td>' + esc(c.free) + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
@@ -626,6 +655,9 @@
       '<div class="ukHybrid_side">' + list.map(function (c) {
         var av = V.availOf(c);
         var plats = (c.plats || []).filter(function (p) { return V.PLAT_MARK[p.k]; });
+        var rateVals = Object.keys(c.rates || {}).map(function (k) { return c.rates[k]; })
+          .filter(function (v) { return v || v === 0; });
+        var fromRate = rateVals.length ? Math.min.apply(null, rateVals) : null;
         return '<article class="ukMini' + (c.id === sel ? ' is-on' : '') + '" data-mappin="' + c.id + '" ' +
           'tabindex="0" role="button" aria-label="Highlight ' + esc(c.n) + '">' +
           '<span class="ukCrAv ukMini_av">' + img(c.img, c.n, '', false) +
@@ -633,9 +665,11 @@
           '</span>' +
           '<div class="ukMini_b">' +
             '<p class="ukMini_n">' + esc(c.n) +
-              (window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') + '</p>' +
+              (c.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
+              (c.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') + '</p>' +
             '<p class="ukMini_m">' + esc(c.loc) + '</p>' +
-            '<p class="ukMini_s">' + esc(c.eng) + ' engagement &middot; ' + c.stays + ' stays</p>' +
+            '<p class="ukMini_s">' + esc(c.eng) + ' engagement &middot; ' + c.stays + ' stays' +
+              (fromRate != null ? ' &middot; from $' + D.fmt(fromRate) : '') + '</p>' +
           '</div>' +
           '<span class="ukCrPlats ukMini_pl">' + plats.map(function (p) {
             return '<img class="ukCrPlat" src="' + V.PLAT_MARK[p.k] + '" alt="' + esc(p.n) +

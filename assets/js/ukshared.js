@@ -16,18 +16,16 @@ window.UKVOCAB = {
     'Reels', 'UGC video', 'Photos', 'B-roll', 'Stories',
     'Carousels', 'Drone & aerial', 'Long-form / YouTube'
   ],
-  /* Where they post. The onboarding offers all eight, so every filter that names
-     a platform has to be able to name all eight too. This list was written out
-     twice — once in the creator onboarding, once in the hotel views — and the two
-     copies could drift. One list now, each entry carrying its real brand mark. */
+  /* Where they post. Narrowed from eight to the four that actually carry UGC
+     travel content — Facebook, Snapchat, X and LinkedIn are gone. This list
+     was written out twice before — once in the creator onboarding, once in
+     the hotel views — and the two copies could drift. One list now, each
+     entry carrying its real brand mark, so a future change to this set only
+     happens in one place. */
   PLATFORMS: [
     { k:'ig', n:'Instagram', s:'/assets/img/brand/instagram.svg' },
     { k:'tt', n:'TikTok',    s:'/assets/img/brand/tiktok.svg' },
     { k:'yt', n:'YouTube',   s:'/assets/img/brand/youtube.svg' },
-    { k:'fb', n:'Facebook',  s:'/assets/img/brand/facebook.svg' },
-    { k:'sc', n:'Snapchat',  s:'/assets/img/brand/snapchat.svg' },
-    { k:'x',  n:'X',         s:'/assets/img/brand/x.svg' },
-    { k:'li', n:'LinkedIn',  s:'/assets/img/brand/linkedin.svg' },
     { k:'pi', n:'Pinterest', s:'/assets/img/brand/pinterest.svg' }
   ],
   /* a creator declares up to five of each; no entry ranks above another */
@@ -72,10 +70,16 @@ window.UKME = {
     { k:'ig', n:'Instagram', f:12400 },
     { k:'tt', n:'TikTok',    f:8600 },
     { k:'yt', n:'YouTube',   f:6400 },
-    { k:'fb', n:'Facebook',  f:3800 }
+    { k:'pi', n:'Pinterest', f:3800 }
   ],
   band: '5K - 25K',
   verified: false,
+  /* Earned by finishing every Academy lesson, not by paying for membership —
+     a separate credibility signal from `verified`, computed live wherever a
+     creator's own D.academy is read (ukcviews.js profile()) since lessons
+     complete over a session; this stored flag is what the OTHER app (which
+     never sees that live progress) reads instead. */
+  academyCert: false,
   /* what she has actually delivered — the hotel's roster reads these */
   stays: 6,
   ontime: 100,
@@ -103,6 +107,30 @@ window.UKME = {
     return this.plats.reduce(function (a, p) { return a + (p.f || 0); }, 0);
   }
 };
+
+/* The fields above are a LITERAL — same starting values because both apps
+   load the same file, not because they share a live object. /app/ and
+   /creator/ are separate pages; a plain `window.UKME.x = y` in one only
+   ever touches that page's own copy and is gone the moment it navigates or
+   reloads, which meant a creator's own edits (collab types, rates, Academy
+   badges) never actually reached a hotel that opened her profile fresh —
+   they looked shared right up until the hotel side's own page load proved
+   they were not. Same fix UKShared already uses two blocks down for a
+   collaboration: localStorage, same origin, read by both. Persists only
+   the fields a creator actually edits from her own side; everything else
+   stays the plain literal above. */
+(function () {
+  var KEY = 'uk_me_edits_v1';
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; } }
+  function save(all) { try { localStorage.setItem(KEY, JSON.stringify(all)); } catch (e) {} }
+  Object.assign(window.UKME, load());
+  window.UKME_SET = function (patch) {
+    Object.assign(window.UKME, patch);
+    var all = load();
+    Object.assign(all, patch);
+    save(all);
+  };
+})();
 
 /* Ukreate — the one shared truth for a collaboration that exists on both sides.
    Hotel (/app/) and creator (/creator/) are separate script/data worlds — but for
@@ -145,3 +173,28 @@ window.UKShared = (function () {
   }
   return { get: get, ensure: ensure, set: set, pushMsg: pushMsg };
 })();
+
+/* ---------------- flags ----------------
+   The country in a "City, Country" string, resolved to the flag both apps
+   already ship at /assets/img/flags/<cc>.svg (the full ISO set — every code
+   used below already exists on disk, nothing new to add). Was hand-copied
+   into the hotel side only, one entry short of what the data actually uses
+   (e.g. "Cape Town, South Africa" vs the creator side's own "Cape Town, SA"),
+   which is why a lookup by name has to carry both spellings of anything that
+   appears both ways. One map now, so a country used on one side is a country
+   both sides can flag. */
+window.UKCC = { Portugal:'pt', USA:'us', Mexico:'mx', Norway:'no', Japan:'jp',
+  India:'in', SA:'za', 'South Africa':'za', Italy:'it', Morocco:'ma', Spain:'es',
+  France:'fr', UK:'gb', Indonesia:'id', Florida:'us', UAE:'ae', Iceland:'is',
+  Greece:'gr', Australia:'au', Switzerland:'ch', Ghana:'gh', Germany:'de',
+  Austria:'at', Sweden:'se', Singapore:'sg', Brazil:'br', Canada:'ca',
+  'New Zealand':'nz' };
+window.ukFlagFor = function (loc) {
+  var cc = window.ukCCOf(loc);
+  return cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + cc + '.svg" alt="" ' +
+    'loading="lazy" decoding="async">' : '';
+};
+window.ukCCOf = function (loc) {
+  var country = String(loc || '').split(',').pop().trim();
+  return window.UKCC[country] || null;
+};

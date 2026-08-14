@@ -188,11 +188,17 @@ window.UKPLATCONNECT = (function () {
               platMark(p) + esc(p.n) + '</button>';
           }).join('') + '</div>'
         : '') +
-      (plats.length
-        ? '<p class="ukHint">' + fmt(total(st)) + ' across ' + plats.length +
-          (plats.length === 1 ? ' platform' : ' platforms') + '.</p>'
-        : '') +
       oauthModal(st.oauth);
+  }
+
+  /* The same reach line, for the footer rather than the body — the onboarding
+     nav row already reserves the space to the left of Continue/Finish for
+     exactly this kind of context, so it sits on that one line instead of as
+     its own paragraph pushed up against the button above it. */
+  function footNote(st) {
+    var plats = st.plats || [];
+    if (!plats.length) return '';
+    return fmt(total(st)) + ' across ' + plats.length + (plats.length === 1 ? ' platform' : ' platforms') + '.';
   }
 
   function total(st) {
@@ -252,6 +258,6 @@ window.UKPLATCONNECT = (function () {
     body: body, oauthModal: oauthModal, platRow: platRow, platMark: platMark,
     start: start, allow: allow, cancel: cancel, drop: drop, makeMain: makeMain,
     total: total, bandFor: bandFor, platforms: platforms, platOf: platOf, fmt: fmt,
-    work: work
+    work: work, footNote: footNote
   };
 })();

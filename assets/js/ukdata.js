@@ -6,6 +6,15 @@ window.UK = (function () {
   var IMG = '/assets/img/';
   var AV  = IMG + 'fc/av/';
 
+  /* One vocabulary, read by both apps — the creator side declares which of
+     these they accept (ukcdata2.js), this side offers one when creating a
+     stay/campaign, and an invitation carries whichever was chosen. Same
+     three strings on both, so a match is a string compare, not a mapping.
+     A fourth, "Custom", existed briefly but implied a negotiation feature
+     that was never built — an arrangement nobody can actually act on is
+     worse than not offering it. */
+  var COLLAB_TYPES = ['Hosted stay', 'Hosted stay + creative fee', 'Paid campaign'];
+
   /* The real lifecycle after the inquiry decision.
      Inquiry is the only pre-approval stage; once a hotel approves, the collab moves
      into Onboarding with finalised dates, the edited brief, and the guest guide. */
@@ -66,15 +75,19 @@ window.UK = (function () {
        fills this row from it. Anything left here is hotel-side only. */
     { id:'c1', img:AV+'av-01.jpg', free:'From 12 Mar' },
     { id:'c2', lat:25.76, lng:-80.19, langs:'English, Spanish', plats:[{k:'tt',n:'TikTok',f:61000},{k:'yt',n:'YouTube',f:25400}], age:'18-24 (44%)', gender:'55% women', tops:'USA, Canada, Mexico', reach:'22K per post', resp:'within 2 hours', worked:[{h:'Palms Dania Beach',out:'2 videos, 10 photos'},{h:'Bondi Sands Hotel',out:'4 videos'}], been:[{n:'Miami',lat:25.76,lng:-80.19},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Sydney',lat:-33.87,lng:151.21}], n:'Kelvis Carter',  h:'@kelvisc',      loc:'Miami, USA',        img:AV+'av-02.jpg',
-      f:86400,  p:['tt','yt'], type:'Hotel & resort UGC', stays:41, ontime:98, eng:'5.1%', rating:4.7,
+      f:86400,  p:['tt','yt'], type:'Hotel & resort UGC', stays:41, ontime:98, eng:'5.1%', rating:4.7, vetted:true, academyCert:true,
+      academyModules:['Start here', 'Pitching', 'On the stay'],
       free:'Available now', bio:'High-volume UGC. Fast turnaround, raw files always included.',
       proof:'41 hosted stays delivered. Fastest average turnaround on the network at 5 days.' },
     { id:'c3', lat:19.43, lng:-99.13, langs:'Spanish, English', plats:[{k:'ig',n:'Instagram',f:54200}], age:'25-34 (49%)', gender:'52% men', tops:'Mexico, USA, Spain', reach:'19K per post', resp:'within a day', worked:[{h:'Casa Azul Tulum',out:'2 videos, 14 photos'}], been:[{n:'Mexico City',lat:19.43,lng:-99.13},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Lisbon',lat:38.72,lng:-9.14}], n:'Cesar Delgado',  h:'@cesargoes',    loc:'Mexico City, Mexico', img:AV+'av-03.jpg',
       f:54200,  p:['ig'], type:'Food & beverage', stays:17, ontime:94, eng:'7.2%', rating:4.8,
+      collabTypes:['Hosted stay', 'Paid campaign'], rates:{ 'Paid campaign':450 },
       free:'From 04 Apr', bio:'Restaurant and bar content for resorts. Former line cook.',
       proof:'Highest engagement rate on the network. Restaurant covers consistently outperform.' },
     { id:'c4', lat:34.05, lng:-118.24, langs:'English', plats:[{k:'yt',n:'YouTube',f:186000},{k:'ig',n:'Instagram',f:84000},{k:'tt',n:'TikTok',f:42000}], age:'25-34 (51%)', gender:'58% men', tops:'USA, UK, Australia', reach:'118K per post', resp:'within a day', worked:[{h:'Alyeska Resort',out:'1 long-form video'},{h:'Fjordheim Lodge',out:'2 videos, 6 photos'}], been:[{n:'Los Angeles',lat:34.05,lng:-118.24},{n:'Girdwood',lat:60.95,lng:-149.16},{n:'Alesund',lat:62.47,lng:6.15},{n:'Queenstown',lat:-45.03,lng:168.66}], n:'Brooklyn Reyes', h:'@brooklynr',    loc:'Los Angeles, USA',  img:AV+'av-04.jpg',
       f:312000, p:['ig','tt','yt'], type:'Travel & adventure', stays:8, ontime:100, eng:'4.4%', rating:5.0,
+      collabTypes:['Hosted stay + creative fee', 'Paid campaign'],
+      rates:{ 'Hosted stay + creative fee':500, 'Paid campaign':1200 },
       free:'From 20 May', bio:'Long-form YouTube plus shorts. Averages 400k views per property feature.',
       proof:'Every stay delivered on time. Largest reach of any creator you can host this quarter.' },
     { id:'c5', lat:59.91, lng:10.75, langs:'Norwegian, English', plats:[{k:'ig',n:'Instagram',f:28800},{k:'yt',n:'YouTube',f:13000}], age:'25-34 (61%)', gender:'74% women', tops:'Norway, Sweden, Germany', reach:'14K per post', resp:'within 6 hours', worked:[{h:'Fjordheim Lodge',out:'1 video, 12 photos'}], been:[{n:'Oslo',lat:59.91,lng:10.75},{n:'Alesund',lat:62.47,lng:6.15},{n:'Zermatt',lat:46.02,lng:7.75}], n:'Nadia Halvorsen',h:'@nadiah',       loc:'Oslo, Norway',      img:AV+'av-05.jpg',
@@ -123,7 +136,10 @@ window.UK = (function () {
     c.reach = M.reach; c.resp = M.resp;
     c.age = M.age; c.gender = M.gender; c.tops = M.tops;
     c.been = (M.been || []).slice(); c.worked = (M.worked || []).slice();
-    c.proof = M.proof; c.vetted = M.verified;
+    c.proof = M.proof; c.vetted = M.verified; c.academyCert = M.academyCert || false;
+    c.academyModules = (M.academyModules || []).slice();
+    c.collabTypes = (M.collabTypes || []).slice();
+    c.rates = Object.assign({}, M.rates || {});
     c.lat = (M.been && M.been[0] && M.been[0].lat); c.lng = (M.been && M.been[0] && M.been[0].lng);
   })();
 
@@ -141,7 +157,7 @@ window.UK = (function () {
   var packages = [
     { id:'starter', n:'Starter', rec:false,
       tag:'Testing the water',
-      nights:'1', inc:'Room and breakfast', reach:'10K-50K',
+      nights:'1', inc:'Room and breakfast', reach:'~10K-50K',
       del:{ 'UGC video':1 },
       why:'One short stay, one video. The smallest useful trade, and the easiest to say yes to.' },
     { id:'standard', n:'Standard', rec:true,
@@ -153,32 +169,38 @@ window.UK = (function () {
       tag:'A bigger moment',
       nights:'3', inc:'Room, all meals, one experience', reach:'100K+',
       del:{ 'UGC video':2, 'Photos':6, 'Reels':2 },
-      why:'For a relaunch or a season opening, with a higher-reach creator and enough nights to shoot properly.' }
+      why:'For a relaunch or a season opening, with a higher-reach creator and enough nights to shoot properly.' },
+    { id:'bookings', n:'Direct bookings', rec:false,
+      tag:'Drive direct bookings using creator content',
+      nights:'2', inc:'Room, breakfast', reach:'25K-100K',
+      del:{ 'UGC video':1, 'Photos':4, 'Reels':1 },
+      why:'Built for the booking page and paid ads: a video, enough photos to refresh the gallery, and a reel ' +
+        'that can run as one, all yours to reuse everywhere a guest is deciding.' }
   ];
 
   /* Hosted stays. The offer is the trade, never a cash amount. */
   var stays = [
     { id:'s1', t:'Spa season, midweek', img:IMG+'hero_bg_room.jpg',
-      nights:3, capacity:3, rooms:'Garden suite', inc:'Room, breakfast, one spa treatment',
-      from:'04 Mar 2027', to:'07 Mar 2027', status:'live', apps:5, reach:'25K-100K',
+      nights:3, capacity:3, guests:1, rooms:'Garden suite', inc:'Room, breakfast, one spa treatment',
+      from:'04 Mar 2027', to:'07 Mar 2027', status:'live', apps:5, reach:'25K-100K', score:8,
       type:'Wellness & spa',
       del:[{t:'UGC video',q:1},{t:'Photos',q:3}],
       rights:'Yours in perpetuity, all channels' },
     { id:'s2', t:'Quiet weeks in April', img:IMG+'hero_bg_lobby.webp',
-      nights:2, capacity:2, rooms:'Standard king', inc:'Room and breakfast',
-      from:'12 Apr 2027', to:'14 Apr 2027', status:'live', apps:3, reach:'10K-50K',
+      nights:2, capacity:2, guests:2, rooms:'Standard king', inc:'Room and breakfast',
+      from:'12 Apr 2027', to:'14 Apr 2027', status:'live', apps:3, reach:'~10K-50K', score:6,
       type:'Boutique & budget',
       del:[{t:'UGC video',q:1},{t:'Photos',q:5}],
       rights:'Yours in perpetuity, all channels' },
     { id:'s3', t:'Restaurant relaunch', img:IMG+'hero_bg_indoor.webp',
-      nights:2, capacity:4, rooms:'Deluxe double', inc:'Room, tasting menu for two',
-      from:'20 May 2027', to:'22 May 2027', status:'draft', apps:0, reach:'50K-250K',
+      nights:2, capacity:4, guests:2, rooms:'Deluxe double', inc:'Room, tasting menu for two',
+      from:'20 May 2027', to:'22 May 2027', status:'draft', apps:0, reach:'50K-250K', score:9,
       type:'Food & beverage',
       del:[{t:'UGC video',q:2},{t:'Photos',q:6}],
       rights:'Yours in perpetuity, all channels' },
     { id:'s4', t:'Summer poolside', img:IMG+'hero_bg_outdoor.webp',
-      nights:4, capacity:2, rooms:'Poolside cabana', inc:'Room, all meals, activities',
-      from:'02 Jul 2026', to:'06 Jul 2026', status:'closed', apps:11, reach:'100K+',
+      nights:4, capacity:2, guests:3, rooms:'Poolside cabana', inc:'Room, all meals, activities',
+      from:'02 Jul 2026', to:'06 Jul 2026', status:'closed', apps:11, reach:'100K+', score:7,
       type:'Travel & adventure',
       del:[{t:'UGC video',q:2},{t:'Photos',q:8}],
       rights:'Yours in perpetuity, all channels' }
@@ -221,7 +243,7 @@ window.UK = (function () {
       brief:{ title:'Poolside summer', deliverables:'2 UGC videos, 8 photos', deadline:'2026-07-10',
               notes:'Poolside by day, terrace at sunset, property hero shots.' },
       creatingStarted:true,
-      assets:['a5','a6'], contentStatus:'approved',
+      assets:['a5','a6'], contentStatus:'published',
       msgs:[{by:'me',at:'7 weeks ago',tx:'Content approved and downloaded. Thank you, this was one of our strongest sets this year.'},
             {by:'them',at:'6 weeks ago',tx:'Thank you. I would happily come back for the winter season.'}] },
     { id:'x7', who:'c1', stay:'s1', stage:3, unread:3, when:'6 hours ago',
@@ -327,7 +349,7 @@ window.UK = (function () {
           tx:'Shared the guest guide for ' + c.guide.prop + '.', guide:c.guide });
       }
     }
-    if (c.stage >= 4) c.contentStatus = 'approved';
+    if (c.stage >= 4) c.contentStatus = 'published';
     return c;
   }
   collabs.forEach(ensureLifecycle);
@@ -353,7 +375,7 @@ window.UK = (function () {
     c.briefSent = rec.briefSent != null ? !!rec.briefSent : c.stage >= 1;
     c.brief = hasBriefData(rec.brief) ? rec.brief : packageBrief(c);
     c.creatingStarted = !!rec.creatingStarted;
-    c.contentStatus = rec.contentStatus || (c.stage === 4 ? 'approved' : null);
+    c.contentStatus = rec.contentStatus || (c.stage === 4 ? 'published' : null);
     c.guideSent = rec.guideSent != null ? !!rec.guideSent : !!seedGuide;
     c.guide = rec.guide || seedGuide;
     if (rec.assets) c.assets = rec.assets;
@@ -404,7 +426,10 @@ window.UK = (function () {
     if (c.stage === 0) return 'Approve or pass';
     if (c.stage === 1) return 'Package sent';
     if (c.stage === 2) return c.creatingStarted ? 'Shooting under way' : 'Shoot not started';
-    if (c.stage === 3) return c.contentStatus === 'changesRequested' ? 'Changes requested' : 'Content just landed';
+    if (c.stage === 3) {
+      return c.contentStatus === 'changesRequested' ? 'Changes requested' :
+        c.contentStatus === 'approved' ? 'Approved — waiting on them to publish' : 'Content just landed';
+    }
     return 'All wrapped up';
   }
   /* Every collaboration gets one tracking link for its whole run. If a live
@@ -567,11 +592,10 @@ window.UK = (function () {
     var f = 18000 + (i * 14300) % 260000;
     /* Everyone is somewhere; a minority also post on a fourth channel, which is
        what the onboarding actually allows. The roster has to contain those people
-       or the platform filter has options that can never return anybody. */
-    var EXTRA = [
-      { k:'fb', n:'Facebook'  }, { k:'sc', n:'Snapchat' },
-      { k:'pi', n:'Pinterest' }, { k:'x',  n:'X'        }, { k:'li', n:'LinkedIn' }
-    ];
+       or the platform filter has options that can never return anybody. Only
+       Pinterest is left outside the base three now that the platform list has
+       been narrowed to four. */
+    var EXTRA = [{ k:'pi', n:'Pinterest' }];
     var plats = [
       { k:'ig', n:'Instagram', f: Math.round(f * 0.58) },
       { k:'tt', n:'TikTok',    f: Math.round(f * 0.27) },
@@ -638,11 +662,17 @@ window.UK = (function () {
     var nights = 2 + (i % 4);
     stays.push({
       id:id, t:row[0], img:GEN_IMGS[i % GEN_IMGS.length],
-      nights:nights, capacity: 2 + (i % 4), rooms:row[1], inc:row[2],
+      nights:nights, capacity: 2 + (i % 4), guests: 1 + (i % 3), rooms:row[1], inc:row[2],
       from: String(d1).padStart(2,'0') + ' ' + m + ' 2027',
       to:   String(d1 + nights).padStart(2,'0') + ' ' + m + ' 2027',
       status: i % 5 === 4 ? 'draft' : (i % 7 === 6 ? 'closed' : 'live'),
-      apps: (i * 4) % 13, reach:['10K-50K','25K-100K','50K-250K','100K+'][i % 4],
+      apps: (i * 4) % 13, reach:['~10K-50K','25K-100K','50K-250K','100K+'][i % 4],
+      /* Left unset before, which meant every one of these fell through to
+         toCreator()'s flat score:8 fallback — sixteen listings from the same
+         property, all reading identically on a creator's Stays tab. A
+         different modulus from reach's own i%4 cycle, so the two vary
+         independently rather than moving in lockstep. */
+      score: 5 + ((i * 3) % 5),
       type:'Wellness & spa',
       del:[{ t:'UGC video', q:1 + (i % 2) }, { t:'Photos', q:3 + (i % 5) }],
       rights:'Yours in perpetuity, all channels'
@@ -666,7 +696,7 @@ window.UK = (function () {
       unread: stage === 0 ? (i % 3) : 0,
       when: ['2 days ago','yesterday','6 hours ago','last week','3 days ago'][i % 5],
       creatingStarted: stage >= 2,
-      contentStatus: stage === 4 ? 'approved' : (stage === 3 && i % 5 === 0 ? 'changesRequested' : null),
+      contentStatus: stage === 4 ? 'published' : (stage === 3 && i % 5 === 0 ? 'changesRequested' : null),
       assets: stage >= 3 ? ['a1','a2','a3'].slice(0, 2 + (i % 2)) : null,
       msgs: [{ by:'them', at:['2 days ago','yesterday','6 hours ago'][i % 3], tx: GEN_MSG[i % GEN_MSG.length] }]
     });
@@ -983,10 +1013,13 @@ window.UK = (function () {
     return t;
   }
 
-  /* Approving is the moment ownership becomes true: the collaboration completes
-     and its assets enter the library. Nothing else moves them there. This is the
-     one approve-and-keep path — the shared record just rides along with it, it
-     never gets its own separate copy of what "approved" means. */
+  /* Approving is the moment ownership becomes true — the files are the hotel's,
+     in perpetuity, from here on. It is NOT the moment the collaboration
+     completes any more: reviewing something that is already public would be
+     meaningless, so review happens on hosted-not-yet-public content, and the
+     stage only reaches Complete once the creator has actually published it
+     (see markPublished in ukcdata.js). Ownership transfer and stage completion
+     used to be the same line; they are two different real events now. */
   function approve(collabId, today) {
     var c = collabs.filter(function (x) { return x.id === collabId; })[0];
     if (!c || !c.assets) return 0;
@@ -994,11 +1027,10 @@ window.UK = (function () {
       var a = byId(assets, id);
       if (a && !a.owned) { a.owned = true; a.on = today || 'Today'; }
     });
-    c.stage = 4;
     c.unread = 0;
     c.approvedNow = true;
     c.contentStatus = 'approved';
-    if (c.link) pushSharedPatch(c, { stage:'complete', contentStatus:'approved', approvedNow:true });
+    if (c.link) pushSharedPatch(c, { stage:'content', contentStatus:'approved', approvedNow:true });
     return c.assets.length;
   }
 
@@ -1114,7 +1146,7 @@ window.UK = (function () {
   if (window.UKONBOARD) window.UKONBOARD.apply('hotel');
 
   return {
-    STAGES: STAGES, creators: creators, stays: stays, collabs: collabs, packages: packages,
+    STAGES: STAGES, COLLAB_TYPES: COLLAB_TYPES, creators: creators, stays: stays, collabs: collabs, packages: packages,
     attribution: attribution, COMMISSION: COMMISSION, money: money, roiTotals: roiTotals,
     creatorPacks: creatorPacks, trend: trend, contentPerf: contentPerf,
     ROLES: ROLES, team: team, addMember: addMember,

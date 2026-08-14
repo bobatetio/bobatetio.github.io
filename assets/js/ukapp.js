@@ -346,7 +346,7 @@
   var crMap = null, crMapHost = null, crMapKey = null;
   function mountCrMap() {
     var slot = q('[data-crmap]');
-    if (!slot || !window.UKDOTMAP) return;
+    if (!slot || !window.UKWORLDMAP) return;
     if (!crMapHost) {
       crMapHost = document.createElement('div');
       crMapHost.className = 'ukMap';
@@ -357,7 +357,7 @@
     var pts = [];
     try { pts = JSON.parse(slot.getAttribute('data-crmap') || '[]'); } catch (e) { pts = []; }
 
-    if (!crMap) crMap = window.UKDOTMAP.mount(crMapHost, { lat: 20, lng: 0, zoom: FIT });
+    if (!crMap) crMap = window.UKWORLDMAP.mount(crMapHost, { lat: 0, lng: 0, zoom: FIT });
     else if (crMap.resume) crMap.resume();
     if (!crMap) return;
 
@@ -366,13 +366,11 @@
     var key = pts.map(function (p) { return p.id; }).join(',');
     if (key !== crMapKey) { if (crMap.pins) crMap.pins(pts); crMapKey = key; }
 
-    /* pins() re-frames and will zoom in to fit its markers, which is what pushed
-       the sphere out of the box; hold it at the fitting zoom and rotate instead */
+    /* a single selected creator gets a close, comfortable zoom on just them;
+       with nobody picked the frame fits the whole roster as tight as it can
+       without pushing anyone out of it */
     var sel = pts.filter(function (p) { return p.on; })[0];
-    if (crMap.to) {
-      if (sel) crMap.to(sel.lat, sel.lng, FIT);
-      else crMap.to(20, 0, FIT);
-    }
+    if (crMap.fit) crMap.fit(sel ? [sel] : pts);
   }
 
   /* The photo uploader from the property onboarding, same behaviour and the same
@@ -446,7 +444,7 @@
   var pMap = null, pMapHost = null, pMapKey = null;
   function mountProfMap() {
     var slot = q('[data-profmap]');
-    if (!slot || !window.UKDOTMAP) return;
+    if (!slot || !window.UKWORLDMAP) return;
     if (!pMapHost) {
       pMapHost = document.createElement('div');
       pMapHost.className = 'ukMap';
@@ -455,12 +453,14 @@
     if (pMapHost.parentNode !== slot) slot.appendChild(pMapHost);
     var pts = [];
     try { pts = JSON.parse(slot.getAttribute('data-profmap') || '[]'); } catch (e) { pts = []; }
-    if (!pMap) pMap = window.UKDOTMAP.mount(pMapHost, { lat: 20, lng: 0, zoom: FIT });
+    if (!pMap) pMap = window.UKWORLDMAP.mount(pMapHost, { lat: 0, lng: 0, zoom: FIT });
     else if (pMap.resume) pMap.resume();
     if (!pMap) return;
     var key = pts.map(function (x) { return x.id; }).join(',');
-    if (key !== pMapKey) { if (pMap.pins) pMap.pins(pts); pMapKey = key; }
-    if (pMap.to && pts[0]) pMap.to(pts[0].lat, pts[0].lng, FIT);
+    /* the one map with a real home-to-destinations story — everywhere else
+       pins() runs with no second argument, which means no arcs */
+    if (key !== pMapKey) { if (pMap.pins) pMap.pins(pts, { arcs: true }); pMapKey = key; }
+    if (pMap.fit && pts.length) pMap.fit(pts);
   }
 
   function paintView(keepScroll) {
@@ -525,7 +525,7 @@
      and drops the one pin a hotel actually has. */
   function mountHireMap() {
     var slot = q('[data-hiremap]');
-    if (!slot || !window.UKDOTMAP) return;
+    if (!slot || !window.UKWORLDMAP) return;
     if (!hireMapHost) {
       hireMapHost = document.createElement('div');
       hireMapHost.className = 'ukMap';
@@ -540,9 +540,9 @@
                    : (UK.placeOf ? UK.placeOf(brief.dest) : null);
 
     if (!hireMap) {
-      hireMap = window.UKDOTMAP.mount(hireMapHost, place
+      hireMap = window.UKWORLDMAP.mount(hireMapHost, place
         ? { lat: place.lat, lng: place.lng, zoom: FIT }
-        : { lat: 25, lng: -60, zoom: FIT });
+        : { lat: 0, lng: 0, zoom: FIT });
     } else if (hireMap.resume) {
       hireMap.resume();
     }
@@ -552,7 +552,7 @@
        sitting under a different city's name. */
     if (place) {
       if (hireMap.pins) hireMap.pins([{ lat: place.lat, lng: place.lng, name: place.n, cc: place.cc || null }]);
-      if (hireMap.to && hireMapAt !== place.n) hireMap.to(place.lat, place.lng, FIT);
+      if (hireMap.fit && hireMapAt !== place.n) hireMap.fit([{ lat: place.lat, lng: place.lng }]);
       hireMapAt = place.n;
     } else {
       if (hireMap.pins) hireMap.pins([]);
@@ -957,7 +957,8 @@
       var hint = root.querySelector('#ukInviteHint');
       if (!pick) { if (hint) hint.textContent = 'Pick which stay you are inviting them to first.'; return; }
       var stay = UK.stay(pick.value);
-      window.UKINVITE.invite(pick.value, [el.dataset.inviteSend], stay.capacity || 1);
+      window.UKINVITE.invite(pick.value, [el.dataset.inviteSend], stay.capacity || 1, null,
+        { collabType: stay.collabType || 'Hosted stay', fee: stay.fee || null });
       st().inviteFor = null;
       return repaint();
     }
@@ -975,7 +976,13 @@
       var h2 = root.querySelector('#ukInviteHint');
       if (!ids.length) { if (h2) h2.textContent = 'Pick at least one creator to invite.'; return; }
       var st2 = UK.stay(el.dataset.invitestaySend);
-      window.UKINVITE.invite(st2.id, ids, st2.capacity || 1);
+      var briefNotes = (root.querySelector('#ukInviteBriefNotes') || {}).value || '';
+      var briefLink = (root.querySelector('#ukInviteBriefLink') || {}).value || '';
+      var briefFile = (root.querySelector('#ukInviteBriefFile') || {}).files;
+      window.UKINVITE.invite(st2.id, ids, st2.capacity || 1, {
+        notes: briefNotes.trim(), link: briefLink.trim(),
+        file: briefFile && briefFile[0] ? briefFile[0].name : ''
+      });
       st().inviteStay = null; st().invitePick = {};
       return repaint();
     }
@@ -1047,6 +1054,13 @@
       var cur = parseInt(fn.nights, 10);
       if (isNaN(cur)) cur = 0;
       fn.nights = String(Math.max(0, Math.min(14, cur + Number(el.dataset.nights))));
+      return paintView(true);
+    }
+    if ((el = e.target.closest('[data-guests]'))) {
+      var fg = st().form || (st().form = { del:{} });
+      var curG = parseInt(fg.guests, 10);
+      if (isNaN(curG)) curG = 1;
+      fg.guests = Math.max(1, Math.min(6, curG + Number(el.dataset.guests)));
       return paintView(true);
     }
     if (e.target.closest('[data-notify-toggle]')) {
@@ -1161,6 +1175,7 @@
         img: shots[0] || D.property.img,
         nights: nights,
         capacity: pf.capacity || 1,
+        guests: pf.guests || 1,
         rooms: pf.type || D.property.cat || 'Room',
         incList: pf.incList || [],
         inc: pf.inc || '',
@@ -1170,15 +1185,20 @@
         type: pf.shoots || D.property.cat || '',
         brief: pf.brief || '', guide: pf.guide || '',
         visibility: pf.visibility === 'private' ? 'private' : 'public',
-        invited: pf.invited || []
+        invited: pf.invited || [],
+        collabType: pf.collabType || 'Hosted stay',
+        fee: pf.fee ? Number(pf.fee) : null
       });
 
       if (published) {
         D.addStay(window.UKSTAYS.toHotel(published));
         /* a private stay IS an invitation: the creators it names are the only
-           ones who will ever see it, so they are invited to it by definition */
+           ones who will ever see it, so they are invited to it by definition —
+           the arrangement travels with it, so an invite never reads as a plain
+           hosted stay when real money is actually on the table */
         if (published.visibility === 'private' && window.UKINVITE) {
-          window.UKINVITE.invite(published.id, published.invited, published.capacity);
+          window.UKINVITE.invite(published.id, published.invited, published.capacity, null,
+            { collabType: published.collabType, fee: published.fee });
         }
       }
       st().publish = 'done';
@@ -1340,6 +1360,7 @@
     }
     if ((el = e.target.closest('[data-thread]')) && !e.target.closest('[data-cardact]')) { s2.thread = el.dataset.thread; s2.composerMode = null; s2.modalOpen = null; return paintView(); }
     if ((el = e.target.closest('[data-cardact] [data-thread]'))) { s2.thread = el.dataset.thread; s2.composerMode = null; s2.modalOpen = null; return paintView(); }
+    if (e.target.closest('[data-focus-toggle]'))  { s2.focus = !s2.focus; return paintView(true); }
     if (e.target.closest('[data-back]'))          { s2.thread = null; s2.creator = null; s2.composerMode = null; s2.modalOpen = null; return paintView(); }
     /* a crumb always lands on that page's top level, so clicking "Collaborations"
        while a thread is open closes the thread rather than being a no-op */
@@ -1398,7 +1419,8 @@
       if (el.dataset.pkg === 'blank') {
         s2.form = { pkg:'blank', nights:'', inc:'', incList:[], reach:'', photos:[],
                     guide:{}, brief:'', visibility:'public', invited:[],
-                    type:(s2.form && s2.form.type) || UK.property.cat, del:{}, date:'' };
+                    type:(s2.form && s2.form.type) || UK.property.cat, del:{}, date:'',
+                    guests:(s2.form && s2.form.guests) || 1 };
         return repaint();
       }
       var pk = UK.packages.filter(function (x) { return x.id === el.dataset.pkg; })[0];
@@ -1406,7 +1428,8 @@
       s2.form = { pkg:pk.id, nights:pk.nights, inc:pk.inc,
                  incList:String(pk.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean),
                  reach:pk.reach, photos:(s2.form && s2.form.photos) || [],
-                 type:(s2.form && s2.form.type) || UK.property.cat, del:Object.assign({}, pk.del), date:'' };
+                 type:(s2.form && s2.form.type) || UK.property.cat, del:Object.assign({}, pk.del), date:'',
+                 guests:(s2.form && s2.form.guests) || 1 };
       return repaint();
     }
     if ((el = e.target.closest('[data-pick]'))) {

@@ -52,6 +52,7 @@ window.UKCP = (function () {
      threw away anything you had changed — which you could not do anyway. */
   var drafts = {};
   var openId = null;          /* the stay being written to, if any */
+  var openWasLead = false;    /* which page to return to when the composer closes */
   var openKind = 'first';     /* 'first' letter or 'nudge' follow-up */
 
   /* ================= how long ago =================
@@ -216,7 +217,30 @@ window.UKCP = (function () {
     { k:'short',  t:'Short' },
     { k:'story',  t:'Story' }
   ];
+  /* Outreach: a hotel with no campaign on Ukreate at all, so there is no
+     agreed nights/deliverables to reference — the letter proposes a hosted
+     stay rather than restating terms that do not exist yet. */
+  function leadLetter(s, tone) {
+    var niche = String(D.me.niche).toLowerCase();
+    if (tone === 'short') {
+      return 'Hi ' + s.hotel + ' team,\n\nQuick one. I am a travel creator shooting ' + niche +
+        ', and I would like to propose a hosted stay in exchange for content you keep and post on ' +
+        'your own channels.\n\nWorth a short reply?\n\n' + D.me.n + '\n' + D.me.h;
+    }
+    if (tone === 'story') {
+      return 'Hi,\n\nI have been putting together a series on ' + String(s.city).split(',')[0] +
+        ', and ' + s.hotel + ' keeps coming up.\n\nI would love to come and make it: a hosted stay, ' +
+        'and the work is yours to keep and use on your own channels.\n\n' + D.me.n + '\n' + D.me.h;
+    }
+    return 'Hi ' + s.hotel + ' team,\n\n' +
+      'I am a travel creator shooting ' + niche + ', and ' + s.hotel + ' has been on my list for a while.\n\n' +
+      'I would like to propose a hosted stay: a few nights in exchange for content you keep and post on ' +
+      'your own channels, however you like.\n\n' +
+      'I shoot, edit and deliver on my own, within ten days of checking out. Happy to send recent work if it is useful.\n\n' +
+      'Would this be worth a short conversation?\n\n' + D.me.n + '\n' + D.me.h;
+  }
   function letterFor(s, p, kind, tone) {
+    if (s.isLead) return leadLetter(s, tone);
     if (kind === 'nudge') return nudgeLetter(s, p);
     if (tone === 'short') {
       return 'Hi ' + s.hotel + ' team,\n\nQuick one. I am a travel creator shooting ' +
@@ -243,13 +267,6 @@ window.UKCP = (function () {
       out[l.id] = list.filter(function (r) { return r.state === l.id; }).length;
     });
     return out;
-  }
-  /* Has anything happened yet? The rail does not exist until it would hold
-     something: a creator who has sent nothing should meet a page of stays, not
-     four empty lanes explaining a pipeline they have not started. */
-  function started() {
-    var c = counts();
-    return (c.waiting + c.replied + c.booked) > 0;
   }
   /* The stays not yet pitched, which is what the browse lane shows. */
   function unpitched() {
@@ -282,7 +299,11 @@ window.UKCP = (function () {
                       counts());
   }
   function writing() { return openId; }
-  function write(id, kind) { openId = id; openKind = kind || 'first'; }
+  function write(id, kind) {
+    openId = id; openKind = kind || 'first';
+    var s = D.stay(id);
+    openWasLead = !!(s && s.isLead);
+  }
   function close() { openId = null; }
 
   /* ---- the only thing above the list that is not the list ----
@@ -322,17 +343,6 @@ window.UKCP = (function () {
       }).join('') + '</div>';
   }
 
-  function lanes(lane, counts) {
-    return '<div class="ukFilters ukFilters--tabs ukPLanes" role="tablist" aria-label="Where your pitches stand">' +
-      LANES.map(function (l) {
-        var on = l.id === lane;
-        return '<button class="ukFilter' + (on ? ' is-on' : '') + '" type="button" role="tab" ' +
-          'aria-selected="' + on + '" data-lane="' + l.id + '">' +
-          '<span class="ukFilter_lb">' + l.t + '</span>' +
-          (counts[l.id] ? '<span class="ukFilter_ct">' + counts[l.id] + '</span>' : '') + '</button>';
-      }).join('') + '</div>';
-  }
-
   /* ---- a row, not a card ----
      Twenty-two cards is a wall. A row is scannable, and the thing that matters
      on it — what you do next — sits in the same place on every one. */
@@ -357,13 +367,13 @@ window.UKCP = (function () {
             : s
               ? '<span class="ukPL_wait">' + r.days + ' days out</span>'
               : '<div class="ukPL_set">' +
-                  '<button class="ukGhost ukGhost--sm" type="button" data-setst="' + esc(p.id) + '|Responded">They replied</button>' +
-                  '<button class="ukGhost ukGhost--sm" type="button" data-setst="' + esc(p.id) + '|Passed">They passed</button>' +
+                  '<button class="ukGhost ukPL_go" type="button" data-setst="' + esc(p.id) + '|Responded">They replied</button>' +
+                  '<button class="ukGhost ukPL_go" type="button" data-setst="' + esc(p.id) + '|Passed">They passed</button>' +
                 '</div>')
       : lane === 'replied'
         ? '<div class="ukPL_set">' +
             '<button class="ukBtn ukPL_go" type="button" data-setst="' + esc(p.id) + '|Booked">It is booked</button>' +
-            '<button class="ukGhost ukGhost--sm" type="button" data-setst="' + esc(p.id) + '|Passed">They passed</button>' +
+            '<button class="ukGhost ukPL_go" type="button" data-setst="' + esc(p.id) + '|Passed">They passed</button>' +
           '</div>'
         /* Booked is not a state this page owns. The moment a hotel says yes the
          relationship stops being a pitch and becomes a collaboration, which
@@ -386,18 +396,19 @@ window.UKCP = (function () {
         (r.state === 'waiting' ? ' · no reply yet' : '') +
         (p.note && String(p.note).length <= 60 ? ' · ' + esc(p.note) : '');
 
+    var propImg = s ? s.img : (r.from ? r.from.img : null);
     return '<li class="ukPL_i' + (r.due ? ' is-due' : '') + '">' +
-      /* A pitch made to a property with nothing published has no photograph to
-         show, and four empty grey squares in a column read as a loading state
-         that never finishes. The initial is not decoration: it is the only
-         thing about the hotel we actually hold. */
-      (s ? UKCV.pic(s.img, name, '1x1', 'ukM--sm')
+      /* A pitch made to a property with nothing published, and with no other
+         stay of theirs to borrow a photo from, has no photograph to show —
+         four empty grey squares in a column reads as a loading state that
+         never finishes, so the initial stands in for those only. */
+      (propImg ? UKCV.pic(propImg, name, '4x3', 'ukM--row')
          : '<span class="ukPL_ph" aria-hidden="true">' +
            esc(String(name || '?').trim().charAt(0).toUpperCase()) + '</span>') +
       '<span class="ukPL_b">' +
         '<span class="ukPL_top">' +
           '<span class="ukPL_n">' + esc(name) + '</span>' +
-          (place ? '<span class="ukPL_c">' + esc(place) + '</span>' : '') +
+          (place ? '<span class="ukPL_c">' + window.ukFlagFor(place) + esc(place) + '</span>' : '') +
           (lane === 'to' && s ? '<span class="ukPL_fit">' + D.scoreFor(s) + '/10 fit</span>' : '') +
           (r.due ? '<span class="ukTag ukTag--wait">Due a nudge</span>' : '') +
         '</span>' +
@@ -452,7 +463,8 @@ window.UKCP = (function () {
     var nudge = kind === 'nudge' && !!p;
     var goes = (D.me.work || []).slice(0, 3);
 
-    return '<button class="ukBack" type="button" data-writeclose>&larr; Back to stays</button>' +
+    return '<button class="ukBack" type="button" data-writeclose>&larr; Back to ' +
+      (s.isLead ? 'outreach' : 'stays') + '</button>' +
       UKCV.head(nudge ? 'Follow up with ' + esc(s.hotel) : 'Write to ' + esc(s.hotel),
         nudge
           ? 'Short, warm, and it gives them an easy way out. That is what gets answered.'
@@ -474,7 +486,7 @@ window.UKCP = (function () {
             '<h3 class="ukPanel_title">' + (nudge ? 'Your follow-up' : 'Your pitch') + '</h3>' +
             (nudge ? '' :
               /* the hotel's segmented control, not a set of pills invented here */
-              '<div class="ukSeg" role="group" aria-label="Tone">' + TONES.map(function (t) {
+              '<div class="ukSeg ukSeg--tone" role="group" aria-label="Tone">' + TONES.map(function (t) {
                 var on = t.k === tone;
                 return '<button class="ukSeg_b' + (on ? ' is-on' : '') + '" type="button" ' +
                   'aria-pressed="' + on + '" data-ptone="' + t.k + '">' + t.t + '</button>';
@@ -484,14 +496,23 @@ window.UKCP = (function () {
           /* The three facts of the trade, on one row, the way the hotel states
              the same three from its side. They used to sit in a panel on the
              right called "What they are offering", which put the terms of the
-             deal further from the sentence describing them than the tips were. */
-          '<dl class="ukPitchIn ukPitchIn--row">' +
-            '<div><dt>You are asking for</dt><dd>' + s.nights + ' night' +
-              (String(s.nights) === '1' ? '' : 's') + ', ' + esc(String(s.room || s.rooms || '').toLowerCase()) + '</dd></div>' +
-            '<div><dt>You would deliver</dt><dd>' + esc((s.del || []).map(function (d) {
-              return d.q + ' × ' + d.t.toLowerCase(); }).join(', ')) + '</dd></div>' +
-            '<div><dt>Included</dt><dd>' + esc(s.inc) + '</dd></div>' +
-          '</dl>' +
+             deal further from the sentence describing them than the tips were.
+             A lead has no campaign to state terms from — for outreach this
+             becomes contact facts instead, so there is still something to
+             ground the letter in besides the property's name and city. */
+          (s.isLead
+            ? '<dl class="ukPitchIn ukPitchIn--row">' +
+                '<div><dt>Reaching out to</dt><dd>' + esc(s.hotel) + '</dd></div>' +
+                (s.website ? '<div><dt>Website</dt><dd>' + esc(s.website) + '</dd></div>' : '') +
+                (s.email ? '<div><dt>Contact</dt><dd>' + esc(s.email) + '</dd></div>' : '') +
+              '</dl>'
+            : '<dl class="ukPitchIn ukPitchIn--row">' +
+                '<div><dt>You are asking for</dt><dd>' + s.nights + ' night' +
+                  (String(s.nights) === '1' ? '' : 's') + ', ' + esc(String(s.room || s.rooms || '').toLowerCase()) + '</dd></div>' +
+                '<div><dt>You would deliver</dt><dd>' + esc((s.del || []).map(function (d) {
+                  return d.q + ' × ' + d.t.toLowerCase(); }).join(', ')) + '</dd></div>' +
+                '<div><dt>Included</dt><dd>' + esc(s.inc) + '</dd></div>' +
+              '</dl>') +
 
           '<section class="ukComposer">' +
             '<label class="ukSrOnly" for="ukWriteTa">' +
@@ -539,10 +560,17 @@ window.UKCP = (function () {
       '</section>' +
 
       '<aside class="ukSideCol">' +
+        /* A lead is a hotel Ukreate has never scored or assessed — no `.score`,
+           no `.wants` band to compare against. scoreFor()/why() both assume a
+           real D.stays record and quietly fabricate an answer for anything
+           else (undefined math, or a size-fit claim with nothing behind it).
+           Same discipline as leadLetter(): say nothing rather than invent it. */
         window.UKSTAY.hotelCard(s, {
           eager: true,
-          tag: '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>',
-          foot: '<p class="ukCard_sub">' + esc(why(s)) + '</p>'
+          tag: s.isLead ? '' : '<span class="ukScore2">' + D.scoreFor(s) + '<em>/10</em></span>',
+          foot: '<p class="ukCard_sub">' + esc(s.isLead
+            ? 'Not on Ukreate yet — this is your own outreach, not a match.'
+            : why(s)) + '</p>'
         }) +
         '<section class="ukPanel"><div class="ukPanel_head">' +
           '<h3 class="ukPanel_title">Angles that fit this one</h3></div>' +
@@ -563,7 +591,10 @@ window.UKCP = (function () {
   }
 
   /* ================= events ================= */
-  function go() { return window.UKCGO('stays'); }
+  function go() {
+    if (openWasLead && window.UKCSTATE) window.UKCSTATE('stays').tab = 'outreach';
+    return window.UKCGO('stays');
+  }
 
   document.addEventListener('click', function (e) {
     var root = document.querySelector('[data-ukc]');
@@ -578,7 +609,7 @@ window.UKCP = (function () {
       var np = (D.pitches || []).filter(function (x) { return x.id === el.dataset.nudge; })[0];
       var ns = np && (D.stays || []).filter(function (x) { return x.hotel === np.hotel; })[0];
       if (!ns) return;
-      openId = ns.id; openKind = 'nudge';
+      openId = ns.id; openKind = 'nudge'; openWasLead = false;
       return go();
     }
     if (e.target.closest('[data-closewrite]')) { openId = null; return go(); }
@@ -612,7 +643,13 @@ window.UKCP = (function () {
       var draftKey = 'first:' + ss.id + ':';
       var text = drafts[draftKey + 'warm'] || drafts[draftKey + 'short'] ||
                  drafts[draftKey + 'story'] || firstLetter(ss);
-      if (window.UKAPPLY) {
+      /* A lead has no campaign to apply to — UKAPPLY is specifically an
+         application against a posted D.stays item. This is the same
+         property-level record D.pitches already carries for a hotel with
+         nothing published, which is exactly what an outreach hotel is. */
+      if (ss.isLead) {
+        D.addPitch({ hotel: ss.hotel, city: ss.city, on:'Today', via:'Email', status:'Sent', note: text });
+      } else if (window.UKAPPLY) {
         window.UKAPPLY.send({
           stay: ss.id, creatorName: D.me.n, creatorHandle: D.me.h,
           creatorImg: D.me.img, creatorCity: D.me.city || '',
@@ -621,7 +658,7 @@ window.UKCP = (function () {
       }
       /* the pitch actually ARRIVES: it used to be recorded only in the creator's
          own tracker, so the hotel had no way to see it */
-      if (window.UKPITCHIN && ss.hotel === window.UKPITCHIN.PROPERTY) {
+      if (!ss.isLead && window.UKPITCHIN && ss.hotel === window.UKPITCHIN.PROPERTY) {
         window.UKPITCHIN.send({
           to: ss.hotel, from: 'c1', fromName: D.me.n,
           angle: angles(ss)[0] || ss.style,
@@ -650,14 +687,26 @@ window.UKCP = (function () {
       } else {
         sp.status = parts[1];
       }
-      return go();
+      /* This row only ever renders inside the Inquiry tab on Your collabs now
+         (waiting/replied moved there) — repaint that page, not Stays. */
+      return window.UKCGO ? window.UKCGO('collabs') : go();
     }
 
     if ((el = e.target.closest('[data-lane]'))) {
-      var s2 = (window.UKCSTATE && window.UKCSTATE('stays')) || null;
-      if (s2) { s2.lane = el.dataset.lane; s2.q = ''; s2.showAll = 0; }
+      /* Waiting and Replied live inside Your collabs' Inquiry tab now, not on
+         Stays — this button used to send you to the Stays page's own lane rail,
+         which no longer exists. "to" is the one lane that is still genuinely
+         about finding a stay, so it alone still points at Stays. */
+      if (el.dataset.lane === 'to') {
+        var s3 = (window.UKCSTATE && window.UKCSTATE('stays')) || null;
+        if (s3) { s3.q = ''; s3.showAll = 0; s3.tab = 'stays'; }
+        openId = null;
+        return go();
+      }
+      var s2 = (window.UKCSTATE && window.UKCSTATE('collabs')) || null;
+      if (s2) { s2.stageF = '0'; s2.inqSub = el.dataset.lane; s2.q = ''; }
       openId = null;
-      return go();
+      return window.UKCGO ? window.UKCGO('collabs') : go();
     }
     if (e.target.closest('[data-writeclose]')) { openId = null; return go(); }
     if (e.target.closest('[data-clearpp]')) {
@@ -690,8 +739,8 @@ window.UKCP = (function () {
 
   return {
     /* the pipeline, for the one page that renders it */
-    LANES: LANES, counts: counts, started: started, unpitched: unpitched,
-    laneRows: laneRows, laneList: laneList, dueStrip: dueStrip, lanes: lanes,
+    LANES: LANES, counts: counts, unpitched: unpitched,
+    laneRows: laneRows, laneList: laneList, dueStrip: dueStrip,
     emptyLane: emptyLane, scoreOf: function (s) { return D.scoreFor(s); },
     /* the composer */
     composer: composer, writing: writing, write: write, close: close

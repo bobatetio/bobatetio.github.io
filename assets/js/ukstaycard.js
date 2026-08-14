@@ -69,10 +69,24 @@ window.UKSTAY = (function () {
 
   /* A list that must not exceed N lines. The clamp runs in the browser and adds
      the "+N" once it knows the real width; the full list rides along in the
-     attribute so pressing that badge never has to go back for the data. */
-  function fewOf(list, lines, key) {
+     attribute so pressing that badge never has to go back for the data.
+
+     cap, when given, skips the measurement pass entirely and truncates by a
+     fixed ITEM COUNT instead of a pixel line-height — the same "+N" popup,
+     reached the same way, but the rule is now "first N items, always" rather
+     than "however many words happen to fit," which is why a short phrase and
+     a long one stopped reading as two different treatments on cards that sit
+     side by side. Opt-in, so the line-clamp this already was stays exactly
+     as it was everywhere that does not pass it. */
+  function fewOf(list, lines, key, cap) {
     list = (list || []).filter(Boolean);
     if (!list.length) return '';
+    if (cap) {
+      var shown = list.slice(0, cap), rest = list.length - shown.length;
+      return '<span class="ukClamp" data-clamp="' + esc(key) + '">' + esc(shown.join(', ')) +
+        (rest > 0 ? ' <button class="ukMoreDot ukMoreDot--sm" type="button" data-staypop="' + esc(key) +
+          '" aria-label="Show the other ' + rest + '">+' + rest + '</button>' : '') + '</span>';
+    }
     return '<span class="ukClamp" data-clamp="' + esc(key) + '" data-lines="' + (lines || 2) + '" ' +
       'data-items="' + esc(JSON.stringify(list)) + '">' + esc(list.join(', ')) + '</span>';
   }
@@ -135,6 +149,74 @@ window.UKSTAY = (function () {
     return '<p class="ukCard_sub">' + name + (city ? ' &middot; ' + city : '') + '</p>';
   }
 
+  /* THE two-panel trade: "The stay" against what it costs you. One place this
+     markup exists — the card calls it with everything already worked out, and a
+     page that just wants the trade (no photo, no card chrome around it) calls it
+     with only a stay, and it works those numbers out itself. Never rebuilt by
+     hand a second time, or the two would drift the way ukFacts and this one did. */
+  function trade(stay, dates, opts, pk, del, got, roomLine, stayLine) {
+    opts = opts || {};
+    if (pk === undefined) {
+      var pr = propertyOf(stay, opts);
+      pk = (stay.id || stay.t || pr.name || '').toString().replace(/[^a-zA-Z0-9]/g, '').slice(0, 24);
+      del = (stay.del || []).map(function (d) { return d.q + ' × ' + d.t.toLowerCase(); });
+      got = (stay.del || []).reduce(function (a, d) { return a + (d.q || 0); }, 0);
+      var incList = stay.incList && stay.incList.length
+        ? stay.incList
+        : String(stay.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+      var rooms = stay.rooms || stay.room;
+      roomLine = (rooms ? [String(rooms).toLowerCase()] : []).concat(incList);
+      stayLine = stay.nights && stay.nights !== '—'
+        ? stay.nights + (String(stay.nights) === '1' ? ' night' : ' nights')
+        : 'Nights not set yet';
+    }
+    /* The fee is money to the creator the same as the nights are — both
+       sides of what "the stay" is actually worth to them — so it sits here,
+       not tucked into a photo-overlay badge that only ever showed up on
+       one of several places this card renders. Hosted stay alone has none:
+       the nights are the whole trade there. */
+    var feeLine = (stay.fee && stay.collabType && stay.collabType !== 'Hosted stay')
+      ? '+ $' + Number(stay.fee).toLocaleString('en-US') + ' ' +
+        (stay.collabType === 'Paid campaign' ? 'campaign fee' : 'creative fee')
+      : '';
+    return '<div class="ukTrade ukTrade--card">' +
+        '<div class="ukTrade_side ukTrade_side--pop"><p class="ukTrade_l">The stay</p>' +
+          '<p class="ukTrade_v' + (stay.nights && stay.nights !== '—' ? '' : ' is-wait') + '">' +
+            esc(stayLine) + '</p>' +
+          (feeLine ? '<p class="ukTrade_s"><strong>' + esc(feeLine) + '</strong></p>' : '') +
+          /* Party size leads the secondary lines, not inclusions — whether a
+             creator can bring someone is a real decision factor, asked often
+             enough before applying that leaving it to blend in with the rest
+             of the fine print just moved the question into the thread later.
+             Bolded so it reads as its own field rather than another line of
+             prose, and always shown, even at one, so its absence never reads
+             as "unknown" rather than "solo". */
+          (stay.guests ? '<p class="ukTrade_s"><strong>' +
+            (Number(stay.guests) <= 1 ? 'Just the creator' : 'Room for ' + esc(stay.guests)) +
+            '</strong></p>' : '') +
+          /* ONE run, not two paragraphs. The room type was its own <p> and the
+             inclusions another, so "design king" could never share a line with
+             "Room, breakfast" however much room was left on it. */
+          (roomLine.length ? '<p class="ukTrade_s">' + fewOf(roomLine, 2, 'inc:' + pk, opts.capAt) + '</p>' : '') +
+          (dates && dates.from
+            ? '<p class="ukTrade_s">' + esc(fmtRange(dates.from, dates.to)) + '</p>'
+            : stay.from ? '<p class="ukTrade_s">' + esc(fmtRange(stay.from, stay.to)) + '</p>' : '') +
+        '</div>' +
+        '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
+        '<div class="ukTrade_side ukTrade_side--pop"><p class="ukTrade_l">' +
+          esc(opts.getLabel || 'You get') + '</p>' +
+          '<p class="ukTrade_v' + (got ? '' : ' is-wait') + '">' +
+            (got ? got + ' asset' + (got === 1 ? '' : 's') : 'Not set yet') + '</p>' +
+          /* The rights phrase is fixed, short and always true, so it gets its own
+             line and never carries a "+N" — a badge after it would be offering to
+             show you more rights when what it held was the deliverables. Those
+             get the other line, and the badge. */
+          '<p class="ukTrade_s">' + esc(shortRights(stay.rights)) + '</p>' +
+          (del.length ? '<p class="ukTrade_s">' + fewOf(del, 1, 'del:' + pk, opts.capAt) + '</p>' : '') +
+        '</div>' +
+      '</div>';
+  }
+
   /* opts:
        shot     which gallery frame is showing
        pop      which "+N" popup is open, by its scoped key
@@ -169,17 +251,17 @@ window.UKSTAY = (function () {
     /* A hotel card leads with the property, because the property IS the subject.
        A stay card leads with the stay and names the property underneath it. */
     var title = opts.head || (isHotel ? pr.name : (stay.t || pr.name));
+    var cityFlag = pr.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + pr.cc + '.svg" alt="" ' +
+      'loading="lazy" decoding="async">' : '';
     var sub = isHotel
       ? (stay.style || stay.type
           ? '<p class="ukCard_sub">' + esc(stay.style || stay.type) +
-            (pr.city ? ' &middot; ' + esc(pr.city) : '') + '</p>'
-          : (pr.city ? '<p class="ukCard_sub">' + esc(pr.city) + '</p>' : ''))
+            (pr.city ? ' &middot; ' + cityFlag + esc(pr.city) : '') + '</p>'
+          : (pr.city ? '<p class="ukCard_sub">' + cityFlag + esc(pr.city) + '</p>' : ''))
       : title === pr.name
         /* When a stay has no name of its own the property becomes the heading,
            and naming it again directly underneath said the same words twice. */
-        ? (pr.city ? '<p class="ukCard_sub">' +
-            (pr.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + pr.cc + '.svg" alt="" ' +
-                     'loading="lazy" decoding="async">' : '') + esc(pr.city) + '</p>' : '')
+        ? (pr.city ? '<p class="ukCard_sub">' + cityFlag + esc(pr.city) + '</p>' : '')
         : propLine(pr, opts);
 
     return '<article class="ukCard ukCard--preview ukCard--stay' + (isHotel ? ' ukCard--hotel' : '') + '">' +
@@ -188,35 +270,11 @@ window.UKSTAY = (function () {
         '<h3 class="ukCard_t">' + esc(title) + '</h3>' +
         sub +
 
-        /* The same two-panel trade the brief shows, because it is the same trade.
-           A definition list underneath said it in a different shape for no reason
-           and made the two halves of the deal look like unrelated facts. */
-        (isHotel ? '' :
-        '<div class="ukTrade ukTrade--card">' +
-          '<div class="ukTrade_side ukTrade_side--pop"><p class="ukTrade_l">The stay</p>' +
-            '<p class="ukTrade_v' + (stay.nights && stay.nights !== '—' ? '' : ' is-wait') + '">' +
-              esc(stayLine) + '</p>' +
-            /* ONE run, not two paragraphs. The room type was its own <p> and the
-               inclusions another, so "design king" could never share a line with
-               "Room, breakfast" however much room was left on it. */
-            (roomLine.length ? '<p class="ukTrade_s">' + fewOf(roomLine, 2, 'inc:' + pk) + '</p>' : '') +
-            (dates && dates.from
-              ? '<p class="ukTrade_s">' + esc(fmtRange(dates.from, dates.to)) + '</p>'
-              : stay.from ? '<p class="ukTrade_s">' + esc(fmtRange(stay.from, stay.to)) + '</p>' : '') +
-          '</div>' +
-          '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
-          '<div class="ukTrade_side ukTrade_side--pop"><p class="ukTrade_l">' +
-            esc(opts.getLabel || 'You get') + '</p>' +
-            '<p class="ukTrade_v' + (got ? '' : ' is-wait') + '">' +
-              (got ? got + ' asset' + (got === 1 ? '' : 's') : 'Not set yet') + '</p>' +
-            /* The rights phrase is fixed, short and always true, so it gets its own
-               line and never carries a "+N" — a badge after it would be offering to
-               show you more rights when what it held was the deliverables. Those
-               get the other line, and the badge. */
-            '<p class="ukTrade_s">' + esc(shortRights(stay.rights)) + '</p>' +
-            (del.length ? '<p class="ukTrade_s">' + fewOf(del, 1, 'del:' + pk) + '</p>' : '') +
-          '</div>' +
-        '</div>') +
+        /* The same two-panel trade the brief shows, because it is the same trade —
+           built by trade(), the one place that markup exists, so a page that
+           needs the trade without the rest of the card (the stay detail page's
+           sticky aside) renders the identical thing rather than a lookalike. */
+        (isHotel ? '' : trade(stay, dates, opts, pk, del, got, roomLine, stayLine)) +
         (opts.foot || '') +
       '</div>' +
       /* outside .ukCard_pad and last, so nothing the card clips can hide it */
@@ -297,5 +355,6 @@ window.UKSTAY = (function () {
   }
 
   return { card: card, hotelCard: hotelCard, clamp: clamp, place: place, shots: shots,
-           fewOf: fewOf, pop: pop, shortRights: shortRights, fmtRange: fmtRange };
+           fewOf: fewOf, pop: pop, shortRights: shortRights, fmtRange: fmtRange, gallery: gallery,
+           trade: trade };
 })();

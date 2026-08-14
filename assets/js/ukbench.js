@@ -206,8 +206,7 @@
           var out = ['ig'];
           if (r() < 0.62) out.push('tt');
           if (r() < 0.34) out.push('yt');
-          if (r() < 0.22) out.push('fb');
-          if (r() < 0.16) out.push('sc');
+          if (r() < 0.22) out.push('pi');
           return out.slice(0, 4);
         })(),
         worked: [], been: [{ n: label.split(',')[0], lat: pt[0], lng: pt[1] }]

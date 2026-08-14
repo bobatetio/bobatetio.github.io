@@ -8,16 +8,132 @@
 .ukM--9x16{aspect-ratio:9/16}
 .ukM--4x5 {aspect-ratio:4/5}
 .ukM--1x1 {aspect-ratio:1/1}
+.ukM--4x3 {aspect-ratio:4/3}
 .ukM--16x9{aspect-ratio:16/9}
 .ukM--sm{width:44px;flex:0 0 44px;border-radius:11px}
+.ukM--row{width:88px;flex:0 0 88px;border-radius:12px}
 .ukM--avxl{width:96px;flex:0 0 96px;border-radius:50%}
 .ukM--cardtop{border-radius:0}
 .ukM--head{width:120px;flex:0 0 120px}
 .ukM--hero{border-radius:20px}
 /* the one play mark used across the product: the disc is part of the shape */
-.ukM_play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:38px;
+.ukM_play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;
   display:block;fill:rgba(255,255,255,.94);pointer-events:none;
   filter:drop-shadow(0 3px 12px rgba(6,18,25,.45))}
+
+/* ---------- the stay detail hero: now inside the intro card, sized to sit
+   above its two columns rather than stand alone above the card ---------- */
+/* The list column and the main frame fill the row completely — a 1:4 width
+   split (list:main), no space left over to the right. The main frame's
+   height comes from its own width at 4:3 (aspect-ratio, not a fixed px
+   value), so the row gets taller on a wide card rather than leaving empty
+   space; the list column stretches to match that height and its four
+   thumbs split it evenly, which at a 1:4 width ratio lands each of them
+   on 4:3 too, to within a rounding pixel. */
+.ukStayHero{display:flex;align-items:stretch;gap:8px;width:100%}
+.ukStayHero_thumbs{display:flex;flex-direction:column;gap:8px;flex:1 1 0;min-width:0}
+.ukStayHero_thumb{position:relative;display:block;width:100%;flex:1 1 0;min-height:0;padding:0;
+  border-radius:10px;overflow:hidden;border:none;background:var(--av-bg);cursor:pointer}
+.ukStayHero_thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ukStayHero_thumb:not(.is-on){opacity:.75}
+.ukStayHero_thumb:hover img{opacity:.85}
+.ukStayHero_thumb:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukStayHero_thumb--empty{flex:1 1 0;min-height:0;border-radius:10px;
+  background:repeating-linear-gradient(135deg,var(--tag-done-bg),var(--tag-done-bg) 6px,transparent 6px,transparent 12px)}
+/* never distorted — object-fit:cover crops the real 4:3 photo to this box,
+   it never stretches it */
+.ukStayHero_main{flex:4 1 0;min-width:0;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
+  background:var(--av-bg)}
+.ukStayHero_main img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:600px){
+  .ukStayHero{flex-direction:column-reverse;align-items:stretch}
+  .ukStayHero_thumbs{flex-direction:row;flex:0 0 auto;height:56px;overflow-x:auto;padding-bottom:2px}
+  .ukStayHero_thumb,.ukStayHero_thumb--empty{flex:0 0 74px;width:74px;height:56px}
+  .ukStayHero_main{width:100%;height:auto;aspect-ratio:4/3}
+}
+
+/* the "what's included" checklist, two columns wide once there is room —
+   .ukTicks itself (ukapp.css) already draws the check mark */
+.ukTicks--grid{display:grid;grid-template-columns:1fr 1fr;column-gap:20px}
+@media (max-width:480px){ .ukTicks--grid{grid-template-columns:1fr} }
+
+/* the stay detail intro card: the hero on top, then one column — every fact
+   the trade card used to split off into its own boxes now lives in the
+   facts strip below, so there is no second column left to hold */
+.ukStayIntro_top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-top:22px}
+.ukStayIntro_n{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:24px;line-height:1.25;
+  margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ukStayIntro_addr{display:flex;align-items:center;gap:6px;font:400 13px/1.5 'Lato',sans-serif;
+  color:var(--text-2);margin:6px 0 0}
+.ukStayIntro_value{font:700 15px/1.4 'Lato',sans-serif;color:var(--text);margin:14px 0 0}
+/* a solid, faded strip instead of top/bottom rules — it stands out as its
+   own block without the double divider line */
+.ukStayIntro_facts{list-style:none;margin:16px 0 0;padding:14px 20px;border-radius:14px;
+  background:var(--tag-done-bg);display:inline-flex;align-items:center;flex-wrap:wrap;gap:0;
+  align-self:flex-start;max-width:100%}
+.ukStayIntro_facts li{display:flex;align-items:center;gap:9px;padding:0 20px;border-left:1px solid var(--line)}
+.ukStayIntro_facts li:first-child{padding-left:0;border-left:none}
+.ukStayIntro_facts svg{width:19px;height:19px;flex:0 0 auto;color:var(--text-3)}
+.ukStayIntro_facts span{display:flex;flex-direction:column;gap:2px;font:400 11.5px/1.2 'Lato',sans-serif;color:var(--text-3)}
+.ukStayIntro_facts b{font:700 13.5px/1.2 'Lato',sans-serif;color:var(--text)}
+@media (max-width:480px){ .ukStayIntro_facts li{padding:0 14px} }
+/* the save button, in the card's top-right corner — no circular frame, just
+   the glyph, set off from the buttons beside it by a rule rather than a
+   border of its own */
+.ukStayIntro_save{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border:none;background:none;color:var(--text-2);cursor:pointer;padding:0}
+.ukStayIntro_save:hover{color:var(--text)}
+.ukStayIntro_save.is-on{color:var(--uk-gold)}
+.ukStayIntro_save .ukFav_i{width:14px;height:16px}
+.ukStayIntro_actDiv{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
+/* the actions, on the same line as the save icon, top right of the card —
+   the small button variants already used for a stay card's own actions,
+   never the full-width chunky ukCard_cta */
+.ukStayIntro_act{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+/* the flat, unboxed sections below the intro card — a heading and a rule
+   above it, one continuous sheet rather than a stack of separate cards */
+.ukStaySection{margin-top:28px;padding-top:24px;border-top:1px solid var(--line);max-width:760px}
+.ukStaySection_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;
+  margin:0 0 10px;color:var(--text)}
+.ukStaySection_lead{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0 0 14px;text-wrap:pretty}
+
+/* "Why pitch this stay" — a real label over the reasoning, not a paragraph
+   with no context above it */
+.ukStayIntro_whyT{font:700 10px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text-3);margin:16px 0 6px}
+.ukStayIntro_why{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+
+/* a real icon in a circle beside each amenity/deliverable line, not a bare
+   checkmark standing in for "this page has icons" */
+.ukIconGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;
+  gap:14px 20px}
+.ukIconGrid li{display:flex;align-items:center;gap:11px;font:400 13.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukIconBadge{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 auto;
+  border-radius:50%;background:var(--tag-done-bg);color:var(--text)}
+.ukIconBadge svg{width:17px;height:17px}
+@media (max-width:480px){ .ukIconGrid{grid-template-columns:1fr} }
+
+/* the guest guide: one row per section, icon left, label + copy right —
+   a longer read than the amenity grid, so it stays one column */
+.ukGuideList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.ukGuideList li{display:flex;align-items:flex-start;gap:14px}
+.ukGuideList .ukIconBadge{margin-top:1px}
+.ukGuideList b{display:block;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text);margin-bottom:4px}
+.ukGuideList p{margin:0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+/* a real brief: the hotel's own free text, at reading width and line height,
+   not squeezed into a chip — plus whatever link or file came with it */
+.ukStayBrief_t{font:700 15px/1.4 'Lato',sans-serif;color:var(--text);margin:0 0 8px}
+.ukStayBrief_notes{font:400 14px/1.7 'Lato',sans-serif;color:var(--text-2);margin:0 0 18px;
+  max-width:62ch;text-wrap:pretty;white-space:pre-line}
+.ukStayBrief_link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;max-width:100%}
+.ukStayBrief_link svg{width:13px;height:13px;transform:rotate(90deg);flex:0 0 auto}
+.ukStayBrief_link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukStayBrief_file{display:flex;align-items:center;gap:8px;margin:10px 0 0;
+  font:400 13px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukStayBrief_file svg{width:15px;height:15px;color:var(--text-3);flex:0 0 auto}
 
 /* ---------- vertical media rows: the creator's own work ---------- */
 .ukReels{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
@@ -65,11 +181,16 @@
 .ukStay_body{display:flex;flex-direction:column;gap:9px;padding:14px}
 .ukStay_row{font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-2)}
 .ukStay_row strong{color:var(--text)}
-.ukHeart{position:absolute;top:11px;left:11px;width:36px;height:36px;border-radius:50%;border:none;
+/* These sit inside .ukStayShots, which pads the photo 12px in from the card
+   edge — top/left measured from the container's own edge put the badges
+   flush with the photo's corner instead of inset within it. 22px accounts
+   for that padding plus a real 10px seat inside the photo itself. */
+.ukHeart{position:absolute;top:22px;left:22px;width:36px;height:36px;border-radius:50%;border:none;
+  padding:0;display:flex;align-items:center;justify-content:center;
   background:rgba(6,18,25,.66);color:#fff;font-size:15px;cursor:pointer;backdrop-filter:blur(4px)}
 .ukHeart.is-on{background:var(--uk-gold);color:var(--uk-on-gold)}
 .ukHeart:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.ukScore2{position:absolute;top:11px;right:11px;padding:6px 10px;border-radius:9999px;
+.ukScore2{position:absolute;top:22px;right:22px;padding:6px 10px;border-radius:9999px;
   background:var(--uk-gold);color:var(--uk-on-gold);font:700 13px/1 'Lato',sans-serif}
 .ukScore2 em{font-style:normal;font-size:9.5px;opacity:.75}
 .ukScore2--flat{position:static;flex:0 0 auto}
@@ -106,18 +227,36 @@
 .ukKit_foot strong{color:var(--text)}
 .ukKit_by{font:700 11px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-ink);margin:0}
 
-/* ---------- academy ---------- */
-.ukLessons{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.ukLesson{display:flex;gap:14px;align-items:flex-start;padding:12px;border-radius:16px;cursor:pointer;
-  background:var(--surface-2);border:1px solid var(--line-soft)}
-.ukLesson:hover{background:var(--hover)}
-.ukLesson:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukLesson .ukM{width:74px;flex:0 0 74px}
-.ukLesson_b{min-width:0}
-.ukLesson_t{font:700 13.5px/1.35 'Lato',sans-serif;color:var(--text);margin:0;text-wrap:balance}
-.ukLesson_d{font:400 12.5px/1.55 'Lato',sans-serif;color:var(--text-2);margin:5px 0 0;text-wrap:pretty}
-.ukLesson_m{font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-3);margin:6px 0 0}
-.ukLesson.is-done .ukLesson_m{color:var(--tag-you-ink)}
+
+/* the lesson page's full curriculum, in its sticky aside — a real course
+   keeps the whole syllabus one click away, not just "up next", collapsed
+   into modules the way the reference's own sidebar is. */
+.ukAcadCurric_top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 16px;
+  padding:10px 13px;border-radius:12px;background:var(--surface-2);
+  font:700 12px/1 'Lato',sans-serif;color:var(--text-2)}
+.ukAcadCurric_grp{border-top:1px solid var(--line-soft)}
+.ukAcadCurric_grp:first-of-type{border-top:none}
+.ukAcadCurric_modBtn{display:flex;align-items:center;gap:9px;width:100%;padding:12px 4px;border:none;
+  background:none;cursor:pointer;text-align:left;color:var(--text)}
+.ukAcadCurric_modBtn:hover{color:var(--gold-ink)}
+.ukAcadCurric_modBtn:focus-visible{outline:2px solid var(--uk-gold);outline-offset:1px}
+.ukAcadCurric_car{width:16px;height:16px;flex:0 0 auto;transition:transform .15s ease}
+.ukAcadCurric_grp.is-open .ukAcadCurric_car{transform:rotate(180deg)}
+.ukAcadCurric_modT{flex:1 1 auto;min-width:0;font:700 12.5px/1.3 'Lato',sans-serif}
+.ukAcadCurric_modN{flex:0 0 auto;font:600 11.5px/1 'Lato',sans-serif;color:var(--text-3)}
+.ukAcadCurric_l{list-style:none;margin:0 0 6px;padding:0}
+.ukAcadCurric_l button{display:flex;align-items:center;gap:9px;width:100%;padding:8px 6px;border:none;
+  background:none;border-radius:10px;cursor:pointer;text-align:left;color:var(--text-2)}
+.ukAcadCurric_l button:hover{background:var(--hover)}
+.ukAcadCurric_l button:focus-visible{outline:2px solid var(--uk-gold);outline-offset:1px}
+.ukAcadCurric_l li.is-now button{background:var(--active-bg);color:var(--text)}
+.ukAcadCurric_tick{width:18px;height:18px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  border:1.5px solid var(--input-line);background:var(--surface)}
+.ukAcadCurric_l li.is-done .ukAcadCurric_tick{background:var(--uk-gold);border-color:var(--uk-gold);color:var(--uk-on-gold)}
+.ukAcadCurric_tick svg{width:10px;height:10px;display:block}
+.ukAcadCurric_t{flex:1 1 auto;min-width:0;font:600 12.5px/1.35 'Lato',sans-serif}
+.ukAcadCurric_l li.is-done .ukAcadCurric_t{color:var(--text-3);text-decoration:line-through}
+.ukAcadCurric_len{flex:0 0 auto;font:400 11px/1 'Lato',sans-serif;color:var(--text-3)}
 
 /* ---------- community doorway ---------- */
 .ukDoor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:clamp(20px,3vw,40px);
@@ -209,9 +348,13 @@
 .ukPickReel.is-on .ukM{outline-color:var(--uk-gold)}
 .ukPickReel:focus-visible .ukM{outline-color:var(--accent)}
 .ukPickReel_c{position:absolute;top:9px;right:9px;width:26px;height:26px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
   background:rgba(6,18,25,.62);color:#fff;border:1.5px solid rgba(255,255,255,.7)}
+.ukPickReel_c svg{width:13px;height:13px;display:block}
 .ukPickReel.is-on .ukPickReel_c{background:var(--uk-gold);color:var(--uk-on-gold);border-color:var(--uk-gold)}
+.ukGhost--icon{gap:8px}
+.ukGhost--icon svg{width:16px;height:16px;flex:0 0 auto;display:block}
+.ukCard_cta--gapped{margin-top:16px}
 .ukAsked{list-style:none;margin:0 0 4px;padding:0;display:flex;flex-direction:column;gap:9px}
 .ukAsked li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;
   border-radius:12px;background:var(--surface-2);border:1px solid var(--line-soft)}
@@ -220,19 +363,34 @@
 .ukAsked_c{font:700 12.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap}
 .ukAsked li.is-met .ukAsked_c{color:var(--tag-you-ink)}
 
-/* ---- lesson player ---- */
-.ukGrid--lesson{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.85fr);gap:16px;align-items:start}
-.ukPlayer{position:relative;max-width:340px}
-.ukM--player{border-radius:20px}
-.ukPlayer_go{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:66px;height:66px;
-  border-radius:50%;border:none;background:var(--uk-gold);color:var(--uk-on-gold);font-size:22px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center}
-.ukPlayer_go:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.ukPlayer_len{position:absolute;right:12px;bottom:12px;padding:5px 10px;border-radius:9px;
+/* ---- lesson page ----
+   Recreates the reference course-detail layout: title, an icon stats row,
+   a full-width 16:9 player (an explicit, one-off exception to the vertical-
+   media rule everywhere else in the product — this page is modelled on a
+   traditional course platform on purpose), then Overview/Summary, with the
+   full curriculum as a collapsible accordion in the sticky aside. */
+.ukGrid--stay{grid-template-columns:minmax(0,1.7fr) minmax(300px,.9fr)}
+.ukAcadLesson{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:24px;align-items:start}
+.ukAcadLesson_h{margin:0 0 14px;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(24px,2.6vw,32px);line-height:1.15;color:var(--text);text-wrap:balance}
+.ukAcadStats{list-style:none;display:flex;flex-wrap:wrap;gap:22px;margin:0 0 20px;padding:0}
+.ukAcadStat{display:flex;align-items:center;gap:8px}
+.ukAcadStat_ic{width:19px;height:19px;flex:0 0 auto;color:var(--gold-ink)}
+.ukAcadStat_ic svg{width:100%;height:100%;display:block}
+.ukAcadStat_v{font:700 13px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukAcadStat_l{font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-3)}
+.ukAcadPlayer16{position:relative;display:block;width:100%;border:none;padding:0;border-radius:18px;
+  overflow:hidden;background:var(--av-bg);aspect-ratio:16/9;margin-bottom:18px;cursor:pointer}
+.ukAcadPlayer16:focus-visible{outline:3px solid var(--uk-gold);outline-offset:3px}
+.ukAcadPlayer16_m{position:absolute;inset:0;width:100%;height:100%;border-radius:0}
+.ukAcadPlayer16_m img{width:100%;height:100%;object-fit:cover;display:block}
+/* the standard play mark, just bigger — this is the hero player, not a card */
+.ukAcadPlayer16_m .ukM_play{width:64px;height:64px}
+.ukAcadPlayer16_len{position:absolute;right:12px;bottom:12px;padding:5px 10px;border-radius:9px;
   background:rgba(6,18,25,.84);color:#fff;font:700 11px/1 'Lato',sans-serif}
 .ukLessonNotes{font:400 14.5px/1.75 'Lato',sans-serif;color:var(--text-2);margin:0 0 12px;
   max-width:62ch;text-wrap:pretty}
-@media (max-width:900px){ .ukGrid--lesson{grid-template-columns:1fr} .ukPlayer{max-width:none} }
+@media (max-width:900px){ .ukAcadLesson{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){ .ukPickReel .ukM{transition:none} }
 
 /* fit note: why this score, for this creator */
@@ -346,60 +504,6 @@
 .ukGuideRead{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .ukGuideRead_b{margin:10px 0 0;font-size:14px;line-height:1.65;color:var(--text-2);text-wrap:pretty}
 
-/* ---- mood boards ----
-   Named .ukMoodCard, not .ukBoard. .ukBoard is the collaboration grid in
-   ukapp.css, and this file loads after it: while this tile owned that name it
-   silently turned the creator's collabs grid into a single flex column, which is
-   why every collab card was rendering full width with a full-bleed photo. */
-.ukBoards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
-.ukMoodCard{
-  display:flex;flex-direction:column;cursor:pointer;border-radius:18px;overflow:hidden;
-  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
-  transition:transform .15s ease,border-color .15s ease;
-}
-.ukMoodCard:hover{transform:translateY(-2px);border-color:var(--active-ring)}
-.ukMoodCard:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
-.ukMoodCard_m{display:block}
-.ukMoodCard_m .ukM{border-radius:0}
-.ukMoodCard_b{display:block;padding:14px 15px 16px}
-.ukMoodCard_k{
-  display:block;margin-bottom:6px;font:700 10.5px/1.4 'Lato',sans-serif;letter-spacing:.11em;
-  text-transform:uppercase;color:var(--gold-ink);
-}
-.ukMoodCard_t{
-  display:block;font-family:'Marcellus',Georgia,serif;font-size:18px;line-height:1.25;
-  color:var(--text);text-wrap:balance;
-}
-.ukMoodCard_s{display:block;margin-top:3px;font-size:12.5px;color:var(--text-3);text-wrap:pretty}
-.ukMoodCard_n{display:block;margin-top:9px;font-size:12px;font-weight:700;color:var(--text-2)}
-
-.ukMoodNew{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-  min-height:260px;padding:22px;border-radius:18px;cursor:pointer;text-align:center;
-  background:var(--surface-2);border:1.5px dashed var(--line);color:var(--text-2);
-}
-.ukMoodNew:hover{border-color:var(--uk-gold);color:var(--text)}
-.ukMoodNew:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
-.ukMoodNew_p{
-  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
-  background:var(--hover);font:400 24px/1 'Lato',sans-serif;color:var(--gold-ink);
-}
-.ukMoodNew_t{font:700 15px 'Lato',sans-serif;color:var(--text)}
-.ukMoodNew_s{font:400 12.5px/1.5 'Lato',sans-serif;color:var(--text-3);text-wrap:balance}
-
-.ukMaker{margin-bottom:20px}
-.ukBoardHead{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
-  margin:0 0 20px;
-}
-.ukBoardHead_t{
-  margin:2px 0 4px;font-family:'Marcellus',Georgia,serif;font-weight:400;
-  font-size:clamp(24px,3vw,34px);line-height:1.12;color:var(--text);text-wrap:balance;
-}
-.ukBoardHead_s{margin:0 0 8px;font-size:14px;color:var(--text-2)}
-.ukBoardHead_n{margin:0;max-width:52ch;font-size:13.5px;line-height:1.6;color:var(--text-3);text-wrap:pretty}
-.ukBoardHead_a{display:flex;gap:10px;flex-wrap:wrap}
-
 @media (max-width:860px){
   .ukHotel_hero{grid-template-columns:minmax(0,1fr);gap:18px}
   .ukItin_top{flex-direction:column}
@@ -408,7 +512,6 @@
 @media (max-width:560px){
   .ukItin_l li{flex-wrap:wrap}
   .ukItin_d{flex:0 0 100%}
-  .ukBoards{grid-template-columns:minmax(0,1fr)}
 }
 @media (pointer:coarse){
   .ukBack,.ukChip2{min-height:38px;display:inline-flex;align-items:center}
@@ -421,7 +524,7 @@
 
 /* same rule on the creator expansion surfaces */
 .ukFact_e,.ukReel_note,.ukItin_b,.ukItin_n,.ukHotel_ab,.ukGuideRead_b,
-.ukBoardHead_n,.ukMoodCard_s,.ukMoodNew_s,.ukPageHead p,.ukAsk,.ukWhy{text-wrap:balance}
+.ukPageHead p,.ukAsk,.ukWhy{text-wrap:balance}
 
 /* ================= creator onboarding: platforms, destinations, matches =================
    Moment one now asks for every platform a creator posts on and where they are
@@ -550,6 +653,11 @@
   box-shadow:0 16px 40px rgba(4,16,22,.18);
   overflow:hidden;
 }
+/* Inside the onboarding gate this is repositioned to position:fixed by
+   ukcapp.js so it can escape .ukStart_ask's own scroll clipping — at that
+   point it is stacking against .ukModalWrap's z-index:70, not just its own
+   picker, so 60 is not enough to clear the modal it needs to float above. */
+.ukOb_modal .ukPickr_drop{z-index:120}
 .ukPickr_list{
   list-style:none;margin:0;padding:5px;
   max-height:212px;overflow-y:auto;overscroll-behavior:contain;
@@ -609,44 +717,37 @@
   height:270px;margin:0;
   border-radius:15px;overflow:hidden;
   background:var(--surface-2);border:1px solid var(--line);
-  cursor:grab;touch-action:none;user-select:none;
+  touch-action:none;user-select:none;
 }
-.ukMap.is-grabbing{cursor:grabbing}
-/* out of flow on purpose: the canvas carries an inline pixel width for its backing
-   store, and in normal flow that width becomes the map's min-content and blows the
-   column open on a narrow screen */
-.ukMap_cv{position:absolute;inset:0;display:block;width:100%;height:100%}
-/* the stems sit in their own layer, always under every label card — see the note in
-   ukdotmap.js's mount() for why a stem can't just be part of the pin's own box */
-.ukMap_stems{position:absolute;inset:0;z-index:1;pointer-events:none}
+/* grab only once zoomed in — at the minimum zoom the whole world already
+   fits the box, so there is nowhere a drag could pan to */
+.ukMap.is-pannable{cursor:grab}
+.ukMap.is-pannable.is-grabbing{cursor:grabbing}
+/* the flat map's own SVG surface — dots, arcs and pin markers are all real SVG,
+   drawn once and left alone; only the transform below ever moves */
+.ukMap_svg{position:absolute;inset:0;display:block;width:100%;height:100%}
+.ukMap_sea{fill:var(--map-sea)}
+.ukMap_dot{fill:var(--map-dot)}
+/* the one thing the globe never had: an animated curved line from the home pin
+   to every other one, dashes flowing along it the way a route always reads */
+.ukMap_arc{fill:none;stroke:var(--map-dot-on);stroke-width:1.6;stroke-linecap:round;
+  stroke-dasharray:5 6;opacity:.8;animation:ukMapFlow 2.4s linear infinite}
+@keyframes ukMapFlow{ to{ stroke-dashoffset:-33 } }
+.ukMap_pinDot{fill:var(--map-dot-on)}
+.ukMap_pinRing{fill:none;stroke:var(--map-dot-on);stroke-width:2;opacity:.55;
+  transform-box:fill-box;transform-origin:center;animation:ukMapRing 2.1s ease-out infinite}
+@keyframes ukMapRing{ 0%{transform:scale(1);opacity:.55} 100%{transform:scale(3.4);opacity:0} }
 .ukMap_pins{position:absolute;inset:0;pointer-events:none}
 
-.ukMapStem{
-  position:absolute;top:0;left:0;will-change:transform,height;
-  width:1.5px;background:var(--uk-gold);
-}
-.ukMapStem::after{
-  content:'';position:absolute;left:-3.75px;top:100%;
-  width:9px;height:9px;border-radius:50%;
-  background:var(--uk-gold);box-shadow:0 0 0 0 rgba(215,165,67,.55);
-  animation:ukMapPulse 2.1s ease-out infinite;
-}
-@keyframes ukMapPulse{
-  0%   {box-shadow:0 0 0 0 rgba(215,165,67,.55)}
-  70%  {box-shadow:0 0 0 11px rgba(215,165,67,0)}
-  100% {box-shadow:0 0 0 0 rgba(215,165,67,0)}
-}
-
-/* a pin is a chip that floats above its stem, the way a real map labels a place */
+/* a pin is a chip that floats above its exact point on the flat map */
 .ukMapPin{
-  position:absolute;top:0;left:0;will-change:transform;
+  position:absolute;will-change:transform;
   display:flex;align-items:center;gap:7px;
   padding:5px 10px 5px 5px;border-radius:999px;
   background:var(--uk-deep);color:#fff;
   box-shadow:0 6px 16px rgba(4,16,22,.34);
   white-space:nowrap;pointer-events:auto;
-  /* no left offset: the placement loop centres the chip on its point */
-  margin:-46px 0 0 0;                     /* sits above its point */
+  transform:translate(-50%,calc(-100% - 10px));   /* centred on its point, sitting above it */
 }
 .ukMapPin_f{width:20px;height:20px;border-radius:50%;object-fit:cover;flex:0 0 auto;display:block}
 .ukMapPin_b{display:flex;flex-direction:column;line-height:1.1}
@@ -666,7 +767,7 @@
 .ukMap_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
 .ukMap_b svg{width:15px;height:15px;display:block}
 
-@media (prefers-reduced-motion:reduce){.ukMapPin::before{animation:none}}
+@media (prefers-reduced-motion:reduce){.ukMap_arc,.ukMap_pinRing{animation:none}}
 @media (max-width:560px){.ukMap{height:220px}.ukPickr_list{max-height:180px}.ukMapPin_s{display:none}}
 
 /* ---------- the card panel ----------
@@ -1068,26 +1169,33 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukPostProof_u{flex:1 1 200px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font:500 12.5px/1.3 'Lato',sans-serif;color:var(--accent)}
 .ukPostProof_at{flex:0 0 auto;font:400 11px/1.3 'Lato',sans-serif;color:var(--text-3)}
+.ukPostProof_eng{flex:0 0 auto;font:700 11px/1.3 'Lato',sans-serif;color:var(--gold-ink)}
 
 
-/* ---- being invited (creator) ---- */
+/* ---- being invited (creator) ----
+   One fixed size, always — 200x150, 4:3, never stretched to match whatever
+   text happens to be in the row next to it. Letting it stretch made the photo
+   a different shape on every card depending on copy length, which is its own
+   kind of wrong. Instead the row centers on its cross-axis, so when the text
+   is shorter than the photo the leftover space splits evenly above and below
+   it — reading as balance, not as a gap left behind. */
 .ukInvIn{margin-bottom:18px}
-.ukInvIn_i{display:flex;gap:16px;align-items:stretch;padding:16px;border-radius:18px;margin-top:12px;
+.ukInvIn_i{display:flex;gap:18px;align-items:center;padding:10px 16px 10px 10px;border-radius:18px;margin-top:12px;
   background:var(--todo-bg);border:1px solid var(--todo-line)}
 .ukInvIn_i.is-in{background:var(--tag-you-bg);border-color:transparent}
 .ukInvIn_i.is-gone{background:var(--surface-2);border-color:var(--line-soft)}
-.ukInvIn_img{width:110px;flex:0 0 110px;aspect-ratio:4/3;object-fit:cover;border-radius:12px;background:var(--av-bg)}
-.ukInvIn_b{min-width:0;display:flex;flex-direction:column;gap:5px}
+.ukInvIn_img{width:200px;height:150px;flex:0 0 200px;border-radius:16px;object-fit:cover;background:var(--av-bg)}
+.ukInvIn_b{min-width:0;display:flex;flex-direction:column;gap:6px}
 .ukInvIn_k{margin:0;font:700 10px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.12em;color:var(--gold-ink)}
-.ukInvIn_t{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;line-height:1.2;color:var(--text)}
+.ukInvIn_t{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:20px;line-height:1.2;color:var(--text)}
 .ukInvIn_p{margin:0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 .ukInvIn_c{margin:4px 0 0;padding:9px 12px;border-radius:11px;background:var(--surface);
   font:500 12.5px/1.55 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 .ukInvIn_c--calm{background:none;padding:0;color:var(--text-3)}
-.ukInvIn_act{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}
+.ukInvIn_act{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
 @media (max-width:600px){
   .ukInvIn_i{flex-direction:column}
-  .ukInvIn_img{width:100%;flex-basis:auto}
+  .ukInvIn_img{width:100%;height:auto;aspect-ratio:16/10;flex-basis:auto}
 }
 
 
@@ -1138,13 +1246,12 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukCards .ukPP .ukChips{margin-bottom:14px}
 
 
-/* Academy thumbnails: one shape. Each lesson's clip carries its own ratio, so a
-   row of three was mixing tall portrait frames with short landscape ones and no
-   two cards in a row lined up. 16:9, because these are watched, not scrolled. */
-.ukLesson > .ukM{flex:0 0 108px;width:108px;aspect-ratio:16/9 !important;height:auto;align-self:flex-start}
-.ukLesson > .ukM img{width:100%;height:100%;object-fit:cover;display:block}
+/* Academy thumbnails keep their own declared ratio, same as every other media
+   slot in the product — these are the creator's own reel/shot media, and a
+   forced 16:9 crop was cutting into vertical footage to fake a shape this
+   platform does not use. .ukLesson .ukM already sets a fixed width (below);
+   the ratio itself is left alone. */
 .ukLesson{align-items:flex-start}
-@media (max-width:560px){ .ukLesson > .ukM{flex-basis:88px;width:88px} }
 
 
 /* the platform mark sits with its name in the "Where you post" row */
@@ -1178,14 +1285,15 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukPLanes{margin-bottom:14px}
 .ukPitchList{padding:8px 10px}
 
-/* the list */
-.ukPL{list-style:none;margin:0;padding:0}
-.ukPL_i{display:flex;align-items:center;gap:14px;padding:14px 10px;
-  border-top:1px solid var(--line)}
-.ukPL_i:first-child{border-top:0}
-.ukPL_i.is-due{background:var(--todo-bg);border-radius:14px;border-top-color:transparent}
-.ukPL_i.is-due + .ukPL_i{border-top-color:transparent}
-.ukPL_ph{width:44px;height:44px;flex:0 0 44px;border-radius:11px;background:var(--tag-done-bg)}
+/* the list — each row is its own card with real space around it, not rows
+   stitched together by a hairline border. Stacked directly against each
+   other, a run of "due" rows (each carrying its own gold tint) read as one
+   continuous gradient rather than as separate hotels. */
+.ukPL{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ukPL_i{display:flex;align-items:center;gap:14px;padding:14px 16px;
+  border-radius:14px;background:var(--surface);border:1px solid var(--line-soft)}
+.ukPL_i.is-due{background:var(--todo-bg);border-color:transparent}
+.ukPL_ph{width:88px;height:66px;flex:0 0 88px;border-radius:12px;background:var(--tag-done-bg)}
 .ukPL_b{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:3px}
 .ukPL_top{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .ukPL_n{font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text)}
@@ -1216,7 +1324,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 
 @media (max-width:720px){
   .ukPL_i{flex-wrap:wrap}
-  .ukPL_r{width:100%;justify-content:flex-start;padding-left:58px}
+  .ukPL_r{width:100%;justify-content:flex-start;padding-left:102px}
   .ukPL_set{justify-content:flex-start}
 }
 .ukPL_more{width:100%;margin-top:6px;justify-content:center}
@@ -1231,9 +1339,10 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukProfNum_n{font:400 11.5px/1.4 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
 
 
-/* the globe inside a dashboard card: tall enough for the whole sphere, and the
-   pin labels off because the ranked list underneath already names every one */
-.ukMapSlot--dash{position:relative;height:230px;border-radius:14px;overflow:hidden;
+/* the flat map inside a dashboard card — aspect-ratio, not a fixed height, so
+   the box matches the map's own 2:1 shape instead of letterboxing it; the pin
+   labels are off because the ranked list underneath already names every one */
+.ukMapSlot--dash{position:relative;aspect-ratio:2/1;max-height:230px;border-radius:14px;overflow:hidden;
   background:var(--rail-bg);margin:2px 0 14px;isolation:isolate;z-index:0}
 /* On the ink card the globe was sitting on a white plate in the middle of a navy
    panel. The map draws its own surface, so it is the surface that has to go. */
@@ -1241,10 +1350,13 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukCard--ink .ukMapSlot--dash .ukMap,
 .ukCard--ink .ukMapSlot--dash .ukMap--live{background:transparent;border:0;box-shadow:none}
 .ukCard--ink .ukRank2_ph{background:rgba(255,255,255,.16)}
-.ukMapSlot--dash .ukMap{position:absolute;inset:0}
-.ukMapSlot--dash canvas{position:absolute;inset:0;width:100%;height:100%}
+/* width/height/aspect-ratio:auto — without them the base .ukMap rule's own
+   explicit height:270px wins over inset:0 (a set height beats an implied one
+   even under absolute positioning), and the map ignores this box entirely */
+.ukMapSlot--dash .ukMap{position:absolute;inset:0;width:auto;height:auto;aspect-ratio:auto}
+.ukMapSlot--dash .ukMap_svg{position:absolute;inset:0;width:100%;height:100%}
 .ukMapSlot--dash .ukMapPin_n,.ukMapSlot--dash .ukMapPin_s,
-.ukMapSlot--dash .ukMapStem,.ukMapSlot--dash .ukMap_ui{display:none}
+.ukMapSlot--dash .ukMap_ui{display:none}
 .ukMapSlot--dash .ukMapPin{background:none;box-shadow:none;padding:0;border:0}
 
 
@@ -1286,3 +1398,139 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukWriteWork_t{margin:0;font:700 11px/1 'Lato',sans-serif;text-transform:uppercase;
   letter-spacing:.12em;color:var(--text-3)}
 .ukWriteWork .ukWhy{margin-top:10px}
+
+/* ---- collabs board (creator) ----
+   Same .ukKan the hotel side uses, just four columns instead of five — this
+   side never shows an Inquiry column, so the shared 5-up grid would leave a
+   blank column-width gap. Below 900px this defers back to ukapp.css's own
+   swipeable-board rule (.ukKan{grid-template-columns:none;...}), so both
+   sides collapse the same way rather than fighting over two breakpoints. */
+.ukKan--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:900px){
+  .ukKan--4{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(240px,78vw);
+    overflow-x:auto;padding-bottom:8px;height:auto}
+}
+
+/* ---- the hotel head on a collab thread (creator) ----
+   The hotel side's own .ukCrD, reused as-is — a property is not a person, so
+   its photo is a rounded square rather than the circular avatar crop the
+   hotel side uses for a creator. Nothing else about the card changes. */
+.ukCrAv--sq img{border-radius:14px}
+
+/* ---- earnings: top performing video, one piece not a row of three ---- */
+.ukTopVid_row{display:flex;gap:20px;align-items:flex-start}
+.ukTopVid_m{width:120px;flex:0 0 120px}
+.ukTopVid_b{flex:1 1 auto;min-width:0;padding-top:2px}
+.ukTopVid_t{margin:0;font-family:'Marcellus',Georgia,serif;font-size:19px;line-height:1.3;color:var(--text);text-wrap:balance}
+@media (max-width:560px){ .ukTopVid_row{flex-direction:column} .ukTopVid_m{width:140px;flex-basis:auto} }
+
+/* ---- a lesson's one attached resource: a real page in the product, not a
+   fake download ---- */
+.ukAcadRes{display:flex;align-items:center;gap:13px;width:100%;padding:13px 14px;border:1px solid var(--line-soft);
+  border-radius:14px;background:var(--surface-2);cursor:pointer;text-align:left}
+.ukAcadRes:hover{background:var(--hover);border-color:var(--active-ring)}
+.ukAcadRes:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukAcadRes_ic{width:20px;height:20px;flex:0 0 auto;color:var(--gold-ink)}
+.ukAcadRes_ic svg{width:100%;height:100%;display:block}
+.ukAcadRes_b{flex:1 1 auto;min-width:0}
+.ukAcadRes_t{display:block;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukAcadRes_s{display:block;margin-top:2px;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
+.ukAcadRes_go{width:16px;height:16px;flex:0 0 auto;color:var(--text-3)}
+.ukAcadRes_go svg{width:100%;height:100%;display:block}
+
+/* ---- flat underline tabs, the reference's own tab style — plain text,
+   no pill, a two-point border under the active one. Distinct from
+   .ukSubTabs (the app's existing pill-tab component) on purpose: the
+   reference course page did not use a pill. ---- */
+.ukTabs{display:inline-flex;gap:28px;border-bottom:1px solid var(--line);margin:0 0 20px}
+.ukTabs_b{padding:0 0 12px;border:none;background:none;cursor:pointer;
+  font:700 14px/1 'Lato',sans-serif;color:var(--text-3);border-bottom:2px solid transparent;margin-bottom:-1px}
+.ukTabs_b:hover{color:var(--text)}
+.ukTabs_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukTabs_b.is-on{color:var(--text);border-bottom-color:var(--uk-deep)}
+
+/* ---- academy index: a real card grid, same family as the course-catalog
+   reference — module filter pills where it had category tabs, a lessons/
+   duration meta row where it had lessons/students, status + action where
+   it had price + "Start Course". ---- */
+.ukAcadGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.ukAcadCard{display:block;text-align:left;padding:12px 12px 0;border:1px solid var(--line);background:var(--surface);
+  border-radius:16px;cursor:pointer;transition:transform .15s ease,border-color .15s ease}
+.ukAcadCard:hover{transform:translateY(-2px);border-color:var(--active-ring)}
+.ukAcadCard:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukAcadCard_m{position:relative;aspect-ratio:16/9;background:var(--av-bg);border-radius:12px;overflow:hidden}
+.ukAcadCard_img{position:absolute;inset:0;width:100%;height:100%;border-radius:0}
+.ukAcadCard_img img{width:100%;height:100%;object-fit:cover;display:block}
+.ukAcadCard_badge{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:9999px;
+  background:rgba(6,18,25,.62);color:#fff;font:700 10.5px/1 'Lato',sans-serif}
+.ukAcadCard_len{position:absolute;right:10px;bottom:10px;padding:4px 9px;border-radius:8px;
+  background:rgba(6,18,25,.72);color:#fff;font:700 10.5px/1 'Lato',sans-serif}
+.ukAcadCard_b{padding:14px 0 16px}
+.ukAcadCard_t{margin:0 0 8px;font:700 14.5px/1.35 'Lato',sans-serif;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ukAcadCard_meta{display:flex;align-items:center;gap:6px;margin:0;font:400 12px/1 'Lato',sans-serif;color:var(--text-3)}
+.ukAcadCard_meta svg{width:14px;height:14px;flex:0 0 auto}
+.ukAcadCard_dot{margin:0 1px}
+.ukAcadCard_rule{height:1px;background:var(--line-soft);margin:13px 0}
+.ukAcadCard_foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ukAcadCard_status{display:flex;align-items:center;gap:5px;font:600 12px/1 'Lato',sans-serif;color:var(--text-3)}
+.ukAcadCard_status svg{width:14px;height:14px}
+.is-done .ukAcadCard_status{color:var(--tag-you-ink)}
+.ukAcadCard_go{display:flex;align-items:center;gap:5px;font:700 12.5px/1 'Lato',sans-serif;color:var(--gold-ink)}
+.ukAcadCard_go svg{width:14px;height:14px}
+
+/* ---- Outreach: cold leads, thin cards ----
+   Reuses the same .ukCard hotel-card variant the pitch composer's sidebar
+   already renders (window.UKSTAY.hotelCard) — gallery, name, city, nothing
+   else the card system draws for a stay. Only the foot is new. */
+.ukOutreachGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.ukLeadCard_contact{margin:2px 0 14px;display:flex;flex-direction:column;gap:6px}
+.ukLeadCard_row{display:flex;align-items:center;gap:8px;margin:0;font:400 13px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukLeadCard_row svg{width:15px;height:15px;flex:0 0 auto;color:var(--text-3)}
+.ukLeadCard_row--soc{gap:10px;flex-wrap:wrap}
+.ukLeadCard_soc{font:600 12.5px/1 'Lato',sans-serif;color:var(--gold-ink);background:var(--tag-you-bg);
+  padding:5px 9px;border-radius:9999px}
+
+/* ---- Discover ----
+   The hotel Content library's own grid/card idiom (.ukLib), adapted rather
+   than reinvented: cards keep each piece's own declared ratio (via .ukM)
+   instead of forcing one, same as the library's video/photo split. */
+.ukDiscGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:18px}
+.ukDiscFeatured{margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
+.ukDiscCard_featured{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:9999px;
+  background:var(--uk-gold);color:var(--uk-on-gold);font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.02em}
+.ukDiscCard{display:block;text-align:left;padding:0;border:1px solid var(--line);background:var(--surface);
+  border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .15s ease,border-color .15s ease}
+.ukDiscCard:hover{transform:translateY(-2px);border-color:var(--active-ring)}
+.ukDiscCard:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukDiscCard_m{position:relative}
+.ukDiscCard_m .ukM{border-radius:0}
+.ukDiscCard_b{padding:12px 14px 15px}
+.ukDiscCard_t{margin:0;font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukDiscCard_by{display:flex;align-items:center;gap:6px;margin:6px 0 0;font-size:12.5px;color:var(--text-3)}
+.ukDiscCard_by img{width:20px;height:20px;border-radius:50%;object-fit:cover;flex:0 0 auto}
+.ukDiscCard_tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ukDiscCard_save{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;border:1px solid rgba(255,255,255,.7);
+  background:rgba(6,18,25,.5);color:#fff;cursor:pointer}
+.ukDiscCard_save svg{width:15px;height:15px;display:block}
+.ukDiscCard_save.is-on{background:var(--uk-gold);color:var(--uk-on-gold);border-color:var(--uk-gold)}
+.ukDiscOpen_m .ukM{border-radius:20px}
+.ukDiscOpen_by{display:flex;align-items:center;gap:9px;margin:0;font:700 14px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukDiscOpen_by img{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.ukDiscPerf{margin-top:16px;padding:13px 15px;border-radius:14px;background:var(--surface-2);
+  display:flex;gap:20px}
+.ukDiscPerf_lb{flex-basis:100%;margin:0 0 2px;font:700 10px/1 'Lato',sans-serif;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-3)}
+.ukDiscPerf_row{display:flex;flex-direction:column;gap:2px}
+.ukDiscPerf_v{font:700 18px/1 'Lato',sans-serif;color:var(--text)}
+.ukDiscOpen_save{display:flex;align-items:center;justify-content:center;gap:8px}
+.ukDiscOpen_save svg{width:16px;height:16px}
+.ukDiscColl{margin-bottom:22px}
+.ukDiscNewColl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.ukDiscNewColl input{flex:1 1 220px;min-width:0;padding:11px 14px;border-radius:12px;
+  border:1px solid var(--input-line);background:var(--input-bg);font:400 14px/1.4 'Lato',sans-serif;color:var(--text)}
+.ukDiscNewColl input:focus-visible{outline:2px solid var(--uk-gold);outline-offset:1px}
+@media (max-width:560px){
+  .ukDiscGrid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+}

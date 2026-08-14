@@ -30,8 +30,19 @@
 .ukDashTop_p{margin:0;font-size:14.5px;line-height:1.55;color:var(--text-2);text-wrap:balance}
 .ukDashTop_act{display:flex;gap:10px;flex-wrap:wrap}
 
+/* ---------- a divider between two halves of one page, not a card ----------
+   The Earnings page's own type scale, one size down from the page title, so
+   "this is a different question now" reads without inventing a second
+   heading style just for it. */
+.ukEarnSec{margin:36px 0 14px;padding-top:20px;border-top:1px solid var(--line)}
+.ukEarnSec_h{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:22px;line-height:1.15;margin:0 0 4px;color:var(--text);text-wrap:balance;
+}
+.ukEarnSec_p{margin:0;font-size:13.5px;line-height:1.5;color:var(--text-2);text-wrap:balance}
+
 /* ---------- bento ---------- */
-.ukBento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin:0 0 16px}
+.ukBento{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin:0 0 16px;align-items:stretch}
 .ukBento > *{min-width:0}
 .c3{grid-column:span 3}.c4{grid-column:span 4}.c5{grid-column:span 5}
 .c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
@@ -200,8 +211,20 @@
   opacity:.7;
 }
 
-.ukCh--ring{position:relative;width:100%;max-width:180px;margin:0 auto}
-.ukCh--ring svg{width:100%;display:block}
+/* aspect-ratio:1, not height-from-the-svg — a flex column's auto height from
+   an absolutely positioned top:0/bottom:0 child is technically circular (the
+   child needs the container's height to stretch into, the container has no
+   height until something in normal flow gives it one), and two rings built
+   from the exact same markup were resolving that circularity differently —
+   one square, one visibly taller than its own circle. ".ukCard > .ukCh{flex:1}"
+   above exists so line/bar charts fill a taller card next to them, but it
+   outranks a bare ".ukCh--ring" (two class selectors beat one) and stretches
+   the ring the same way whenever its row has a taller neighbour — the
+   ".ukCard > .ukCh--ring" form matches its specificity and wins on being the
+   later rule, so the ring stays the square it is meant to be regardless. */
+.ukCard > .ukCh--ring{flex:0 0 auto;align-self:center}
+.ukCh--ring{position:relative;width:100%;max-width:180px;aspect-ratio:1;margin:0 auto}
+.ukCh--ring svg{width:100%;height:100%;display:block}
 .ukCh_ticks{color:var(--text)}
 .ukCh_mid--c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
 .ukCh--ring .ukCh_mid{top:0;bottom:0;display:grid;place-content:center}
@@ -423,14 +446,26 @@
 .ukCh_mid strong{font-size:34px}
 .ukCh--gauge .ukCh_mid{bottom:6px}
 
-/* ---------- creator: the "pitch next" card ---------- */
-.ukCNext_m{display:block;border-radius:13px;overflow:hidden;margin:0 0 13px}
-.ukCNext_n{
-  margin:0 0 3px;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:18px;
-  line-height:1.25;color:var(--text);
-}
-.ukCNext_m2{margin:0;font-size:12.5px;color:var(--text-3);white-space:nowrap;
+/* ---------- creator: the "pitch next" list ---------- */
+.ukPitchNext{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.ukPitchNext li{display:flex;align-items:center;gap:14px;padding:10px;border-radius:14px;cursor:pointer}
+.ukPitchNext li:hover{background:var(--hover)}
+.ukPitchNext li:focus-visible{outline:2px solid var(--uk-gold);outline-offset:-2px}
+.ukPitchNext_m{position:relative;flex:0 0 100px;width:100px;aspect-ratio:4/3;border-radius:12px;
+  overflow:hidden;background:var(--av-bg)}
+.ukPitchNext_m img{width:100%;height:100%;object-fit:cover;display:block}
+.ukPitchNext_m .ukScore2{top:6px;right:6px;padding:4px 8px;font-size:11px}
+.ukPitchNext_b{min-width:0;flex:1 1 auto;display:flex;flex-direction:column;gap:2px}
+.ukPitchNext_n{font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text);white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
+.ukPitchNext_c{font:400 12.5px/1.35 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.ukPitchNext_w{font:400 12px/1.4 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+@media (max-width:480px){
+  .ukPitchNext_m{flex-basis:76px;width:76px}
+  .ukPitchNext_w{display:none}
+}
 
 /* "Ask in plain English" used to have a page-local box here (.ukAsk2 and friends,
    one on Pitch Pilot, one on the Creators network). Both are retired in favour of

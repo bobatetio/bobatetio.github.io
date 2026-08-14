@@ -335,8 +335,12 @@
   background:linear-gradient(5.71deg,var(--uk-gold) 13%,var(--uk-gold-2) 90%);
   color:var(--uk-on-gold);font:700 12.5px/1 'Lato',sans-serif;
   box-shadow:0 2px 10px rgba(215,165,67,.35);
-  /* nothing to ask until something is typed, so it rests quietly */
-  opacity:.45;
+  /* Quieter than its typing state, but still a button: at .45 against the
+     field's own warm gradient border it read as a pale smudge rather than a
+     control, which is what made it look like it was floating over the field
+     instead of belonging to it. .7 keeps the "nothing to ask yet" restraint
+     without losing the shape. */
+  opacity:.7;
   transition:opacity .18s ease, filter .18s ease, box-shadow .18s ease
 }
 .ukAskShell.is-typing .ukAsk_go,
@@ -483,6 +487,9 @@
 /* panels — title inside */
 .ukGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start}
 .ukPanel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,2vw,26px)}
+/* ROI > Links & codes > How it works: three read-only reference panels stacked
+   straight in the DOM with nothing between them otherwise. */
+.ukHowPanels{display:flex;flex-direction:column;gap:20px}
 .ukPanel_head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 18px}
 .ukPanel_title{font-family:"Marcellus",serif;font-weight:400;font-size:19px;line-height:1.15;margin:0;color:var(--text)}
 .ukPanel_more{font:600 12.5px/1 'Lato',sans-serif;color:var(--accent);text-decoration:none;white-space:nowrap;
@@ -501,6 +508,7 @@
 .ukTag--wait{background:var(--tag-wait-bg);color:var(--tag-wait-ink)}
 .ukTag--you{background:var(--tag-you-bg);color:var(--tag-you-ink)}
 .ukTag--done{background:var(--tag-done-bg);color:var(--tag-done-ink)}
+.ukTag--late{background:rgba(184,52,52,.1);color:#8d2a2a}
 
 /* next action strip */
 .ukTodo{display:flex;align-items:center;gap:16px;background:var(--todo-bg);
@@ -523,6 +531,10 @@
 .ukEmpty{text-align:center;padding:clamp(30px,4vw,52px) 20px}
 .ukEmpty_t{font-family:"Marcellus",serif;font-weight:400;font-size:21px;color:var(--text);margin:0 0 8px}
 .ukEmpty_p{font:400 14px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0 auto;max-width:420px;text-wrap:pretty}
+/* whatever follows the description — almost always the CTA button — sits
+   right against it with no margin of its own; this is the one place that
+   gap belongs, so every empty state gets it without each caller adding it */
+.ukEmpty_p + *{margin-top:20px}
 .ukStub{border:1px dashed var(--line);background:var(--surface-2)}
 
 @media (max-width:1000px){
@@ -574,8 +586,14 @@
   border-radius:2px;background:var(--uk-gold)}
 .ukFilters--tabs .ukFilter_ct{background:var(--tag-done-bg);color:var(--text-3)}
 .ukFilters--tabs .ukFilter.is-on .ukFilter_ct{background:var(--tag-done-bg);color:var(--text-2)}
+/* Same box, same type as .ukBtn — the two sit side by side constantly (accept/
+   decline, confirm/cancel) and used to carry different padding, radius and
+   type size, so the pair read as two different sizes of button rather than
+   one choice presented twice. Only the surface (gold fill vs bordered ghost)
+   is what should tell them apart. */
 .ukGhost{border:1px solid var(--input-line);background:var(--surface-2);color:var(--text);cursor:pointer;
-  padding:10px 16px;border-radius:12px;font:600 13px/1 'Lato',sans-serif;white-space:nowrap}
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 22px;border-radius:14px;font:700 15px/1.4 'Lato',sans-serif;white-space:nowrap}
 .ukGhost:hover{background:var(--hover)}
 .ukGhost:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
 
@@ -1514,6 +1532,44 @@
 .ukProof dd{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:18px;line-height:1;margin:0;color:var(--text);white-space:nowrap}
 .ukChip--v{display:inline-flex;align-items:center;gap:5px;background:var(--tag-you-bg);color:var(--tag-you-ink);font-weight:700}
 .ukChipVet{flex:0 0 auto;display:block;width:12px;height:12px;color:currentColor}
+/* Academy certification: the same seal, its own tint — a distinct
+   credibility signal from "Verified" (which is membership), not a second
+   copy of it. */
+.ukChip--academy{display:inline-flex;align-items:center;gap:5px;background:var(--tag-done-bg,var(--tag-you-bg));
+  color:var(--gold-ink);font-weight:700;margin-left:6px}
+
+/* ---- the badge collection: one per Academy module, plus the certification ----
+   Locked reuses the earned card's own shape at lower contrast rather than a
+   different visual language — the difference is state, not a demotion. */
+.ukAcadBadges{margin-bottom:20px}
+.ukBadgeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:4px}
+.ukBadge{
+  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  padding:16px 10px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);
+  cursor:pointer;color:var(--text-3);
+}
+.ukBadge:hover{border-color:var(--line-soft);background:var(--hover)}
+.ukBadge_ic{width:30px;height:30px;color:var(--text-3);opacity:.4}
+.ukBadge.is-on{border-color:transparent;background:var(--tag-done-bg,var(--tag-you-bg))}
+.ukBadge.is-on .ukBadge_ic{color:var(--gold-ink);opacity:1}
+.ukBadge_t{font:700 12.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukBadge_s{font:400 11px/1.3 'Lato',sans-serif;color:var(--text-3)}
+.ukBadge.is-on .ukBadge_s{color:var(--gold-ink)}
+.ukBadgeCert{
+  display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;
+  border-radius:14px;border:1px solid var(--line);background:var(--surface-2);
+}
+.ukBadgeCert.is-on{border-color:transparent;background:var(--tag-done-bg,var(--tag-you-bg))}
+.ukBadgeCert_t{font:700 13.5px/1.3 'Lato',sans-serif;margin:0;color:var(--text)}
+.ukBadgeCert_s{font:400 12px/1.4 'Lato',sans-serif;margin:2px 0 0;color:var(--text-2)}
+.ukBadgeCert .ukBadge_ic{flex:0 0 auto;width:26px;height:26px;color:var(--text-3);opacity:.4}
+.ukBadgeCert.is-on .ukBadge_ic{color:var(--gold-ink);opacity:1}
+
+/* the compact strip on a profile — credentials already earned, next to the
+   verified seal, not the whole locked/unlocked collection */
+.ukBadgeStrip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ukBadgeStrip .ukChip2{display:inline-flex;align-items:center;gap:5px}
+.ukBadgeStrip .ukChip2 svg{width:11px;height:11px;flex:0 0 auto}
 
 /* bookings & roi, deliberately empty */
 
@@ -1824,9 +1880,16 @@
 .ukMini_m{font:400 12px/1.35 'Lato',sans-serif;color:var(--text-2);margin:2px 0 0}
 .ukMini_s{font:400 11.5px/1.35 'Lato',sans-serif;color:var(--text-3);margin:2px 0 0}
 
-/* view toggle */
+/* view toggle
+   --tone: ukdash.css declares its own bare .ukSeg for the chart's segmented
+   bar (a fixed height:38px, meant for that stacked-segment chart). The pitch
+   composer's tone toggle shares the .ukSeg class name for its pill track, so
+   that fixed height leaked in here too and fought the button's own
+   min-height touch target, pushing the pills past the track's rounded edge.
+   This modifier undoes it and lets the track size to its content again. */
 .ukSeg{display:flex;gap:2px;padding:3px;border-radius:9999px;background:var(--input-bg);
   border:1px solid var(--input-line);flex:0 0 auto}
+.ukSeg.ukSeg--tone{height:auto}
 .ukSeg_b{border:none;background:none;cursor:pointer;padding:8px 16px;border-radius:9999px;
   font:600 12.5px/1 'Lato',sans-serif;color:var(--text-2)}
 .ukSeg_b:hover{color:var(--text)}
@@ -2049,6 +2112,9 @@
   background:var(--hover);color:var(--text-2);border:1px solid var(--line-soft);
 }
 .ukChip2.is-key{background:var(--tag-you-bg);color:var(--tag-you-ink);border-color:transparent;font-weight:700}
+/* the rate beside an arrangement — same chip, a quieter weight for the
+   number so the arrangement name still reads first */
+.ukChip2_rate{margin-left:6px;font-style:normal;font-weight:400;opacity:.75}
 
 /* ---- hiring helper ---- */
 .ukHire{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;align-items:start}
@@ -2854,6 +2920,7 @@
   font:700 15px/1.25 'Lato',sans-serif;color:var(--text);
 }
 .ukCrVet{flex:0 0 auto;display:block;width:15px;height:15px;color:var(--uk-deep)}
+.ukCrVet--academy{color:var(--gold-ink);margin-left:4px}
 .ukCrFlag{
   display:inline-block;width:15px;height:11px;object-fit:cover;border-radius:2px;
   margin-right:5px;vertical-align:-1px;box-shadow:0 0 0 1px rgba(15,43,52,.14);
@@ -3301,9 +3368,6 @@
 .ukStageSelect{min-width:220px;max-width:280px}
 .ukStageNote{margin:4px 0 18px;font:400 13px/1.5 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 .ukBoardCard_pad{padding:18px;display:flex;flex-direction:column;gap:14px}
-.ukThumbWrap{display:block;width:52px;height:52px;overflow:hidden;border-radius:10px}
-.ukThumbWrap .ukM{display:block;width:100%;height:100%;aspect-ratio:1/1}
-.ukThumbWrap img{width:100%;height:100%;object-fit:cover}
 
 .ukCollabHead2{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
 .ukCollabHead2_id{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 320px}
@@ -3431,6 +3495,13 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
   color:var(--text-3);font-size:20px;line-height:1;cursor:pointer}
 .ukPop_x:hover{background:var(--hover);color:var(--text)}
 .ukPop_list{list-style:none;margin:12px 0 0;padding:0 14px 4px 0;overflow-y:auto;display:grid;gap:2px}
+/* A section label inside the popup — "Home base" ahead of "Also headed to".
+   Right after the header it takes the header's own 14px; between two lists
+   it needs to read as a break between groups, not just more list, so it
+   gets more room above than a plain row ever does. */
+.ukPop_sec{margin:20px 0 0 2px;font:700 10px/1 'Lato',sans-serif;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-3)}
+.ukPop_head + .ukPop_sec{margin-top:14px}
 .ukPop_row{display:flex;align-items:center;padding:9px 4px;border-radius:10px;
   font:600 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
 .ukPop_row .ukCrFlag{margin-right:8px}
@@ -3450,6 +3521,18 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 .ukCrD_track{margin-top:clamp(14px,1.8vw,18px);padding-top:14px;border-top:1px solid var(--line-soft)}
 .ukCrD_track .ukTrack{max-width:none}
+
+/* Five equal-width segments left each stage label under 80px at a phone's
+   width, which .ukTrack_lb's own ellipsis quietly clipped down to a single
+   letter — never visibly broken, just unreadable. Wrapping to two rows here
+   gives every label the width it actually needs instead of shrinking the
+   words to fit the row. */
+@media (max-width:600px){
+  .ukCrD_track .ukTrack{flex-wrap:wrap;border-radius:12px}
+  .ukCrD_track .ukTrack li{flex:1 1 33%;border-left:0;border-top:1px solid var(--line-soft)}
+  .ukCrD_track .ukTrack li:nth-child(-n+3){border-top:0}
+  .ukCrD_track .ukTrack_lb{white-space:normal;overflow:visible;text-overflow:clip;font-size:11.5px}
+}
 
 @media (max-width:860px){
   .ukCrD_grid{grid-template-columns:1fr;grid-template-areas:'who' 'side' 'stats'}
@@ -3471,6 +3554,32 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 /* capped so the conversation panel does not tower over the stay card beside it */
 .ukFlowThread .ukMsgs{max-height:300px;margin-bottom:0;padding-right:2px}
 .ukSideCol{display:flex;flex-direction:column;gap:18px;min-width:0}
+
+/* the panel head now carries a third thing (the focus toggle) alongside the
+   title and the count — grouped together on the left so space-between still
+   puts one clear thing on the right instead of spreading three across it */
+.ukPanel_headTxt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+
+/* the focus toggle: a real pill, not a quiet icon button, because the point
+   raised was that it has to be easy to spot on a screen with a lot going on */
+.ukFocusToggle{display:flex;align-items:center;gap:7px;flex:0 0 auto;
+  padding:8px 14px;border-radius:9999px;border:1px solid var(--uk-gold);
+  background:var(--tag-you-bg);color:var(--tag-you-ink);
+  font:700 12px/1 'Lato',sans-serif;cursor:pointer;white-space:nowrap}
+.ukFocusToggle svg{width:15px;height:15px;flex:0 0 auto}
+.ukFocusToggle:hover{background:var(--uk-gold);color:#fff}
+.ukFocusToggle.is-on{background:var(--uk-gold);color:#fff;box-shadow:0 2px 10px rgba(215,165,67,.35)}
+.ukFocusToggle:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+@media (max-width:480px){ .ukFocusToggle span{display:none} }
+
+/* focus mode: the sidebar and the header's own stat row step aside, and the
+   conversation itself gets the room they were taking up — this is the one
+   thing that toggle does, nothing about the page's data changes */
+.ukThreadPage.is-focus .ukGrid--thread{grid-template-columns:1fr}
+.ukThreadPage.is-focus .ukSideCol{display:none}
+.ukThreadPage.is-focus .ukCrD_stats{display:none}
+.ukThreadPage.is-focus .ukFlow{max-width:760px;margin:0 auto;width:100%}
+.ukThreadPage.is-focus .ukFlowThread.is-focus .ukMsgs{max-height:min(62vh,640px)}
 
 /* The composer is part of the conversation, not a panel inside it and not a
    pinned footer with a rule above it. No border at all — it simply follows the
@@ -3919,8 +4028,12 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 /* ---- creators map view ----
    The globe is the same object the hotel onboarding uses; this only gives it a
    box to live in and puts the roster beside it. */
-.ukMapSlot--tall{position:relative;height:clamp(380px,54vh,600px);border-radius:16px;overflow:hidden;
-  background:var(--input-bg);border:1px solid var(--line)}
+/* aspect-ratio, not a tall fixed/viewport height — the map itself is a 2:1
+   surface, and a box any taller than that just letterboxes it, showing empty
+   space above and below no matter how the fix above centred it. Matching the
+   box to the map's own shape is what actually closes that gap. */
+.ukMapSlot--tall{position:relative;aspect-ratio:2/1;min-height:260px;max-height:460px;
+  border-radius:16px;overflow:hidden;background:var(--input-bg);border:1px solid var(--line)}
 /* .ukMap_note is absolutely positioned by the old flat-map rules; under the globe
    it is an ordinary caption sitting below the box */
 .ukHybrid_map .ukMap_note{position:static;margin:10px 2px 0;padding:0;background:none;border:0;
@@ -3947,47 +4060,45 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 @media (prefers-reduced-motion:reduce){ .ukMini{transition:none} }
 
 
-/* ---- globe pins ----
-   Ported from ukcreator.css unchanged: the hotel app mounts the same UKDOTMAP
-   globe (Who to host, and the creators map view) but had none of the styling for
+/* ---- flat map pins ----
+   Ported from ukcreator.css unchanged: the hotel app mounts the same UKWORLDMAP
+   flat map (Who to host, and the creators map view) but had none of the styling for
    the pin layer it renders, so a pin's flag was an unsized <img> filling the box. */
-/* THE canvas rule. Without it the element lays out at its width/height
-   ATTRIBUTES, which are the backing store — CSS pixels x devicePixelRatio. On a
-   1x screen that happens to equal the box and everything looks correct; on a
-   Retina display the canvas becomes twice the box, so the globe renders at double
-   size hanging off the bottom-right corner while the HTML pin layer, which is in
-   real CSS pixels, stays put in the middle. That is the whole "the globe is not
+/* THE svg rule. Without it the element lays out at its width/height
+   ATTRIBUTES rather than the host's CSS box. That is the whole "the map is not
    centred" fault, and it was invisible to every check I ran at 1x. */
-.ukMap_cv{position:absolute;inset:0;display:block;width:100%;height:100%}
+/* the flat map's own SVG surface — dots, arcs and pin markers are all real SVG,
+   drawn once and left alone; only the pan/zoom transform below ever moves.
+   --map-dot/--map-dot-on/--map-sea/--map-grid have no definition on this side
+   (ukcreator.css owns them) so they fall through to var()'s own fallback here. */
+.ukMap_svg{position:absolute;inset:0;display:block;width:100%;height:100%}
+.ukMap_sea{fill:var(--map-sea,#e9e3d6)}
+.ukMap_dot{fill:var(--map-dot,rgba(16,46,55,.32))}
+.ukMap_arc{fill:none;stroke:var(--map-dot-on,#d7a543);stroke-width:1.6;stroke-linecap:round;
+  stroke-dasharray:5 6;opacity:.8;animation:ukMapFlow 2.4s linear infinite}
+@keyframes ukMapFlow{ to{ stroke-dashoffset:-33 } }
+.ukMap_pinDot{fill:var(--map-dot-on,#d7a543)}
+.ukMap_pinRing{fill:none;stroke:var(--map-dot-on,#d7a543);stroke-width:2;opacity:.55;
+  transform-box:fill-box;transform-origin:center;animation:ukMapRing 2.1s ease-out infinite}
+@keyframes ukMapRing{ 0%{transform:scale(1);opacity:.55} 100%{transform:scale(3.4);opacity:0} }
 /* ISOLATION. The placement loop gives every pin a z-index in the thousands so
    pins stack correctly against each other. Without a stacking context of its own,
    the map hands those numbers to the whole page — so a pin at z-index 1400 sits
    over a dropdown at 60, and the menu opens *behind* the map's labels. Contained
-   here, the map competes with the page as a single layer at z-index 0. This rule
-   existed on the creator side and I did not bring it across with the pin styling;
-   it is the same omission as .ukMap_cv above. */
-.ukMap{position:relative;isolation:isolate;z-index:0}
-.ukMap_stems{position:absolute;inset:0;z-index:1;pointer-events:none}
+   here, the map competes with the page as a single layer at z-index 0. */
+.ukMap{position:relative;isolation:isolate;z-index:0;touch-action:none;user-select:none}
+/* grab only once zoomed in — at the minimum zoom the whole world already
+   fits the box, so there is nowhere a drag could pan to */
+.ukMap.is-pannable{cursor:grab}
+.ukMap.is-pannable.is-grabbing{cursor:grabbing}
 .ukMap_pins{position:absolute;inset:0;pointer-events:none}
-.ukMapStem{position:absolute;top:0;left:0;will-change:transform,height;
-  width:1.5px;background:var(--uk-gold)}
-.ukMapStem::after{content:'';position:absolute;left:-3.75px;top:100%;
-  width:9px;height:9px;border-radius:50%;
-  background:var(--uk-gold);box-shadow:0 0 0 0 rgba(215,165,67,.55);
-  animation:ukMapPulse 2.1s ease-out infinite}
-@keyframes ukMapPulse{
-  0%   {box-shadow:0 0 0 0 rgba(215,165,67,.55)}
-  70%  {box-shadow:0 0 0 11px rgba(215,165,67,0)}
-  100% {box-shadow:0 0 0 0 rgba(215,165,67,0)}
-}
-.ukMapPin{position:absolute;top:0;left:0;will-change:transform;
+.ukMapPin{position:absolute;will-change:transform;
   display:flex;align-items:center;gap:7px;
   padding:5px 10px 5px 5px;border-radius:999px;
   background:var(--uk-deep);color:#fff;
   box-shadow:0 6px 16px rgba(4,16,22,.34);
   white-space:nowrap;pointer-events:auto;
-  /* no left offset: the placement loop centres the chip on its point */
-  margin:-46px 0 0 0}
+  transform:translate(-50%,calc(-100% - 10px))}
 .ukMapPin_f{width:20px;height:20px;border-radius:50%;object-fit:cover;flex:0 0 auto;display:block}
 .ukMapPin_b{display:flex;flex-direction:column;line-height:1.1}
 .ukMapPin_n{font:700 12px/1.25 'Lato',sans-serif}
@@ -4001,7 +4112,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukMap_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
 .ukMap_b svg{width:15px;height:15px;display:block}
 @media (max-width:560px){ .ukMapPin_s{display:none} }
-@media (prefers-reduced-motion:reduce){ .ukMapStem::after{animation:none} }
+@media (prefers-reduced-motion:reduce){ .ukMap_arc,.ukMap_pinRing{animation:none} }
 
 /* The globe fills whichever slot it is mounted into. Both slots must establish a
    position context of their own first: absolute against an ancestor that isn't
@@ -4064,7 +4175,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukPlace_os{margin-left:auto;font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-3);
   white-space:nowrap;flex:0 0 auto}
 .ukPlace_none{margin:0;padding:12px 10px;font:400 13px/1.5 'Lato',sans-serif;color:var(--text-3)}
-.ukMapSlot--hire{position:relative;height:220px;border-radius:14px;overflow:hidden;
+.ukMapSlot--hire{position:relative;aspect-ratio:2/1;max-height:220px;border-radius:14px;overflow:hidden;
   background:var(--input-bg);border:1px solid var(--line)}
 .ukMapSlot--hire .ukMap{position:absolute;inset:0;width:auto;height:auto;aspect-ratio:auto;
   margin:0;border:0;border-radius:inherit;background:var(--input-bg)}
@@ -4184,6 +4295,13 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 /* ---- host flow: step two ---- */
 /* a count that looks like a count, answerable without a keyboard */
+.ukInputPre{display:inline-flex;align-items:center;gap:2px;border-radius:10px;
+  border:1px solid var(--input-line);background:var(--input-bg);padding:0 12px}
+.ukInputPre_p{color:var(--text-3);font:700 15px/1 'Lato',sans-serif}
+.ukInputPre_i{border:none;background:none;height:38px;width:100px;color:var(--text);
+  font:700 15px/1 'Lato',sans-serif;font-variant-numeric:tabular-nums}
+.ukInputPre_i:focus-visible{outline:none}
+.ukInputPre:focus-within{outline:2px solid var(--uk-gold);outline-offset:1px}
 .ukNum{display:flex;align-items:center;gap:8px}
 .ukNum_b{width:38px;height:38px;flex:0 0 38px;border-radius:10px;cursor:pointer;
   border:1px solid var(--input-line);background:var(--surface);color:var(--text);
@@ -4387,7 +4505,11 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
   border-radius:50%;cursor:pointer;background:none;color:var(--text-3);
   display:grid;place-items:center;
   transition:color .15s ease,transform .15s ease}
-.ukFav_i{width:16px;height:16px;display:block}
+/* The bookmark's own viewBox (17.5x19.5 outline, 16x18 solid) is taller than
+   wide — forcing both dimensions to the same pixel value squeezed it about a
+   tenth narrower than it was drawn. Height stays the anchor, width follows
+   its real proportion instead. */
+.ukFav_i{width:14px;height:16px;display:block}
 .ukFav:hover{color:var(--uk-gold);transform:scale(1.08)}
 .ukFav:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
 .ukFav.is-on{color:var(--uk-gold)}
@@ -4396,7 +4518,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 
 /* the creator side's save control carries the same bookmark */
-.ukHeart .ukFav_i{width:17px;height:17px;display:block}
+.ukHeart .ukFav_i{width:15px;height:17px;display:block}
 
 
 /* hosted stays: this page's numbers and actions in the shared card's foot */
@@ -4706,7 +4828,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 /* the save control sitting beside Hire, in the header's action pill */
 .ukStatusBadge_b--ic{display:grid;place-items:center;width:36px;padding:0;flex:0 0 36px}
-.ukStatusBadge_b--ic .ukFav_i{width:16px;height:16px;display:block}
+.ukStatusBadge_b--ic .ukFav_i{width:14px;height:16px;display:block}
 .ukStatusBadge_b--ic.is-on{color:var(--gold-ink)}
 
 
@@ -4925,6 +5047,9 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukOb_nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
 .ukOb_nav .ukNav_go{min-width:120px;justify-content:center}
 .ukOb_nav .ukBtn[disabled]{opacity:.45;pointer-events:none}
+/* a step's own left-side note (e.g. the reach total on the platforms step) —
+   same line as Continue/Finish, not a paragraph stacked above it */
+.ukOb_navNote{margin:0}
 
 /* ---- onboarding: the tier-two checklist ----
    Sits at the top of the dashboard while there is anything left in it, and stops
@@ -4934,12 +5059,9 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukObList_head{display:flex;align-items:baseline;justify-content:space-between;gap:14px}
 .ukObList_t{margin:0;font-family:"Marcellus",serif;font-weight:400;font-size:19px;color:var(--text)}
 .ukObList_c{margin:0;font:600 12.5px/1 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
-.ukObList_bar{height:6px;border-radius:9999px;background:var(--c1-track,var(--tag-done-bg));
-  overflow:hidden;margin:12px 0 4px}
-.ukObList_bar i{display:block;height:100%;border-radius:9999px;background:var(--uk-gold);
-  transition:width .3s ease}
-.ukObList_l{list-style:none;margin:0;padding:0}
+.ukObList_l{list-style:none;margin:12px 0 0;padding:0}
 .ukObTask{display:flex;align-items:center;gap:13px;padding:13px 0;border-top:1px solid var(--line)}
+.ukObTask:first-child{border-top:0}
 .ukObTask_tick{flex:0 0 22px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
   border:1.5px solid var(--input-line);background:var(--surface)}
 .ukObTask.is-done .ukObTask_tick{background:var(--uk-gold);border-color:var(--uk-gold);
@@ -4950,7 +5072,6 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukObTask.is-done .ukObTask_t{color:var(--text-3);text-decoration:line-through}
 .ukObTask_s{font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 .ukObTask .ukGhost{flex:0 0 auto}
-@media (prefers-reduced-motion:reduce){ .ukObList_bar i{transition:none} }
 @media (max-width:560px){
   .ukObTask{flex-wrap:wrap}
   .ukObTask .ukGhost{margin-left:35px}

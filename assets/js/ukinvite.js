@@ -70,10 +70,19 @@ window.UKINVITE = (function () {
   }
 
   /* ---- hotel side ---- */
-  function invite(stayId, creatorIds, capacity) {
+  /* brief is optional and freeform — notes, a link, an attached file's name,
+     any subset. It rides on the invitation record itself rather than only
+     existing once a collab does, so a creator can read what is actually
+     wanted before they have said yes to anything. */
+  function invite(stayId, creatorIds, capacity, brief, deal) {
     var a = loadAll();
     var inv = a[stayId] || { stay: stayId, capacity: capacity || 1, invitees: [], at: 'just now' };
     if (capacity) inv.capacity = capacity;
+    if (brief && (brief.notes || brief.link || brief.file)) inv.brief = brief;
+    /* The arrangement rides on the invitation the same way the brief does —
+       a creator deciding whether to accept needs to know it is a paid
+       campaign before they say yes, not find out in the thread after. */
+    if (deal && deal.collabType) { inv.collabType = deal.collabType; inv.fee = deal.fee || null; }
     (creatorIds || []).forEach(function (cid) {
       var has = inv.invitees.filter(function (i) { return i.creator === cid; })[0];
       /* topping up: someone who declined can be asked again on a later round,

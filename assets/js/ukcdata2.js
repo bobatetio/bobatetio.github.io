@@ -31,6 +31,14 @@
     'Wine & vineyards', 'Nightlife', 'Diving', 'Markets', 'Road trips'
   ];
 
+  /* ---------------- collaboration types ----------------
+     What a creator will accept, and what a hotel can offer — one vocabulary,
+     read by both sides. A hosted stay is only one of four real arrangements;
+     the other three involve real money, so a creator states which of these
+     they will actually consider, the same way they already state their
+     niches and formats. */
+  D.COLLAB_TYPES = ['Hosted stay', 'Hosted stay + creative fee', 'Paid campaign'];
+
   /* PLUG-IN POINT — travel-type suggestion.
      Replace with: the real onboarding classifier, or simply drop it once creators
      have history to infer from. Today it maps the niche they already picked onto a
@@ -62,6 +70,27 @@
   D.me.types     = ['Wellness', 'Solo travel'];
   D.me.age       = '25 - 34';
   D.me.interests = ['Slow mornings', 'Design & architecture', 'Local food'];
+  /* Seeded to the same two-thirds she already does — hosted stay first, plus
+     being open to a fee on top. Paid campaign is a real option a creator
+     can add, not assumed on. */
+  D.me.collabTypes = ['Hosted stay', 'Hosted stay + creative fee'];
+  /* Real numbers for the one paid arrangement she has actually turned on —
+     "Hosted stay" alone never gets a rate, the stay is the payment. Left
+     genuinely unset here is not the demo's job to fake; this is what an
+     account that has actually filled the field in looks like. */
+  D.me.rates = { 'Hosted stay + creative fee': 350 };
+  /* window.UKME's own literal (ukshared.js) predates both of these fields,
+     so a hotel opening her profile before either was ever manually saved
+     would see none of this — the same gap markLessonDone() already closed
+     for Academy badges, closed here too so what a fresh account starts
+     with is what a hotel actually sees, not just what gets typed later.
+     Only fills a genuinely empty record: ukshared.js already hydrated
+     window.UKME from any real, persisted edit before this line runs, and
+     a seed's job is to fill a gap, never to overwrite something that
+     actually happened since. */
+  if (window.UKME_SET && (!window.UKME.collabTypes || !window.UKME.collabTypes.length)) {
+    window.UKME_SET({ collabTypes: D.me.collabTypes.slice(), rates: Object.assign({}, D.me.rates) });
+  }
 
   /* ---------------- 4. profile: top stays, itinerary, partnership work ---------------- */
   D.me.topStays = [
@@ -94,53 +123,6 @@
     { id:'pw3', m:'reel3', hotel:'MiraGrace Estate',t:'Breakfast on the terrace',
       out:'1 video, 3 photos', rights:'They keep and post it', plays:19400 }
   ];
-
-  /* ---------------- 5. mood boards ----------------
-     Organised by destination / budget / vibe, which are the three ways creators
-     actually think about a trip. */
-  D.BOARD_KINDS = [
-    { k:'destination', l:'Destination', hint:'Everything for one place' },
-    { k:'budget',      l:'Budget',      hint:'What it costs to do it well' },
-    { k:'vibe',        l:'Vibe',        hint:'A feeling, wherever it is' }
-  ];
-
-  D.boards = [
-    { id:'b1', t:'Portugal, off-season', kind:'destination', sub:'Lisbon to the Algarve',
-      cover:'reel4', shared:true,
-      note:'November to March. Cheaper, quieter, and the light is better than anyone tells you.',
-      picks:[
-        { id:'p1', m:'reel4', t:'Alfama rooftops',    tag:'Lisbon',  note:'Golden hour from any of them.' },
-        { id:'p2', m:'shot1', t:'Tiled facades',      tag:'Lisbon',  note:'The blue ones near Graça.' },
-        { id:'p3', m:'reel1', t:'Empty beaches',      tag:'Algarve', note:'Off-season means you get the whole cove.' },
-        { id:'p4', m:'shot2', t:'Market mornings',    tag:'Lisbon',  note:'Go before ten or not at all.' }
-      ] },
-    { id:'b2', t:'Slow luxury under £200', kind:'budget', sub:'Per night, and worth it',
-      cover:'reel2', shared:false,
-      note:'Properties that feel expensive and are not. Mostly independent, mostly out of season.',
-      picks:[
-        { id:'p5', m:'reel2', t:'Jungle cabanas',     tag:'Mid-range', note:'Casa Azul, midweek.' },
-        { id:'p6', m:'shot3', t:'Rooftop riads',      tag:'Mid-range', note:'Marrakesh is the best value on this list.' },
-        { id:'p7', m:'reel5', t:'Garden suites',      tag:'Mid-range', note:'Look for shoulder season.' }
-      ] },
-    { id:'b3', t:'Quiet mornings', kind:'vibe', sub:'The whole point of the trip',
-      cover:'reel1', shared:true,
-      note:'Places where nothing happens before nine and nobody minds.',
-      picks:[
-        { id:'p8',  m:'reel1', t:'Terrace light',   tag:'Calm',  note:'East-facing, always.' },
-        { id:'p9',  m:'reel3', t:'Long breakfasts', tag:'Calm',  note:'The kind you have to be asked to leave.' },
-        { id:'p10', m:'shot4', t:'Empty pools',     tag:'Calm',  note:'Before the loungers get claimed.' }
-      ] }
-  ];
-
-  D.board = function (id) {
-    return D.boards.filter(function (b) { return b.id === id; })[0] || null;
-  };
-  D.addBoard = function (b) {
-    b.id = 'b' + (D.boards.length + 1);
-    b.picks = b.picks || [];
-    D.boards.unshift(b);
-    return b;
-  };
 
   /* ---------------- 3. hotel profile (creator-facing) ----------------
      Extends each stay with what a creator actually decides on. Keyed by stay id so
