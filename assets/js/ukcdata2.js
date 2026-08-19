@@ -92,6 +92,31 @@
     window.UKME_SET({ collabTypes: D.me.collabTypes.slice(), rates: Object.assign({}, D.me.rates) });
   }
 
+  /* Where booking commissions, creative fees and referral commissions get
+     paid out to, once each clears — see ukcviews.js's aPayout(). Genuinely
+     saved now (data-savepayout in ukcapp.js), not just a toast: real
+     transfers are still not built, but what a creator types here should not
+     vanish on reload.
+
+     Deliberately NOT window.UKME/UKME_SET (ukshared.js) — that record is the
+     one BOTH apps read, and ukdata.js's hotel-side merge holds var M =
+     window.UKME with full read access to it. Rates and collabTypes belong
+     there because a hotel is meant to see them. An IBAN or a PayPal email is
+     not a hotel's business, so this stays in its own creator-app-only key —
+     same idea as UKME_SET's overlay, just not shared across the origin. */
+  var PAYOUT_KEY = 'uk_payout_v1';
+  function loadPayout() {
+    try { return JSON.parse(localStorage.getItem(PAYOUT_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  D.me.payout = Object.assign(
+    { method:'Bank transfer', paypalEmail:'', acctName:'', iban:'', country:'' },
+    loadPayout()
+  );
+  D.savePayout = function (patch) {
+    Object.assign(D.me.payout, patch);
+    try { localStorage.setItem(PAYOUT_KEY, JSON.stringify(D.me.payout)); } catch (e) {}
+  };
+
   /* ---------------- 4. profile: top stays, itinerary, partnership work ---------------- */
   D.me.topStays = [
     { id:'ts1', m:'reel2', hotel:'Casa Azul Tulum',  city:'Tulum, Mexico',      when:'Jan 2026',

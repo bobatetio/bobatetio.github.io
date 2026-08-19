@@ -50,7 +50,7 @@ window.UKPLATCONNECT = (function () {
   /* What a connect actually brings back besides a number. The step says "we read
      your work from them, so there is nothing to upload", and this is that
      sentence being true: connecting fills the creator's recent posts, which is
-     what a hotel looks at first and what the media kit is built from.
+     what a hotel looks at first and what the profile page is built from.
 
      Seeded per platform for the same reason the follower count is - connecting
      the same account twice should not invent a different history.
@@ -74,7 +74,7 @@ window.UKPLATCONNECT = (function () {
     pi: [['shot3','Saved: rooms with a view',5400,470,'6 weeks ago']]
   };
   /* Newest first across every connected account, deduped: the same post is often
-     cross-posted, and a media kit that lists it twice reads as padding. */
+     cross-posted, and a profile that lists it twice reads as padding. */
   function work(plats) {
     var out = [], seen = {};
     (plats || []).forEach(function (r) {

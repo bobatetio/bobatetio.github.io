@@ -159,8 +159,15 @@ window.UKSTAY = (function () {
     if (pk === undefined) {
       var pr = propertyOf(stay, opts);
       pk = (stay.id || stay.t || pr.name || '').toString().replace(/[^a-zA-Z0-9]/g, '').slice(0, 24);
-      del = (stay.del || []).map(function (d) { return d.q + ' × ' + d.t.toLowerCase(); });
-      got = (stay.del || []).reduce(function (a, d) { return a + (d.q || 0); }, 0);
+      /* A proposed (not yet confirmed) deliverable can arrive as one free-text
+         line with no real quantity of its own — d.q is '' rather than a
+         number then, and "× " has nothing to connect, so it is left off
+         rather than printed as a stray leading "× ". */
+      del = (stay.del || []).map(function (d) { return (d.q || d.q === 0 ? d.q + ' × ' : '') + d.t.toLowerCase(); });
+      /* A proposed deliverable with no numeric quantity still counts as one
+         real asset, not zero — "Not set yet" next to a line that plainly
+         does say what is being delivered would read as a contradiction. */
+      got = (stay.del || []).reduce(function (a, d) { return a + (d.q || d.q === 0 ? d.q : (d.t ? 1 : 0)); }, 0);
       var incList = stay.incList && stay.incList.length
         ? stay.incList
         : String(stay.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
@@ -235,8 +242,11 @@ window.UKSTAY = (function () {
     var isHotel = opts.of === 'hotel';
     var pk = (stay.id || stay.t || pr.name || '').toString().replace(/[^a-zA-Z0-9]/g, '').slice(0, 24);
 
-    var del = (stay.del || []).map(function (d) { return d.q + ' × ' + d.t.toLowerCase(); });
-    var got = (stay.del || []).reduce(function (a, d) { return a + (d.q || 0); }, 0);
+    /* Same discipline as trade()'s own internal recompute: a proposed
+       deliverable can arrive with no real quantity (d.q === ''), and that is
+       still one real asset, not a "× " with nothing to connect and not zero. */
+    var del = (stay.del || []).map(function (d) { return (d.q || d.q === 0 ? d.q + ' × ' : '') + d.t.toLowerCase(); });
+    var got = (stay.del || []).reduce(function (a, d) { return a + (d.q || d.q === 0 ? d.q : (d.t ? 1 : 0)); }, 0);
     var incList = stay.incList && stay.incList.length
       ? stay.incList
       : String(stay.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);

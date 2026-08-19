@@ -30,7 +30,6 @@
     ]},
     { group:'You', items:[
       { id:'discover',title:'Discover',     icon:'image' },
-      { id:'kit',     title:'Media kit',    icon:'idcard' },
       { id:'academy', title:'Academy',      icon:'book' },
       { id:'community',title:'Community',   icon:'chat', out:true }
     ]}
@@ -40,7 +39,7 @@
      the left rail — but the account menu still routes to them by id, so their
      page titles have to resolve even without a matching NAV entry. */
   var TITLES = { member:'Membership', editme:'How you travel',
-                 hotel:'Hotel', guide:'Guest guide',
+                 guide:'Guest guide',
                  profile:'Your profile', account:'Account' };
   NAV.forEach(function (g) { g.items.forEach(function (i) { TITLES[i.id] = i.title; }); });
 
@@ -69,13 +68,22 @@
     if (L && !hadMod && mods.indexOf(L.mod) > -1) {
       S.academy = S.academy || {};
       S.academy.justBadgedMod = L.mod;
+      /* Part 4.2 — transient, not a banner that sits there until some
+         unrelated click happens to repaint over it: badgesTab() already
+         reads-and-clears this flag on render, so a repaint after the
+         celebration has had its moment is all it takes to make it go. */
+      setTimeout(function () { if (view === 'academy') paintView(true); }, 4000);
     }
 
     if (D.academy.every(function (x) { return x.done; })) {
       var justCert = !D.me.academyCert;
       D.me.academyCert = true;
       if (window.UKME_SET) window.UKME_SET({ academyCert: true });
-      if (justCert) { S.academy = S.academy || {}; S.academy.justCertified = true; }
+      if (justCert) {
+        S.academy = S.academy || {};
+        S.academy.justCertified = true;
+        setTimeout(function () { if (view === 'academy') paintView(true); }, 4000);
+      }
     }
   }
 
@@ -90,6 +98,20 @@
       el.classList.add('ukIco', 'ukIco--on');
     });
   }
+  /* Academy badge artwork (ukcviews.js badgeImg()) points at files that do
+     not exist in the repo yet (Part 1's placeholder mapping) — this is
+     what keeps that from ever showing a broken-image icon: the moment one
+     404s, it is swapped for the seal mark the app already uses for a
+     credential. 'error' does not bubble, so this listens on the capture
+     phase (same technique the product uses nowhere else, because nothing
+     else in it points at an asset that might not exist yet). */
+  document.addEventListener('error', function (e) {
+    var el = e.target;
+    if (el.tagName === 'IMG' && el.classList.contains('ukBadgeArt')) {
+      var cls = el.className.replace('ukBadgeArt', '').trim();
+      el.outerHTML = window.ukVetBadge(cls);
+    }
+  }, true);
 
   /* ---------------- notifications ----------------
      The bell has been in this app's header all along with nothing behind it:
@@ -139,6 +161,27 @@
         return { id:'cmove:' + c.id + ':' + c.stage, kind:'move', at: 4,
           t: (stay ? stay.hotel : 'A collaboration') + ' is waiting on you',
           s: D.STAGES[c.stage].sayMine || D.STAGES[c.stage].say || '',
+          go:'collabs', open: c.id };
+      });
+    });
+
+    /* a cold pitch gone quiet for a week — replies happen over email, so this
+       is the one place Ukreate can actually remind you rather than you
+       remembering to go check the thread yourself */
+    window.UKNOTIFY.source(function () {
+      return (D.collabs || []).filter(function (c) {
+        if (c.archived || c.stage !== 0 || c.nudged) return false;
+        var stay = D.stay(c.stay);
+        if (!stay || !stay.isLead) return false;
+        var them = (c.msgs || []).some(function (m) { return m.by === 'them'; });
+        if (them) return false;
+        var first = (c.msgs || [])[0];
+        return first && D.relDays(first.at) >= D.NUDGE_AFTER;
+      }).map(function (c) {
+        var stay = D.stay(c.stay);
+        return { id:'nudge:' + c.id, kind:'nudge', at: 2,
+          t: stay.hotel + ' hasn’t replied',
+          s: 'It’s been a week since you sent that pitch — worth a follow-up',
           go:'collabs', open: c.id };
       });
     });
@@ -225,13 +268,11 @@
     if (view === 'stays')    return V.stays(s);
     if (view === 'earn')     return V.earn(s);
     if (view === 'profile')  return V.profile(s);
-    if (view === 'kit')      return V.kit(s);
     if (view === 'academy')  return V.academy(s);
     if (view === 'community')return V.community(s);
     if (view === 'member')   return V.member(s);
     if (view === 'account')  return V.account(s);
     if (view === 'editme')   return V.editme(s);
-    if (view === 'hotel')    return V.hotel(s);
     if (view === 'discover') return V.discover(s);
     if (view === 'guide')    return V.guide(s);
     return V.empty('Nothing here', 'Pick something from the sidebar.');
@@ -342,6 +383,50 @@
     if (sMap.fit) sMap.fit(sel ? [sel] : pts);
   }
 
+  /* The globe on the creator's own profile ("Where X has created" / "Where
+     work has been made") — same mount pattern as mountStayMap above, its
+     own instance so it does not fight that one, and its own attribute
+     (data-profmap) since the hotel side (ukapp.js) already hydrates that
+     name for the same markup ukprofile.js now shares with both apps. */
+  var pMap = null, pMapHost = null, pMapKey = null;
+  function mountProfMap() {
+    var slot = q('[data-profmap]');
+    if (!slot || !window.UKWORLDMAP) return;
+    if (!pMapHost) {
+      pMapHost = document.createElement('div');
+      pMapHost.className = 'ukMap';
+      pMapHost.setAttribute('aria-hidden', 'true');
+    }
+    if (pMapHost.parentNode !== slot) slot.appendChild(pMapHost);
+    var pts = [];
+    try { pts = JSON.parse(slot.getAttribute('data-profmap') || '[]'); } catch (e) { pts = []; }
+    if (!pMap) pMap = window.UKWORLDMAP.mount(pMapHost, { lat: 0, lng: 0, zoom: FIT });
+    else if (pMap.resume) pMap.resume();
+    if (!pMap) return;
+    var key = pts.map(function (x) { return x.id; }).join(',');
+    if (key !== pMapKey) { if (pMap.pins) pMap.pins(pts, { arcs: true }); pMapKey = key; }
+    if (pMap.fit && pts.length) pMap.fit(pts);
+  }
+
+  /* The "+N" overflow popup on the profile header's Covers/category lists
+     (creatorHead, ukprofile.js) — same positioning logic as the hotel
+     side's placeCrPop (ukapp.js), needed here now that the header is a
+     shared component this side also renders. */
+  function placeCrPop() {
+    var panel = q('[data-crpop-panel]');
+    if (!panel) return;
+    var s = st();
+    var btn = q('[data-crpop="' + s.crPop + '"]');
+    if (!btn) { s.crPop = null; return; }
+    var br = btn.getBoundingClientRect();
+    var left = Math.min(Math.max(8, br.left), window.innerWidth - panel.offsetWidth - 8);
+    var top = br.bottom + 8;
+    if (top + panel.offsetHeight > window.innerHeight - 8) top = Math.max(8, br.top - panel.offsetHeight - 8);
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+    panel.style.visibility = 'visible';
+  }
+
   /* The ask bar is one mounted instance, not two — the hotel side's own
      mechanism (ukapp.js), ported so a page here can offer the same search
      slot instead of duplicating a plain text filter beside it. Moving the
@@ -370,6 +455,7 @@
     icons(dyn);
     placeAsk();
     mountStayMap();
+    mountProfMap();
     /* the stay card measures itself once it is on the page — this is what puts
        the "+N" on a list that does not fit, and it never ran on this side */
     if (window.UKSTAY) { window.UKSTAY.clamp(dyn); placeStayPop(); }
@@ -797,14 +883,34 @@
     }
     if ((el = e.target.closest('[data-view]')))  { s.view = el.dataset.view;   return repaint(); }
     if ((el = e.target.closest('[data-tab]')))   { s.tab = el.dataset.tab;     return repaint(); }
-    if ((el = e.target.closest('[data-pay]')))   { s.pay = el.dataset.pay;     return repaint(); }
-    if ((el = e.target.closest('[data-stage]'))) { s.stageF = el.dataset.stage;return repaint(); }
+    if ((el = e.target.closest('[data-pay]'))) {
+      /* Payout details are never shared with the hotel app — D.savePayout
+         (ukcdata2.js) is a creator-app-only localStorage key, deliberately
+         not window.UKME/UKME_SET, which the hotel side reads directly. */
+      if (D.savePayout) D.savePayout({ method: el.dataset.pay });
+      return repaint();
+    }
+    if (e.target.closest('[data-savepayout]')) {
+      var patch = {};
+      root.querySelectorAll('[data-payfield]').forEach(function (inp) {
+        patch[inp.dataset.payfield] = inp.value;
+      });
+      if (D.savePayout) D.savePayout(patch);
+      var ph = root.querySelector('#ukPayoutHint');
+      if (ph) ph.textContent = 'Saved.';
+      return;
+    }
+    /* Archived and a lifecycle stage are mutually exclusive views, not
+       combinable filters — the archived toggle already clears stageF when
+       switching in; picking a stage tab has to clear archived on the way
+       out too, or the two stay lit at once. */
+    if ((el = e.target.closest('[data-stage]'))) { s.stageF = el.dataset.stage; s.archived = false; return repaint(); }
     if ((el = e.target.closest('[data-cview]'))) { s.cview = el.dataset.cview; return repaint(); }
-    if ((el = e.target.closest('[data-inqsub]'))) { s.inqSub = el.dataset.inqsub; return repaint(); }
+    if (e.target.closest('[data-archived-toggle]')) { s.archived = !s.archived; s.stageF = null; return repaint(); }
     if ((el = e.target.closest('[data-style]'))) { s.style = el.dataset.style; s.pgStays = 1; return repaint(); }
     if ((el = e.target.closest('[data-pin]')))   { s.pin = el.dataset.pin;     return repaint(); }
     if (e.target.closest('[data-clearf]'))       { s.q=''; s.style='all'; s.saved=false; return repaint(); }
-    if (e.target.closest('[data-savedonly]'))    { s.saved = !s.saved; s.pgStays = 1; return repaint(); }
+    if ((el = e.target.closest('[data-savedonly]'))) { s.saved = el.dataset.savedonly === '1'; s.pgStays = 1; return repaint(); }
 
     if (e.target.closest('[data-notify-toggle]')) {
       var np = q('#ukNotifyPanel');
@@ -830,13 +936,29 @@
       paintNotify();
       return;
     }
+    /* the caveat behind the info button, shown in place rather than as a
+       tooltip a keyboard or touch screen can't reach — same generic
+       aria-controls toggle as the hotel side's own [data-info-toggle]. */
+    if ((el = e.target.closest('[data-info-toggle]'))) {
+      var panelId = el.getAttribute('aria-controls');
+      var panel = panelId && document.getElementById(panelId);
+      if (panel) { panel.hidden = !panel.hidden; el.setAttribute('aria-expanded', String(!panel.hidden)); }
+      return;
+    }
     if ((el = e.target.closest('[data-save]'))) {
       /* Backed by the shared favourites store, so a saved property survives a
          reload and sits in the same record as the hotel's own shortlist of
-         creators — one feature, two directions, not two implementations. */
+         creators — one feature, two directions, not two implementations.
+         D.stay() hands back a freshly built copy for a lead (so nothing
+         accidentally mutates the shared seed record elsewhere) — saving one
+         has to write through D.lead() instead, the real reference, or the
+         toggle would be thrown away the instant this repaint runs. */
       var stay = D.stay(el.dataset.save);
-      if (window.UKFAVS) stay.saved = window.UKFAVS.toggle('stays', stay.id);
-      else stay.saved = !stay.saved;
+      var real = (stay && stay.isLead && D.lead) ? D.lead(el.dataset.save) : stay;
+      if (!real) return;
+      var bucket = stay && stay.isLead ? 'leads' : 'stays';
+      if (window.UKFAVS) real.saved = window.UKFAVS.toggle(bucket, real.id);
+      else real.saved = !real.saved;
       return repaint();
     }
     /* ---- the shared stay card's own controls ----
@@ -887,7 +1009,10 @@
       if (isLeadTarget) window.UKCSTATE('stays').tab = 'outreach';
       return go('stays');
     }
-    if ((el = e.target.closest('[data-hotel]'))) { view = 'hotel'; st().stay = el.dataset.hotel; paintNav(); return paintView(); }
+    /* One property design now covers a live stay AND a cold lead (see
+       stayDetail() in ukcviews.js), so "see the property" opens the same
+       stays-view detail page rather than the retired standalone hotel view. */
+    if ((el = e.target.closest('[data-hotel]'))) { window.UKCPREFILL('stays', { open: el.dataset.hotel }); return; }
     if ((el = e.target.closest('[data-open]'))) { s.open = el.dataset.open; return paintView(); }
     if (e.target.closest('[data-back]')) {
       if (s.delivering) { s.delivering = null; s.picked = null; return paintView(); }
@@ -908,6 +1033,35 @@
       var name = ((nameEl && nameEl.value) || '').trim();
       if (name) D.dsNewCollection(name);
       return repaint();
+    }
+    /* file a saved piece into a collection — the single-select .ukDrop's
+       own generic open/close plumbing already handles the menu; this just
+       applies the pick and repaints, same as every other .ukDropMenu item
+       in the product (data-brief, data-leadfield, etc.) */
+    if ((el = e.target.closest('[data-dsfile]'))) { D.dsFile(el.dataset.dsfile, el.dataset.val); return repaint(); }
+    if ((el = e.target.closest('[data-rencoll-edit]'))) { s.renColl = el.dataset.rencollEdit; return repaint(); }
+    if ((el = e.target.closest('[data-rencoll-go]'))) {
+      var renEl = root.querySelector('#ukRenName');
+      var renName = ((renEl && renEl.value) || '').trim();
+      if (renName) D.dsRename(el.dataset.rencollGo, renName);
+      s.renColl = null;
+      return repaint();
+    }
+    /* "see this property" from a Discover piece — the property is real
+       (D.stay), but it lives in the Stays view's own state, not Discover's;
+       UKCPREFILL (ukcapp.js's own cross-view door, already used by the
+       dashboard's open-collab links) hands Stays its starting state and
+       navigates in one step. */
+    if ((el = e.target.closest('[data-openstay]'))) { window.UKCPREFILL('stays', { open: el.dataset.openstay }); return; }
+    /* "see more from this creator" — there is no per-creator profile route
+       on this side of the app for another creator's byline identity (only
+       D.me has one), so this narrows the SAME feed to their other pieces
+       rather than link to a page that does not exist. Empty value clears
+       it (the "Show everyone" button inside the filter strip). */
+    if ((el = e.target.closest('[data-discby]'))) {
+      window.UKCPREFILL('discover', { discItem: null, dsub: 'feed', dFmt: null, dNiche: null,
+        dBy: el.dataset.discby || null });
+      return;
     }
     if ((el = e.target.closest('[data-mset]'))) {
       var mKey = el.dataset.mset, mVal = el.dataset.mval;
@@ -944,6 +1098,13 @@
       var l = root.querySelector('#ukMsgs'); if (l) l.scrollTop = l.scrollHeight;
       var h2 = root.querySelector('#ukSendHint'); if (h2) h2.textContent = 'Sent.';
       return;
+    }
+    if ((el = e.target.closest('[data-markreplied]'))) {
+      var rbox = root.querySelector('#ukReplyLog'), rtxt = ((rbox && rbox.value) || '').trim();
+      var rhint = root.querySelector('#ukReplyLogHint');
+      if (!rtxt) { if (rhint) rhint.textContent = 'Add a note first.'; if (rbox) rbox.focus(); return; }
+      D.markReplied(el.dataset.markreplied, rtxt);
+      return paintView(true);
     }
     /* ---- responding to an invitation ----
        Accepting skips Inquiry entirely and lands in onboarding: the hotel already
@@ -1011,6 +1172,18 @@
       return repaint();
     }
     if ((el = e.target.closest('[data-acadmod]'))) { s.acadMod = el.dataset.acadmod; return repaint(); }
+    /* Part 3 — a certificate is a sub-state of Academy, same pattern as
+       st.lesson: clearing lesson here is what lets "View certificate"
+       work from inside a lesson page (academy() checks st.lesson before
+       st.cert, so both being set would otherwise strand it on the lesson). */
+    if ((el = e.target.closest('[data-cert]'))) { s.cert = el.dataset.cert; s.lesson = null; return repaint(); }
+    if (e.target.closest('[data-certclose]')) { s.cert = null; return repaint(); }
+    /* Real, working download: the browser's own print-to-PDF, not a stub.
+       #ukCertPrint plus the @media print rule (ukapp.css) isolate just the
+       certificate — everything else (sidebar, top bar, the button itself)
+       is hidden for the print, so "Save as PDF" in the print dialog is a
+       genuine downloaded file. */
+    if (e.target.closest('[data-certdownload]')) { window.print(); return; }
     if ((el = e.target.closest('[data-watched]'))) {
       markLessonDone(el.dataset.watched);
       return repaint();
@@ -1044,21 +1217,21 @@
       setTimeout(function () { el.setAttribute('aria-label', copyLbl); el.classList.remove('is-copied'); }, 1600);
       return;
     }
-    if (e.target.closest('[data-logopen]'))  { s.logging = true;  return repaint(); }
-    if (e.target.closest('[data-logclose]')) { s.logging = false; return repaint(); }
-    if (e.target.closest('[data-logsave]')) {
-      var h = (root.querySelector('#ukLogHotel') || {}).value || '';
-      if (!h.trim()) { var f0 = root.querySelector('#ukLogHotel'); if (f0) f0.focus(); return; }
-      D.addPitch({ hotel:h.trim(), city:((root.querySelector('#ukLogCity') || {}).value || '').trim(), on:'today', via:(root.querySelector('#ukLogVia') || {}).value || 'Email', status:(root.querySelector('#ukLogStatus') || {}).value || 'Sent', note:'' });
-      s.logging = false;
-      return repaint();
-    }
     if ((el = e.target.closest('[data-ack]'))) {
       var was = el.textContent;
       el.textContent = el.dataset.ack; el.disabled = true;
       setTimeout(function () { el.textContent = was; el.disabled = false; }, 1800);
       return;
     }
+    /* The profile header's "+N" popup (creatorHead, ukprofile.js) — same
+       mechanism as the hotel side's placeCrPop/data-crpop handling. */
+    if ((el = e.target.closest('[data-crpop]'))) {
+      var cp = st();
+      cp.crPop = cp.crPop === el.dataset.crpop ? null : el.dataset.crpop;
+      paintView(true); return placeCrPop();
+    }
+    if (e.target.closest('[data-crpop-close]')) { st().crPop = null; return paintView(true); }
+    if (s.crPop && !e.target.closest('[data-crpop-panel]')) { s.crPop = null; paintView(true); }
   });
 
   document.addEventListener('click', function (e) {

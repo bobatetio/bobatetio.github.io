@@ -140,6 +140,7 @@ window.UK = (function () {
     c.academyModules = (M.academyModules || []).slice();
     c.collabTypes = (M.collabTypes || []).slice();
     c.rates = Object.assign({}, M.rates || {});
+    c.savedInspiration = (M.savedInspiration || []).slice();
     c.lat = (M.been && M.been[0] && M.been[0].lat); c.lng = (M.been && M.been[0] && M.been[0].lng);
   })();
 

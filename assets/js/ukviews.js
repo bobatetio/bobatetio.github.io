@@ -105,6 +105,12 @@ window.UKV = (function () {
      the creator side reads the same country list rather than keeping its own. */
   function flagFor(loc) { return window.ukFlagFor(loc); }
   function ccOf(loc) { return window.ukCCOf(loc); }
+  /* The one icon pack, same as the creator side's own icon() — used by
+     propertyPreview() to draw the borrowed amenity/guide rows. */
+  function ic(name) {
+    var g = (window.UKICONS || {})[name];
+    return g ? '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' + g + '</svg>' : '';
+  }
   /* free now, free soon, or not for a while — a colour alone is not a status, so
      every dot carries the same words in its label */
   function availOf(c) {
@@ -1384,87 +1390,18 @@ window.UKV = (function () {
     '</div>';
   }
 
+  /* Delegates to the shared window.UKPROFILE.creatorHead (ukprofile.js) —
+     the exact same markup this function used to build inline, now the one
+     copy both apps render from instead of two that can drift. Still called
+     from two hotel-only screens below (the pitch-inbound header and the
+     collaboration-thread header), so it keeps this name and signature;
+     only the body moved. headActions(c) stays here and hotel-only — its
+     buttons (Approve/Pass/Request changes) wire to hotel-only handlers in
+     ukapp.js and make no sense as a shared default. */
   function creatorHead(c, cr, stay, dates, st, opts) {
-    var av = availOf(cr);
-    /* Markets are a flat list of equals, exactly as onboarding captures them, and
-       each is named place-and-country. Categories come from the shared vocabulary,
-       so this says the same words as the network filters. */
-    var markets = (cr.markets || []).slice(0, 5);
-    var cats = (cr.cats || [cr.type]).filter(Boolean).slice(0, 5);
-    var plats = (cr.plats || []).filter(function (p) { return PLAT_MARK[p.k]; });
-    var stats = [
-      ['Audience',   D.fmt(cr.f)],
-      ['Avg reach',  String(cr.reach || '\u2014').replace(/\s*per post/, '')],
-      ['Engagement', cr.eng || '\u2014'],
-      ['Rating',     cr.rating ? cr.rating.toFixed(1) : '\u2014', true],
-      ['On time',    cr.ontime != null ? cr.ontime + '%' : '\u2014'],
-      ['Replies',    cr.resp ? String(cr.resp).replace(/^within\s+/, '') : '\u2014']
-    ];
-
-    return '<section class="ukCrD">' +
-      '<div class="ukCrD_grid">' +
-        '<div class="ukCrD_who">' +
-          who(cr, img(cr.img, cr.n, '', true) +
-            '<span class="ukCrAv_dot ' + av.c + '" title="' + esc(av.t) + '" role="img" aria-label="' + esc(av.t) + '"></span>',
-            'ukCrAv ukCrAv--xl ukWho--av') +
-          '<div class="ukCrD_id">' +
-            '<h2 class="ukCrD_n">' + who(cr, esc(cr.n)) +
-              (cr.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
-              (cr.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') +
-              '<button class="ukCrD_open" type="button" data-creator="' + cr.id + '" ' +
-                'title="Open full profile" aria-label="Open ' + esc(cr.n) + '&rsquo;s full profile">' + OPEN_ICON + '</button>' +
-            '</h2>' +
-            /* Earned Academy modules, stated by the creator and read off the
-               same record ukcprofile.js writes to — not the locked ones,
-               which belong to the Academy's own progress view, not a
-               hotel's read of who this person already is. */
-            (cr.academyModules && cr.academyModules.length
-              ? '<ul class="ukBadgeStrip">' + cr.academyModules.map(function (b) {
-                  return '<li class="ukChip2 is-key">' + window.ukVetBadge('ukChipVet') + esc(b) + '</li>';
-                }).join('') + '</ul>'
-              : '') +
-            /* one line of plain facts: where they work, how much they have done,
-               what they speak. The markets carry flags but no frames — only the
-               overflow badge is a control. */
-            '<p class="ukCrD_mk"><span class="ukCrD_mkK">Covers</span>' +
-              capped(markets, 'markets', function (m) {
-                return '<span class="ukCrD_mkI">' +
-                  (m.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + m.cc + '.svg" alt="" loading="lazy" decoding="async">' : '') +
-                  esc(m.n) + '</span>';
-              }) +
-              (cr.stays != null ? '<span class="ukCrD_sep" aria-hidden="true"></span><span class="ukCrD_mkF">' + cr.stays + ' stays</span>' : '') +
-            '</p>' +
-            '<div class="ukCrD_tagRow">' +
-              '<span class="ukCrTags">' + capped(cats, 'cats', function (t) {
-                return '<span class="ukCrTag">' + esc(t) + '</span>'; }) + '</span>' +
-              /* layered marks, no per-platform counts — the audience total below
-                 is the number that actually matters */
-              '<span class="ukCrPlats">' + plats.map(function (p) {
-                return '<img class="ukCrPlat" src="' + PLAT_MARK[p.k] + '" alt="' + esc(p.n) + '" title="' + esc(p.n) + '" loading="lazy" decoding="async">';
-              }).join('') + '</span>' +
-              (cr.langs ? '<span class="ukCrD_mkF ukCrD_lang">Speaks ' + esc(cr.langs) + '</span>' : '') +
-            '</div>' +
-            /* the numbers live on the Stats tab now; repeating them in the header
-               meant the same six figures twice on one screen */
-            ((opts && opts.noStats) ? '' : '<ul class="ukCrD_stats">' + stats.map(function (s) {
-              return '<li><span class="ukCrD_sv">' +
-                (s[2] ? '<img class="ukCrStar" src="/assets/img/fc/star.svg" alt="" width="10" height="10">' : '') +
-                esc(s[1]) + '</span><span class="ukCrD_sl">' + esc(s[0]) + '</span></li>';
-            }).join('') + '</ul>') +
-          '</div>' +
-        '</div>' +
-        /* A pitch reuses this header wholesale — it is the same object being
-           introduced — and only swaps the two buttons, because "Approve" on a
-           pitch would approve a stay that does not exist. */
-        '<div class="ukCrD_side">' +
-          statusBadge(c, (opts && opts.actions) || headActions(c), opts && opts.badge) +
-          ((opts && opts.noTrack) ? '' : trackedInline(c, cr)) + '</div>' +
-      '</div>' +
-      /* the lifecycle band belongs to a collaboration; on a profile there is not
-         one yet, so it has nothing to say */
-      ((opts && opts.noTrack2) ? '' : '<div class="ukCrD_track">' + track(c.stage) + '</div>') +
-      crPopup(st || {}, cr) +
-    '</section>';
+    opts = opts || {};
+    if (opts.actions === undefined) opts.actions = headActions(c);
+    return window.UKPROFILE.creatorHead(c, cr, stay, dates, st, opts);
   }
 
   /* The link belongs where the work is. Links & Codes stays the full management
@@ -2606,11 +2543,75 @@ window.UKV = (function () {
       '<p class="ukK_n"><span>' + esc(n) + '</span></p></article>';
   }
 
+  /* propType/rooms don't exist on D.property today (see field() calls in
+     setProperty below: name/city/type/cat/about only) — the fact strip
+     collapses to whichever of those two are actually set, same discipline
+     stayIntro() applies to a sparse lead on the creator side. */
+  function propFact(iconName, value, label) {
+    return '<li>' + ic(iconName) + '<span><b>' + esc(value) + '</b>' + esc(label) + '</span></li>';
+  }
+  function propHero(src, alt) {
+    var slots = [{ src: src, i: 0 }, null, null, null];
+    return '<div class="ukStayHero">' +
+      '<div class="ukStayHero_thumbs">' + slots.map(function (o) {
+        if (!o) return '<span class="ukStayHero_thumb ukStayHero_thumb--empty" aria-hidden="true"></span>';
+        return '<span class="ukStayHero_thumb is-on"><img src="' + esc(o.src) + '" alt="" loading="lazy" decoding="async"></span>';
+      }).join('') + '</div>' +
+      '<div class="ukStayHero_main"><img src="' + esc(src) + '" alt="' + esc(alt) + '" loading="eager" decoding="async"></div>' +
+    '</div>';
+  }
+  /* What a creator actually sees when they open this property from Stays or
+     Outreach — the exact component set stayHero()/stayIntro()/staySection()
+     render on the creator side (ukcviews.js), rebuilt here off D.property
+     since the two apps' JS worlds don't share functions. A single cover
+     photo collapses the thumb column to empty placeholders (propHero()
+     mirrors stayHero()'s own logic for that); no lat/lng on D.property, so
+     there is no Location section here either — same "don't render it
+     hollow" rule the creator side already follows for a sparse lead. */
+  function propertyPreview() {
+    var p = D.property;
+    var facts = [];
+    if (p.type) facts.push(propFact('building', p.type, 'Property type'));
+    if (p.cat) facts.push(propFact('star', p.cat, 'Known for'));
+    return '<div class="ukPropPreview">' +
+      '<p class="ukPropPreview_tag">' + ic('eye') + 'Preview — what a creator sees</p>' +
+      '<section class="ukPanel ukStayIntro">' +
+        propHero(p.img, p.name) +
+        '<div class="ukStayIntro_top"><div><h2 class="ukStayIntro_n">' + esc(p.name) + '</h2>' +
+          '<p class="ukStayIntro_addr">' + flagFor(p.city) + esc(p.city) + '</p></div></div>' +
+        (facts.length ? '<ul class="ukStayIntro_facts">' + facts.join('') + '</ul>' : '') +
+      '</section>' +
+      (p.about ? '<section class="ukStaySection"><h3 class="ukStaySection_t">About the property</h3>' +
+        '<p class="ukStaySection_lead">' + esc(p.about) + '</p></section>' : '') +
+    '</div>';
+  }
+
+  var PROP_TABS = [ { id:'profile', t:'Profile' }, { id:'performance', t:'Performance' } ];
+
+  /* Editing and analytics used to run on one continuous scroll under one
+     generic "Property profile" header — a hotel opening this page to check
+     application numbers landed in the same view as a hotel opening it to
+     fix a typo in the about copy. Two clearly separated tabs, the same
+     .ukSetNav pattern Account and Settings already use for exactly this
+     kind of page-level split. */
   function propertyPage(st) {
+    var tab = st.tab === 'performance' ? 'performance' : 'profile';
     return head('Property profile',
       'What creators see when your stays appear in the network.') +
-      propertyStats() +
-      '<div class="ukGrid ukGrid--thread"><div>' + setProperty({ bare: true }) + '</div>' +
+      '<div class="ukGrid ukGrid--set">' +
+        '<nav class="ukPanel ukSetNav" aria-label="Property profile sections">' + PROP_TABS.map(function (t) {
+          return '<button class="ukSetNav_i' + (t.id === tab ? ' is-on' : '') + '" type="button" data-tab="' + t.id + '"' +
+            (t.id === tab ? ' aria-current="true"' : '') + '>' + t.t + '</button>'; }).join('') + '</nav>' +
+        '<div>' + (tab === 'performance' ? propertyStats() : propertyEdit(st)) + '</div>' +
+      '</div>';
+  }
+
+  function propertyEdit(st) {
+    return '<div class="ukGrid ukGrid--thread"><div>' + setProperty({ bare: true }) +
+      '<button class="ukGhost" type="button" data-toggle-preview style="width:100%;margin-top:16px">' +
+        (st.preview ? 'Hide preview' : 'Preview as a creator sees it') + '</button>' +
+      (st.preview ? propertyPreview() : '') +
+      '</div>' +
       '<aside class="ukSideCol">' +
         '<section class="ukPanel"><div class="ukPanel_head">' +
         '<h3 class="ukPanel_title">How this is used</h3></div>' +

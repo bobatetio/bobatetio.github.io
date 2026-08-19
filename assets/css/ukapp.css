@@ -576,8 +576,17 @@
 /* underline-tab variant — a flat text row with one coloured underline marking the
    active tab, matching the reference (Style/Image/Arrange): no pill background,
    just weight + colour + an indicator bar under the selected item. */
-.ukFilters--tabs{display:flex;gap:26px;flex-wrap:wrap;padding:0;background:none;border:0;
-  border-bottom:1px solid var(--line);border-radius:0}
+/* width:fit-content so the underline sits under the tab items themselves,
+   not stretched the full width of the row the way a block-level flex
+   container otherwise would — and its own margin-bottom, since not every
+   caller wraps this in .ukToolbar to get that spacing for free. */
+.ukFilters--tabs{display:flex;width:fit-content;gap:26px;flex-wrap:wrap;padding:0;background:none;border:0;
+  border-bottom:1px solid var(--line);border-radius:0;margin-bottom:20px}
+/* .ukToolbar already carries its own margin-bottom for whatever it wraps —
+   inside it, the tabs' own 20px would stack on top instead of collapsing
+   (flex containers don't collapse child margins), doubling the gap below
+   the tab row. Nested here, the toolbar's spacing is enough on its own. */
+.ukToolbar .ukFilters--tabs{margin-bottom:0}
 .ukFilters--tabs .ukFilter{padding:4px 0 13px;border-radius:0;background:none;color:var(--text-3);
   font:600 13.5px/1 'Lato',sans-serif;position:relative;gap:6px}
 .ukFilters--tabs .ukFilter:hover{background:none;color:var(--text-2)}
@@ -1539,37 +1548,58 @@
   color:var(--gold-ink);font-weight:700;margin-left:6px}
 
 /* ---- the badge collection: one per Academy module, plus the certification ----
-   Locked reuses the earned card's own shape at lower contrast rather than a
-   different visual language — the difference is state, not a demotion. */
+   Part 4.1 fix: earned used to sit on a grey tag wash (--tag-done-bg) while
+   locked sat on plain white (--surface-2) — since the wash reads DARKER
+   than white, finishing everything made the page look greyer than when a
+   creator started, exactly backwards from what "earned" should feel like.
+   Earned now uses --active-bg, the same warm gold wash the product already
+   uses for a selected/highlighted state (the recommended package card,
+   .ukFilter.is-on) — full-colour art, genuinely brighter than idle white.
+   Locked keeps the art visible (not hidden behind a lock icon) at reduced
+   opacity on a plain card — a preview of what finishing gets you, not an
+   empty slot. */
 .ukAcadBadges{margin-bottom:20px}
 .ukBadgeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:4px}
-.ukBadge{
-  display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
-  padding:16px 10px;border-radius:14px;border:1px solid var(--line);background:var(--surface-2);
-  cursor:pointer;color:var(--text-3);
-}
-.ukBadge:hover{border-color:var(--line-soft);background:var(--hover)}
-.ukBadge_ic{width:30px;height:30px;color:var(--text-3);opacity:.4}
-.ukBadge.is-on{border-color:transparent;background:var(--tag-done-bg,var(--tag-you-bg))}
-.ukBadge.is-on .ukBadge_ic{color:var(--gold-ink);opacity:1}
+.ukBadge{display:flex;flex-direction:column;border-radius:14px;overflow:hidden;
+  border:1px solid var(--line);background:var(--surface)}
+.ukBadge.is-on{border-color:var(--active-ring);background:var(--active-bg);
+  box-shadow:0 6px 18px -10px rgba(215,165,67,.45)}
+.ukBadge_hit{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  flex:1 1 auto;padding:16px 10px 12px;border:0;background:none;cursor:pointer;color:var(--text-3)}
+.ukBadge_hit:hover{background:var(--hover)}
+.ukBadge.is-on .ukBadge_hit:hover{background:rgba(215,165,67,.1)}
+.ukBadge_ic{width:44px;height:44px;color:var(--text-3);opacity:.45;filter:grayscale(1)}
+.ukBadgeArt{object-fit:contain;display:block}
+.ukBadge.is-on .ukBadge_ic{opacity:1;filter:none;color:var(--gold-ink)}
 .ukBadge_t{font:700 12.5px/1.3 'Lato',sans-serif;color:var(--text)}
 .ukBadge_s{font:400 11px/1.3 'Lato',sans-serif;color:var(--text-3)}
-.ukBadge.is-on .ukBadge_s{color:var(--gold-ink)}
-.ukBadgeCert{
-  display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px 16px;
-  border-radius:14px;border:1px solid var(--line);background:var(--surface-2);
-}
-.ukBadgeCert.is-on{border-color:transparent;background:var(--tag-done-bg,var(--tag-you-bg))}
-.ukBadgeCert_t{font:700 13.5px/1.3 'Lato',sans-serif;margin:0;color:var(--text)}
-.ukBadgeCert_s{font:400 12px/1.4 'Lato',sans-serif;margin:2px 0 0;color:var(--text-2)}
-.ukBadgeCert .ukBadge_ic{flex:0 0 auto;width:26px;height:26px;color:var(--text-3);opacity:.4}
-.ukBadgeCert.is-on .ukBadge_ic{color:var(--gold-ink);opacity:1}
+.ukBadge.is-on .ukBadge_s{color:var(--gold-ink);font-weight:700}
+.ukBadge_cert{width:auto;margin:0 14px 14px;border-color:rgba(215,165,67,.4)}
 
-/* the compact strip on a profile — credentials already earned, next to the
-   verified seal, not the whole locked/unlocked collection */
-.ukBadgeStrip{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.ukBadgeStrip .ukChip2{display:inline-flex;align-items:center;gap:5px}
-.ukBadgeStrip .ukChip2 svg{width:11px;height:11px;flex:0 0 auto}
+/* the headline credential (Part 4.3) — its own hero, well above a module
+   badge's own weight, with module badges reading as the steps beneath it.
+   Earned uses the same brighter --active-bg treatment as an earned badge,
+   just at a scale nothing else on the page matches. */
+.ukAcadCertHero{display:flex;align-items:center;gap:16px;margin-bottom:16px;
+  padding:20px 22px;border:1px solid var(--line)}
+.ukAcadCertHero.is-on{border-color:var(--active-ring);background:var(--active-bg);
+  box-shadow:0 10px 28px -14px rgba(215,165,67,.5)}
+.ukAcadCertHero_ic{flex:0 0 auto;width:60px;height:60px;color:var(--text-3);opacity:.4;filter:grayscale(1)}
+.ukAcadCertHero.is-on .ukAcadCertHero_ic{opacity:1;filter:none;color:var(--gold-ink)}
+.ukAcadCertHero_seal{width:100%;height:100%;display:block}
+.ukAcadCertHero_b{flex:1 1 auto;min-width:0}
+.ukAcadCertHero_k{margin:0 0 2px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-3)}
+.ukAcadCertHero.is-on .ukAcadCertHero_k{color:var(--gold-ink)}
+.ukAcadCertHero_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:22px;margin:0;color:var(--text)}
+.ukAcadCertHero_s{margin:4px 0 0;font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+/* the latest earned module badge, in front of the name on the profile
+   header — replaced the old text-chip strip below the name (every module
+   spelled out) with the one real badge a hotel scanning a roster can read
+   at a glance. .ukCrD_n is already a flex row with its own gap, so this
+   only needs its own size. */
+.ukCrD_latestBadge{width:24px;height:24px;flex:0 0 auto}
 
 /* bookings & roi, deliberately empty */
 
@@ -3816,6 +3846,20 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 
 .ukCrBar{align-items:center;gap:12px}
 .ukCrBar_l{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0;flex:1 1 auto}
+/* Stays/Outreach tabs on the left, the kind-of-stay filter and the
+   grid/list/map switch on the right — one row. Bottom-aligned rather than
+   centred, since the tabs carry their own underline the switch does not, and
+   the row's own margin-bottom is what spaces it from what follows now, not
+   the tabs' (they would otherwise stack two margins into one gap). */
+.ukCrTabsBar{align-items:flex-end}
+.ukCrTabsBar .ukFilters--tabs{margin-bottom:0}
+.ukCrBar_r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media (max-width:760px){
+  .ukCrTabsBar{flex-direction:column;align-items:stretch;gap:14px}
+  .ukCrBar_r{width:100%}
+  .ukCrBar_r .ukSeg--ic{width:100%}
+  .ukCrBar_r .ukSeg--ic .ukSeg_b{flex:1 1 0}
+}
 
 /* a menu, because there are sixteen content types and they will not sit in a row */
 .ukDrop{position:relative}
@@ -4191,7 +4235,12 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 /* the picks list was a card per person; it is a row per person, so a dozen fit */
 .ukRecPicks li{gap:10px;padding:10px 0}
 .ukRecPicks .ukAv--lg{width:40px;height:40px}
-.ukRecPicks_n{font-size:13.5px}
+/* line-height:1.7 (the base rule, meant for a bigger card-style name) never
+   got tightened when this became a compact row — a single line of text was
+   rendering at nearly double its own font-size, stacked across 3 lines and
+   multiplied by up to a dozen rows, which is most of where "too much space"
+   in this list was actually coming from. */
+.ukRecPicks_n{font-size:13.5px;line-height:1.3}
 .ukRecPicks_m,.ukRecPicks_w{font-size:11.5px;line-height:1.45}
 /* same: the shared .ukCrFlag treatment, not a circle invented for this row */
 .ukRecPicks_m .ukCrFlag{margin-right:4px}
@@ -4264,6 +4313,24 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{background:var(--hover);bo
 .ukLibTop{display:flex;align-items:center;gap:16px;margin-bottom:14px}
 .ukLibTop .ukGhost{margin-left:auto;flex:0 0 auto}
 .ukLibTabs{margin-bottom:0}
+/* Videos/Photos are two independent switches (both can be on at once — see
+   the comment above where this renders, ukviews.js), never a mutually
+   exclusive choice — but .ukFilters--tabs' underline is the product's
+   single-select-tab language everywhere else it appears (Feed/Saved,
+   Stays/Outreach, the profile tabs), so borrowing it here read as a tab
+   pair with an impossible "both active" state. Reverts to the plain
+   .ukFilter pressed-pill look (the same gold fill .ukFilter.is-on already
+   uses outside a --tabs context) so two-can-be-on-at-once looks like two
+   checkboxes, not one broken tab bar. */
+.ukLibTabs.ukFilters--tabs{gap:8px}
+.ukLibTabs .ukFilter{padding:9px 16px;border-radius:9999px;background:var(--surface-2);
+  border:1px solid var(--line);color:var(--text-2)}
+.ukLibTabs .ukFilter:hover{background:var(--hover);color:var(--text)}
+.ukLibTabs .ukFilter.is-on{background:linear-gradient(5.71deg,var(--uk-gold) 13%,var(--uk-gold-2) 90%);
+  box-shadow:none;border-color:transparent;color:var(--uk-on-gold)}
+.ukLibTabs .ukFilter.is-on::after{content:none}
+.ukLibTabs .ukFilter_ct{background:var(--tag-done-bg);color:var(--text-3)}
+.ukLibTabs .ukFilter.is-on .ukFilter_ct{background:rgba(11,47,82,.16);color:var(--uk-on-gold)}
 
 /* The five filters hold one row. Each is as wide as what it has to say and no
    wider — they share out the leftover space rather than being cut to equal
@@ -5337,3 +5404,185 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
 /* A KPI tile with nothing it can honestly report. The value slot still holds a
    value so the row does not go ragged; it just holds a dash instead of a lie. */
 .ukK_v--none{color:var(--text-3)}
+
+/* ================= shared with ukprofile.js =================
+   The creator profile is now one shared page (ukprofile.js), rendered by
+   both apps. Its media/gallery system (.ukM, .ukReels) and curated-itinerary
+   markup used to live only in ukcreator.css, which /app/ never loads — the
+   hotel side rendered raw, unconstrained <img> tags the moment it hit this
+   shared component, blowing the whole page out to native image height.
+   Moved here rather than duplicated, so both apps get one definition. */
+.ukM{position:relative;display:block;overflow:hidden;border-radius:14px;background:var(--av-bg)}
+.ukM img{width:100%;height:100%;object-fit:cover;display:block}
+.ukM--9x16{aspect-ratio:9/16}
+.ukM--4x5 {aspect-ratio:4/5}
+.ukM--1x1 {aspect-ratio:1/1}
+.ukM--4x3 {aspect-ratio:4/3}
+.ukM--16x9{aspect-ratio:16/9}
+.ukM--sm{width:44px;flex:0 0 44px;border-radius:11px}
+.ukM--row{width:88px;flex:0 0 88px;border-radius:12px}
+.ukM--avxl{width:96px;flex:0 0 96px;border-radius:50%}
+.ukM--cardtop{border-radius:0}
+.ukM--head{width:120px;flex:0 0 120px}
+.ukM--hero{border-radius:20px}
+.ukM_play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:30px;height:30px;
+  display:block;fill:rgba(255,255,255,.94);pointer-events:none;
+  filter:drop-shadow(0 3px 12px rgba(6,18,25,.45))}
+
+/* The gradient-scrim title treatment, reused product-wide (already proven on
+   .ukPost_scrim / .ukLib_scrim — same gradient stops, same discipline) —
+   composed with .ukM's own ratio/radius/overflow so it works at any aspect
+   ratio, not just the 9:16 those two hardcode. Title lives ON the image, not
+   in a caption below it, so every tile in a .ukReels row is exactly its
+   image's height — the fix for uneven card heights, not just uneven rows. */
+.ukM_scrim{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,18,25,.34) 0%,rgba(6,18,25,0) 30%,
+    rgba(6,18,25,0) 48%,rgba(6,18,25,.88) 100%)}
+.ukM_cap{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:2px;
+  padding:11px 12px 12px;color:#fff}
+.ukM_capT{font:700 12.5px/1.32 'Lato',sans-serif;text-wrap:pretty;text-shadow:0 1px 4px rgba(6,18,25,.5);
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.ukM_capS{font:400 11px/1.3 'Lato',sans-serif;color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(6,18,25,.5)}
+.ukM_capN{font:400 11px/1.4 'Lato',sans-serif;color:rgba(255,255,255,.82);text-shadow:0 1px 4px rgba(6,18,25,.5);
+  text-wrap:pretty;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+/* A small identity photo inside .ukM_cap (e.g. Discover's byline avatar) is
+   still an <img> inside .ukM, so .ukM img{width:100%;height:100%;display:
+   block} — sized and laid out for the ONE big photo every .ukM exists to
+   show — would otherwise stretch it to fill the tile and drop it to its
+   own line. !important on display too, not just size: .ukM img's display:
+   block has higher specificity (class+type) than .ukM_capAv alone (class
+   only), so without it display:block still won at the same source order. */
+.ukM_capAv{width:16px !important;height:16px !important;display:inline-block !important;
+  border-radius:50%;object-fit:cover;vertical-align:-3px;margin-right:5px}
+
+/* Fixed column counts, not auto-fill: auto-fill leaves a half-empty trailing
+   row whenever the item count does not divide evenly into however many
+   150px tracks happened to fit. A fixed count per breakpoint always fills. */
+.ukReels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ukReels--sm{grid-template-columns:repeat(5,1fr)}
+@media(max-width:1024px){.ukReels{grid-template-columns:repeat(3,1fr)}.ukReels--sm{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:640px){.ukReels{grid-template-columns:repeat(2,1fr)}.ukReels--sm{grid-template-columns:repeat(2,1fr)}}
+.ukReel{margin:0;display:flex;flex-direction:column;gap:8px}
+.ukReel figcaption{display:flex;flex-direction:column;gap:2px}
+.ukReel_t{font:700 12.5px/1.35 'Lato',sans-serif;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ukReel_s{font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukReel--wide{max-width:none}
+.ukReel_note{display:block;margin-top:5px;font-size:12px;line-height:1.5;color:var(--text-3);text-wrap:pretty}
+.ukReel--kit .ukM{aspect-ratio:9/16 !important;height:auto}
+.ukReel--kit .ukM img{width:100%;height:100%;object-fit:cover;display:block}
+
+.ukFact_v{margin:0;font-size:15px;font-weight:700;color:var(--text)}
+.ukFact_e{margin:0;font-size:13px;line-height:1.5;color:var(--text-3);text-wrap:pretty}
+
+.ukItin_top{display:flex;gap:18px;align-items:flex-start;margin-bottom:20px}
+.ukItin_top .ukM{flex:0 0 118px;border-radius:14px;overflow:hidden}
+.ukItin_t{margin:0 0 4px;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:21px;line-height:1.2;color:var(--text)}
+.ukItin_m{margin:0 0 8px;font-size:12.5px;color:var(--text-3);white-space:nowrap}
+.ukItin_b{margin:0;font-size:14px;line-height:1.6;color:var(--text-2);text-wrap:pretty}
+.ukItin_l{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.ukItin_l li{display:flex;gap:14px;align-items:center;padding:12px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line-soft)}
+.ukItin_l .ukM{flex:0 0 62px;border-radius:11px;overflow:hidden}
+.ukItin_d{flex:0 0 74px;font:700 11.5px/1.4 'Lato',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-ink)}
+.ukItin_body{flex:1;min-width:0}
+.ukItin_st{display:block;font-size:14.5px;font-weight:700;color:var(--text)}
+.ukItin_n{display:block;margin-top:3px;font-size:13px;line-height:1.5;color:var(--text-3);text-wrap:pretty}
+
+/* ---- the unified property design: gallery, spec strip, flat sections ----
+   Shared by the creator side's stay/lead detail page (ukcviews.js
+   stayHero/stayIntro/staySection) and the hotel side's own "preview as a
+   creator sees it" (ukviews.js propertyPreview()) — one component set, so
+   a hotel previewing its own listing sees exactly what a creator would. */
+.ukStayHero{display:flex;align-items:stretch;gap:8px;width:100%}
+.ukStayHero_thumbs{display:flex;flex-direction:column;gap:8px;flex:1 1 0;min-width:0}
+.ukStayHero_thumb{position:relative;display:block;width:100%;flex:1 1 0;min-height:0;padding:0;
+  border-radius:10px;overflow:hidden;border:none;background:var(--av-bg);cursor:pointer}
+.ukStayHero_thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ukStayHero_thumb:not(.is-on){opacity:.75}
+.ukStayHero_thumb:hover img{opacity:.85}
+.ukStayHero_thumb:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukStayHero_thumb--empty{flex:1 1 0;min-height:0;border-radius:10px;
+  background:repeating-linear-gradient(135deg,var(--tag-done-bg),var(--tag-done-bg) 6px,transparent 6px,transparent 12px)}
+/* never distorted — object-fit:cover crops the real 4:3 photo to this box,
+   it never stretches it */
+.ukStayHero_main{flex:4 1 0;min-width:0;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
+  background:var(--av-bg)}
+.ukStayHero_main img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width:600px){
+  .ukStayHero{flex-direction:column-reverse;align-items:stretch}
+  .ukStayHero_thumbs{flex-direction:row;flex:0 0 auto;height:56px;overflow-x:auto;padding-bottom:2px}
+  .ukStayHero_thumb,.ukStayHero_thumb--empty{flex:0 0 74px;width:74px;height:56px}
+  .ukStayHero_main{width:100%;height:auto;aspect-ratio:4/3}
+}
+
+/* the stay detail intro card: the hero on top, then one column — every fact
+   the trade card used to split off into its own boxes now lives in the
+   facts strip below, so there is no second column left to hold */
+.ukStayIntro_top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin-top:22px}
+.ukStayIntro_n{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:24px;line-height:1.25;
+  margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ukStayIntro_addr{display:flex;align-items:center;gap:6px;font:400 13px/1.5 'Lato',sans-serif;
+  color:var(--text-2);margin:6px 0 0}
+.ukStayIntro_value{font:700 15px/1.4 'Lato',sans-serif;color:var(--text);margin:14px 0 0}
+/* a solid, faded strip instead of top/bottom rules — it stands out as its
+   own block without the double divider line */
+.ukStayIntro_facts{list-style:none;margin:16px 0 0;padding:14px 20px;border-radius:14px;
+  background:var(--tag-done-bg);display:inline-flex;align-items:center;flex-wrap:wrap;gap:0;
+  align-self:flex-start;max-width:100%}
+.ukStayIntro_facts li{display:flex;align-items:center;gap:9px;padding:0 20px;border-left:1px solid var(--line)}
+.ukStayIntro_facts li:first-child{padding-left:0;border-left:none}
+.ukStayIntro_facts svg{width:19px;height:19px;flex:0 0 auto;color:var(--text-3)}
+.ukStayIntro_facts span{display:flex;flex-direction:column;gap:2px;font:400 11.5px/1.2 'Lato',sans-serif;color:var(--text-3)}
+.ukStayIntro_facts b{font:700 13.5px/1.2 'Lato',sans-serif;color:var(--text)}
+@media (max-width:480px){ .ukStayIntro_facts li{padding:0 14px} }
+/* the save button, in the card's top-right corner — no circular frame, just
+   the glyph, set off from the buttons beside it by a rule rather than a
+   border of its own */
+.ukStayIntro_save{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border:none;background:none;color:var(--text-2);cursor:pointer;padding:0}
+.ukStayIntro_save:hover{color:var(--text)}
+.ukStayIntro_save.is-on{color:var(--uk-gold)}
+.ukStayIntro_save .ukFav_i{width:14px;height:16px}
+.ukStayIntro_actDiv{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
+/* the actions, on the same line as the save icon, top right of the card —
+   the small button variants already used for a stay card's own actions,
+   never the full-width chunky ukCard_cta */
+.ukStayIntro_act{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+/* the flat, unboxed sections below the intro card — a heading and a rule
+   above it, one continuous sheet rather than a stack of separate cards */
+.ukStaySection{margin-top:28px;padding-top:24px;border-top:1px solid var(--line);max-width:760px}
+.ukStaySection_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;
+  margin:0 0 10px;color:var(--text)}
+.ukStaySection_lead{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0 0 14px;text-wrap:pretty}
+
+/* "Why pitch this stay" — a real label over the reasoning, not a paragraph
+   with no context above it */
+.ukStayIntro_whyT{font:700 10px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text-3);margin:16px 0 6px}
+.ukStayIntro_why{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+
+/* a real icon in a circle beside each amenity/deliverable line, not a bare
+   checkmark standing in for "this page has icons" */
+.ukIconGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;
+  gap:14px 20px}
+.ukIconGrid li{display:flex;align-items:center;gap:11px;font:400 13.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukIconBadge{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 auto;
+  border-radius:50%;background:var(--tag-done-bg);color:var(--text)}
+.ukIconBadge svg{width:17px;height:17px}
+@media (max-width:480px){ .ukIconGrid{grid-template-columns:1fr} }
+
+/* the guest guide: one row per section, icon left, label + copy right —
+   a longer read than the amenity grid, so it stays one column */
+.ukGuideList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.ukGuideList li{display:flex;align-items:flex-start;gap:14px}
+.ukGuideList .ukIconBadge{margin-top:1px}
+.ukGuideList b{display:block;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text);margin-bottom:4px}
+.ukGuideList p{margin:0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+/* the preview panel itself: a light frame around the borrowed components so
+   it reads as "a look at another surface", not as this page's own content */
+.ukPropPreview{border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--surface)}
+.ukPropPreview_tag{display:inline-flex;align-items:center;gap:6px;margin:0 0 16px;
+  font:700 10.5px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}

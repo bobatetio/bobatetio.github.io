@@ -103,7 +103,7 @@
     if (w.length < 2) return '';
     return '<section class="ukCard c8"><div class="ukCard_h">' +
         '<h3 class="ukCard_t">How each piece performed</h3>' +
-        '<button class="ukCard_more" type="button" data-goto="kit">Media kit</button></div>' +
+        '<button class="ukCard_more" type="button" data-goto="profile">Your profile</button></div>' +
         '<p class="ukCard_sub">Plays on everything you have delivered, newest first. This is the number ' +
         'a hotel is actually reading.</p>' +
         CH.capsules({ data: w.map(function (x, i) {
@@ -372,7 +372,9 @@
       '<p class="ukEarnSec_p">' + p + '</p></div>';
   }
 
-  function earn() {
+  function earn(st) {
+    st = st || {};
+    var tab = st.tab === 'growth' ? 'growth' : 'money';
     var e = D.earnings;
     var booked = D.pitches.filter(function (p) { return p.status === 'Booked'; }).length;
     var rate = D.pitches.length ? Math.round(booked / D.pitches.length * 100) : 0;
@@ -381,23 +383,30 @@
     });
     var money = moneyTotals();
 
-    return '<div class="ukDashTop"><div>' +
-        '<h2 class="ukDashTop_h">Earnings and growth</h2>' +
-        '<p class="ukDashTop_p">What you have actually made, then what is driving it.</p></div>' +
-        '<div class="ukDashTop_act">' +
-          '<button class="ukBtn" type="button" data-goto="pitch">Send another pitch</button>' +
-        '</div></div>' +
+    /* Two tabs, not one long scroll — money and growth answer different
+       questions ("what have I made" vs. "what is driving it") and used to be
+       told apart only by a section heading partway down the page. Same tab
+       shape the Stays/Outreach page already uses (.ukFilters--tabs), so a
+       creator who has learned that pattern once reads it the same way here. */
+    var tabs = '<div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Earnings">' +
+        '<button class="ukFilter' + (tab === 'money' ? ' is-on' : '') + '" type="button" role="tab" ' +
+          'aria-selected="' + (tab === 'money') + '" aria-controls="ukEarnPanel" data-tab="money">' +
+          '<span class="ukFilter_lb">Your money</span></button>' +
+        '<button class="ukFilter' + (tab === 'growth' ? ' is-on' : '') + '" type="button" role="tab" ' +
+          'aria-selected="' + (tab === 'growth') + '" aria-controls="ukEarnPanel" data-tab="growth">' +
+          '<span class="ukFilter_lb">Your growth</span></button>' +
+      '</div>';
 
-      /* ============ money, reconciled, first ============
-         The hero used to be "What that was worth" — the value of free
-         rooms, not money — with the real earned figure buried a screen down
-         inside its own card. Two big numbers on one page that do not
-         reconcile is a trust problem, so the hero is the actual total now,
-         "still confirming" sits right beside it instead of hiding inside a
-         chart, and stay VALUE — real, just not income — stays in this
-         block as the clearly-labelled context it is rather than the
-         headline. */
-      earnSection('Your money', 'Everything you have actually earned, across every stream — reconciled, not scattered.') +
+    /* ============ money, reconciled, first ============
+       The hero used to be "What that was worth" — the value of free
+       rooms, not money — with the real earned figure buried a screen down
+       inside its own card. Two big numbers on one page that do not
+       reconcile is a trust problem, so the hero is the actual total now,
+       "still confirming" sits right beside it instead of hiding inside a
+       chart, and stay VALUE — real, just not income — stays in this
+       block as the clearly-labelled context it is rather than the
+       headline. */
+    var moneyPanel = earnSection('Your money', 'Everything you have actually earned, across every stream — reconciled, not scattered.') +
       '<div class="ukBento">' +
         kpi({ l:'Earned so far', v:D.money(money.realized), n:'paid out or approved', go:'collabs', hero:true }) +
         kpi({ l:'Still confirming', v:D.money(money.pending), n:'on its way, not yet counted', go:'collabs' }) +
@@ -415,14 +424,14 @@
       '<div class="ukBento">' + commissionCard() + '</div>' +
       (feeCard() ? '<div class="ukBento">' + feeCard() + '</div>' : '') +
       (referralCard() ? '<div class="ukBento">' + referralCard() + '</div>' : '') +
-      '<div class="ukBento">' + valueCard('c12') + '</div>' +
+      '<div class="ukBento">' + valueCard('c12') + '</div>';
 
-      /* ============ performance, as the explanation ============
-         Everything here answers "why", once the money above has already
-         answered "what" — pitch volume and conversion, which channel
-         actually converts, the work that is carrying it, and the pipeline
-         behind what has not landed yet. */
-      earnSection('Your growth', 'What is driving those numbers, and what is worth doing more of.') +
+    /* ============ performance, as the explanation ============
+       Everything here answers "why", once the money above has already
+       answered "what" — pitch volume and conversion, which channel
+       actually converts, the work that is carrying it, and the pipeline
+       behind what has not landed yet. */
+    var growthPanel = earnSection('Your growth', 'What is driving those numbers, and what is worth doing more of.') +
       '<div class="ukBento">' +
         /* the same chart the dashboard shows, not a second drawing of one fact */
         '<section class="ukCard c8"><div class="ukCard_h">' +
@@ -457,7 +466,7 @@
           var top = D.me.work.slice().sort(function (a, b) { return b.plays - a.plays; })[0];
           return '<section class="ukCard c12 ukTopVid"><div class="ukCard_h">' +
             '<h3 class="ukCard_t">Top performing video</h3>' +
-            '<button class="ukCard_more" type="button" data-goto="kit">Media kit</button></div>' +
+            '<button class="ukCard_more" type="button" data-goto="profile">Your profile</button></div>' +
             (top
               ? '<div class="ukTopVid_row">' + media(top.m, top.t, '9x16', 'ukTopVid_m', true) +
                 '<div class="ukTopVid_b"><p class="ukTopVid_t">' + esc(top.t) + '</p>' +
@@ -471,6 +480,17 @@
       '</div>' +
 
       pairRow(savesCard, 'c4', pipelineCard, 'c8');
+
+    return '<div class="ukDashTop"><div>' +
+        '<h2 class="ukDashTop_h">Earnings and growth</h2>' +
+        '<p class="ukDashTop_p">What you have actually made, then what is driving it.</p></div>' +
+        '<div class="ukDashTop_act">' +
+          '<button class="ukBtn" type="button" data-goto="pitch">Send another pitch</button>' +
+        '</div></div>' +
+      tabs +
+      '<div id="ukEarnPanel" role="tabpanel" aria-label="' + (tab === 'money' ? 'Your money' : 'Your growth') + '">' +
+        (tab === 'money' ? moneyPanel : growthPanel) +
+      '</div>';
   }
 
   /* ---- what the bookings you drove are actually worth ----

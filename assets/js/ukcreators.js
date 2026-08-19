@@ -106,300 +106,83 @@
     map:'<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3.5 6.5 5.5-2 6 2 5.5-2v13l-5.5 2-6-2-5.5 2v-13Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 4.5v13M15 6.5v13" stroke="currentColor" stroke-width="1.5"/></svg>'
   };
 
-  /* ---------- creator profile ---------- */
+  /* ---------- creator profile ----------
+     Thin adapter now: build a normalised model off the hotel's roster
+     record and hand it to window.UKPROFILE.render (ukprofile.js), the same
+     function the creator side calls on itself. The tab shell, the section
+     order, the channel switcher and the Rates tab all live there — this
+     file's job is only to gather what the hotel already knows about this
+     creator into the shape that renderer expects, plus the hotel-only
+     actions (Hire, save, tracked link, invite picker) no creator ever sees. */
+  function bestWorkFor(c) {
+    /* The hotel side has never carried a per-creator work array the way
+       D.me.work does on the creator's own side — only a small shared demo
+       gallery (D.assets). [ASSUMPTION] rather than invent per-creator play
+       counts with nothing behind them, the podium/format/save-rate cards
+       that need real per-piece numbers are simply left off here; they were
+       never on the hotel-facing page before this restructure either. A
+       future pass wiring real per-creator asset data could turn these on. */
+    return [];
+  }
   function creatorProfile(st) {
     var c = D.creator(st.creator);
-    var total = c.plats.reduce(function (a, p) { return a + p.f; }, 0);
     var work = D.assets.slice(0, 6);
+    var live = (D.collabs || []).filter(function (x) { return x.who === c.id && !x.passed; })[0];
 
-    /* THE creator header, the same one a collaboration opens with — not a second
-       introduction to the same person written a different way. If there is a live
-       collaboration with them it carries its real state; if not, the lifecycle
-       band and the tracked link have nothing to say and are left off, and the two
-       decisions become the ones that apply here.
+    var m = {
+      id: c.id, n: c.n, h: c.h, img: c.img, city: c.loc, niche: c.type,
+      plats: c.plats || [],
+      /* Read directly by creatorHead() (ukprofile.js), lifted verbatim from
+         the original ukviews.js header — f (raw audience total), type/cats
+         (category chips), markets ({n,cc} — real flags, not the map's lat/
+         lng pins), free (availability text), resp (reply time). */
+      f: c.f, type: c.type, cats: c.cats || [], markets: c.markets || [], free: c.free, makes: c.makes || [],
+      verified: c.vetted, academyCert: c.academyCert, academyModules: c.academyModules || [],
+      collabTypes: c.collabTypes || [], rates: c.rates || {},
+      stats: { eng: c.eng, reach: c.reach, stays: c.stays, ontime: c.ontime, rating: c.rating, age: c.age, gender: c.gender, tops: c.tops },
+      langs: c.langs,
+      langsList: String(c.langs || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean),
+      reliability: { ontime: c.ontime, resp: c.resp, turn: c.turn },
+      resp: c.resp,
+      proof: c.proof,
+      /* c.markets is c.been's own city names resolved to real flags
+         (ukdata.js's MARKET table), same order, truncated to MAXP=5 — the
+         exact source the header's "Covers" line already reads. Map pins get
+         the same flags rather than a second, invented lookup; cities past
+         MAXP show with no flag, same "say nothing" discipline as everywhere
+         else in this file. */
+      been: (c.been || []).map(function (b) {
+        var mk = (c.markets || []).filter(function (x) { return x.n === b.n; })[0];
+        return { n: b.n, lat: b.lat, lng: b.lng, cc: mk ? mk.cc : null };
+      }),
+      worked: c.worked || [],
+      work: work.map(function (a) { return { t: a.t, plays: null, saves: null, img: a.img, video: a.k === 'video' }; }),
+      topStays: [], partnerWork: [], itinerary: null,
+      audienceCountries: String(c.tops || '').split(',').map(function (n, i) {
+        return { n: n.trim(), pct: [46, 27, 15, 8, 4][i] || 2 };
+      }).filter(function (r) { return r.n; }),
+      reachTrend: (D.trend || []).map(function (t, i) { return { k: t.m, v: Math.round((c.f / 1000) * (0.7 + i * 0.06)) }; }),
+      bestWork: bestWorkFor(c), formatAvg: [], savesPer1000: null, bookingsByChannel: [],
+      places: (c.been || []).map(function (b) {
+        var mk = (c.markets || []).filter(function (x) { return x.n === b.n; })[0];
+        return { city: b.n, lat: b.lat, lng: b.lng, id: c.id + '-' + b.n, cc: mk ? mk.cc : null };
+      }),
+      trackedHtml: trackedFor(c),
+      /* 2c — already resolved to {img,video,t,byN} on the creator side
+         (ukdiscover.js's syncPublic, via window.UKME) since this app has
+         no MEDIA manifest of its own to resolve a media key against. */
+      savedInspiration: c.savedInspiration || []
+    };
 
-       No back button: the topbar breadcrumb carries the trail on every screen. */
-    var live = (D.collabs || []).filter(function (x) {
-      return x.who === c.id && !x.passed;
-    })[0];
-    var ghost = live || { id:'prof-' + c.id, who:c.id, stage:0, msgs:[], passed:false };
+    var actionsHtml =
+      '<button class="ukStatusBadge_b is-go" type="button" data-invite-open="' + c.id + '">Hire this creator</button>' +
+      '<button class="ukStatusBadge_b ukStatusBadge_b--ic' +
+        (window.UKFAVS && window.UKFAVS.has('creators', c.id) ? ' is-on' : '') + '" type="button" ' +
+        'data-fav="' + c.id + '" aria-pressed="' + !!(window.UKFAVS && window.UKFAVS.has('creators', c.id)) + '" ' +
+        'title="Save this creator" aria-label="Save ' + esc(c.n) + '">' +
+        V.favIcon(window.UKFAVS && window.UKFAVS.has('creators', c.id)) + '</button>';
 
-    return invitePicker(c, st) +
-      V.creatorHead(ghost, c, live ? D.stay(live.stay) : null,
-        live && D.packageDates ? D.packageDates(live) : null, st, {
-          /* No lifecycle band here, live collaboration or not: this page is about
-             the person, and a progress bar is about a job. */
-          noTrack2: true,
-          noTrack: !live,
-          noStats: true,
-          badge: false,
-          actions:
-            '<button class="ukStatusBadge_b is-go" type="button" data-invite-open="' + c.id + '">' +
-              'Hire this creator</button>' +
-            '<button class="ukStatusBadge_b ukStatusBadge_b--ic' +
-              (window.UKFAVS && window.UKFAVS.has('creators', c.id) ? ' is-on' : '') + '" type="button" ' +
-              'data-fav="' + c.id + '" aria-pressed="' +
-              !!(window.UKFAVS && window.UKFAVS.has('creators', c.id)) + '" ' +
-              'title="Save this creator" aria-label="Save ' + esc(c.n) + '">' +
-              V.favIcon(window.UKFAVS && window.UKFAVS.has('creators', c.id)) + '</button>'
-        }) +
-
-      /* Tabs, from the reference: the profile is three different readings of one
-         person and they should not all be on screen at once. Overview is who they
-         are and what they have made; Stats is the audience behind it. */
-      '<div class="ukToolbar"><div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Profile sections">' +
-        [['overview','Overview'],['stats','Stats'],['work','Past work']].map(function (t) {
-          var on = (st.profTab || 'overview') === t[0];
-          return '<button class="ukFilter' + (on ? ' is-on' : '') + '" type="button" role="tab" ' +
-            'aria-selected="' + on + '" data-proftab="' + t[0] + '">' +
-            '<span class="ukFilter_lb">' + t[1] + '</span></button>';
-        }).join('') + '</div></div>' +
-
-      ((st.profTab || 'overview') === 'stats' ? profStats(c) : '') +
-      ((st.profTab || 'overview') === 'work' ? profWork(c, work) : '') +
-      ((st.profTab || 'overview') !== 'overview' ? '' :
-
-      /* proof first, before anything pretty */
-      '<div class="ukStats ukStats--prof">' +
-        s('Engagement', c.eng, 'category average is 2.1%') +
-        s('Typical reach', c.reach, 'across ' + c.plats.length + ' platform' + (c.plats.length === 1 ? '' : 's')) +
-        s('Stays delivered', c.stays, c.ontime + '% on time') +
-        s('Rated', c.rating.toFixed(1), 'by properties who hosted') +
-      '</div>' +
-
-      '<div class="ukGrid ukGrid--prof">' +
-        '<div>' +
-          /* past work: the most persuasive thing on the page, so it gets the space */
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Past work</h3>' +
-            '<span class="ukCount">' + work.length + ' pieces</span></div>' +
-            '<div class="ukGallery ukGallery--work">' + work.map(function (a, i) {
-              return '<figure class="ukShot">' + img(a.img, a.t, 'ukShot_img', i < 3) +
-                (a.k === 'video' ? '<span class="ukShot_play" aria-hidden="true">&#9654;</span>' +
-                 '<span class="ukShot_len">' + a.len + '</span>' : '') +
-                '<figcaption class="ukShot_cap">' + esc(a.t) + '</figcaption></figure>';
-            }).join('') + '</div></section>' +
-
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Where ' +
-            esc(c.n.split(' ')[0]) + ' has created</h3></div>' +
-            '<p class="ukAsk">Home base plus the destinations they have shot in. Useful if you want someone who already knows your region.</p>' +
-            /* the globe the rest of the product uses, not a flat grid with markers */
-            '<div class="ukMapSlot ukMapSlot--tall" data-profmap=\'' +
-              JSON.stringify(c.been.map(function (b, i) {
-                return { id:c.id + '-' + i, lat:b.lat, lng:b.lng, name:b.n,
-                         sub: i === 0 ? 'Home base' : '', on: i === 0 };
-              })).replace(/'/g, '&#39;') + '\'></div>' +
-            '<p class="ukMap_note">Home base first, then everywhere they have shot.</p>' +
-          '</section>' +
-
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Properties hosted</h3></div>' +
-            '<ul class="ukList">' + c.worked.map(function (w) {
-              return '<li><span class="ukList_body"><span class="ukList_name">' + esc(w.h) + '</span>' +
-                '<span class="ukList_meta">Delivered ' + esc(w.out) + '</span></span>' +
-                '<span class="ukTag ukTag--done">Complete</span></li>';
-            }).join('') + '</ul>' +
-            '<p class="ukWhy">' + esc(c.proof) + '</p></section>' +
-        '</div>' +
-
-        '<aside>' +
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Where they publish</h3></div>' +
-            '<ul class="ukPlats">' + c.plats.map(function (p) {
-              return '<li><span class="ukPlats_n">' + PLAT[p.k] + '</span>' +
-                '<span class="ukPlats_f">' + D.fmt(p.f) + '</span></li>';
-            }).join('') + '</ul>' +
-            '<p class="ukHint">' + D.fmt(total) + ' followers in total, but reach and engagement matter more.</p>' +
-          '</section>' +
-
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Their audience</h3></div>' +
-            '<dl class="ukFacts ukFacts--stack">' +
-              '<div><dt>Age</dt><dd>' + esc(c.age) + '</dd></div>' +
-              '<div><dt>Split</dt><dd>' + esc(c.gender) + '</dd></div>' +
-              '<div><dt>Top locations</dt><dd>' + String(c.tops || '').split(',').map(function (n) {
-                n = n.trim(); return (window.ukFlagFor ? window.ukFlagFor(n) : '') + esc(n);
-              }).join(', ') + '</dd></div>' +
-              '<div><dt>Content style</dt><dd>' + esc(c.type) + '</dd></div>' +
-            '</dl>' +
-            '<p class="ukWhy">Compare this against your own guest profile. Fit beats follower count every time.</p>' +
-          '</section>' +
-
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Reliability</h3></div>' +
-            '<dl class="ukFacts ukFacts--stack">' +
-              '<div><dt>On-time delivery</dt><dd>' + c.ontime + '%</dd></div>' +
-              '<div><dt>Replies</dt><dd>' + esc(c.resp) + '</dd></div>' +
-              '<div><dt>Turnaround</dt><dd>' + esc(c.turn) + ' after checkout</dd></div>' +
-              '<div><dt>Stays completed</dt><dd>' + c.stays + '</dd></div>' +
-            '</dl></section>' +
-          trackedFor(c) +
-
-          (c.collabTypes && c.collabTypes.length
-            ? '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Arrangements they will accept</h3></div>' +
-                '<p class="ukAsk">Stated by ' + esc(c.n.split(' ')[0]) + ', not assumed — reach out with one of these.</p>' +
-                '<ul class="ukChips">' + c.collabTypes.map(function (t) {
-                  /* A hosted stay carries no figure — the stay is the payment
-                     there. Anything else shows the real number the creator
-                     set, or says plainly it is on request rather than
-                     leaving a blank a hotel might read as free. */
-                  var money = t !== 'Hosted stay';
-                  var r = (c.rates || {})[t];
-                  return '<li class="ukChip2 is-key">' + esc(t) +
-                    (money ? '<em class="ukChip2_rate">' +
-                      (r || r === 0 ? '$' + esc(r) : 'rate on request') + '</em>' : '') +
-                    '</li>'; }).join('') + '</ul>' +
-              '</section>'
-            : '') +
-
-          '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">What they offer</h3></div>' +
-            '<p class="ukAsk">Pick a shape now or decide together later.</p>' +
-            D.creatorPacks.map(function (k) {
-              return '<div class="ukCPack' + (k.rec ? ' is-rec' : '') + '">' +
-                (k.rec ? '<span class="ukPkg_rec">Most chosen</span>' : '') +
-                '<p class="ukCPack_n">' + k.n + '</p>' +
-                '<p class="ukCPack_d">' + k.nights + ' night' + (k.nights === 1 ? '' : 's') + ' · ' + esc(k.del) + '</p>' +
-                '<p class="ukCPack_r">' + esc(k.rights) + '</p></div>';
-            }).join('') +
-          '</section>' +
-        '</aside>' +
-      '</div>');
-  }
-
-  /* ---- Overview: the Socials grid from the reference ----
-     One card per platform, in that platform's own colour, showing the handle and
-     the number a hotel is actually buying. Built from the creator's real plats,
-     so it can only ever show channels they declared. */
-  function profSocials(c) {
-    var marks = V.PLAT_MARK || {};
-    var TINT = { ig:'#fdf1f6', tt:'#f2f2f4', yt:'#fdf0f0', fb:'#eff4fd', x:'#f3f4f6',
-                 sc:'#fffbe8', li:'#eef4fa', pi:'#fdf0f1' };
-    var UNIT = { yt:'Subscribers' };
-    return '<section class="ukPanel"><div class="ukPanel_head">' +
-      '<h3 class="ukPanel_title">Where they publish</h3>' +
-      '<span class="ukCount">' + D.fmt(c.plats.reduce(function (a2, p) { return a2 + p.f; }, 0)) +
-        ' across ' + c.plats.length + '</span></div>' +
-      '<div class="ukSoc">' + c.plats.map(function (p) {
-        return '<article class="ukSoc_c" style="--soc:' + (TINT[p.k] || '#f4f4f5') + '">' +
-          '<div class="ukSoc_top">' +
-            (marks[p.k] ? '<img class="ukSoc_i" src="' + marks[p.k] + '" alt="" width="26" height="26" ' +
-              'loading="lazy" decoding="async">' : '') +
-            '<span class="ukSoc_id"><span class="ukSoc_h">' + esc(c.h) + '</span>' +
-              '<span class="ukSoc_p">' + esc(p.n) + '</span></span>' +
-          '</div>' +
-          '<p class="ukSoc_k">' + (UNIT[p.k] || 'Followers') + '</p>' +
-          '<p class="ukSoc_v">' + D.fmt(p.f) + '</p>' +
-        '</article>';
-      }).join('') + '</div></section>';
-  }
-
-  /* ---- Stats: the audience behind the number ----
-     Everything here is read off the creator record — age, gender, top countries,
-     languages, reach, engagement. Nothing is invented, and where a reading does
-     not exist it is left out rather than filled with a plausible number. */
-  function profStats(c) {
-    var CH = window.UKCHART;
-    var total = c.plats.reduce(function (a2, p) { return a2 + p.f; }, 0);
-    var lead = c.plats.slice().sort(function (x, y) { return y.f - x.f; })[0];
-    var marks = V.PLAT_MARK || {};
-    var countries = String(c.tops || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-    var langs = String(c.langs || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-    /* a declining share across the ranked list, so the bars read as a ranking
-       rather than as measurements we do not have */
-    var shares = [46, 27, 15, 8, 4];
-
-    return '<div class="ukProfStats">' +
-      /* the headline: the biggest channel, the way the reference leads with it */
-      (lead ? '<section class="ukSocHero">' +
-        '<div class="ukSocHero_b"><p class="ukSocHero_k">Followers</p>' +
-          '<p class="ukSocHero_v">' + D.fmt(lead.f) + '</p>' +
-          '<p class="ukSocHero_s">on ' + esc(lead.n) + ' \u00b7 ' + D.fmt(total) + ' across all channels</p></div>' +
-        (marks[lead.k] ? '<img class="ukSocHero_i" src="' + marks[lead.k] + '" alt="' + esc(lead.n) + '" ' +
-          'width="46" height="46">' : '') +
-      '</section>' : '') +
-
-      '<div class="ukBento">' +
-        kpi('Avg reach', String(c.reach || '\u2014').replace(/\s*per post/, ''), 'per post') +
-        kpi('Engagement', c.eng || '\u2014', 'category average is 2.1%') +
-        kpi('Replies', String(c.resp || '\u2014').replace(/^within\s+/, ''), 'typical response time') +
-        kpi('On time', c.ontime != null ? c.ontime + '%' : '\u2014', 'across ' + c.stays + ' stays') +
-      '</div>' +
-
-      '<div class="ukGrid ukGrid--prof">' +
-        '<div>' +
-          (countries.length ? '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">Where their audience is</h3>' +
-            '<span class="ukCount">Top ' + countries.length + '</span></div>' +
-            '<ul class="ukRank">' + countries.map(function (n, i) {
-              return '<li><span class="ukRank_n">' + (window.ukFlagFor ? window.ukFlagFor(n) : '') + esc(n) + '</span>' +
-                '<span class="ukRank_bar"><span style="width:' + shares[i] + '%"></span></span>' +
-                '<span class="ukRank_v">' + shares[i] + '%</span></li>';
-            }).join('') + '</ul>' +
-            '<p class="ukWhy">Ranked by share of audience. The top market is where your listing will ' +
-            'travel furthest.</p></section>' : '') +
-
-          '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">Reach over time</h3></div>' +
-            (CH ? CH.area({ data: (D.trend || []).map(function (t, i) {
-              return { k:t.m, v: Math.round((c.f / 1000) * (0.7 + i * 0.06)) }; }),
-              unit:'thousand', label:'Reach by month' }) : '') +
-            '<p class="ukWhy">Modelled from their current audience and the platform\u2019s own trend. ' +
-            'Replaced by real figures once a channel is connected.</p></section>' +
-        '</div>' +
-
-        '<aside>' +
-          /* Charted, not written out. The gender split is a share of a whole, so it
-             is the segmented bar the ROI page already uses; the age bands are a
-             ranking, so they are the same bars as the countries. */
-          '<section class="ukPanel"><div class="ukPanel_head">' +
-            '<h3 class="ukPanel_title">Who follows them</h3></div>' +
-            (function () {
-              var g = String(c.gender || '').match(/(\d+)%\s*(women|men)/i);
-              if (!g || !CH) return '';
-              var pct = Number(g[1]);
-              var isW = /women/i.test(g[2]);
-              return '<p class="ukField_l">Gender</p>' +
-                CH.segbar({ segs: isW
-                  ? [{ l:'Women', v:pct, show:pct + '% women' }, { l:'Men', v:100 - pct, show:(100 - pct) + '% men' }]
-                  : [{ l:'Men', v:pct, show:pct + '% men' }, { l:'Women', v:100 - pct, show:(100 - pct) + '% women' }] });
-            })() +
-            (function () {
-              var a2 = String(c.age || '').match(/(\d{2})\s*-\s*(\d{2})\s*\((\d+)%\)/);
-              if (!a2) return '';
-              var band = a2[1] + '\u2013' + a2[2], pct = Number(a2[3]);
-              var rest = [['Younger', Math.round((100 - pct) * 0.42)],
-                          ['Older',   100 - pct - Math.round((100 - pct) * 0.42)]];
-              return '<p class="ukField_l" style="margin-top:16px">Age</p>' +
-                '<ul class="ukRank">' + [[band, pct]].concat(rest).map(function (r) {
-                  return '<li><span class="ukRank_n">' + esc(r[0]) + '</span>' +
-                    '<span class="ukRank_bar"><span style="width:' + r[1] + '%"></span></span>' +
-                    '<span class="ukRank_v">' + r[1] + '%</span></li>';
-                }).join('') + '</ul>';
-            })() +
-            (langs.length ? '<p class="ukField_l" style="margin-top:16px">Languages</p>' +
-              '<div class="ukChips">' + langs.map(function (l) {
-                return '<span class="ukChip">' + esc(l) + '</span>'; }).join('') + '</div>' : '') +
-          '</section>' +
-
-          profSocials(c) +
-        '</aside>' +
-      '</div></div>';
-  }
-
-  function kpi(l, v, n) {
-    return '<article class="ukK c3"><p class="ukK_l">' + esc(l) + '</p>' +
-      '<p class="ukK_v">' + esc(v) + '</p><p class="ukK_n"><span>' + esc(n) + '</span></p></article>';
-  }
-
-  function profWork(c, work) {
-    return '<section class="ukPanel"><div class="ukPanel_head">' +
-      '<h3 class="ukPanel_title">Past work</h3>' +
-      '<span class="ukCount">' + work.length + ' pieces</span></div>' +
-      '<div class="ukGallery ukGallery--work">' + work.map(function (a2, i) {
-        return '<figure class="ukShot">' + img(a2.img, a2.t, 'ukShot_img', i < 3) +
-          (a2.k === 'video' ? '<span class="ukShot_len">' + a2.len + '</span>' : '') +
-          '<figcaption class="ukShot_cap">' + esc(a2.t) + '</figcaption></figure>';
-      }).join('') + '</div></section>';
-  }
-
-  function s(l, v, n) {
-    return '<div class="ukStat"><p class="ukStat_label">' + l + '</p>' +
-           '<p class="ukStat_value">' + v + '</p><p class="ukStat_note">' + n + '</p></div>';
+    return invitePicker(c, st) + window.UKPROFILE.render(m, st, { mode: 'hotel', actionsHtml: actionsHtml });
   }
 
   /* ---------- find creators ---------- */

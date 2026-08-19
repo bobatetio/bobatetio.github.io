@@ -30,98 +30,15 @@
    space; the list column stretches to match that height and its four
    thumbs split it evenly, which at a 1:4 width ratio lands each of them
    on 4:3 too, to within a rounding pixel. */
-.ukStayHero{display:flex;align-items:stretch;gap:8px;width:100%}
-.ukStayHero_thumbs{display:flex;flex-direction:column;gap:8px;flex:1 1 0;min-width:0}
-.ukStayHero_thumb{position:relative;display:block;width:100%;flex:1 1 0;min-height:0;padding:0;
-  border-radius:10px;overflow:hidden;border:none;background:var(--av-bg);cursor:pointer}
-.ukStayHero_thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.ukStayHero_thumb:not(.is-on){opacity:.75}
-.ukStayHero_thumb:hover img{opacity:.85}
-.ukStayHero_thumb:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukStayHero_thumb--empty{flex:1 1 0;min-height:0;border-radius:10px;
-  background:repeating-linear-gradient(135deg,var(--tag-done-bg),var(--tag-done-bg) 6px,transparent 6px,transparent 12px)}
-/* never distorted — object-fit:cover crops the real 4:3 photo to this box,
-   it never stretches it */
-.ukStayHero_main{flex:4 1 0;min-width:0;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
-  background:var(--av-bg)}
-.ukStayHero_main img{width:100%;height:100%;object-fit:cover;display:block}
-@media (max-width:600px){
-  .ukStayHero{flex-direction:column-reverse;align-items:stretch}
-  .ukStayHero_thumbs{flex-direction:row;flex:0 0 auto;height:56px;overflow-x:auto;padding-bottom:2px}
-  .ukStayHero_thumb,.ukStayHero_thumb--empty{flex:0 0 74px;width:74px;height:56px}
-  .ukStayHero_main{width:100%;height:auto;aspect-ratio:4/3}
-}
+/* .ukStayHero / .ukStayIntro / .ukStaySection / .ukIconGrid / .ukGuideList
+   moved to ukapp.css (shared) — the hotel side's own property-profile
+   preview (assets/js/ukviews.js propertyPreview()) reuses this exact
+   component set rather than a hand-built lookalike. */
 
 /* the "what's included" checklist, two columns wide once there is room —
    .ukTicks itself (ukapp.css) already draws the check mark */
 .ukTicks--grid{display:grid;grid-template-columns:1fr 1fr;column-gap:20px}
 @media (max-width:480px){ .ukTicks--grid{grid-template-columns:1fr} }
-
-/* the stay detail intro card: the hero on top, then one column — every fact
-   the trade card used to split off into its own boxes now lives in the
-   facts strip below, so there is no second column left to hold */
-.ukStayIntro_top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
-  flex-wrap:wrap;margin-top:22px}
-.ukStayIntro_n{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:24px;line-height:1.25;
-  margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.ukStayIntro_addr{display:flex;align-items:center;gap:6px;font:400 13px/1.5 'Lato',sans-serif;
-  color:var(--text-2);margin:6px 0 0}
-.ukStayIntro_value{font:700 15px/1.4 'Lato',sans-serif;color:var(--text);margin:14px 0 0}
-/* a solid, faded strip instead of top/bottom rules — it stands out as its
-   own block without the double divider line */
-.ukStayIntro_facts{list-style:none;margin:16px 0 0;padding:14px 20px;border-radius:14px;
-  background:var(--tag-done-bg);display:inline-flex;align-items:center;flex-wrap:wrap;gap:0;
-  align-self:flex-start;max-width:100%}
-.ukStayIntro_facts li{display:flex;align-items:center;gap:9px;padding:0 20px;border-left:1px solid var(--line)}
-.ukStayIntro_facts li:first-child{padding-left:0;border-left:none}
-.ukStayIntro_facts svg{width:19px;height:19px;flex:0 0 auto;color:var(--text-3)}
-.ukStayIntro_facts span{display:flex;flex-direction:column;gap:2px;font:400 11.5px/1.2 'Lato',sans-serif;color:var(--text-3)}
-.ukStayIntro_facts b{font:700 13.5px/1.2 'Lato',sans-serif;color:var(--text)}
-@media (max-width:480px){ .ukStayIntro_facts li{padding:0 14px} }
-/* the save button, in the card's top-right corner — no circular frame, just
-   the glyph, set off from the buttons beside it by a rule rather than a
-   border of its own */
-.ukStayIntro_save{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:24px;height:24px;
-  border:none;background:none;color:var(--text-2);cursor:pointer;padding:0}
-.ukStayIntro_save:hover{color:var(--text)}
-.ukStayIntro_save.is-on{color:var(--uk-gold)}
-.ukStayIntro_save .ukFav_i{width:14px;height:16px}
-.ukStayIntro_actDiv{width:1px;align-self:stretch;background:var(--line);margin:0 2px}
-/* the actions, on the same line as the save icon, top right of the card —
-   the small button variants already used for a stay card's own actions,
-   never the full-width chunky ukCard_cta */
-.ukStayIntro_act{display:flex;align-items:center;gap:8px;flex:0 0 auto}
-
-/* the flat, unboxed sections below the intro card — a heading and a rule
-   above it, one continuous sheet rather than a stack of separate cards */
-.ukStaySection{margin-top:28px;padding-top:24px;border-top:1px solid var(--line);max-width:760px}
-.ukStaySection_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;
-  margin:0 0 10px;color:var(--text)}
-.ukStaySection_lead{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0 0 14px;text-wrap:pretty}
-
-/* "Why pitch this stay" — a real label over the reasoning, not a paragraph
-   with no context above it */
-.ukStayIntro_whyT{font:700 10px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--text-3);margin:16px 0 6px}
-.ukStayIntro_why{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
-
-/* a real icon in a circle beside each amenity/deliverable line, not a bare
-   checkmark standing in for "this page has icons" */
-.ukIconGrid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;
-  gap:14px 20px}
-.ukIconGrid li{display:flex;align-items:center;gap:11px;font:400 13.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
-.ukIconBadge{display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 auto;
-  border-radius:50%;background:var(--tag-done-bg);color:var(--text)}
-.ukIconBadge svg{width:17px;height:17px}
-@media (max-width:480px){ .ukIconGrid{grid-template-columns:1fr} }
-
-/* the guest guide: one row per section, icon left, label + copy right —
-   a longer read than the amenity grid, so it stays one column */
-.ukGuideList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
-.ukGuideList li{display:flex;align-items:flex-start;gap:14px}
-.ukGuideList .ukIconBadge{margin-top:1px}
-.ukGuideList b{display:block;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text);margin-bottom:4px}
-.ukGuideList p{margin:0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 
 /* a real brief: the hotel's own free text, at reading width and line height,
    not squeezed into a chip — plus whatever link or file came with it */
@@ -135,15 +52,6 @@
   font:400 13px/1.4 'Lato',sans-serif;color:var(--text-2)}
 .ukStayBrief_file svg{width:15px;height:15px;color:var(--text-3);flex:0 0 auto}
 
-/* ---------- vertical media rows: the creator's own work ---------- */
-.ukReels{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.ukReels--sm{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
-.ukReel{margin:0;display:flex;flex-direction:column;gap:8px}
-.ukReel figcaption{display:flex;flex-direction:column;gap:2px}
-.ukReel_t{font:700 12.5px/1.35 'Lato',sans-serif;color:var(--text);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ukReel_s{font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
-
 /* ---------- greeting ---------- */
 .ukCHi{margin-bottom:20px}
 .ukCHi_h{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(26px,3.2vw,38px);
@@ -154,6 +62,13 @@
 /* ---------- warmth: cheers, soothing, asides ---------- */
 .ukCheer{margin:0 0 18px;padding:13px 17px;border-radius:14px;background:var(--tag-you-bg);
   color:var(--tag-you-ink);font:600 13.5px/1.6 'Lato',sans-serif;text-wrap:pretty}
+/* Part 4.2 — celebrate, then let go: paired with a 4s setTimeout repaint
+   (ukcapp.js markLessonDone) that stops rendering it at all; this is just
+   what it looks like on the way out rather than vanishing mid-frame.
+   Reduced-motion still gets the same disappearance, just as a cut. */
+.ukCheer--toast{animation:ukCheerFade 4s ease forwards}
+@keyframes ukCheerFade{0%,72%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.ukCheer--toast{animation:none}}
 .ukSoothe{margin:12px 0 0;padding:11px 14px;border-radius:12px;background:var(--tag-done-bg);
   font:400 12.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
 .ukSoothe--wide{margin:0 0 18px;font-size:13.5px}
@@ -207,25 +122,8 @@
   line-height:1.12;margin:0;color:var(--text)}
 .ukCHead_m{font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-2);margin:5px 0 0}
 
-/* ---------- profile / media kit ---------- */
+/* ---------- profile ---------- */
 .ukProf_act .ukBtn,.ukProf_act .ukGhost{width:100%}
-.ukKit{border-radius:24px;border:1px solid var(--line);background:var(--surface);overflow:hidden}
-.ukKit_top{display:flex;gap:18px;align-items:center;flex-wrap:wrap;padding:clamp(20px,2.6vw,30px);
-  border-bottom:1px solid var(--line)}
-.ukKit_n{font-family:"Marcellus",serif;font-weight:400;font-size:26px;margin:0;color:var(--text)}
-.ukKit_m{font:400 13px/1.5 'Lato',sans-serif;color:var(--text-2);margin:4px 0 0}
-.ukKit_b{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);margin:8px 0 0;max-width:44ch;text-wrap:pretty}
-.ukKit_stats{display:flex;gap:22px;margin-left:auto}
-.ukKit_stats dt{font:700 9.5px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.12em;
-  color:var(--text-3);margin-bottom:5px}
-.ukKit_stats dd{font-family:'Marcellus',Georgia,serif;font-size:22px;margin:0;color:var(--text)}
-.ukKit_work{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;
-  padding:clamp(18px,2.4vw,26px)}
-.ukKit_foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  padding:18px clamp(20px,2.6vw,30px);border-top:1px solid var(--line);
-  font:400 13px/1.5 'Lato',sans-serif;color:var(--text-2)}
-.ukKit_foot strong{color:var(--text)}
-.ukKit_by{font:700 11px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.14em;color:var(--gold-ink);margin:0}
 
 
 /* the lesson page's full curriculum, in its sticky aside — a real course
@@ -310,10 +208,8 @@
 }
 @media (max-width:900px){
   .ukCheerBig{grid-template-columns:1fr}
-  .ukKit_stats{margin-left:0;width:100%}
 }
 @media (max-width:768px){
-  .ukReels{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}
   .ukStayGrid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
   .ukLessons{grid-template-columns:1fr}
   .ukLogGrid{grid-template-columns:1fr}
@@ -323,8 +219,6 @@
 @media (max-width:560px){
   .ukCheerBig_m,.ukDoor_m{grid-template-columns:1fr 1fr}
   .ukStayGrid{grid-template-columns:1fr 1fr;gap:12px}
-  .ukReels{grid-template-columns:1fr 1fr}
-  .ukKit_work{grid-template-columns:1fr 1fr}
   .ukJoin_p{font-size:42px}
   .ukCHead{flex-wrap:wrap}
   .ukM--head{width:100%;flex-basis:auto}
@@ -1227,11 +1121,6 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukCh--caps .ukBars{gap:10px}
 
 
-/* the media-kit strip: one ratio for every tile, whatever the asset's own is */
-.ukReel--kit .ukM{aspect-ratio:9/16 !important;height:auto}
-.ukReel--kit .ukM img{width:100%;height:100%;object-fit:cover;display:block}
-.ukKit_work{align-items:start}
-
 
 /* the free-pitch offer, stated once above the grid rather than under every card */
 .ukHint--lead{margin:0 0 14px}
@@ -1376,6 +1265,10 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukCollabCell .ukStatusBadge{max-width:100%}
 .ukCollabCell .ukPreview{margin-top:12px}
 .ukCollabCell .ukDot{position:absolute;top:12px;right:12px;z-index:2}
+/* Same overlay treatment as the unread dot above it — laid over the photo,
+   not flowed into the card body, so a cold-outreach thread is not a
+   different, taller card shape than every other collab card next to it. */
+.ukCollabCell .ukTag{position:absolute;top:22px;left:22px;z-index:2}
 
 /* A pitch with no stay behind it has no photograph, so the tile carries the
    hotel's initial rather than sitting empty. */
@@ -1398,18 +1291,6 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukWriteWork_t{margin:0;font:700 11px/1 'Lato',sans-serif;text-transform:uppercase;
   letter-spacing:.12em;color:var(--text-3)}
 .ukWriteWork .ukWhy{margin-top:10px}
-
-/* ---- collabs board (creator) ----
-   Same .ukKan the hotel side uses, just four columns instead of five — this
-   side never shows an Inquiry column, so the shared 5-up grid would leave a
-   blank column-width gap. Below 900px this defers back to ukapp.css's own
-   swipeable-board rule (.ukKan{grid-template-columns:none;...}), so both
-   sides collapse the same way rather than fighting over two breakpoints. */
-.ukKan--4{grid-template-columns:repeat(4,minmax(0,1fr))}
-@media (max-width:900px){
-  .ukKan--4{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(240px,78vw);
-    overflow-x:auto;padding-bottom:8px;height:auto}
-}
 
 /* ---- the hotel head on a collab thread (creator) ----
    The hotel side's own .ukCrD, reused as-is — a property is not a person, so
@@ -1437,6 +1318,73 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 .ukAcadRes_s{display:block;margin-top:2px;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
 .ukAcadRes_go{width:16px;height:16px;flex:0 0 auto;color:var(--text-3)}
 .ukAcadRes_go svg{width:100%;height:100%;display:block}
+.ukAcadRes--cert{border-color:var(--active-ring);background:var(--active-bg)}
+.ukAcadRes--cert:hover{background:var(--active-bg);border-color:var(--uk-gold)}
+
+/* ---- Part 3: the certificate ----
+   Decorative panel reuses the exact brand gradient the sidebar already
+   renders with (--uk-deep/-2/-3, same 170deg formula as .ukSide) and the
+   existing white wordmark asset — no new artwork. Name is set in
+   Marcellus, the one display face already used for every heading in the
+   product, standing in for "a script/display face" per the brief rather
+   than a new font import. Fixed design width + horizontal scroll below it
+   rather than shrinking text to fit a phone: a certificate crammed small
+   enough to avoid scrolling is not readable, and pinch/scroll is the
+   normal way to view a wide document on a narrow screen. */
+.ukCertWrap{overflow-x:auto;padding:4px 4px 24px;-webkit-overflow-scrolling:touch}
+.ukCertWrap.is-overall{padding-top:8px}
+.ukCert{min-width:700px;max-width:800px;margin:0 auto;
+  border-radius:20px;overflow:hidden;background:#fdfcfa;border:1px solid var(--line);
+  box-shadow:0 30px 70px -32px rgba(6,18,25,.4)}
+.ukCertWrap.is-overall .ukCert{box-shadow:0 34px 80px -28px rgba(215,165,67,.5)}
+.ukCert_body{padding:38px 30px;background:#fdfcfa}
+/* A real inner border, the way a printed certificate is bordered — a thin
+   gold rule with a hairline set back from it, both CSS, not an image. */
+.ukCert_frame{position:relative;padding:36px clamp(28px,4vw,52px) 34px;text-align:center;
+  border:1.5px solid var(--uk-gold);outline:1px solid rgba(215,165,67,.35);outline-offset:-7px}
+/* The real wordmark, not a text label standing in for one — the ink
+   variant, since this sits on the certificate's light surface rather than
+   the dark panel the white variant is drawn for. */
+.ukCert_mark{width:118px;height:auto;display:block;margin:0 auto 18px}
+.ukCert_h{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:clamp(24px,2.6vw,32px);
+  line-height:1.25;letter-spacing:.09em;text-transform:uppercase;color:var(--text)}
+.ukCert_rule{display:block;width:64px;height:2px;margin:16px auto 20px;background:var(--uk-gold)}
+.ukCert_p{margin:0;font:400 13px/1.5 'Lato',sans-serif;color:var(--text-2)}
+.ukCert_name{margin:8px 0 20px;font-family:'Marcellus',Georgia,serif;font-weight:400;font-style:italic;
+  font-size:clamp(30px,3.6vw,42px);color:var(--text);text-wrap:balance}
+.ukCert_mod{margin:8px 0 24px;font:700 18px/1.35 'Lato',sans-serif;color:var(--gold-ink);text-wrap:balance}
+.ukCert_badgeSlot{display:flex;justify-content:center;margin-bottom:24px}
+/* A ring behind the seal, not the seal floating loose — the same weight a
+   printed gold foil medallion would carry. */
+.ukCert_badgeRing{display:flex;align-items:center;justify-content:center;width:120px;height:120px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%, #fdf2d8, #f3dca4 55%, #e3bd6c 100%);
+  box-shadow:0 8px 18px -8px rgba(154,110,26,.55), inset 0 0 0 1px rgba(154,110,26,.25)}
+.ukCert_badgeArt{width:72px;height:72px;object-fit:contain;color:#8a6414}
+.ukCert_badgeArt--seal{width:80px;height:80px}
+.ukCert_foot{display:flex;justify-content:center;gap:clamp(36px,6vw,72px);margin-top:4px}
+.ukCert_sig{display:flex;flex-direction:column;align-items:center;min-width:170px}
+.ukCert_line{width:100%;height:1px;background:var(--line);margin-bottom:9px}
+.ukCert_sigName{margin:0;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukCert_sigName--script{font-family:'Marcellus',Georgia,serif;font-style:italic;font-weight:400;font-size:17px}
+.ukCert_cap{margin:3px 0 0;font:400 10.5px/1.3 'Lato',sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-3)}
+.ukCert_dl{display:flex;align-items:center;justify-content:center;gap:8px;margin:22px auto 0;min-width:700px;
+  max-width:800px}
+.ukCert_dl svg{width:16px;height:16px}
+@media (max-width:750px){
+  .ukCertWrap{padding-left:0;padding-right:0}
+}
+
+/* Real download, not a stub: the browser's own print-to-PDF. #ukCertPrint
+   is the one thing left visible; "Save as PDF" in the print dialog is a
+   genuine file on disk, no library, no network call. */
+@media print{
+  body *{visibility:hidden}
+  #ukCertPrint, #ukCertPrint *{visibility:visible}
+  #ukCertPrint{position:fixed;inset:0;margin:0;max-width:none;min-width:0;border:0;box-shadow:none;
+    border-radius:0}
+  .ukSide, .ukTop, .ukBack, .ukCert_dl{display:none !important}
+}
 
 /* ---- flat underline tabs, the reference's own tab style — plain text,
    no pill, a two-point border under the active one. Distinct from
@@ -1447,7 +1395,7 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
   font:700 14px/1 'Lato',sans-serif;color:var(--text-3);border-bottom:2px solid transparent;margin-bottom:-1px}
 .ukTabs_b:hover{color:var(--text)}
 .ukTabs_b:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
-.ukTabs_b.is-on{color:var(--text);border-bottom-color:var(--uk-deep)}
+.ukTabs_b.is-on{color:var(--text);border-bottom-color:var(--uk-gold)}
 
 /* ---- academy index: a real card grid, same family as the course-catalog
    reference — module filter pills where it had category tabs, a lessons/
@@ -1493,40 +1441,82 @@ button.ukMoreDot:hover,button.ukMoreDot:focus-visible{
 
 /* ---- Discover ----
    The hotel Content library's own grid/card idiom (.ukLib), adapted rather
-   than reinvented: cards keep each piece's own declared ratio (via .ukM)
-   instead of forcing one, same as the library's video/photo split. */
+   than reinvented: every card forced to one ratio (.ukM--4x5, in the
+   markup itself — not each piece's own declared ratio via ukcviews.js's
+   shared m() helper) so a portrait reel next to a landscape photo never
+   leaves one card shorter than its neighbour. Title and byline ride the
+   image via .ukM_scrim/.ukM_cap — the same gradient-scrim tile the
+   profile page's galleries and the library's own .ukLib_scrim already
+   use — instead of a caption block underneath, so the card's whole
+   height is just the image. */
 .ukDiscGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:18px}
-.ukDiscFeatured{margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid var(--line)}
-.ukDiscCard_featured{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:9999px;
-  background:var(--uk-gold);color:var(--uk-on-gold);font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.02em}
 .ukDiscCard{display:block;text-align:left;padding:0;border:1px solid var(--line);background:var(--surface);
   border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .15s ease,border-color .15s ease}
 .ukDiscCard:hover{transform:translateY(-2px);border-color:var(--active-ring)}
 .ukDiscCard:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
 .ukDiscCard_m{position:relative}
 .ukDiscCard_m .ukM{border-radius:0}
-.ukDiscCard_b{padding:12px 14px 15px}
-.ukDiscCard_t{margin:0;font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
-.ukDiscCard_by{display:flex;align-items:center;gap:6px;margin:6px 0 0;font-size:12.5px;color:var(--text-3)}
-.ukDiscCard_by img{width:20px;height:20px;border-radius:50%;object-fit:cover;flex:0 0 auto}
-.ukDiscCard_tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
 .ukDiscCard_save{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;
   display:grid;place-items:center;border:1px solid rgba(255,255,255,.7);
   background:rgba(6,18,25,.5);color:#fff;cursor:pointer}
 .ukDiscCard_save svg{width:15px;height:15px;display:block}
 .ukDiscCard_save.is-on{background:var(--uk-gold);color:var(--uk-on-gold);border-color:var(--uk-gold)}
-.ukDiscOpen_m .ukM{border-radius:20px}
-.ukDiscOpen_by{display:flex;align-items:center;gap:9px;margin:0;font:700 14px/1.3 'Lato',sans-serif;color:var(--text)}
-.ukDiscOpen_by img{width:32px;height:32px;border-radius:50%;object-fit:cover}
-.ukDiscPerf{margin-top:16px;padding:13px 15px;border-radius:14px;background:var(--surface-2);
-  display:flex;gap:20px}
-.ukDiscPerf_lb{flex-basis:100%;margin:0 0 2px;font:700 10px/1 'Lato',sans-serif;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--text-3)}
-.ukDiscPerf_row{display:flex;flex-direction:column;gap:2px}
-.ukDiscPerf_v{font:700 18px/1 'Lato',sans-serif;color:var(--text)}
+/* Reels are shot 9:16 — at the width a fixed grid fraction gives a hero,
+   an unconstrained aspect-ratio box turns into a wall of video taller
+   than the viewport. Cap the height like the lightbox already does for a
+   full photo (.ukLightbox_i img, 82vh) and let width follow from the
+   ratio, rather than the reverse. */
+.ukDiscOpen_m{display:flex;justify-content:center}
+.ukDiscOpen_m .ukM{border-radius:20px;width:auto;max-width:100%;max-height:min(70vh,600px)}
+/* The pair, centred as a unit with no dead track around it: the left
+   column is max-content, not a fixed fraction like .ukGrid--thread's
+   1.4fr — this media is capped narrow by its own height limit and never
+   fills a wide fraction, so a fixed-fraction track always leaves dead
+   space in it somewhere, left or right of the media, whichever way the
+   media itself is aligned. Sized to exactly what the media renders at
+   instead, so the pair's total width is just media + gap + panel, and
+   .ukDiscOpenWrap's flex centring puts the same margin on both sides
+   rather than stranding it all on one. Media size itself is untouched —
+   only how much space sits around the pair changes. */
+.ukDiscOpenWrap{display:flex;justify-content:center}
+.ukDiscOpenGrid{grid-template-columns:minmax(0,max-content) minmax(320px,420px)}
+@media (max-width:900px){
+  .ukDiscOpenGrid{grid-template-columns:1fr;width:100%}
+  .ukDiscOpen_nav{justify-content:center}
+}
+.ukDiscOpen_nav{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+.ukDiscOpen_nav svg{width:15px;height:15px}
+.ukDiscOpen_by{display:flex;align-items:center;gap:9px;margin:0;padding:0;border:0;background:none;
+  cursor:pointer;font:700 14px/1.3 'Lato',sans-serif;color:var(--text);text-align:left}
+.ukDiscOpen_by:hover span{text-decoration:underline}
+.ukDiscOpen_by img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:0 0 auto}
+/* The hero stat block (1b) — the exact .ukK tile the profile's own KPI row
+   uses (ukdash.css), two across rather than that row's four: this panel
+   is a sidebar, not a dashboard. */
+.ukDiscHero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.ukDiscHero .ukK{padding:14px 14px 12px}
+.ukDiscHero .ukK_v{font-size:28px}
+.ukDiscInsight{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:var(--surface-2);
+  font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+.ukDiscOpen_prop{width:100%;margin-top:16px}
 .ukDiscOpen_save{display:flex;align-items:center;justify-content:center;gap:8px}
 .ukDiscOpen_save svg{width:16px;height:16px}
+.ukDiscFile{margin-top:12px}
+.ukDiscByFilter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:-6px 0 16px;
+  font:400 13.5px/1.4 'Lato',sans-serif;color:var(--text-2)}
 .ukDiscColl{margin-bottom:22px}
+.ukDiscColl_h{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ukDiscColl_h .ukStaySection_t{margin:0}
+.ukDiscColl_ed{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;
+  border:1px solid transparent;background:none;color:var(--text-3);cursor:pointer}
+.ukDiscColl_ed:hover{background:var(--hover);color:var(--text-2)}
+.ukDiscColl_ed svg{width:13px;height:13px}
+.ukDiscColl_e{margin:0;padding:16px;border-radius:14px;border:1px dashed var(--line);
+  font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-3)}
+.ukDiscRen{display:flex;gap:8px;align-items:center;flex:1 1 auto}
+.ukDiscRen input{flex:1 1 220px;min-width:0;padding:8px 12px;border-radius:10px;
+  border:1px solid var(--input-line);background:var(--input-bg);font:600 14px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukDiscRen input:focus-visible{outline:2px solid var(--uk-gold);outline-offset:1px}
 .ukDiscNewColl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
 .ukDiscNewColl input{flex:1 1 220px;min-width:0;padding:11px 14px;border-radius:12px;
   border:1px solid var(--input-line);background:var(--input-bg);font:400 14px/1.4 'Lato',sans-serif;color:var(--text)}

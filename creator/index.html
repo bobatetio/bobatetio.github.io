@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/css/ukapp.css?v=401">
-<link rel="stylesheet" href="/assets/css/ukcreator.css?v=110">
-<link rel="stylesheet" href="/assets/css/ukdash.css?v=33">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=416">
+<link rel="stylesheet" href="/assets/css/ukcreator.css?v=130">
+<link rel="stylesheet" href="/assets/css/ukdash.css?v=34">
 </head>
 <body class="ukApp ukC" data-ukc>
 
@@ -67,7 +67,6 @@
     <div class="ukMenu" id="ukMenu" role="menu" hidden>
       <p class="ukMenu_head">Signed in as<strong>Amara Mensah</strong></p>
       <button class="ukMenu_i" type="button" role="menuitem" data-goto="profile">Your profile</button>
-      <button class="ukMenu_i" type="button" role="menuitem" data-goto="kit">Media kit</button>
       <button class="ukMenu_i" type="button" role="menuitem" data-goto="account">Account</button>
       <button class="ukMenu_i" type="button" role="menuitem" data-goto="member">Membership</button>
       <div class="ukMenu_rule"></div>
@@ -86,10 +85,12 @@
      blob should have been. -->
 <script src="/assets/vendor/lottie-light.min.js?v=1" defer></script>
 <script src="/assets/js/uklottie.js?v=1" defer></script>
-<script src="/assets/js/ukicons.js?v=10" defer></script>
+<script src="/assets/js/ukicons.js?v=11" defer></script>
 <script src="/assets/js/ukshared.js?v=9" defer></script>
 <!-- THE stay card, rendered by both apps. See the file header. -->
-<script src="/assets/js/ukstaycard.js?v=8" defer></script>
+<script src="/assets/js/ukstaycard.js?v=11" defer></script>
+<!-- THE creator profile renderer, shared by both apps. See the file header. -->
+<script src="/assets/js/ukprofile.js?v=7" defer></script>
 <!-- The stay registry and the applications record: the two things the hotel
      app and the creator app genuinely share. Both must load before the data
      files, which hydrate out of them. -->
@@ -99,7 +100,7 @@
 <!-- which account are we looking at: established, or the first hour -->
 <!-- connecting where a creator posts: one implementation, used by the start
      page and by the in-app onboarding gate -->
-<script src="/assets/js/ukplatconnect.js?v=2" defer></script>
+<script src="/assets/js/ukplatconnect.js?v=3" defer></script>
 <script src="/assets/js/ukplace.js?v=1" defer></script>
 <script src="/assets/js/ukshots.js?v=1" defer></script>
 <script src="/assets/js/ukchips.js?v=4" defer></script>
@@ -107,25 +108,24 @@
 <script src="/assets/js/ukonboard.js?v=29" defer></script>
 <script src="/assets/js/ukattrib.js?v=5" defer></script>
 <script src="/assets/js/ukpitchin.js?v=5" defer></script>
-<script src="/assets/js/uknotify.js?v=1" defer></script>
-<script src="/assets/js/ukfavs.js?v=1" defer></script>
+<script src="/assets/js/uknotify.js?v=2" defer></script>
+<script src="/assets/js/ukfavs.js?v=2" defer></script>
 <script src="/assets/js/ukreviews.js?v=1" defer></script>
 <script src="/assets/js/ukinvite.js?v=4" defer></script>
 <script src="/assets/js/ukmarkets.js?v=3" defer></script>
-<script src="/assets/js/ukcdata.js?v=77" defer></script>
-<script src="/assets/js/ukworldmap.js?v=7" defer></script>
-<script src="/assets/js/ukcviews.js?v=167" defer></script>
-<script src="/assets/js/ukcpitch.js?v=43" defer></script>
+<script src="/assets/js/ukcdata.js?v=82" defer></script>
+<script src="/assets/js/ukworldmap.js?v=8" defer></script>
+<script src="/assets/js/ukcviews.js?v=183" defer></script>
+<script src="/assets/js/ukcpitch.js?v=45" defer></script>
 <script src="/assets/js/ukchart.js?v=7" defer></script>
 <script src="/assets/js/ukreferral.js?v=1" defer></script>
 <script src="/assets/js/ukcreativefee.js?v=1" defer></script>
-<script src="/assets/js/ukcdash.js?v=52" defer></script>
-<script src="/assets/js/ukcdata2.js?v=6" defer></script>
+<script src="/assets/js/ukcdash.js?v=54" defer></script>
+<script src="/assets/js/ukcdata2.js?v=8" defer></script>
 <script src="/assets/js/ukcmatch.js?v=11" defer></script>
-<script src="/assets/js/ukcprofile.js?v=30" defer></script>
-<script src="/assets/js/ukchotel.js?v=2" defer></script>
-<script src="/assets/js/ukdiscover.js?v=5" defer></script>
-<script src="/assets/js/ukcapp.js?v=117" defer></script>
+<script src="/assets/js/ukcprofile.js?v=34" defer></script>
+<script src="/assets/js/ukdiscover.js?v=11" defer></script>
+<script src="/assets/js/ukcapp.js?v=129" defer></script>
 <script src="/assets/js/ukaskbrain.js?v=1" defer></script>
 <script src="/assets/js/ukask.js?v=35" defer></script>
 </body>

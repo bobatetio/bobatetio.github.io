@@ -196,7 +196,15 @@ window.UKWORLDMAP = (function () {
       });
       var lat = (minLat + maxLat) / 2, lng = (minLng + maxLng) / 2;
       var spanLat = maxLat - minLat, spanLng = maxLng - minLng;
-      if (spanLat < 6 && spanLng < 6) return { lat: lat, lng: lng, zoom: 3.4 };
+      /* A single property used to fit at 3.4 (of a 1-5 range) — at the flat
+         dot-grid style this map draws in, that still reads as "a pin on the
+         whole world" rather than "zoomed to the property": the dot texture
+         doesn't thin out with zoom the way street tiles would, so anything
+         short of the map's own ceiling still looks like a wide continental
+         view. MAX_Z is what actually reads as a legible, close-in view of
+         just the property and its immediate surroundings — confirmed by
+         testing every step from 3.4 up to MAX_Z directly. */
+      if (spanLat < 6 && spanLng < 6) return { lat: lat, lng: lng, zoom: MAX_Z };
       var pad = 1.5;
       return { lat: lat, lng: lng, zoom: clampZ(Math.min(360 / (spanLng * pad), 180 / (spanLat * pad))) };
     }

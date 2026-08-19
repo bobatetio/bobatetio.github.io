@@ -23,7 +23,8 @@ window.UKNOTIFY = (function () {
     { k:'invite',  t:'Invitations',         d:'Invitations sent to you, and answers to yours' },
     { k:'content', t:'Content delivered',   d:'Work submitted for review' },
     { k:'booking', t:'Bookings',            d:'A tracked link turned into a booking' },
-    { k:'review',  t:'Reviews',             d:'A review you can now read' }
+    { k:'review',  t:'Reviews',             d:'A review you can now read' },
+    { k:'nudge',   t:'Follow-ups due',      d:'A pitch that has gone quiet for a week' }
   ];
 
   function read(key, fallback) {

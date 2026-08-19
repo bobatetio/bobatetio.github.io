@@ -270,19 +270,36 @@ window.UKC = (function () {
   function hasBriefData(brief) {
     return !!(brief && (brief.title || brief.deliverables || brief.notes || brief.file || brief.link));
   }
+  /* A collab that started as a cold pitch has no D.stays record to read
+     dates/deliverables off — what it has instead is what was PROPOSED in the
+     letter (see startCollab/composer). That is real, if unconfirmed, so it
+     backs the package the same way a real stay's own fields do, rather than
+     leaving Onboarding printing blanks for a hotel that said yes to
+     something. */
+  function leadPackageSource(c) {
+    var l = byId(leads, c.stay);
+    if (!l) return null;
+    var t = c.proposedTerms || {};
+    /* delText, not del: what was proposed is already one free-text line
+       ("1 UGC video, 5 photos"), not a {qty, kind} pair to reformat — running
+       it through the usual q+t join would print the quantity twice. */
+    return { hotel: l.hotel, nights: t.nights, room: '',
+      del: [], delText: t.del || '', inc: '', rights: 'They keep and use the content' };
+  }
   function packageDates(c) {
-    var s = byId(stays, c.stay) || {};
+    var s = byId(stays, c.stay) || leadPackageSource(c) || {};
     var from = toISO((c.dates || {}).from) || toISO(s.from);
     var to = toISO((c.dates || {}).to) || toISO(s.to);
     return { status:'accepted', from:from, to:to, by:((c.dates || {}).by || 'hotel') };
   }
   function packageBrief(c, override) {
-    var s = byId(stays, c.stay) || {};
+    var s = byId(stays, c.stay) || leadPackageSource(c) || {};
     var base = {
       title: s.hotel || '',
-      deliverables: (s.del || []).map(function (d) { return d.q + ' ' + d.t.toLowerCase(); }).join(', '),
+      deliverables: s.delText || (s.del || []).map(function (d) { return d.q + ' ' + d.t.toLowerCase(); }).join(', '),
       deadline: addDays(toISO(s.to), 7) || toISO(s.to),
-      notes: 'Hosted stay: ' + (s.nights || '') + ' nights in the ' + ((s.room || '').toLowerCase()) + '. Included: ' + (s.inc || '') + '. Usage rights: ' + (s.rights || '') + '.',
+      notes: 'Hosted stay: ' + (s.nights || '') + ' nights' + (s.room ? ' in the ' + String(s.room).toLowerCase() : '') +
+        (s.inc ? '. Included: ' + s.inc : '') + '. Usage rights: ' + (s.rights || '') + '.',
       file: '',
       link: ''
     };
@@ -442,7 +459,10 @@ window.UKC = (function () {
     }
   }
   function collabSay(c) {
-    if (c.stage === 0) return 'Your pitch is with the hotel';
+    if (c.stage === 0) {
+      var lead = byId(leads, c.stay);
+      return lead ? 'Sent — mark it when they reply' : 'Your pitch is with the hotel';
+    }
     if (c.stage === 1) return 'Your host sent the full stay package';
     if (c.stage === 2) {
       if (!c.creatingStarted) return 'Mark when you start shooting';
@@ -487,7 +507,7 @@ window.UKC = (function () {
   function pushSharedMsg(c, msg)     { if (c.link && window.UKShared) window.UKShared.pushMsg(c.link, msg); }
   function hydrateLinked() {
     hydrateApplications();
-    reconcilePipeline();
+    archiveStalePitches();
     collabs.forEach(function (c) { c.link ? hydrateFromShared(c) : ensureLifecycle(c); });
   }
 
@@ -609,16 +629,21 @@ window.UKC = (function () {
     return c;
   }
 
-  /* ---------- Pitch Pilot ---------- */
-  var pitches = [
-    { id:'p1', hotel:'Casa Azul Tulum',   city:'Tulum, Mexico',      on:'12 Jan', via:'Email',     status:'Booked',    note:'Replied in two days. Booked for January.' },
-    { id:'p2', hotel:'MiraGrace Estate',  city:'Miami, Florida',     on:'18 Jan', via:'Email',     status:'Responded', note:'Asked about March dates.' },
-    { id:'p3', hotel:'Riad Amber',        city:'Marrakesh, Morocco', on:'20 Jan', via:'Instagram', status:'Booked',    note:'DM, replied same day.' },
-    { id:'p4', hotel:'Alpina Zermatt',    city:'Zermatt, Switzerland',on:'02 Feb', via:'Email',    status:'Sent',      note:'' },
-    { id:'p5', hotel:'Bondi Sands Hotel', city:'Sydney, Australia',  on:'04 Feb', via:'Instagram', status:'Sent',      note:'' },
-    { id:'p6', hotel:'The Mayfair Rooms', city:'London, UK',         on:'06 Feb', via:'Email',     status:'Sent',      note:'No reply yet. Follow up on the 13th.' },
-    { id:'p7', hotel:'Fjordheim Lodge',   city:'Ålesund, Norway',    on:'09 Feb', via:'Email',     status:'Responded', note:'Interested for June.' }
-  ];
+  /* ---------- pitches, derived ----------
+     Used to be its own written store (D.addPitch), kept in step with collabs
+     by hand — which is exactly how Fjordheim Lodge ended up "Complete" in one
+     list and "Responded" in the other. There is only one ledger now: every
+     pitch, cold or to a posted stay, is a collabs row from the moment it is
+     sent (see startCollab). This stays as a read-only VIEW over that, purely
+     so the dashboard and home KPIs that already read D.pitches.hotel/.status
+     do not need to change shape. Defined as a getter further down. */
+  function pitchesView() {
+    return collabs.map(function (c) {
+      var st = byId(stays, c.stay) || byId(leads, c.stay);
+      return { id: c.id, hotel: st ? st.hotel : '', city: st ? st.city : '',
+               status: c.stage >= 1 ? 'Booked' : 'Sent' };
+    });
+  }
 
   /* ---------- earnings & growth ---------- */
   var earnings = {
@@ -635,7 +660,7 @@ window.UKC = (function () {
     { id:'m1', notes:'Hotels are not buying your audience. They are buying content they can post on their own feed, their booking page and their newsletter. That is what UGC means. A property with 40,000 followers of its own does not need yours, it needs something good to post. Which is why 8,000 people who actually watch you beats 80,000 who scroll past.', mod:'Start here', t:'Your content is the value, not your follower count',
       len:'6 min', done:true, m:'reel5',
       d:'Why hotels buy content for their own channels, and why 8,000 engaged followers beats 80,000 quiet ones.',
-      res:{ t:'Your media kit', s:'See how your own work is packaged for a hotel to judge.', go:'kit' } },
+      res:{ t:'Your profile', s:'See how your own work is packaged for a hotel to judge.', go:'profile' } },
     { id:'m2', notes:'Pitch three hotels in your own city this month. You can travel there for nothing, you can reshoot if the light is bad, and you build a portfolio of real hotel work before you ask anyone far away. Local independents say yes far more often than chains.', mod:'Start here', t:'Practice on hotels in your own city',
       len:'8 min', done:true, m:'shot3',
       d:'The lowest-risk way to build a portfolio before you pitch anywhere far.',
@@ -643,7 +668,7 @@ window.UKC = (function () {
     { id:'m3', notes:'UGC is user generated content: content made for the brand to use themselves. No audience required, no posting obligation on your side unless you agree to it. It is the reason a creator with a small following can still be worth a room.', mod:'Start here', t:'What UGC actually means',
       len:'5 min', done:true, m:'reel6',
       d:'Content made for the hotel to post themselves. No audience required.',
-      res:{ t:'Your media kit', s:'This is what a hotel is actually judging — not your follower count.', go:'kit' } },
+      res:{ t:'Your profile', s:'This is what a hotel is actually judging — not your follower count.', go:'profile' } },
     { id:'m4', notes:'Midweek nights and off-season weeks are the ones hotels struggle to sell. A room that sits empty earns nothing, so trading it for content costs them very little. Look for Tuesday to Thursday, shoulder season, and anywhere that just opened.', mod:'Pitching', t:'Pitch hotels with empty rooms',
       len:'9 min', done:false, m:'reel2',
       d:'Off-season and midweek is where the yeses live. How to spot them.',
@@ -833,6 +858,8 @@ window.UKC = (function () {
     if (!window.UKFAVS) return;
     var saved = window.UKFAVS.list('stays');
     stays.forEach(function (s2) { s2.saved = saved.indexOf(s2.id) > -1; });
+    var savedLeads = window.UKFAVS.list('leads');
+    leads.forEach(function (l2) { l2.saved = savedLeads.indexOf(l2.id) > -1; });
   }
 
   function placeStays() {
@@ -909,7 +936,7 @@ window.UKC = (function () {
      untouched — they belong to hotels, not to her, and they are what she came
      for. See ukdemo.js. */
   if (window.UKDEMO && window.UKDEMO.isNew()) {
-    window.UKDEMO.strip([collabs, pitches, me.work, me.topStays, me.partnerWork, me.plats]);
+    window.UKDEMO.strip([collabs, me.work, me.topStays, me.partnerWork, me.plats]);
     earnings.stays = 0; earnings.nights = 0; earnings.value = 0;
     earnings.months = (earnings.months || []).map(function (m) {
       return { m: m.m, pitches: 0, booked: 0 };
@@ -919,53 +946,76 @@ window.UKC = (function () {
   }
 
   /* ---- one home, one state ----
-     The same hotel relationship was being tracked in two places with two state
-     models that disagreed: Fjordheim Lodge was "Complete" in Your collabs and
-     "Responded" in Pitch Pilot; Riad Amber was "Creating" and "Booked". The
-     creator's own dashboard counted several of them twice.
+     Used to be a HANDOFF between two ledgers: Pitch Pilot owned the outbound
+     phase (to pitch, waiting, replied) and Your collabs only began at
+     Onboarding, once a hotel said yes. That meant a collaboration still at
+     Inquiry was actively demoted out of this list and recorded as a separate,
+     weaker "pitch" row — which is how Fjordheim Lodge ended up "Complete" in
+     one list and "Responded" in the other, and how a cold pitch to a hotel
+     with no Ukreate account could never become a real, followable thread.
 
-     The split is real, so it is kept — but as a HANDOFF rather than two ledgers:
+     There is one ledger now. A pitch — cold outreach to a lead, or an
+     application to a posted stay — IS a collabs row from the moment it is
+     sent, at stage 0. Nothing here moves it out. */
 
-       Pitch Pilot owns the outbound phase. To pitch, waiting, replied. That is
-       where a creator works the funnel, and while a pitch is out there is no
-       collaboration yet — only a hope.
+  /* Relative dates ("3 days ago", "yesterday", "a week ago") are what msgs.at
+     and c.when actually carry throughout the seed data — this reads that
+     vocabulary directly rather than parsing absolute dates nothing here has. */
+  function relDays(s) {
+    s = String(s || '').toLowerCase().trim();
+    if (!s || s === 'just now' || s === 'today') return 0;
+    if (s === 'yesterday') return 1;
+    var m;
+    if ((m = s.match(/^(\d+)\s+day/))) return Number(m[1]);
+    if (/^a\s+week/.test(s)) return 7;
+    if ((m = s.match(/^(\d+)\s+week/))) return Number(m[1]) * 7;
+    if (/^a\s+month/.test(s)) return 30;
+    if ((m = s.match(/^(\d+)\s+month/))) return Number(m[1]) * 30;
+    return 0;
+  }
+  var NUDGE_AFTER = 7;    /* one follow-up is worth it, after a week */
+  var ARCHIVE_AFTER = 14; /* two silent weeks, and a cold pitch stops asking to be checked on */
 
-       Your collabs owns the collaboration. It begins the moment a hotel says
-       yes, at Onboarding, and runs to sign-off.
+  /* Both a cold pitch (isLead target) and a real application start life the
+     same way: a stage-0 collabs row, with the actual letter sent kept as its
+     first message rather than a truncated note somewhere else. That message
+     IS "documenting the email" — reread it any time by opening the thread. */
+  function startCollab(targetId, msg, proposedTerms) {
+    var c = { id: 'k' + (collabs.length + 1) + '-' + targetId, stay: targetId, stage: 0,
+              when: 'just now', unread: 0,
+              msgs: [{ by:'me', at:'just now', tx: msg }] };
+    if (proposedTerms) c.proposedTerms = proposedTerms;
+    collabs.unshift(c);
+    return c;
+  }
 
-     So a collaboration at "Inquiry" was never a collaboration; it was a pitch
-     that had not been answered. Those move to where they belong, and a pitch
-     that HAS been answered stops carrying a state of its own and carries a
-     pointer to the collaboration it became. */
-  function reconcilePipeline() {
-    var byHotel = {};
+  /* Replies to a cold pitch happen over email, not on Ukreate — there is
+     nothing here to detect automatically. Logging one by hand both keeps a
+     real record of what was said and moves the thread on: a reply means the
+     conversation is genuinely moving, not still sitting at Inquiry. */
+  function markReplied(collabId, replyText) {
+    var c = byId(collabs, collabId);
+    if (!c) return null;
+    c.msgs = c.msgs || [];
+    c.msgs.push({ by:'them', at:'just now', tx: replyText });
+    if (c.stage < 1) c.stage = 1;
+    c.when = 'just now';
+    return c;
+  }
+
+  /* Only a cold pitch with nobody on the other end yet — a real application's
+     hotel either answers on the platform (hydrateApplications catches that)
+     or a creator has reason to keep checking on it. Quietly drops out of the
+     default list rather than sitting there forever asking to be chased. */
+  function archiveStalePitches() {
     collabs.forEach(function (c) {
-      var st = byId(stays, c.stay);
-      if (st) (byHotel[st.hotel] = byHotel[st.hotel] || []).push(c);
-    });
-
-    /* 1. a "collaboration" still at Inquiry is an unanswered pitch. It belongs
-          to Pitch Pilot, so it is recorded there and leaves this list. */
-    collabs.slice().forEach(function (c) {
-      if (c.stage !== 0) return;
-      var st = byId(stays, c.stay);
+      if (c.archived || c.stage !== 0) return;
+      var st = byId(leads, c.stay);
       if (!st) return;
-      var existing = pitches.filter(function (x) { return x.hotel === st.hotel; })[0];
-      if (!existing) {
-        pitches.push({ id: 'p' + (pitches.length + 1), hotel: st.hotel, city: st.city,
-          on: c.when || 'recently', via: 'Ukreate', status: 'Sent',
-          note: ((c.msgs || [])[(c.msgs || []).length - 1] || {}).tx || '', fromCollab: c.id });
-      }
-      var i = collabs.indexOf(c);
-      if (i > -1) collabs.splice(i, 1);
-    });
-
-    /* 2. a pitch whose hotel now has a live collaboration is no longer a pitch
-          with a status. It became something, and it points at it. */
-    pitches.forEach(function (p) {
-      var live = (byHotel[p.hotel] || []).filter(function (c) { return c.stage >= 1; })[0];
-      if (live) { p.converted = live.id; p.status = 'Booked'; }
-      else { delete p.converted; if (p.status === 'Booked') p.status = 'Responded'; }
+      var them = (c.msgs || []).some(function (m) { return m.by === 'them'; });
+      if (them) return;
+      var first = (c.msgs || [])[0];
+      if (first && relDays(first.at) >= ARCHIVE_AFTER) c.archived = true;
     });
   }
 
@@ -975,7 +1025,7 @@ window.UKC = (function () {
      take the id and shut out the property that already had it. ukcmatch calls
      hydrateStays() once it has finished. */
   hydrateApplications();
-  reconcilePipeline();
+  archiveStalePitches();
 
   /* answers given in the onboarding gate, applied before anything reads the
      record — they are the record, not a copy of it */
@@ -1004,11 +1054,11 @@ window.UKC = (function () {
   me.academyModules = academyModules();
   if (window.UKME) window.UKME.academyModules = me.academyModules.slice();
 
-  return {
+  var ret = {
     hydrateStays: hydrateStays,
     MEDIA: MEDIA, me: me, stays: stays, STAGES: STAGES, collabs: collabs,
     addProof: addProof, acceptInvite: acceptInvite,
-    pitches: pitches, earnings: earnings, academy: academy, MEMBER_PRICE: MEMBER_PRICE,
+    earnings: earnings, academy: academy, MEMBER_PRICE: MEMBER_PRICE,
     academyModules: academyModules, academyProgress: academyProgress,
     stay: function (id) {
       var s = byId(stays, id);
@@ -1020,8 +1070,8 @@ window.UKC = (function () {
     placeStays: placeStays, hydrateFavs: hydrateFavs,
     work: function (id) { return byId(me.work, id); },
     media: function (k) { return MEDIA[k] || MEDIA.reel1; },
-    addPitch: function (p) { p.id = 'p' + (pitches.length + 1); pitches.unshift(p); return p; },
-    dropPitch: function (id) { var i = pitches.map(function (x) { return x.id; }).indexOf(id); if (i > -1) pitches.splice(i, 1); },
+    startCollab: startCollab, markReplied: markReplied, archiveStalePitches: archiveStalePitches,
+    relDays: relDays, NUDGE_AFTER: NUDGE_AFTER, ARCHIVE_AFTER: ARCHIVE_AFTER,
     BANDS: BANDS, scoreFor: scoreFor, fitNote: fitNote,
     markShooting: markShooting, sendMessage: sendMessage, deliverWork: deliverWork, markPublished: markPublished,
     hydrateLinked: hydrateLinked, collabMine: collabMine, collabSay: collabSay, packageBrief: packageBrief, packageDates: packageDates, guideSnapshot: guideSnapshot,
@@ -1029,4 +1079,9 @@ window.UKC = (function () {
     fmt: fmt, money: money,
     initials: function (n) { return n.split(' ').map(function (w) { return w[0]; }).slice(0,2).join(''); }
   };
+  /* Read-only: dashboard/home KPIs that already read D.pitches.hotel/.status
+     keep working unmodified, computed fresh off the one real ledger every
+     time rather than a second store someone has to remember to update. */
+  Object.defineProperty(ret, 'pitches', { get: pitchesView });
+  return ret;
 })();

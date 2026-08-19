@@ -314,7 +314,21 @@ window.UKCV = (function () {
      other stage already says whose move it is via the column's own tag, so a
      verbose "Your move / With your host" line on every card was saying it a
      second time, and doing it in two lines instead of one. */
+  /* Stage 0 acts on its own terms rather than D.collabMine's "whose move" —
+     nobody's move is on the platform, since the whole point is that a reply
+     happens over email. Both actions open the composer's nudge mode or the
+     thread's reply-log, so they read the same as every other stage's
+     "Open"-style action rather than inventing a new pattern. */
+  function inquiryActions(c) {
+    var s = D.stay(c.stay);
+    var due = s && s.isLead && !(c.msgs || []).some(function (m) { return m.by === 'them'; }) &&
+      !c.nudged && c.msgs && c.msgs[0] && D.relDays(c.msgs[0].at) >= D.NUDGE_AFTER;
+    var b = due ? '<button class="ukCardAct_b is-go" type="button" data-nudge="' + c.id + '">Send a follow-up</button>' : '';
+    b += '<button class="ukCardAct_b" type="button" data-thread="' + c.id + '">Open</button>';
+    return '<div class="ukCardAct" data-cardact>' + b + '</div>';
+  }
   function cardActions(c) {
+    if (c.stage === 0) return inquiryActions(c);
     if (!D.collabMine(c)) return '';
     var b = '';
     if (c.stage === 2) {
@@ -335,8 +349,7 @@ window.UKCV = (function () {
       ? 'The whole lifecycle at once. Every collab sits in the stage it has reached.'
       : 'One stay, followed across every stage of the lifecycle.';
     return head('Your collabs', note, stayFilter(stayF, myStays) + viewSwitch('board')) +
-      '<div class="ukKan ukKan--4" role="list">' + D.STAGES.map(function (stage, i) {
-        if (i === 0) return '';        /* Inquiry lives in Pitch Pilot */
+      '<div class="ukKan" role="list">' + D.STAGES.map(function (stage, i) {
         var col = scoped.filter(function (c) { return c.stage === i; });
         return '<section class="ukKan_col" role="listitem" aria-label="' + esc(stage.short) + ', ' + col.length + '">' +
           '<div class="ukKan_head">' +
@@ -360,10 +373,14 @@ window.UKCV = (function () {
        holds two different things a hotel can be doing with a pitch — sitting
        on it, or having come back with something — so it gets a sub-tab each,
        the same shape the hotel side uses for its own Inquiry stage. */
-    var P = window.UKCP;
     var cview = st.cview === 'board' ? 'board' : 'cards';
     var stayF = st.stayF || 'all';
-    var real = D.collabs.filter(function (c) { return c.stage >= 1; });
+    var showArchived = !!st.archived;
+    /* One ledger: every pitch, cold or to a posted stay, is a real collab from
+       the moment it is sent — Inquiry included. Archived (a cold pitch nobody
+       answered after two weeks) is the one thing that drops out by default;
+       it stays reachable, just not under foot. */
+    var real = D.collabs.filter(function (c) { return showArchived ? c.archived : !c.archived; });
     var myStays = [];
     real.forEach(function (c) {
       var stay = D.stay(c.stay);
@@ -372,53 +389,70 @@ window.UKCV = (function () {
     var scoped = real.filter(function (c) { return stayF === 'all' || c.stay === stayF; });
     if (cview === 'board') return board(st, stayF, myStays, scoped);
 
-    var f = stayF === 'all' ? (st.stageF == null ? '1' : String(st.stageF)) : (st.stageF == null ? null : String(st.stageF));
-    var pCounts = P ? P.counts() : {};
+    /* Archived is a cross-cutting toggle, not a lifecycle stage — it should
+       never default onto Inquiry's tab. Defaulting to stage 0 only makes
+       sense in the normal (non-archived) all-stays view; every other case
+       stays unfiltered until a stage tab is actually clicked. */
+    var f = showArchived ? (st.stageF == null ? null : String(st.stageF))
+      : stayF === 'all' ? (st.stageF == null ? '0' : String(st.stageF))
+      : (st.stageF == null ? null : String(st.stageF));
     var list = scoped.filter(function (c) {
       if (f === 'late') return D.isOverdue && D.isOverdue(c);
       return f == null || String(c.stage) === f;
     });
+    /* Same fix as Overdue/Archived's own counts below: counted off the
+       non-archived, stay-scoped baseline rather than `scoped` itself, which
+       is Archived-filtered — every archived collab sits at Inquiry with
+       nothing to show for the other four stages, so counting from `scoped`
+       made every stage badge in the whole bar drop to 0 (and vanish) the
+       instant Archived was toggled on. The tab bar's numbers now describe
+       the real pipeline regardless of which toggle is active; only the
+       list below and which tab is marked is-on change with it. */
+    var stageBase = D.collabs.filter(function (c) {
+      return !c.archived && (stayF === 'all' || c.stay === stayF);
+    });
     var tabs = '<div class="ukToolbar"><div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Filter your collaborations by lifecycle stage">' +
         D.STAGES.map(function (stage, i) {
-          var n = i === 0 ? (pCounts.waiting || 0) + (pCounts.replied || 0)
-                           : scoped.filter(function (c) { return c.stage === i; }).length;
+          var n = stageBase.filter(function (c) { return c.stage === i; }).length;
           return '<button class="ukFilter' + (f === String(i) ? ' is-on' : '') + '" type="button" role="tab" aria-selected="' + (f === String(i)) + '" data-stage="' + i + '">' +
             '<span class="ukFilter_lb">' + stage.short + '</span>' + (n ? '<span class="ukFilter_ct">' + n + '</span>' : '') + '</button>';
         }).join('') +
-        /* Not a seventh stage, same flag the hotel side carries — a way of
+        /* Not a sixth stage, same flag the hotel side carries — a way of
            slicing Creating, not a place after Complete. Told straight: it is
-           the creator's own work that is running behind. */
+           the creator's own work that is running behind. Counted off the
+           same stageBase as the five stage tabs above, for the same reason:
+           an archived collab can never be overdue, so counting off the
+           Archived-filtered `scoped` made this tab flip to zero — and
+           disappear — the instant Archived was toggled on. */
         (function () {
-          var lateN = scoped.filter(function (c) { return D.isOverdue && D.isOverdue(c); }).length;
+          var lateN = stageBase.filter(function (c) { return D.isOverdue && D.isOverdue(c); }).length;
           if (!lateN && f !== 'late') return '';
           return '<button class="ukFilter ukFilter--late' + (f === 'late' ? ' is-on' : '') + '" ' +
             'type="button" role="tab" aria-selected="' + (f === 'late') + '" data-stage="late">' +
             '<span class="ukFilter_lb">Overdue</span>' +
             (lateN ? '<span class="ukFilter_ct">' + lateN + '</span>' : '') + '</button>';
         })() +
+        /* A cold pitch nobody answered, not deleted — just out of the way.
+           Its own toggle rather than a seventh stage tab, since it is not a
+           stage of the lifecycle, it is a state ABOUT Inquiry specifically.
+           Same count badge every other tab in this bar carries — it was the
+           one tab silently going without one. Counted off the full archived
+           set (stayF-scoped, not showArchived-scoped) so the number reads
+           "how many are archived" regardless of which toggle is active,
+           the same way Overdue's own count no longer flips with it either. */
+        (function () {
+          var archivedN = D.collabs.filter(function (c) {
+            return c.archived && (stayF === 'all' || c.stay === stayF);
+          }).length;
+          return '<button class="ukFilter ukFilter--late' + (showArchived ? ' is-on' : '') + '" type="button" ' +
+            'aria-pressed="' + showArchived + '" data-archived-toggle>' +
+            '<span class="ukFilter_lb">Archived</span>' +
+            (archivedN ? '<span class="ukFilter_ct">' + archivedN + '</span>' : '') + '</button>';
+        })() +
       '</div></div>';
 
-    if (f === '0') {
-      var sub = st.inqSub === 'replied' ? 'replied' : 'waiting';
-      return head('Your collabs', 'Every stay a hotel has said yes to, from package through sign-off.',
-          stayFilter(stayF, myStays) + viewSwitch(cview)) +
-        invitations(st) +
-        (st.sent ? '<p class="ukCheer" role="status">Pitch sent. Nice one. Hotels usually reply within a few days, and no reply for a week is normal rather than a no.</p>' : '') +
-        tabs +
-        (P ? P.dueStrip() : '') +
-        '<div class="ukSubTabs" role="tablist" aria-label="Kind of inquiry">' +
-          '<button class="ukSubTab' + (sub === 'waiting' ? ' is-on' : '') + '" type="button" role="tab" ' +
-            'aria-selected="' + (sub === 'waiting') + '" data-inqsub="waiting">Waiting' +
-            (pCounts.waiting ? ' <span class="ukSubTab_ct">' + pCounts.waiting + '</span>' : '') + '</button>' +
-          '<button class="ukSubTab' + (sub === 'replied' ? ' is-on' : '') + '" type="button" role="tab" ' +
-            'aria-selected="' + (sub === 'replied') + '" data-inqsub="replied">Replied' +
-            (pCounts.replied ? ' <span class="ukSubTab_ct">' + pCounts.replied + '</span>' : '') + '</button>' +
-        '</div>' +
-        (P ? P.laneList(sub, st) : '');
-    }
-
     return head('Your collabs',
-      'Every stay a hotel has said yes to, from package through sign-off.',
+      'Every pitch you have sent, from the first message through sign-off.',
       stayFilter(stayF, myStays) + viewSwitch(cview)) +
       invitations(st) +
       (st.sent ? '<p class="ukCheer" role="status">Pitch sent. Nice one. Hotels usually reply within a few days, and no reply for a week is normal rather than a no.</p>' : '') +
@@ -435,7 +469,12 @@ window.UKCV = (function () {
           'aria-label="Open your collab with ' + esc(stay.hotel) + '">' +
           window.UKSTAY.hotelCard(stay, {
             eager: i < 3,
-            tag: c.unread ? '<span class="ukDot">' + c.unread + '</span>' : '',
+            /* A cold pitch and a confirmed collaboration sit in the same list
+               now, so the one thing still unconfirmed about a cold one — that
+               nobody on the other end has an Ukreate account, and nothing
+               about it is verified — has to read at a glance. */
+            tag: stay.isLead ? '<span class="ukTag ukTag--wait">Cold outreach</span>' :
+              (c.unread ? '<span class="ukDot">' + c.unread + '</span>' : ''),
             /* The hotel side's own composition, matched exactly: the tracker,
                then EITHER the card's action buttons OR one plain status line
                — never a boxed badge stacked on top of both — then the
@@ -449,7 +488,7 @@ window.UKCV = (function () {
               cardPreview(c, stay) + cardActions(c)
           }) + '</div>';
       }).join('') + '</div>'
-        : empty('Nothing at that stage', 'Try another stage.'));
+        : empty(showArchived ? 'Nothing archived' : 'Nothing at that stage', 'Try another stage.'));
   }
 
   function track(stage, mini) {
@@ -582,8 +621,27 @@ window.UKCV = (function () {
     return '<section class="ukPanel ukComposer">' + (opts.note ? '<p class="ukAsk">' + opts.note + '</p>' : '') + '<label class="ukSrOnly" for="ukReply">Write a message to ' + esc(stay.hotel) + '</label><textarea id="ukReply" rows="3" placeholder="' + esc(opts.placeholder || 'Write a message') + '"></textarea><div class="ukComposer_row"><div class="ukComposer_actions">' + (opts.actions || '') + '</div><div class="ukComposer_send"><span class="ukHint" id="ukSendHint" role="status" aria-live="polite"></span><button class="ukBtn ukBtn--sec" type="button" data-send="' + c.id + '">Send</button></div></div><div class="ukSrOnly" aria-live="polite">Composer updated for the current collaboration stage.</div></section>';
   }
 
+  /* A cold pitch is answered over email, not here — there is nothing on
+     Ukreate to detect a reply landing in an inbox. Logging one by hand is
+     what moves the thread on: a reply means the conversation is genuinely
+     happening, so it advances straight to Onboarding rather than sitting at
+     Inquiry with no way to say "this is no longer just a hope". */
+  function replyLogPanel(c, stay) {
+    if (!stay.isLead) return '';
+    return '<section class="ukPanel ukComposer"><div class="ukPanel_head">' +
+      '<h3 class="ukPanel_title">Did they reply?</h3></div>' +
+      '<p class="ukAsk">This happened over email, not here — paste or summarise what ' +
+        esc(stay.hotel) + ' said. It logs the reply and moves this on to Onboarding.</p>' +
+      '<label class="ukSrOnly" for="ukReplyLog">What they said</label>' +
+      '<textarea id="ukReplyLog" rows="3" placeholder="e.g. Interested — asked about dates in June"></textarea>' +
+      '<div class="ukComposer_row"><div class="ukComposer_actions"></div>' +
+        '<div class="ukComposer_send"><span class="ukHint" id="ukReplyLogHint" role="status" aria-live="polite"></span>' +
+        '<button class="ukBtn" type="button" data-markreplied="' + c.id + '">Mark as replied</button></div></div>' +
+    '</section>';
+  }
   function composerInquiry(c, stay) {
-    return composerPlain(c, stay, { note:'Inquiry is pure conversation. You can ask a question, share availability, or simply keep it warm while the hotel decides.', placeholder:'Reply to the inquiry' });
+    return composerPlain(c, stay, { note:'Inquiry is pure conversation. You can ask a question, share availability, or simply keep it warm while the hotel decides.', placeholder:'Reply to the inquiry' }) +
+      replyLogPanel(c, stay);
   }
   function composerOnboarding(c, stay) {
     return '<section class="ukPanel ukComposer ukComposer--reference"><div class="ukPanel_head"><h3 class="ukPanel_title">Your onboarding pack</h3></div><p class="ukAsk">Everything is locked in here: dates, final brief and the guest guide. Most creators only need a quick note back.</p>' + referenceDeck(c, stay) + '<label class="ukSrOnly" for="ukReply">Add an optional note for ' + esc(stay.hotel) + '</label><textarea id="ukReply" rows="3" placeholder="Optional note about arrivals, timings, or anything practical"></textarea><div class="ukComposer_row"><div class="ukComposer_actions"></div><div class="ukComposer_send"><span class="ukHint" id="ukSendHint" role="status" aria-live="polite"></span><button class="ukBtn ukBtn--sec" type="button" data-send="' + c.id + '">Send note</button></div></div></section>';
@@ -668,7 +726,7 @@ window.UKCV = (function () {
   }
 
   function composerComplete(c, stay, st) {
-    return '<section class="ukPanel ukComposer ukComposer--done"><p class="ukAsk">All wrapped up. This thread stays here for reference, and the work keeps helping your profile and media kit.</p><div class="ukComposer_row"><div class="ukComposer_actions"><button class="ukGhost ukGhost--sm" type="button" data-goto="profile">Open your profile</button><button class="ukGhost ukGhost--sm" type="button" data-goto="kit">Open your media kit</button></div></div></section>' +
+    return '<section class="ukPanel ukComposer ukComposer--done"><p class="ukAsk">All wrapped up. This thread stays here for reference, and the work keeps helping your profile.</p><div class="ukComposer_row"><div class="ukComposer_actions"><button class="ukGhost ukGhost--sm" type="button" data-goto="profile">Open your profile</button></div></div></section>' +
       reviewBlock(c, stay, st);
   }
   function composer(c, stay, st) {
@@ -768,7 +826,10 @@ window.UKCV = (function () {
        every real published stay showed the same two fallback words no matter
        what the hotel did. Audience band and party size are genuinely what a
        hotel sets when it publishes a stay. */
-    var stats = [
+    /* A lead has no campaign for scoreFor()/wants/guests to read — same
+       discipline as the composer's own isLead branch: say nothing rather
+       than print "undefined/10". */
+    var stats = stay.isLead ? [] : [
       ['Audience wanted', stay.wants || '—'],
       ['Party size', stay.guests ? (Number(stay.guests) <= 1 ? 'Just you' : String(stay.guests)) : '—'],
       ['Fit for you', (D.scoreFor ? D.scoreFor(stay) : '—') + '/10', true]
@@ -816,6 +877,20 @@ window.UKCV = (function () {
     var stay = D.stay(c.stay);
     if (st.delivering) return deliver(st, c, stay);
     var dates = D.packageDates ? D.packageDates(c) : (c.dates || {});
+    /* A lead has no campaign to read nights/deliverables off — what it has
+       instead is what was PROPOSED in the cold pitch (see D.leadPackageSource,
+       which D.packageBrief/packageDates already fall back to once the stage
+       advances). The sidebar shows the same proposed terms here, clearly
+       still unconfirmed, rather than "not set yet" for something that was,
+       in fact, already asked for. */
+    var sideStay = (stay.isLead && c.proposedTerms)
+      ? Object.assign({}, stay, {
+          nights: c.proposedTerms.nights,
+          del: [{ q:'', t: c.proposedTerms.del }],
+          collabType: c.proposedTerms.type,
+          rights: 'They keep and use the content'
+        })
+      : stay;
     /* The breadcrumb in the top bar already reads "Your collabs > <hotel>" and
        goes back to the list the same way this button did — a second one here
        said it twice. */
@@ -823,7 +898,7 @@ window.UKCV = (function () {
       hotelHead(c, stay, st) +
       '<div class="ukGrid ukGrid--thread"><section class="ukFlow">' +
         (c.justDelivered ? cheer(c, stay) : '') + threadPanel(c, stay, st) +
-      '</section><aside class="ukSideCol">' + threadStayCard(stay, dates) + '</aside></div>' +
+      '</section><aside class="ukSideCol">' + threadStayCard(sideStay, dates) + '</aside></div>' +
     '</div>';
   }
 
@@ -846,7 +921,7 @@ window.UKCV = (function () {
       }).join('') + '</ul>' +
       (short ? '<p class="ukSoothe">You are under what they asked for. You can still send it — most hosts are relaxed about the exact count if the work is good — but it is worth a note in the thread.</p>' : '<p class="ukCheer" style="margin:14px 0 0">That covers the brief. Nice.</p>') +
       '<button class="ukBtn ukCard_cta ukCard_cta--gapped" type="button" data-senddeliver="' + c.id + '"' + (chosen.length ? '' : ' disabled') + '>Hand over ' + (chosen.length || '') + (chosen.length === 1 ? ' piece' : ' pieces') + '</button>' + (chosen.length ? '' : '<p class="ukHint">Pick at least one piece to hand over.</p>') +
-      '<p class="ukWhy">They get the right to post these on their own channels. You keep them too, and they go straight onto your media kit.</p></aside></div>';
+      '<p class="ukWhy">They get the right to post these on their own channels. You keep them too, and they go straight onto your profile.</p></aside></div>';
   }
 
   function cheer(c, stay) {
@@ -905,8 +980,9 @@ window.UKCV = (function () {
        page listing the same hotels in a different order. */
     stays_ = stays_.slice().sort(function (a, b) { return D.scoreFor(b) - D.scoreFor(a); });
 
-    var leadPool = D.leads || [];
+    var leadPool = P ? P.unpitchedLeads() : (D.leads || []);
     var leads_ = leadPool.filter(function (l) {
+      if (st.saved && !l.saved) return false;
       return !q || (l.hotel + ' ' + l.city).toLowerCase().indexOf(q) > -1;
     });
 
@@ -928,23 +1004,27 @@ window.UKCV = (function () {
        this slot (see rescueAsk/placeAsk in ukcapp.js). It answers into `q`
        regardless of which tab reads it, which is what makes the search
        shared rather than a second copy per tab. */
+    var savedCount = (tab === 'stays'
+      ? stayPool.filter(function (s) { return s.saved; })
+      : leadPool.filter(function (l) { return l.saved; })).length;
+
     return head('Stays', 'Hotels that actually want to work with creators like you.') +
       '<div class="ukCrFind" data-ask-slot></div>' +
 
-      '<div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Find work">' +
-        '<button class="ukFilter' + (tab === 'stays' ? ' is-on' : '') + '" type="button" role="tab" ' +
-          'aria-selected="' + (tab === 'stays') + '" aria-controls="ukFindPanel" data-tab="stays">' +
-          '<span class="ukFilter_lb">Stays</span><span class="ukFilter_ct">' + stays_.length + '</span></button>' +
-        '<button class="ukFilter' + (tab === 'outreach' ? ' is-on' : '') + '" type="button" role="tab" ' +
-          'aria-selected="' + (tab === 'outreach') + '" aria-controls="ukFindPanel" data-tab="outreach">' +
-          '<span class="ukFilter_lb">Outreach</span><span class="ukFilter_ct">' + leads_.length + '</span></button>' +
-      '</div>' +
-
-      (tab === 'stays'
-        ? '<div class="ukToolbar ukToolbar--split ukCrBar">' +
-            '<div class="ukCrBar_l">' +
-              '<button class="ukFilter' + (st.saved ? ' is-on' : '') + '" type="button" ' +
-                'aria-pressed="' + !!st.saved + '" data-savedonly><span class="ukFilter_lb">Saved</span></button>' +
+      /* Tabs on the left, the kind-of-stay filter and the grid/list/map switch
+         on the right — one row, not two, since both live at the same level:
+         they are all ways of narrowing or reshaping the same find-work list. */
+      '<div class="ukToolbar ukToolbar--split ukCrBar ukCrTabsBar">' +
+        '<div class="ukFilters ukFilters--tabs" role="tablist" aria-label="Find work">' +
+          '<button class="ukFilter' + (tab === 'stays' ? ' is-on' : '') + '" type="button" role="tab" ' +
+            'aria-selected="' + (tab === 'stays') + '" aria-controls="ukFindPanel" data-tab="stays">' +
+            '<span class="ukFilter_lb">Stays</span><span class="ukFilter_ct">' + stays_.length + '</span></button>' +
+          '<button class="ukFilter' + (tab === 'outreach' ? ' is-on' : '') + '" type="button" role="tab" ' +
+            'aria-selected="' + (tab === 'outreach') + '" aria-controls="ukFindPanel" data-tab="outreach">' +
+            '<span class="ukFilter_lb">Outreach</span><span class="ukFilter_ct">' + leads_.length + '</span></button>' +
+        '</div>' +
+        (tab === 'stays'
+          ? '<div class="ukCrBar_r">' +
               /* sixteen kinds of stay wrapped to three rows of pills and pushed the
                  results off the screen; it is a menu, like every other long list */
               '<div class="ukDrop"><button class="ukDrop_b" type="button" data-drop-toggle ' +
@@ -956,15 +1036,28 @@ window.UKCV = (function () {
                   return '<button class="ukDropMenu_i' + (t === sf ? ' is-sel' : '') + '" role="menuitem" ' +
                     'data-style="' + esc(t) + '">' + (t === 'all' ? 'Every kind of stay' : esc(t)) + '</button>';
                 }).join('') + '</div></div>' +
-            '</div>' +
-            '<div class="ukSeg ukSeg--ic" role="group" aria-label="View">' +
-              [['grid','Grid'],['list','List'],['map','Map']].map(function (v) {
-                return '<button class="ukSeg_b' + (v[0] === view ? ' is-on' : '') + '" type="button" data-view="' + v[0] +
-                  '" aria-pressed="' + (v[0] === view ? 'true' : 'false') + '">' +
-                  (VIEW_IC[v[0]] || '') + '<span>' + v[1] + '</span></button>'; }).join('') +
-            '</div>' +
-          '</div>'
-        : '') +
+              '<div class="ukSeg ukSeg--ic" role="group" aria-label="View">' +
+                [['grid','Grid'],['list','List'],['map','Map']].map(function (v) {
+                  return '<button class="ukSeg_b' + (v[0] === view ? ' is-on' : '') + '" type="button" data-view="' + v[0] +
+                    '" aria-pressed="' + (v[0] === view ? 'true' : 'false') + '">' +
+                    (VIEW_IC[v[0]] || '') + '<span>' + v[1] + '</span></button>'; }).join('') +
+              '</div>' +
+            '</div>'
+          : '') +
+      '</div>' +
+
+      /* All / Saved, in the app's own secondary pill-tab shape rather than an
+         orphaned single toggle word — and it says what it is filtering:
+         stays on the Stays tab, hotels (there is no "stay" yet) on Outreach. */
+      '<div class="ukSubTabs" role="tablist" aria-label="Saved">' +
+        '<button class="ukSubTab' + (!st.saved ? ' is-on' : '') + '" type="button" role="tab" ' +
+          'aria-selected="' + !st.saved + '" data-savedonly="0">' +
+          (tab === 'stays' ? 'All stays' : 'All hotels') + '</button>' +
+        '<button class="ukSubTab' + (st.saved ? ' is-on' : '') + '" type="button" role="tab" ' +
+          'aria-selected="' + !!st.saved + '" data-savedonly="1">' +
+          (tab === 'stays' ? 'Saved stays' : 'Saved hotels') +
+          (savedCount ? ' <span class="ukSubTab_ct">' + savedCount + '</span>' : '') + '</button>' +
+      '</div>' +
 
       '<div id="ukFindPanel" role="tabpanel" aria-label="' + (tab === 'stays' ? 'Stays' : 'Outreach') + '">' +
         (tab === 'outreach'
@@ -993,15 +1086,31 @@ window.UKCV = (function () {
     var socials = (l.socials || []).map(function (s) {
       return '<span class="ukLeadCard_soc">' + esc(s.handle) + '</span>';
     }).join('');
-    return '<div class="ukLeadCard">' +
+    /* Same heart, same overlay position, as a stay card's own save control —
+       a hotel worth cold-pitching is worth shortlisting the same way a
+       posted stay is, and it should not feel like a second, different
+       feature because there is no campaign behind this one yet. */
+    var heart = '<button class="ukHeart' + (l.saved ? ' is-on' : '') + '" type="button" data-save="' + esc(l.id) + '" ' +
+      'aria-pressed="' + (l.saved ? 'true' : 'false') + '" aria-label="' +
+      (l.saved ? 'Remove ' : 'Save ') + esc(l.hotel) + (l.saved ? ' from saved' : '') + '">' +
+      favIcon(l.saved) + '</button>';
+    return '<div class="ukLeadCard" data-open="' + esc(l.id) + '" tabindex="0" role="button" ' +
+      'aria-label="Open ' + esc(l.hotel) + '">' +
       window.UKSTAY.hotelCard(l, {
         eager: true,
+        tag: heart,
         foot: '<div class="ukLeadCard_contact">' +
             (l.website ? '<p class="ukLeadCard_row">' + WEB_ICON + '<span>' + esc(l.website) + '</span></p>' : '') +
             (l.email ? '<p class="ukLeadCard_row">' + MAIL_ICON + '<span>' + esc(l.email) + '</span></p>' : '') +
             (socials ? '<p class="ukLeadCard_row ukLeadCard_row--soc">' + socials + '</p>' : '') +
           '</div>' +
-          '<button class="ukBtn ukCard_cta" type="button" data-apply="' + esc(l.id) + '">Pitch this hotel</button>'
+          /* The same slim card-action style Collabs cards already use for
+             "Open"/"Send a follow-up" — not the full-width gold ukBtn pill,
+             which reads as the single high-stakes action on a page (Send
+             this pitch, Publish) rather than one card among a grid of them. */
+          '<div class="ukCardAct" data-cardact>' +
+            '<button class="ukCardAct_b is-go" type="button" data-apply="' + esc(l.id) + '">Pitch this hotel</button>' +
+          '</div>'
       }) +
     '</div>';
   }
@@ -1190,12 +1299,23 @@ window.UKCV = (function () {
 
   function stayIntro(s, CD, shotIx, c) {
     var delLine = (s.del || []).map(function (d) { return d.q + ' × ' + d.t.toLowerCase(); }).join(', ');
-    var facts = [stayFact('nights', s.nights + (String(s.nights) === '1' ? ' night' : ' nights'), 'Length of stay')];
+    /* A live campaign (s.nights/s.from/s.del/a computed score) has real facts
+       to show; a cold lead only has what D.hotelProfile() knows about the
+       property itself. Every fact below is conditional on the field it
+       needs actually existing, so a sparse lead collapses to a short strip
+       instead of rendering hollow cells for terms nobody has agreed yet. */
+    var facts = [];
+    if (s.nights) facts.push(stayFact('nights', s.nights + (String(s.nights) === '1' ? ' night' : ' nights'), 'Length of stay'));
     if (s.room) facts.push(stayFact('room', s.room, 'Room type'));
     if (s.guests) facts.push(stayFact('guests', Number(s.guests) <= 1 ? 'Just you' : String(s.guests), 'Party size'));
-    facts.push(stayFact('dates', CD.fmtRange(s.from, s.to), 'Dates'));
-    facts.push(stayFact('got', delLine, 'They get'));
-    facts.push(stayFact('score', D.scoreFor(s) + '/10', 'Pitch-friendly'));
+    if (s.from) facts.push(stayFact('dates', CD.fmtRange(s.from, s.to), 'Dates'));
+    if (s.del && s.del.length) facts.push(stayFact('got', delLine, 'They get'));
+    var score = D.scoreFor(s);
+    if (score != null) facts.push(stayFact('score', score + '/10', 'Pitch-friendly'));
+    if (s.isLead) {
+      if (s.propType) facts.push(stayFact('room', s.propType, 'Property type'));
+      if (s.rooms) facts.push(stayFact('room', s.rooms, 'Rooms'));
+    }
     /* The trade card used to repeat this same nights/room/dates/assets in its
        own two boxes off to the right. Once every one of those facts lives in
        this one strip there is nothing left for that card to say, so it is
@@ -1208,17 +1328,22 @@ window.UKCV = (function () {
           '<p class="ukStayIntro_addr">' + flagFor(s.city) + esc(s.city) + '</p></div>' +
         '<div class="ukStayIntro_act">' +
           stayPrimaryCta(s, c, 'ukBtn--sm') +
-          (c ? '' : '<button class="ukGhost ukGhost--sm" type="button" data-hotel="' + s.id + '">See the property</button>') +
           '<span class="ukStayIntro_actDiv" aria-hidden="true"></span>' +
           '<button class="ukStayIntro_save' + (s.saved ? ' is-on' : '') +
             '" type="button" data-save="' + s.id + '" aria-label="' + (s.saved ? 'Saved' : 'Save for later') + '">' +
             favIcon(s.saved) + '</button>' +
         '</div>' +
       '</div>' +
-      '<p class="ukStayIntro_value">' + esc(s.room) + ' &middot; ' + esc(s.inc) + '</p>' +
-      '<ul class="ukStayIntro_facts">' + facts.join('') + '</ul>' +
-      '<p class="ukStayIntro_whyT">Why pitch this stay</p>' +
-      '<p class="ukStayIntro_why">' + esc(D.fitNote(s)) + ' ' + esc(s.why) + '</p>' +
+      (s.isLead ? '' : '<p class="ukStayIntro_value">' + esc(s.room) + ' &middot; ' + esc(s.inc) + '</p>') +
+      (facts.length ? '<ul class="ukStayIntro_facts">' + facts.join('') + '</ul>' : '') +
+      (s.isLead ? '' :
+        '<div class="ukField_lRow" style="margin-top:16px">' +
+          '<p class="ukStayIntro_whyT" style="margin:0">Why pitch this stay</p>' +
+          '<button class="ukInfo" type="button" data-info-toggle aria-expanded="false" ' +
+            'aria-controls="ukWhyPitch_' + esc(s.id) + '" aria-label="Why this fits">i</button>' +
+        '</div>' +
+        '<p class="ukStayIntro_why" id="ukWhyPitch_' + esc(s.id) + '" hidden>' +
+          esc(D.fitNote(s)) + ' ' + esc(s.why) + '</p>') +
     '</section>';
   }
 
@@ -1291,14 +1416,37 @@ window.UKCV = (function () {
       (b.file ? '<p class="ukStayBrief_file">' + icon('book') + esc(b.file) + '</p>' : '');
   }
 
+  /* Leads have no active campaign, so there is no brief to show — what a
+     hotel HAS said about itself (D.hotelProfile()'s about/persona/rules)
+     stands in its place. Any of the three can be missing; the section
+     collapses to whatever is actually there rather than an empty shell. */
+  function propertyAbout(s) {
+    return (s.about ? '<p class="ukStaySection_lead">' + esc(s.about) + '</p>' : '') +
+      (s.persona ? '<p class="ukHint">Who they usually host: ' + esc(s.persona) + '</p>' : '') +
+      (s.rules ? '<p class="ukHint">' + esc(s.rules) + '</p>' : '');
+  }
+
   function stayDetail(st) {
     var s = D.stay(st.open);
+    /* A lead is a cold hotel with no campaign yet — D.hotelProfile()'s own
+       fallback record is what fills in property-level detail (amenities,
+       about, guide) so the rest of this page's helpers can treat it exactly
+       like a stay wherever the field names line up. */
+    if (s.isLead) {
+      var hp = D.hotelProfile(s.id);
+      Object.assign(s, {
+        propType: hp.propType, rooms: hp.rooms, persona: hp.persona, about: hp.about,
+        amen: hp.amen, rules: hp.rules, past: hp.past, resp: hp.resp, hosted: hp.hosted,
+        guide: hp.guide, imgs: [s.img].concat(hp.gallery || [])
+      });
+    }
     var CD = window.UKSTAY;
     var shotIx = (st.shots && st.shots[s.id]) || 0;
-    var incList = String(s.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    var incList = s.isLead ? (s.amen || [])
+      : String(s.inc || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
     var got = (s.del || []).reduce(function (a, d) { return a + (d.q || 0); }, 0);
     var pt = { id: s.id, lat: s.lat, lng: s.lng, on: true, name: s.hotel, sub: s.city,
-      cc: window.ukCCOf ? window.ukCCOf(s.city) : null };
+      cc: s.cc || (window.ukCCOf ? window.ukCCOf(s.city) : null) };
     var c = stayCollabFor(s);
     /* If anything the creator has already saved from Discover fits this
        stay's market or vibe, surface it right here — pitch prep is the
@@ -1307,21 +1455,22 @@ window.UKCV = (function () {
     return '<div>' +
         stayThreadNote(s, c) +
         stayIntro(s, CD, shotIx, c) +
+        /* D.discCard, not a hand-carried copy: this used to duplicate
+           discCard's markup (ukdiscover.js) by hand, and drifted the
+           moment that markup changed to the gradient-scrim tile — this
+           section was quietly rendering with dead CSS classes. One card
+           renderer now, reused. */
         (forMarket.length ? staySection('Saved inspiration for ' + esc(s.city.split(',').pop().trim()),
           '<p class="ukStaySection_lead">From your Discover saves — worth a look before you pitch.</p>' +
-          '<div class="ukDiscGrid">' + forMarket.slice(0, 3).map(function (i) {
-            return '<article class="ukDiscCard" data-discitem="' + i.id + '" tabindex="0" role="button" ' +
-              'aria-label="Open ' + esc(i.t) + '">' +
-              '<div class="ukDiscCard_m">' + m(i.m, i.t, '', false) + '</div>' +
-              '<div class="ukDiscCard_b"><p class="ukDiscCard_t">' + esc(i.t) + '</p>' +
-              '<p class="ukDiscCard_by"><span>' + esc(i.by.n) + '</span></p></div></article>';
-          }).join('') + '</div>') : '') +
-        (incList.length ? staySection('Room amenities',
-          '<p class="ukStaySection_lead">Everything the host is covering for this stay:</p>' +
+          '<div class="ukDiscGrid">' + forMarket.slice(0, 3).map(D.discCard).join('') + '</div>') : '') +
+        (incList.length ? staySection(s.isLead ? 'Amenities' : 'Room amenities',
+          '<p class="ukStaySection_lead">Everything the host is covering' + (s.isLead ? ':' : ' for this stay:') + '</p>' +
           '<ul class="ukIconGrid">' + incList.map(function (x) {
             return iconRow(inclusionIcon(x), x); }).join('') + '</ul>') : '') +
         stayGuide(s) +
-        staySection('The brief', stayBrief(s, c, got)) +
+        (s.isLead
+          ? (s.about || s.persona || s.rules ? staySection('About the property', propertyAbout(s)) : '')
+          : staySection('The brief', stayBrief(s, c, got))) +
         (s.lat != null ? staySection('Location',
           '<p class="ukStaySection_lead">' + flagFor(s.city) + esc(s.city) +
             ' &middot; dropped at the property’s own coordinates, ' + s.lat.toFixed(2) + ', ' + s.lng.toFixed(2) + '.</p>' +
@@ -1354,7 +1503,6 @@ window.UKCV = (function () {
             '<p class="ukProf_m">' + esc(me.h) + ' · ' + flagFor(me.city) + esc(me.city) + '</p>' +
             '<p class="ukProf_m">' + esc(me.niche) + '</p></div></div>' +
         '<div class="ukProf_act">' +
-          '<button class="ukBtn" type="button" data-goto="kit">Make my media kit</button>' +
           (me.member ? '' : '<button class="ukGhost" type="button" data-goto="member">Get verified</button>') +
         '</div>' +
       '</section>' +
@@ -1387,112 +1535,117 @@ window.UKCV = (function () {
       '</div>';
   }
 
-  /* ============================ 11 — media kit ============================ */
-  function kit() {
-    var me = D.me;
-    var total = me.plats.reduce(function (a, p) { return a + p.f; }, 0);
-    return head('Your media kit', 'One page you can send to any hotel or brand, on or off Ukreate.',
-      '<button class="ukBtn" type="button" data-ack="Link copied">Copy the link</button>') +
-      '<div class="ukToolbar"><span class="ukCount">Updates itself as your work does</span>' +
-        '<button class="ukGhost" type="button" data-ack="Link copied">Copy share link</button>' +
-        '<button class="ukBtn" type="button" data-ack="Preparing your PDF">Download as PDF</button></div>' +
-      '<article class="ukKit">' +
-        '<header class="ukKit_top">' + pic(me.img, me.n, '1x1', 'ukM--avxl', true) +
-          '<div><h3 class="ukKit_n">' + esc(me.n) + '</h3>' +
-            '<p class="ukKit_m">' + esc(me.h) + ' · ' + flagFor(me.city) + esc(me.city) + '</p>' +
-            '<p class="ukKit_b">' + esc(me.bio) + '</p></div>' +
-          '<div class="ukKit_stats">' +
-            '<div><dt>Audience</dt><dd>' + D.fmt(total) + '</dd></div>' +
-            '<div><dt>Avg plays</dt><dd>' + D.fmt(Math.round(me.work.reduce(function (a, w) { return a + w.plays; }, 0) / me.work.length)) + '</dd></div>' +
-            '<div><dt>Stays</dt><dd>' + D.earnings.stays + '</dd></div>' +
-          '</div>' +
-        '</header>' +
-        /* One tile shape across the strip. Each asset carries its own ratio, so
-           the kit was rendering three portrait frames next to two landscape ones
-           and the caption baselines never lined up — on the page a creator sends
-           to a hotel, of all places. */
-        '<div class="ukKit_work">' + me.work.slice(0, 6).map(function (w, i) {
-          return '<figure class="ukReel ukReel--kit">' + m(w.m, w.t, '', i < 3) +
-            '<figcaption><span class="ukReel_s">' + D.fmt(w.plays) + ' plays</span></figcaption></figure>';
-        }).join('') + '</div>' +
-        '<footer class="ukKit_foot"><p><strong>Worked with</strong> ' +
-          /* stages are 0-4 and Complete IS 4, so === 5 matched nothing and the
-             one line on the kit that proves a creator has done this before was
-             always empty. Same off-by-one the hotel dashboard had. */
-          D.collabs.filter(function (c) { return c.stage >= 4; }).map(function (c) {
-            return esc(D.stay(c.stay).hotel); }).join(', ') + '</p>' +
-          '<p class="ukKit_by">Made with Ukreate</p></footer>' +
-      '</article>' +
-      '<p class="ukWhy">A media kit is just your work, your numbers and who you have worked with, on one page. ' +
-      'Brands ask for it constantly, so yours is always ready.</p>';
-  }
-
   /* ============================ 9 — academy ============================ */
 
   var LESSON_CHECK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.6 6.35 4.85 8.6 9.4 3.75" ' +
     'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M12 3v13m0 0-4.5-4.5M12 16l4.5-4.5M4 19.5h16"/></svg>';
+
+  /* Part 1 — one badge artwork per module, not the single generic seal
+     every module used to share. Checked assets/img/ and every subfolder
+     for anything badge- or certificate-shaped first (ukchips.js's flag
+     set, ukicons.js's UKVETBADGE seal, the brand folder) — nothing exists
+     yet. This is the one clearly-marked mapping the three real exports
+     drop into once they do: module name -> asset path. badgeImg() below
+     reads ONLY this mapping, and falls back to the seal mark the app
+     already uses for a credential (window.ukVetBadge — the same mark
+     Verified/Academy-certified draw) rather than a broken image icon
+     until each file actually exists at its path. Logged once, at load,
+     so whoever drops the files in knows exactly what three filenames to
+     use without reading this comment. */
+  /* Moved to ukprofile.js — creatorHead() there is shared with the hotel
+     side, which never loads this file, so the single source of truth for
+     the module→artwork map has to live in the file both sides load. */
+  var MODULE_BADGE = window.UKPROFILE.MODULE_BADGE;
+  var badgeImg = window.UKPROFILE.badgeImg;
+
+  /* Part 4.2 — celebrate once, then let go: the same .ukCheer banner as
+     before, but it schedules its own removal instead of sitting there
+     until the next unrelated click happens to repaint over it. st.* is
+     read-and-cleared on this render already (so a second repaint never
+     shows it again); the timeout just makes the FIRST render stop
+     showing it too, without the creator having to do anything. */
+  function transientCheer(id, html) {
+    return '<section class="ukCheer ukCheer--toast" role="status" data-cheer="' + id + '" ' +
+      'style="display:flex;align-items:center;gap:10px">' + html + '</section>';
+  }
 
   /* One badge per module, earned the moment its last lesson is — plus the
-     full certification once every module is. Unearned ones stay visible and
-     dimmed rather than disappearing, because a locked badge is the thing
-     that turns a video library into a reason to come back: it says exactly
-     what finishing gets you next, not that you have fallen short. Reuses
-     the one seal icon the app already has for a credential (ukVetBadge —
-     the same mark Verified and Academy certified already draw), never a
-     second badge graphic invented just for this. */
-  function badgeSection(st) {
+     full certification once every module is. Unearned ones stay visible,
+     never disappearing: a locked badge is the thing that turns a video
+     library into a reason to come back, and Part 4.1's fix is what makes
+     it read as "next", not "missing" — full colour art, warm gold card
+     once earned; a quieter, still-legible preview of the same art while
+     locked, not a flat grey box. */
+  function badgesTab(st) {
     var mods = D.academy.map(function (l) { return l.mod; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
     var earned = D.academyModules ? D.academyModules() : [];
     var prog = D.academyProgress ? D.academyProgress() : { done:0, total:D.academy.length };
     var cert = D.me.academyCert;
     var justBadgedMod = st.justBadgedMod; st.justBadgedMod = null;
+    var justCert = st.justCertified; st.justCertified = false;
+    var newCreator = prog.done === 0;
 
-    return (justBadgedMod
-      ? '<section class="ukCheer" role="status" style="display:flex;align-items:center;gap:10px">' +
-          window.ukVetBadge('ukChipVet') +
-          '<span>' + esc(justBadgedMod) + ' badge earned. It is on your profile now, and hotels see it too.</span></section>'
-      : '') +
+    return (justCert
+        ? transientCheer('cert', window.ukVetBadge('ukChipVet') +
+            '<span>Academy certified — the whole thing. It is on your profile now, and every hotel sees it.</span>')
+        : '') +
+      (justBadgedMod
+        ? transientCheer('mod', window.ukVetBadge('ukChipVet') +
+            '<span>' + esc(justBadgedMod) + ' badge earned. It is on your profile now, and hotels see it too.</span>')
+        : '') +
+
+      /* Part 4.3 — the headline credential, not a tile the same size as a
+         module badge: its own hero panel above the row of module badges,
+         which are the steps beneath it. */
+      '<section class="ukPanel ukAcadCertHero' + (cert ? ' is-on' : '') + '">' +
+        '<div class="ukAcadCertHero_ic" aria-hidden="true">' + window.ukVetBadge('ukAcadCertHero_seal') + '</div>' +
+        '<div class="ukAcadCertHero_b">' +
+          '<p class="ukAcadCertHero_k">' + (cert ? 'Certified' : 'Full certification') + '</p>' +
+          '<h3 class="ukAcadCertHero_t">Ukreate Academy</h3>' +
+          '<p class="ukAcadCertHero_s">' + (cert
+            ? 'Every module done. It is on your profile, and every hotel sees it.'
+            : newCreator
+              ? 'Finish every module and this becomes your headline credential — the thing a hotel sees before anything else.'
+              : (prog.total - prog.done) + ' lesson' + (prog.total - prog.done === 1 ? '' : 's') + ' left across ' +
+                (mods.length - earned.length) + ' module' + (mods.length - earned.length === 1 ? '' : 's') + '.') +
+          '</p>' +
+        '</div>' +
+        (cert ? '<button class="ukGhost" type="button" data-cert="overall">View certificate</button>' : '') +
+      '</section>' +
+
       '<section class="ukPanel ukAcadBadges">' +
         '<div class="ukPanel_head"><h3 class="ukPanel_title">Your badges</h3>' +
           '<span class="ukCount2">' + prog.done + ' of ' + prog.total + ' lessons</span></div>' +
-        '<p class="ukAsk">One badge per module. Finish every lesson in it and it is yours — hotels see ' +
-          'exactly what you have completed, not just that you signed up.</p>' +
+        '<p class="ukAsk">' + (newCreator
+          ? 'Nothing earned yet — that is exactly where everyone starts. Finish a module and its badge is yours, on your profile, the moment you do.'
+          : 'One badge per module. Finish every lesson in it and it is yours — hotels see exactly what you have completed, not just that you signed up.') +
+        '</p>' +
         '<div class="ukBadgeGrid">' + mods.map(function (mod) {
           var on = earned.indexOf(mod) > -1;
           var n = D.academy.filter(function (l) { return l.mod === mod; }).length;
           var done = D.academy.filter(function (l) { return l.mod === mod && l.done; }).length;
-          return '<button class="ukBadge' + (on ? ' is-on' : '') + '" type="button" data-acadmod="' + esc(mod) +
-            '" aria-label="' + esc(mod) + (on ? ', badge earned' : ', ' + done + ' of ' + n + ' lessons done') + '">' +
-            window.ukVetBadge('ukBadge_ic') +
-            '<span class="ukBadge_t">' + esc(mod) + '</span>' +
-            '<span class="ukBadge_s">' + (on ? 'Earned' : done + ' of ' + n + ' lessons') + '</span>' +
-          '</button>';
+          return '<div class="ukBadge' + (on ? ' is-on' : '') + '">' +
+            '<button class="ukBadge_hit" type="button" data-acadmod="' + esc(mod) +
+              '" aria-label="Go to ' + esc(mod) + (on ? ', badge earned' : ', ' + done + ' of ' + n + ' lessons done') + '">' +
+              badgeImg(mod, 'ukBadge_ic') +
+              '<span class="ukBadge_t">' + esc(mod) + '</span>' +
+              '<span class="ukBadge_s">' + (on ? 'Earned' : done + ' of ' + n + ' lessons') + '</span>' +
+            '</button>' +
+            (on ? '<button class="ukGhost ukGhost--sm ukBadge_cert" type="button" data-cert="' + esc(mod) + '">Certificate</button>' : '') +
+          '</div>';
         }).join('') + '</div>' +
-        '<div class="ukBadgeCert' + (cert ? ' is-on' : '') + '">' +
-          window.ukVetBadge('ukBadge_ic ukBadge_ic--cert') +
-          '<div><p class="ukBadgeCert_t">' + (cert ? 'Academy certified' : 'Full certification') + '</p>' +
-          '<p class="ukBadgeCert_s">' + (cert
-            ? 'Every module done. It is on your profile, and every hotel sees it.'
-            : (prog.total - prog.done) + ' lesson' + (prog.total - prog.done === 1 ? '' : 's') + ' left across ' +
-              (mods.length - earned.length) + ' module' + (mods.length - earned.length === 1 ? '' : 's') + '.') +
-          '</p></div>' +
-        '</div>' +
       '</section>';
   }
 
   function academy(st) {
     if (st.lesson) return lesson(st);
+    if (st.cert) return certificatePage(st);
     var mods = D.academy.map(function (l) { return l.mod; }).filter(function (v, i, a) { return a.indexOf(v) === i; });
     var modF = st.acadMod || 'all';
-    var shown = D.academy.filter(function (l) { return modF === 'all' || l.mod === modF; });
-    var justCert = st.justCertified; st.justCertified = false;
     return head('Academy', 'Short videos on how this actually works. Watch one before your next pitch.') +
-      (justCert
-        ? '<section class="ukCheer" role="status" style="display:flex;align-items:center;gap:10px">' +
-            window.ukVetBadge('ukChipVet') +
-            '<span>Academy certified. It is on your profile now, and hotels see it too.</span></section>'
-        : '') +
-      badgeSection(st) +
       '<div class="ukTabs" role="tablist" aria-label="Module">' +
         '<button class="ukTabs_b' + (modF === 'all' ? ' is-on' : '') + '" type="button" role="tab" ' +
           'aria-selected="' + (modF === 'all') + '" data-acadmod="all">All modules</button>' +
@@ -1501,8 +1654,66 @@ window.UKCV = (function () {
           return '<button class="ukTabs_b' + (on ? ' is-on' : '') + '" type="button" role="tab" ' +
             'aria-selected="' + on + '" data-acadmod="' + esc(mod) + '">' + esc(mod) + '</button>';
         }).join('') +
+        '<button class="ukTabs_b' + (modF === 'badges' ? ' is-on' : '') + '" type="button" role="tab" ' +
+          'aria-selected="' + (modF === 'badges') + '" data-acadmod="badges">Badges</button>' +
       '</div>' +
-      '<div class="ukAcadGrid">' + shown.map(academyCard).join('') + '</div>';
+      (modF === 'badges'
+        ? badgesTab(st)
+        : '<div class="ukAcadGrid">' + D.academy.filter(function (l) { return modF === 'all' || l.mod === modF; }).map(academyCard).join('') + '</div>');
+  }
+
+  /* ============================ Part 3 — certificates ============================ */
+  /* One certificate per completed module, plus a distinctly bigger
+     treatment for the overall one — same content shape (decorative panel,
+     brand mark, name, what was completed, date, signature, the relevant
+     badge art), reused rather than two unrelated layouts. Decorative panel
+     reuses the exact brand gradient the sidebar already renders with
+     (--uk-deep/-2/-3, ukapp.css) and the existing white wordmark asset —
+     no new artwork. Name is set in Marcellus, the one display face this
+     whole product already uses for every heading — not a new script font. */
+  function certificatePage(st) {
+    var kind = st.cert;
+    var isOverall = kind === 'overall';
+    if (!isOverall && D.academyModules().indexOf(kind) < 0) { st.cert = null; return academy(st); }
+    if (isOverall && !D.me.academyCert) { st.cert = null; return academy(st); }
+    var today = new Date();
+    var dateStr = today.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+    var badgeMarkup = isOverall
+      ? window.ukVetBadge('ukCert_badgeArt ukCert_badgeArt--seal')
+      : badgeImg(kind, 'ukCert_badgeArt');
+
+    /* No decorative side panel: the actual Ukreate wordmark (the ink
+       variant, since the body is now a light surface, not the navy the
+       white variant was drawn for) sits where the "Ukreate Academy" text
+       eyebrow used to be — a real logo, not a label standing in for one. */
+    return '<button class="ukBack" type="button" data-certclose>&larr; Back to Academy</button>' +
+      '<div class="ukCertWrap' + (isOverall ? ' is-overall' : '') + '">' +
+        '<article class="ukCert" id="ukCertPrint">' +
+          '<div class="ukCert_body">' +
+            '<div class="ukCert_frame">' +
+              '<img class="ukCert_mark" src="/assets/img/ukreate-logo-ink.svg" alt="Ukreate" width="118" height="38">' +
+              '<h1 class="ukCert_h">Certificate of Completion</h1>' +
+              '<span class="ukCert_rule" aria-hidden="true"></span>' +
+              '<p class="ukCert_p">This certificate is presented to</p>' +
+              '<p class="ukCert_name">' + esc(D.me.n) + '</p>' +
+              '<p class="ukCert_p">' + (isOverall ? 'Has successfully completed every module of' : 'Has successfully completed') + '</p>' +
+              '<p class="ukCert_mod">' + esc(isOverall ? 'Ukreate Academy' : kind) + '</p>' +
+              '<div class="ukCert_badgeSlot" aria-hidden="true"><span class="ukCert_badgeRing">' + badgeMarkup + '</span></div>' +
+              '<div class="ukCert_foot">' +
+                '<div class="ukCert_sig"><span class="ukCert_line"></span>' +
+                  '<p class="ukCert_sigName">' + dateStr + '</p><p class="ukCert_cap">Date of completion</p></div>' +
+                /* [REVIEW] signatory wording — "Ukreate Academy" stands in as
+                   both signature and title until a founder picks a real name
+                   or role to sign as. */
+                '<div class="ukCert_sig"><span class="ukCert_line"></span>' +
+                  '<p class="ukCert_sigName ukCert_sigName--script">Ukreate Academy</p><p class="ukCert_cap">Issued by Ukreate</p></div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</article>' +
+        '<button class="ukBtn ukCert_dl" type="button" data-certdownload aria-label="Download this certificate">' +
+          DOWNLOAD_ICON + '<span>Download certificate</span></button>' +
+      '</div>';
   }
 
   /* One card per lesson, in the reference's own course-card shape: a 16:9
@@ -1592,6 +1803,19 @@ window.UKCV = (function () {
               'stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
           '</button>' +
         '</section>' : '') +
+        /* Part 3 — "once complete... from the module itself", not only from
+           the Badges tab: the moment this module's last lesson is watched,
+           its certificate is one click away from right here. */
+        (D.academyModules().indexOf(l.mod) > -1
+          ? '<button class="ukAcadRes ukAcadRes--cert" type="button" data-cert="' + esc(l.mod) + '" style="margin-top:16px">' +
+              '<span class="ukAcadRes_ic" aria-hidden="true">' + window.ukVetBadge('ukAcadRes_seal') + '</span>' +
+              '<span class="ukAcadRes_b"><span class="ukAcadRes_t">' + esc(l.mod) + ' badge earned</span>' +
+              '<span class="ukAcadRes_s">View and download your certificate.</span></span>' +
+              '<span class="ukAcadRes_go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none">' +
+                '<path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" ' +
+                'stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+            '</button>'
+          : '') +
       '</div>' +
       '<aside class="ukPanel ukSticky ukAcadCurric">' +
         '<div class="ukAcadCurric_top"><span>My progress</span><span>' + doneTotal + '/' + all.length + '</span></div>' +
@@ -1708,10 +1932,22 @@ window.UKCV = (function () {
       '<h4 class="ukSub">Sign out</h4><p class="ukHint" style="margin-bottom:14px">Signs you out on this device only.</p>' +
       '<button class="ukGhost" type="button" data-signout>Sign out</button></section>';
   }
+  /* Real value, not a demo placeholder pretending to be filled in — a field
+     with nothing saved yet shows an empty box with an example format as a
+     hint, never someone else's fake data sitting in it looking like it was
+     already entered. data-payfield is what data-savepayout (ukcapp.js)
+     reads back out on save. */
+  function pfield(l, key, example, hint, type) {
+    var v = (D.me.payout && D.me.payout[key]) || '';
+    return '<label class="ukField"><span class="ukField_l">' + l + '</span>' +
+      '<input class="ukField_i" type="' + (type || 'text') + '" data-payfield="' + key + '" ' +
+      'value="' + esc(v) + '" placeholder="' + esc(example || '') + '">' +
+      (hint ? '<span class="ukHint">' + hint + '</span>' : '') + '</label>';
+  }
   /* Where booking commissions, creative fees and referral commissions all land
-     once they clear — see Earnings for the three streams themselves. This is
-     the destination, not the plumbing: no payout run actually reads these
-     fields yet.
+     once they clear — see Earnings for the three streams themselves. Genuinely
+     saved now (data-savepayout), same local-first pattern as creator rates and
+     Academy progress — real transfers are still not built.
      // PLUG-IN POINT — real payouts. A live integration (Stripe Connect,
      // PayPal Payouts, or similar) needs: identity/tax verification per
      // payment method before the first payout, a payout schedule and minimum
@@ -1721,7 +1957,7 @@ window.UKCV = (function () {
      // of those modules stands in for today. */
   function aPayout(st) {
     var METHODS = ['Bank transfer', 'PayPal'];
-    var method = (st && st.pay) || METHODS[0];
+    var method = (D.me.payout && D.me.payout.method) || METHODS[0];
     return '<section class="ukPanel"><div class="ukPanel_head"><h3 class="ukPanel_title">Payout details</h3></div>' +
       '<p class="ukAsk">Where your booking commissions, creative fees and membership referrals get paid out to, ' +
         'once each clears. Real transfers are not switched on yet — saving here just holds your details ready.</p>' +
@@ -1729,11 +1965,13 @@ window.UKCV = (function () {
         return '<button class="ukPick' + (method === m ? ' is-on' : '') + '" type="button" ' +
           'data-pay="' + esc(m) + '">' + esc(m) + '</button>';
       }).join('') + '</div>' +
-      (method === 'PayPal'
-        ? field('PayPal email', 'amara@amaratravels.com', '', 'email')
-        : field('Account name', 'Amara Mensah') + field('IBAN', 'PT50 0002 0123 1234 5678 9015 4') +
-          field('Country', 'Portugal')) +
-      '<button class="ukBtn" type="button" data-ack="Saved">Save payout details</button></section>';
+      '<div data-payfields>' + (method === 'PayPal'
+        ? pfield('PayPal email', 'paypalEmail', 'you@example.com', '', 'email')
+        : pfield('Account name', 'acctName', 'Amara Mensah') +
+          pfield('IBAN', 'iban', 'PT50 0002 0123 1234 5678 9015 4') +
+          pfield('Country', 'country', 'Portugal')) + '</div>' +
+      '<span class="ukHint" id="ukPayoutHint" role="status" aria-live="polite"></span>' +
+      '<button class="ukBtn" type="button" data-savepayout>Save payout details</button></section>';
   }
   function aPlan() {
     var p = D.MEMBER_PRICE;
@@ -1742,10 +1980,10 @@ window.UKCV = (function () {
         ? '<div class="ukPlan"><div><p class="ukPlan_n">Verified creator</p>' +
           '<p class="ukPlan_p">Full Pitch Pilot, apply to any stay, verified badge, the whole Academy.</p></div>' +
           '<p class="ukPlan_v">' + D.money(p.month) + '<em>a month</em></p></div>' +
-          '<p class="ukWhy">Renews on the 12th. Cancel any time and you keep your work, your collabs and your media kit.</p>' +
+          '<p class="ukWhy">Renews on the 12th. Cancel any time and you keep your work and your collabs.</p>' +
           '<button class="ukGhost" type="button" data-ack="Opened">Manage billing</button>'
         : '<div class="ukPlan"><div><p class="ukPlan_n">Free</p>' +
-          '<p class="ukPlan_p">Browse stays, see scores, build your profile and your media kit.</p></div>' +
+          '<p class="ukPlan_p">Browse stays, see scores, build your profile.</p></div>' +
           '<p class="ukPlan_v">' + D.money(0) + '</p></div>' +
           '<p class="ukWhy">Verified is a dollar a day and unlocks applying and Pitch Pilot.</p>' +
           '<button class="ukBtn" type="button" data-goto="member">See what verified gets you</button>') +
@@ -1755,7 +1993,7 @@ window.UKCV = (function () {
   return {
     /* earn is not here: ukcdash.js owns that view and assigns V.earn itself */
     home:home, collabs:collabs, stays:stays, profile:profile,
-    kit:kit, academy:academy, community:community, member:member, account:account,
+    academy:academy, community:community, member:member, account:account,
     empty:empty, media:m, pic:pic, head:head, track:track, paginate:paginate,
     /* the shared stay card as this side dresses it, so the dashboard, Pitch Pilot
        and the mood boards all show the one card rather than three near-misses */

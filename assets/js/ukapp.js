@@ -1023,9 +1023,13 @@
       return repaint();
     }
     /* the caveat behind the info button, shown in place rather than as a tooltip
-       that a keyboard or a touch screen cannot reach */
+       that a keyboard or a touch screen cannot reach. Generic by aria-controls
+       (the button already has to name its panel for a11y) rather than a fixed
+       parent selector, so any field, section or row can use the same toggle
+       instead of each caller needing its own click-handler wiring. */
     if ((el = e.target.closest('[data-info-toggle]'))) {
-      var panel = el.closest('.ukHire_f').querySelector('.ukWhy--info');
+      var panelId = el.getAttribute('aria-controls');
+      var panel = panelId && document.getElementById(panelId);
       if (panel) { panel.hidden = !panel.hidden; el.setAttribute('aria-expanded', String(!panel.hidden)); }
       return;
     }
@@ -1298,6 +1302,7 @@
     }
     if ((el = e.target.closest('[data-roisub]'))) { s2.roiSub = el.dataset.roisub; return repaint(); }
     if ((el = e.target.closest('[data-tab]')))    { s2.tab = el.dataset.tab;       return repaint(); }
+    if (e.target.closest('[data-toggle-preview]')) { s2.preview = !s2.preview;     return repaint(); }
     /* the commissionable basis re-costs every booking on the page */
     if ((el = e.target.closest('[data-basis]')))  { window.UKATTRIB.setBasis(el.dataset.basis); return repaint(); }
     if ((el = e.target.closest('[data-range]')))  { s2.range = el.dataset.range;   return repaint(); }

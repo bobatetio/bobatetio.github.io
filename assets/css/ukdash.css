@@ -34,7 +34,11 @@
    The Earnings page's own type scale, one size down from the page title, so
    "this is a different question now" reads without inventing a second
    heading style just for it. */
-.ukEarnSec{margin:36px 0 14px;padding-top:20px;border-top:1px solid var(--line)}
+/* Used to separate "Your money" from "Your growth" further down the same
+   long page, with a rule marking the seam. Now each is the sole, opening
+   section of its own tab — the rule just sat under the tab bar for no
+   reason, marking a seam that no longer exists. */
+.ukEarnSec{margin:8px 0 14px}
 .ukEarnSec_h{
   font-family:'Marcellus',Georgia,serif;font-weight:400;
   font-size:22px;line-height:1.15;margin:0 0 4px;color:var(--text);text-wrap:balance;
