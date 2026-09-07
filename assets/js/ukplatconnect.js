@@ -50,7 +50,7 @@ window.UKPLATCONNECT = (function () {
   /* What a connect actually brings back besides a number. The step says "we read
      your work from them, so there is nothing to upload", and this is that
      sentence being true: connecting fills the creator's recent posts, which is
-     what a hotel looks at first and what the media kit is built from.
+     what a hotel looks at first and what the profile page is built from.
 
      Seeded per platform for the same reason the follower count is - connecting
      the same account twice should not invent a different history.
@@ -74,7 +74,7 @@ window.UKPLATCONNECT = (function () {
     pi: [['shot3','Saved: rooms with a view',5400,470,'6 weeks ago']]
   };
   /* Newest first across every connected account, deduped: the same post is often
-     cross-posted, and a media kit that lists it twice reads as padding. */
+     cross-posted, and a profile that lists it twice reads as padding. */
   function work(plats) {
     var out = [], seen = {};
     (plats || []).forEach(function (r) {
@@ -188,11 +188,17 @@ window.UKPLATCONNECT = (function () {
               platMark(p) + esc(p.n) + '</button>';
           }).join('') + '</div>'
         : '') +
-      (plats.length
-        ? '<p class="ukHint">' + fmt(total(st)) + ' across ' + plats.length +
-          (plats.length === 1 ? ' platform' : ' platforms') + '.</p>'
-        : '') +
       oauthModal(st.oauth);
+  }
+
+  /* The same reach line, for the footer rather than the body — the onboarding
+     nav row already reserves the space to the left of Continue/Finish for
+     exactly this kind of context, so it sits on that one line instead of as
+     its own paragraph pushed up against the button above it. */
+  function footNote(st) {
+    var plats = st.plats || [];
+    if (!plats.length) return '';
+    return fmt(total(st)) + ' across ' + plats.length + (plats.length === 1 ? ' platform' : ' platforms') + '.';
   }
 
   function total(st) {
@@ -252,6 +258,6 @@ window.UKPLATCONNECT = (function () {
     body: body, oauthModal: oauthModal, platRow: platRow, platMark: platMark,
     start: start, allow: allow, cancel: cancel, drop: drop, makeMain: makeMain,
     total: total, bandFor: bandFor, platforms: platforms, platOf: platOf, fmt: fmt,
-    work: work
+    work: work, footNote: footNote
   };
 })();

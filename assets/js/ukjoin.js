@@ -19,6 +19,16 @@
   if (!root) return;
   var X = window.UKAUTHX;
 
+  /* Referral capture: there is no account yet to attach this to, so it
+     waits in localStorage until membership actually starts (data-join, in
+     ukcapp.js) — see assets/js/ukreferral.js for the other half. */
+  (function captureRef() {
+    try {
+      var m = location.search.match(/[?&]ref=([^&]+)/);
+      if (m) localStorage.setItem('uk_pending_ref', decodeURIComponent(m[1]));
+    } catch (e) {}
+  })();
+
   var SIDES = {
     creator: {
       label: 'Sign up as a creator',
@@ -99,6 +109,15 @@
         '<label class="ukTerms"><input type="checkbox" name="terms"' + (f.terms ? ' checked' : '') + '>' +
           '<span>I accept the <a class="ukAuth_link" href="/terms/">Terms of Service</a> and ' +
           '<a class="ukAuth_link" href="/privacy/">Privacy Policy</a>.</span></label>' +
+        /* [REVIEW] exact wording is a legal call, not a design one — this is
+           the plug-in point for the real ToS clause. Consent lives here now
+           rather than as a per-piece toggle later: agreeing once at signup
+           is what makes a creator's delivered work eligible for Discover,
+           the same way the rest of these terms apply once, not per action. */
+        (f.side === 'creator'
+          ? '<p class="ukHint ukTerms_note">Work you deliver to a hotel may be featured in Discover, ' +
+            'our creator inspiration feed — see the Terms for how that works.</p>'
+          : '') +
         '<button class="ukBtn ukStart_go" type="submit" id="ukSubmit" disabled>' + esc(s.cta) + '</button>' +
       '</form>';
     icons();

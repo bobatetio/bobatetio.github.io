@@ -53,8 +53,12 @@ window.UKONBOARD = (function () {
        gained "what do you make" and swapped a self-declared band for connected
        platforms, this was left describing the old questions — so an established
        account came up with the gate in front of it, having answered everything
-       the gate no longer asked. */
+       the gate no longer asked. Same failure mode again when the dests step
+       split into home base + destinations: this still had the old flat
+       `dests` field, and `done()` now reads `home`, so an established account
+       had the gate reopen on it. */
     creator: { intent:'pitch',
+               home:['c-us-miami'],
                dests:['c-pt-lisbon','c-es-barcelona'],
                shoots:['Wellness & spa','Luxury & design'],
                formats:['Reels','Photos'],
@@ -180,27 +184,53 @@ window.UKONBOARD = (function () {
     },
     {
       k: 'dests',
-      /* MISSING UNTIL NOW, and it is the question the original called the one
-         that decides matches: "Hotels match on this before anything else."
-         Without it a creator's fit score was computed against no markets at all.
-         THE picker from /creator/start/, against the same D.DESTS. */
+      /* Home base plus destinations, one list — the same two-bucket shape
+         ukplatconnect.js already uses for "main platform + others", just
+         without the drag-to-reassign: a home base is locked, not swappable
+         by dragging a destination onto it. Hotels running a residency need
+         creators who are actually nearby, so where someone lives has to be
+         a real, separate answer from where they would like to shoot next —
+         "Hotels match on this before anything else" was true of destinations
+         alone; it is truer once local creators can actually be found. */
       render: function (f) {
         var C = window.UKCHIPS, D = window.UKC;
+        var home = f.home || [];
         var picked = f.dests || [];
-        if (!C || !D || !D.DESTS) return ask('Where do you travel?', '', '');
-        return ask('Tell us where you’re headed.',
-          'The places you already travel, and the ones you would go tomorrow. ' +
-          'Hotels match on this before anything else.',
-          '<p class="ukField_l">Markets you cover' + C.counter(picked.length) + '</p>' +
-          C.html({
-            key:'dests', qkey:'destQ', q: DESTQ.q, open: DESTQ.open,
-            chosen: picked, options: D.DESTS,
-            find: function (k) { return D.destOf(k); },
-            ph:'Try Miami, Bali, Lagos…', label:'Markets you cover',
-            idle: false          /* fifteen hundred markets cannot be browsed */
-          }));
+        if (!C || !D || !D.DESTS) return ask('Where are you based?', '', '');
+        return ask('Where are you based, and where are you headed?',
+          'Home base first — hotels running a residency look for creators who are ' +
+          'actually nearby. Then the places you travel or would go tomorrow.',
+          '<div class="ukBuckets">' +
+            '<div class="ukBucket ukBucket--main" aria-label="Home base">' +
+              '<p class="ukBucket_l">Home base</p>' +
+              C.html({
+                key:'home', qkey:'homeQ', q: HOMEQ.q, open: HOMEQ.open,
+                chosen: home, options: D.DESTS, cap: 1,
+                find: function (k) { return D.destOf(k); },
+                ph:'Try Lisbon, Nairobi, Manila…', label:'Home base',
+                idle: false
+              }) +
+            '</div>' +
+            /* Not --sec: that modifier is the platform-picker's 2-column grid,
+               built for arranging .ukPlatRow cards side by side. Reusing it
+               here squeezed this bucket's chip list into a half-width column,
+               so each destination chip wrapped onto its own row instead of
+               flowing inline — the picker's own .ukPickr_chips already does
+               flex-wrap correctly at full width; it just needed to be given
+               full width to do it in. */
+            '<div class="ukBucket ukBucket--dest" aria-label="Destinations">' +
+              '<p class="ukBucket_l">Also headed to' + C.counter(picked.length, 4) + '</p>' +
+              C.html({
+                key:'dests', qkey:'destQ', q: DESTQ.q, open: DESTQ.open,
+                chosen: picked, options: D.DESTS.filter(function (x) { return home.indexOf(x.k) < 0; }), cap: 4,
+                find: function (k) { return D.destOf(k); },
+                ph:'Try Miami, Bali, Lagos…', label:'Also headed to',
+                idle: false
+              }) +
+            '</div>' +
+          '</div>');
       },
-      done: function (f) { return (f.dests || []).length > 0; }
+      done: function (f) { return (f.home || []).length > 0; }
     },
     {
       k: 'plats',
@@ -216,6 +246,12 @@ window.UKONBOARD = (function () {
           'Pick the profiles you already post from. We read your work from them, ' +
           'so there is nothing to upload.',
           P.body(liveState(f)));
+      },
+      /* the reach total, on the same line as Continue/Finish rather than as
+         its own paragraph crowding the button above it */
+      footLeft: function (f) {
+        var P = window.UKPLATCONNECT;
+        return P ? P.footNote(liveState(f)) : '';
       },
       done: function (f) { return (f.plats || []).length > 0; }
     }
@@ -242,6 +278,7 @@ window.UKONBOARD = (function () {
         return ask('What brings you to Ukreate?',
           'There is no wrong answer here. It only decides what we show you first.',
           intents(f.intent, [
+            { k:'bookings', t:'Drive direct bookings using creator content', s:'Turn what they shoot into bookings you keep, commission-free.' },
             { k:'fill',    t:'Fill rooms I was not going to sell', s:'Trade quiet nights for content.' },
             { k:'content', t:'Get content for my own channels',    s:'Photography and video I keep and use.' },
             { k:'look',    t:'See how this works first',           s:'Look around before publishing anything.' }
@@ -362,6 +399,8 @@ window.UKONBOARD = (function () {
      not in the saved record. */
   var CITYQ = { q: '', open: false };
   var DESTQ = { q: '', open: false };
+  var HOMEQ = { q: '', open: false };
+  var CHIPQ = { destQ: DESTQ, homeQ: HOMEQ };
   function liveState(f) {
     if (!LIVE.plats) LIVE.plats = (f.plats || []).slice();
     return LIVE;
@@ -471,7 +510,7 @@ window.UKONBOARD = (function () {
         (s.art ? peek(s.art) : '') +
         s.render(f) +
         '<div class="ukNav ukOb_nav">' +
-          '<span></span>' +
+          '<span class="ukHint ukOb_navNote">' + (s.footLeft ? s.footLeft(f) : '') + '</span>' +
           /* No "or press Enter" hint. Enter still advances a field, because it
              should, but captioning it puts a keyboard instruction next to the
              button that already says what to do. */
@@ -506,6 +545,29 @@ window.UKONBOARD = (function () {
       if (f.dests && f.dests.length) {
         if (me) me.dests = f.dests.slice();
         if (M)  M.dests = f.dests.slice();
+      }
+      /* Home base plus destinations, resolved into the same {n,lat,lng} shape
+         `been` already used with an implicit "index 0 is home" convention —
+         the profile map and the card's "Covers" line both already read
+         `been` that way, so this is the one place that has to reconcile the
+         picker's plain keys into it, not a change to either of those. */
+      var Dm = window.UKC;
+      if (f.home && f.home.length && Dm && Dm.destOf) {
+        var hd = Dm.destOf(f.home[0]);
+        if (hd) {
+          var cityStr = hd.n + (hd.sub ? ', ' + hd.sub : '');
+          if (me) me.city = cityStr;
+          if (M)  M.city = cityStr;
+        }
+        if (me) me.home = f.home.slice();
+        if (M)  M.home = f.home.slice();
+      }
+      if (Dm && Dm.destOf && ((f.home && f.home.length) || (f.dests && f.dests.length))) {
+        var been = (f.home || []).concat(f.dests || []).map(function (k) {
+          var x = Dm.destOf(k);
+          return x ? { n:x.n, lat:x.lat, lng:x.lng } : null;
+        }).filter(Boolean);
+        if (been.length) { if (me) me.been = been; if (M) M.been = been.slice(); }
       }
       /* Connected platforms give the real handle and the real follower count, so
          the band is read off them rather than asked for. */
@@ -584,8 +646,6 @@ window.UKONBOARD = (function () {
         '<p class="ukObList_t">Finish setting up</p>' +
         '<p class="ukObList_c">' + doneN + ' of ' + list.length + ' done</p>' +
       '</div>' +
-      '<div class="ukObList_bar" aria-hidden="true">' +
-        '<i style="width:' + Math.round(doneN / list.length * 100) + '%"></i></div>' +
       '<ul class="ukObList_l">' + list.map(function (t) {
         return '<li class="ukObTask' + (t.done ? ' is-done' : '') + '">' +
           '<span class="ukObTask_tick">' + (t.done
@@ -609,6 +669,7 @@ window.UKONBOARD = (function () {
     fresh: fresh, markFresh: markFresh, clearFresh: clearFresh,
     cityq: function () { return CITYQ; },
     destq: function () { return DESTQ; },
+    chipq: function (qkey) { return CHIPQ[qkey] || DESTQ; },
     shots: function () { return SHOTS; },
     flushShots: flushShots,
     flush: flushPlats

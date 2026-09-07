@@ -19,14 +19,17 @@
     /* ONE PAGE FOR A STAY, not two. "Discover stays" and "Pitch Pilot" rendered
        the same D.stays list from two places, and a stay's home silently changed
        the moment you pitched it. State is an attribute of an object, not another
-       place to keep it, so the lanes filter one list rather than splitting it. */
+       place to keep it, so the lanes filter one list rather than splitting it.
+       Outreach is a genuinely different object, not the same list again — a
+       hotel with no campaign on Ukreate at all — but it is still "find
+       work," the same question with a warm and a cold answer, so it is a
+       tab on this page rather than a second nav item competing with it. */
     { group:'Find work', items:[
-      { id:'stays',  title:'Stays',    icon:'search' },
-      { id:'earn',   title:'Earnings', icon:'bag' }
+      { id:'stays',    title:'Stays',    icon:'search' },
+      { id:'earn',     title:'Earnings', icon:'wallet' }
     ]},
     { group:'You', items:[
-      { id:'boards',  title:'Mood boards',  icon:'eye' },
-      { id:'kit',     title:'Media kit',    icon:'idcard' },
+      { id:'discover',title:'Discover',     icon:'image' },
       { id:'academy', title:'Academy',      icon:'book' },
       { id:'community',title:'Community',   icon:'chat', out:true }
     ]}
@@ -36,7 +39,7 @@
      the left rail — but the account menu still routes to them by id, so their
      page titles have to resolve even without a matching NAV entry. */
   var TITLES = { member:'Membership', editme:'How you travel',
-                 hotel:'Hotel', board:'Board', guide:'Guest guide',
+                 guide:'Guest guide',
                  profile:'Your profile', account:'Account' };
   NAV.forEach(function (g) { g.items.forEach(function (i) { TITLES[i.id] = i.title; }); });
 
@@ -45,16 +48,70 @@
   var S = {};
   function st() { return (S[view] = S[view] || {}); }
 
-  function svg(name) {
-    return '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
-           ((window.UKICONS || {})[name] || '') + '</svg>';
+  /* Completing every Academy lesson earns the Academy's own credibility
+     signal — separate from paid membership ("Verified"), and shown wherever
+     that badge already is. Completing everything IN ONE MODULE earns that
+     module's own badge the same way, one level down — real progress for a
+     creator who has done three of eight lessons, not silence until the
+     whole thing is finished. Both are recomputed fresh off the lesson
+     .done flags rather than toggled by hand, so neither can say "earned"
+     about something not actually finished, and both sync to window.UKME —
+     the record ukcreators.js reads — so a hotel sees the same badges. */
+  function markLessonDone(id) {
+    var L = D.academy.filter(function (x) { return x.id === id; })[0];
+    var hadMod = L && D.academyModules().indexOf(L.mod) > -1;
+    if (L) L.done = true;
+
+    var mods = D.academyModules();
+    D.me.academyModules = mods;
+    if (window.UKME_SET) window.UKME_SET({ academyModules: mods.slice() });
+    if (L && !hadMod && mods.indexOf(L.mod) > -1) {
+      S.academy = S.academy || {};
+      S.academy.justBadgedMod = L.mod;
+      /* Part 4.2 — transient, not a banner that sits there until some
+         unrelated click happens to repaint over it: badgesTab() already
+         reads-and-clears this flag on render, so a repaint after the
+         celebration has had its moment is all it takes to make it go. */
+      setTimeout(function () { if (view === 'academy') paintView(true); }, 4000);
+    }
+
+    if (D.academy.every(function (x) { return x.done; })) {
+      var justCert = !D.me.academyCert;
+      D.me.academyCert = true;
+      if (window.UKME_SET) window.UKME_SET({ academyCert: true });
+      if (justCert) {
+        S.academy = S.academy || {};
+        S.academy.justCertified = true;
+        setTimeout(function () { if (view === 'academy') paintView(true); }, 4000);
+      }
+    }
+  }
+
+  function svg(name, solid) {
+    var set = solid ? (window.UKICONS_SOLID || {}) : (window.UKICONS || {});
+    var glyph = set[name] || (window.UKICONS || {})[name] || '';
+    return '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' + glyph + '</svg>';
   }
   function icons(scope) {
     (scope || root).querySelectorAll('[data-icon]:not(.ukIco--on)').forEach(function (el) {
-      el.innerHTML = svg(el.dataset.icon);
+      el.innerHTML = svg(el.dataset.icon, el.dataset.solid != null);
       el.classList.add('ukIco', 'ukIco--on');
     });
   }
+  /* Academy badge artwork (ukcviews.js badgeImg()) points at files that do
+     not exist in the repo yet (Part 1's placeholder mapping) — this is
+     what keeps that from ever showing a broken-image icon: the moment one
+     404s, it is swapped for the seal mark the app already uses for a
+     credential. 'error' does not bubble, so this listens on the capture
+     phase (same technique the product uses nowhere else, because nothing
+     else in it points at an asset that might not exist yet). */
+  document.addEventListener('error', function (e) {
+    var el = e.target;
+    if (el.tagName === 'IMG' && el.classList.contains('ukBadgeArt')) {
+      var cls = el.className.replace('ukBadgeArt', '').trim();
+      el.outerHTML = window.ukVetBadge(cls);
+    }
+  }, true);
 
   /* ---------------- notifications ----------------
      The bell has been in this app's header all along with nothing behind it:
@@ -107,6 +164,27 @@
           go:'collabs', open: c.id };
       });
     });
+
+    /* a cold pitch gone quiet for a week — replies happen over email, so this
+       is the one place Ukreate can actually remind you rather than you
+       remembering to go check the thread yourself */
+    window.UKNOTIFY.source(function () {
+      return (D.collabs || []).filter(function (c) {
+        if (c.archived || c.stage !== 0 || c.nudged) return false;
+        var stay = D.stay(c.stay);
+        if (!stay || !stay.isLead) return false;
+        var them = (c.msgs || []).some(function (m) { return m.by === 'them'; });
+        if (them) return false;
+        var first = (c.msgs || [])[0];
+        return first && D.relDays(first.at) >= D.NUDGE_AFTER;
+      }).map(function (c) {
+        var stay = D.stay(c.stay);
+        return { id:'nudge:' + c.id, kind:'nudge', at: 2,
+          t: stay.hotel + ' hasn’t replied',
+          s: 'It’s been a week since you sent that pitch — worth a follow-up',
+          go:'collabs', open: c.id };
+      });
+    });
   }
 
   function paintNotify() {
@@ -148,13 +226,27 @@
   function paintNav() {
     paintNotify();
     var needs = D.collabs.filter(function (c) { return D.STAGES[c.stage].mine && c.stage < 5; }).length;
+    /* Collapsed, the promo card is hidden and the primary action went with it —
+       the one thing a creator comes here to do became unreachable from the rail.
+       The same action survives the collapse as a single + button, same pattern
+       as the hotel side's "Host a creator" card. */
+    q('#ukSideCard').innerHTML =
+      '<div class="ukSideCard"><h3 class="ukSideCard_t">Pitch Pilot</h3>' +
+      '<p class="ukSideCard_p">We find the hotels, score them and write the pitch. You press send.</p>' +
+      '<button class="ukSideCard_b" type="button" data-goto="pitch">Find your next stay</button></div>' +
+      '<button class="ukRailAdd" type="button" data-goto="pitch" ' +
+        'title="Find your next stay" aria-label="Find your next stay">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" ' +
+          'stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>' +
+      '</button>';
     q('#ukNav').innerHTML = NAV.map(function (g) {
       return '<div class="ukSide_group"><p class="ukSide_gLabel">' + g.group + '</p>' +
         g.items.map(function (it) {
+          var active = it.id === view;
           var n = it.id === 'collabs' && needs ? '<span class="ukSide_count">' + needs + '</span>' : '';
-          return '<button class="ukSide_link' + (it.id === view ? ' is-active' : '') + '" type="button" ' +
-            'data-go="' + it.id + '"' + (it.id === view ? ' aria-current="page"' : '') + '>' +
-            '<span class="ukIco ukIco--on">' + svg(it.icon) + '</span>' +
+          return '<button class="ukSide_link' + (active ? ' is-active' : '') + '" type="button" ' +
+            'data-go="' + it.id + '"' + (active ? ' aria-current="page"' : '') + '>' +
+            '<span class="ukIco ukIco--on">' + svg(it.icon, active) + '</span>' +
             '<span class="ukSide_lbl">' + it.title + '</span>' + n +
             (it.out ? '<span class="ukOut" aria-label="opens in a new tab">&#8599;</span>' : '') + '</button>';
         }).join('') + '</div>';
@@ -176,15 +268,12 @@
     if (view === 'stays')    return V.stays(s);
     if (view === 'earn')     return V.earn(s);
     if (view === 'profile')  return V.profile(s);
-    if (view === 'kit')      return V.kit(s);
     if (view === 'academy')  return V.academy(s);
     if (view === 'community')return V.community(s);
     if (view === 'member')   return V.member(s);
     if (view === 'account')  return V.account(s);
     if (view === 'editme')   return V.editme(s);
-    if (view === 'hotel')    return V.hotel(s);
-    if (view === 'boards')   return V.boards(s);
-    if (view === 'board')    return V.board(s);
+    if (view === 'discover') return V.discover(s);
     if (view === 'guide')    return V.guide(s);
     return V.empty('Nothing here', 'Pick something from the sidebar.');
   }
@@ -217,7 +306,18 @@
       var st2 = D.stay ? D.stay(s.stay) : null;
       return st2 ? st2.t : null;
     }
-    if (view === 'boards' && s.board) return 'Board';
+    if (view === 'stays' && s.open) {
+      var st3 = D.stay ? D.stay(s.open) : null;
+      return st3 ? st3.hotel : null;
+    }
+    if (view === 'academy' && s.lesson) {
+      var l2 = (D.academy || []).filter(function (x) { return x.id === s.lesson; })[0];
+      return l2 ? l2.t : null;
+    }
+    if (view === 'discover' && s.discItem) {
+      var di = D.discoverBy ? D.discoverBy(s.discItem) : null;
+      return di ? di.t : null;
+    }
     return null;
   }
 
@@ -258,7 +358,7 @@
   var sMap = null, sMapHost = null, sMapKey = null;
   function mountStayMap() {
     var slot = q('[data-cstaymap]');
-    if (!slot || !window.UKDOTMAP) return;
+    if (!slot || !window.UKWORLDMAP) return;
     if (!sMapHost) {
       sMapHost = document.createElement('div');
       sMapHost.className = 'ukMap';
@@ -269,24 +369,93 @@
     var pts = [];
     try { pts = JSON.parse(slot.getAttribute('data-cstaymap') || '[]'); } catch (er) { pts = []; }
 
-    if (!sMap) sMap = window.UKDOTMAP.mount(sMapHost, { lat: 20, lng: 0, zoom: FIT });
+    if (!sMap) sMap = window.UKWORLDMAP.mount(sMapHost, { lat: 0, lng: 0, zoom: FIT });
     else if (sMap.resume) sMap.resume();
     if (!sMap) return;
 
     var key = pts.map(function (p) { return p.id; }).join(',');
     if (key !== sMapKey) { if (sMap.pins) sMap.pins(pts); sMapKey = key; }
 
+    /* a single selected stay (or the single-pin Location card) gets a close,
+       comfortable zoom; with nothing picked the frame fits every stay on
+       screen as tight as it can without pushing any of them out of it */
     var sel = pts.filter(function (p) { return p.on; })[0];
-    if (sMap.to) sMap.to(sel ? sel.lat : 20, sel ? sel.lng : 0, FIT);
+    if (sMap.fit) sMap.fit(sel ? [sel] : pts);
+  }
+
+  /* The globe on the creator's own profile ("Where X has created" / "Where
+     work has been made") — same mount pattern as mountStayMap above, its
+     own instance so it does not fight that one, and its own attribute
+     (data-profmap) since the hotel side (ukapp.js) already hydrates that
+     name for the same markup ukprofile.js now shares with both apps. */
+  var pMap = null, pMapHost = null, pMapKey = null;
+  function mountProfMap() {
+    var slot = q('[data-profmap]');
+    if (!slot || !window.UKWORLDMAP) return;
+    if (!pMapHost) {
+      pMapHost = document.createElement('div');
+      pMapHost.className = 'ukMap';
+      pMapHost.setAttribute('aria-hidden', 'true');
+    }
+    if (pMapHost.parentNode !== slot) slot.appendChild(pMapHost);
+    var pts = [];
+    try { pts = JSON.parse(slot.getAttribute('data-profmap') || '[]'); } catch (e) { pts = []; }
+    if (!pMap) pMap = window.UKWORLDMAP.mount(pMapHost, { lat: 0, lng: 0, zoom: FIT });
+    else if (pMap.resume) pMap.resume();
+    if (!pMap) return;
+    var key = pts.map(function (x) { return x.id; }).join(',');
+    if (key !== pMapKey) { if (pMap.pins) pMap.pins(pts, { arcs: true }); pMapKey = key; }
+    if (pMap.fit && pts.length) pMap.fit(pts);
+  }
+
+  /* The "+N" overflow popup on the profile header's Covers/category lists
+     (creatorHead, ukprofile.js) — same positioning logic as the hotel
+     side's placeCrPop (ukapp.js), needed here now that the header is a
+     shared component this side also renders. */
+  function placeCrPop() {
+    var panel = q('[data-crpop-panel]');
+    if (!panel) return;
+    var s = st();
+    var btn = q('[data-crpop="' + s.crPop + '"]');
+    if (!btn) { s.crPop = null; return; }
+    var br = btn.getBoundingClientRect();
+    var left = Math.min(Math.max(8, br.left), window.innerWidth - panel.offsetWidth - 8);
+    var top = br.bottom + 8;
+    if (top + panel.offsetHeight > window.innerHeight - 8) top = Math.max(8, br.top - panel.offsetHeight - 8);
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+    panel.style.visibility = 'visible';
+  }
+
+  /* The ask bar is one mounted instance, not two — the hotel side's own
+     mechanism (ukapp.js), ported so a page here can offer the same search
+     slot instead of duplicating a plain text filter beside it. Moving the
+     node keeps its state and listeners rather than tearing it down. */
+  function rescueAsk() {
+    var shell = root.querySelector('[data-ask-shell]');
+    var home = q('[data-ask]');
+    if (shell && home && shell.parentNode !== home) home.appendChild(shell);
+  }
+  function placeAsk() {
+    var shell = root.querySelector('[data-ask-shell]');
+    if (!shell) return;
+    var slot = q('[data-ask-slot]');
+    var home = q('[data-ask]');
+    var target = slot || home;
+    if (target && shell.parentNode !== target) target.appendChild(shell);
+    if (home) home.classList.toggle('is-away', !!slot);
   }
 
   function paintView(keep) {
     var now = paintCrumb() || TITLES[view] || 'Ukreate';
     document.title = now + ' · Ukreate for creators';
     var dyn = q('.ukView');
+    rescueAsk();
     dyn.innerHTML = render();
     icons(dyn);
+    placeAsk();
     mountStayMap();
+    mountProfMap();
     /* the stay card measures itself once it is on the page — this is what puts
        the "+N" on a list that does not fit, and it never ran on this side */
     if (window.UKSTAY) { window.UKSTAY.clamp(dyn); placeStayPop(); }
@@ -324,6 +493,41 @@
     if (view === 'home' || view === 'dash') view = 'stays';
   }
 
+  /* The picker's dropdown is position:absolute inside .ukStart_ask, and that
+     panel is the one part of the gate that scrolls (.ukOb_modal itself also
+     clips at its own edge) — so a dropdown open near the bottom of a long
+     question got cut off by the panel's own scroll boundary instead of
+     floating above it. position:fixed alone is not enough to fix that: the
+     dropdown is still a DOM descendant of .ukModalWrap, which establishes
+     its own stacking context (position:fixed + z-index), so no z-index on
+     the dropdown can out-rank content painted inside that context — it was
+     escaping the clip but still losing to the modal's own Continue button.
+     Re-parenting it to the end of <body>, past .ukModalWrap entirely, is
+     what actually gets it into the root stacking context above the modal.
+     Measured and placed the same way ukstaycard.js's clamp() does its own
+     post-layout work. */
+  function positionPickrDrops(host) {
+    var dropHost = q('#ukDropHost') || (function () {
+      var d = document.createElement('div');
+      d.id = 'ukDropHost';
+      document.body.appendChild(d);
+      return d;
+    })();
+    dropHost.innerHTML = '';
+    host.querySelectorAll('.ukPickr.is-open').forEach(function (p) {
+      var input = p.querySelector('.ukPickr_q'), drop = p.querySelector('.ukPickr_drop');
+      if (!input || !drop) return;
+      var r = input.getBoundingClientRect();
+      drop.style.position = 'fixed';
+      drop.style.left = r.left + 'px';
+      drop.style.right = 'auto';
+      drop.style.top = (r.bottom + 6) + 'px';
+      drop.style.width = r.width + 'px';
+      drop.style.zIndex = '150';
+      dropHost.appendChild(drop);
+    });
+  }
+
   function paintOnboard() {
     var host = q('#ukObHost') || (function () {
       var d = document.createElement('div');
@@ -335,6 +539,7 @@
     document.body.classList.add('is-onboarding');
     host.innerHTML = window.UKONBOARD.modalHtml('creator', obAt);
     if (window.UKSTAY && window.UKSTAY.clamp) window.UKSTAY.clamp(host);
+    positionPickrDrops(host);
     /* Focus back into the field, caret at the end. Every keystroke in the market
        search repaints, because the ranked list under it IS the response to the
        keystroke, and without this the input is replaced mid-word: the first
@@ -399,28 +604,48 @@
       return paintOnboard();
     }
     /* the chip picker from /creator/start/: pick, remove, and close on an
-       outside click, the same three behaviours it has always had */
+       outside click, the same three behaviours it has always had. Home base
+       and destinations are two instances of the same picker, so this stays
+       one generic handler keyed on data-chip rather than one per field. */
+    var CHIP_CAP = { home:1, dests:4 };
+    var CHIP_QKEY = { home:'homeQ', dests:'destQ' };
     if ((el = e.target.closest('[data-chip]'))) {
-      var dq = window.UKONBOARD.destq();
-      var cur = (window.UKONBOARD.get('creator').dests || []).slice();
+      var field = el.dataset.chip;
+      var dq = window.UKONBOARD.chipq(CHIP_QKEY[field] || 'destQ');
+      var f0 = window.UKONBOARD.get('creator');
+      var cur = (f0[field] || []).slice();
       var v = el.dataset.val;
-      if (cur.indexOf(v) < 0 && cur.length < ((window.UKCHIPS && window.UKCHIPS.CAP) || 5)) cur.push(v);
-      window.UKONBOARD.set('creator', { dests: cur });
+      var cap = CHIP_CAP[field] || ((window.UKCHIPS && window.UKCHIPS.CAP) || 5);
+      if (cur.indexOf(v) < 0 && cur.length < cap) cur.push(v);
+      var patch = {}; patch[field] = cur;
+      /* the same market cannot sit in both buckets at once */
+      var other = field === 'home' ? 'dests' : 'home';
+      if ((f0[other] || []).indexOf(v) > -1) patch[other] = f0[other].filter(function (k) { return k !== v; });
+      window.UKONBOARD.set('creator', patch);
       dq.q = ''; dq.open = false;
       window.UKONBOARD.apply('creator');
       return paintOnboard();
     }
     if ((el = e.target.closest('[data-unchip]'))) {
-      var cur2 = (window.UKONBOARD.get('creator').dests || []).filter(function (k) {
+      var ufield = el.dataset.unchip;
+      var cur2 = ((window.UKONBOARD.get('creator')[ufield] || [])).filter(function (k) {
         return k !== el.dataset.val;
       });
-      window.UKONBOARD.set('creator', { dests: cur2 });
+      var upatch = {}; upatch[ufield] = cur2;
+      window.UKONBOARD.set('creator', upatch);
       window.UKONBOARD.apply('creator');
       return paintOnboard();
     }
-    if (window.UKONBOARD.destq().open && !e.target.closest('.ukPickr')) {
-      var dq2 = window.UKONBOARD.destq(); dq2.open = false; dq2.q = '';
-      paintOnboard();
+    /* #ukDropHost: the open dropdown itself, once positionPickrDrops() has
+       moved it out from under .ukPickr to escape the modal's stacking
+       context — a click landing on it (its own padding, not an option) is
+       still a click inside the picker, not an outside click that should
+       close it. */
+    if (!e.target.closest('.ukPickr') && !e.target.closest('#ukDropHost')) {
+      var dq2 = window.UKONBOARD.destq(), hq2 = window.UKONBOARD.chipq('homeQ');
+      var wasOpen = dq2.open || hq2.open;
+      dq2.open = false; dq2.q = ''; hq2.open = false; hq2.q = '';
+      if (wasOpen) paintOnboard();
     }
     if (e.target.closest('[data-ob-back]')) { obAt = Math.max(0, obAt - 1); return paintOnboard(); }
     if (e.target.closest('[data-ob-next]')) {
@@ -444,12 +669,21 @@
     if (go && !go.disabled) { e.preventDefault(); go.click(); }
   });
 
+  /* Scrolling .ukStart_ask while a dropdown is open moves the field it is
+     anchored to; fixed positioning does not follow that on its own, since it
+     is no longer part of the scrolling box's normal layout. */
+  document.addEventListener('scroll', function (e) {
+    var ask = e.target.closest && e.target.closest('.ukStart_ask');
+    var host = q('#ukObHost');
+    if (ask && host) positionPickrDrops(host);
+  }, true);
+
   document.addEventListener('input', function (e) {
     /* typing in the market search repaints, because the ranked list under it IS
        the response to the keystroke */
     var mq = e.target.closest && e.target.closest('.ukPickr_q');
     if (mq && window.UKONBOARD) {
-      var dq = window.UKONBOARD.destq();
+      var dq = window.UKONBOARD.chipq(mq.dataset.k);
       dq.q = mq.value; dq.open = true;
       return paintOnboard();
     }
@@ -570,9 +804,33 @@
 
   root.addEventListener('click', function (e) {
     var el, s = st();
+
+    var sfToggle = e.target.closest('[data-stayf-toggle]');
+    if (sfToggle) {
+      var menuEl = sfToggle.nextElementSibling;
+      menuEl.hidden = !menuEl.hidden;
+      sfToggle.setAttribute('aria-expanded', menuEl.hidden ? 'false' : 'true');
+      return;
+    }
+    var sfItem = e.target.closest('[data-stayf]');
+    if (sfItem && sfItem.getAttribute('data-stayf') != null) {
+      s.stayF = sfItem.dataset.stayf;
+      s.thread = null;
+      if (sfItem.dataset.stayf === 'all' && s.stageF == null) s.stageF = '1';
+      else if (sfItem.dataset.stayf !== 'all') s.stageF = null;
+      sfItem.closest('[role="menu"]').hidden = true;
+      var sfBtn = sfItem.closest('.ukStayFilter').querySelector('[data-stayf-toggle]');
+      if (sfBtn) sfBtn.setAttribute('aria-expanded', 'false');
+      return repaint();
+    }
+    if (!e.target.closest('.ukStayFilter')) {
+      root.querySelectorAll('.ukStayMenu:not([hidden])').forEach(function (m) { m.hidden = true; });
+      root.querySelectorAll('[data-stayf-toggle]').forEach(function (t) { t.setAttribute('aria-expanded', 'false'); });
+    }
+
     if ((el = e.target.closest('[data-crumb]'))) {
       var cid = el.dataset.crumb, cs = S[cid];
-      if (cs) { cs.thread = null; cs.stay = null; cs.board = null; cs.composerMode = null; cs.modalOpen = null; }
+      if (cs) { cs.thread = null; cs.stay = null; cs.composerMode = null; cs.modalOpen = null; cs.open = null; cs.lesson = null; cs.delivering = null; cs.picked = null; cs.discItem = null; }
       return go(cid);
     }
     if ((el = e.target.closest('[data-review-save]'))) {
@@ -591,6 +849,11 @@
     if (e.target.closest('[data-reviewedit]')) { s.reviewEdit = true; return repaint(); }
     if ((el = e.target.closest('[data-go]'))) {
       if (el.dataset.go === 'community') return openCommunity();
+      /* Clicking a section while already sitting inside one of its own leaves
+         (a stay, a lesson, a collab thread) should land on that section's
+         list, not silently reopen whatever was last open there. */
+      var gs = S[el.dataset.go];
+      if (gs) { gs.open = null; gs.lesson = null; gs.thread = null; gs.delivering = null; gs.picked = null; gs.discItem = null; }
       go(el.dataset.go); return;
     }
     if ((el = e.target.closest('[data-goto]'))) {
@@ -618,14 +881,36 @@
     if ((el = e.target.closest('[data-ppf]'))) {
       s[el.dataset.ppf] = el.dataset.ppv; s.pgPitch = 1; return repaint();
     }
-    if ((el = e.target.closest('[data-savedf]'))) { s.saved = el.dataset.savedf === 'saved'; s.pgStays = 1; return repaint(); }
     if ((el = e.target.closest('[data-view]')))  { s.view = el.dataset.view;   return repaint(); }
     if ((el = e.target.closest('[data-tab]')))   { s.tab = el.dataset.tab;     return repaint(); }
-    if ((el = e.target.closest('[data-stage]'))) { s.stageF = el.dataset.stage;return repaint(); }
+    if ((el = e.target.closest('[data-pay]'))) {
+      /* Payout details are never shared with the hotel app — D.savePayout
+         (ukcdata2.js) is a creator-app-only localStorage key, deliberately
+         not window.UKME/UKME_SET, which the hotel side reads directly. */
+      if (D.savePayout) D.savePayout({ method: el.dataset.pay });
+      return repaint();
+    }
+    if (e.target.closest('[data-savepayout]')) {
+      var patch = {};
+      root.querySelectorAll('[data-payfield]').forEach(function (inp) {
+        patch[inp.dataset.payfield] = inp.value;
+      });
+      if (D.savePayout) D.savePayout(patch);
+      var ph = root.querySelector('#ukPayoutHint');
+      if (ph) ph.textContent = 'Saved.';
+      return;
+    }
+    /* Archived and a lifecycle stage are mutually exclusive views, not
+       combinable filters — the archived toggle already clears stageF when
+       switching in; picking a stage tab has to clear archived on the way
+       out too, or the two stay lit at once. */
+    if ((el = e.target.closest('[data-stage]'))) { s.stageF = el.dataset.stage; s.archived = false; return repaint(); }
+    if ((el = e.target.closest('[data-cview]'))) { s.cview = el.dataset.cview; return repaint(); }
+    if (e.target.closest('[data-archived-toggle]')) { s.archived = !s.archived; s.stageF = null; return repaint(); }
     if ((el = e.target.closest('[data-style]'))) { s.style = el.dataset.style; s.pgStays = 1; return repaint(); }
     if ((el = e.target.closest('[data-pin]')))   { s.pin = el.dataset.pin;     return repaint(); }
     if (e.target.closest('[data-clearf]'))       { s.q=''; s.style='all'; s.saved=false; return repaint(); }
-    if (e.target.closest('[data-savedonly]'))    { s.saved = !s.saved;         return repaint(); }
+    if ((el = e.target.closest('[data-savedonly]'))) { s.saved = el.dataset.savedonly === '1'; s.pgStays = 1; return repaint(); }
 
     if (e.target.closest('[data-notify-toggle]')) {
       var np = q('#ukNotifyPanel');
@@ -651,13 +936,29 @@
       paintNotify();
       return;
     }
+    /* the caveat behind the info button, shown in place rather than as a
+       tooltip a keyboard or touch screen can't reach — same generic
+       aria-controls toggle as the hotel side's own [data-info-toggle]. */
+    if ((el = e.target.closest('[data-info-toggle]'))) {
+      var panelId = el.getAttribute('aria-controls');
+      var panel = panelId && document.getElementById(panelId);
+      if (panel) { panel.hidden = !panel.hidden; el.setAttribute('aria-expanded', String(!panel.hidden)); }
+      return;
+    }
     if ((el = e.target.closest('[data-save]'))) {
       /* Backed by the shared favourites store, so a saved property survives a
          reload and sits in the same record as the hotel's own shortlist of
-         creators — one feature, two directions, not two implementations. */
+         creators — one feature, two directions, not two implementations.
+         D.stay() hands back a freshly built copy for a lead (so nothing
+         accidentally mutates the shared seed record elsewhere) — saving one
+         has to write through D.lead() instead, the real reference, or the
+         toggle would be thrown away the instant this repaint runs. */
       var stay = D.stay(el.dataset.save);
-      if (window.UKFAVS) stay.saved = window.UKFAVS.toggle('stays', stay.id);
-      else stay.saved = !stay.saved;
+      var real = (stay && stay.isLead && D.lead) ? D.lead(el.dataset.save) : stay;
+      if (!real) return;
+      var bucket = stay && stay.isLead ? 'leads' : 'stays';
+      if (window.UKFAVS) real.saved = window.UKFAVS.toggle(bucket, real.id);
+      else real.saved = !real.saved;
       return repaint();
     }
     /* ---- the shared stay card's own controls ----
@@ -672,6 +973,18 @@
         var n = window.UKSTAY.shots(stay) || 1;
         s.shots = s.shots || {};
         s.shots[sid] = ((s.shots[sid] || 0) + Number(el.dataset.stayshotstep) + n) % n;
+      }
+      return paintView(true);
+    }
+    /* The stay detail page's own thumbnail rail — jump straight to a frame
+       rather than stepping to it one arrow-press at a time. Same s.shots state
+       the step handler above uses, so the two never fall out of sync. */
+    if ((el = e.target.closest('[data-stayshot]'))) {
+      var thumbCell = el.closest('[data-open]');
+      var thumbSid = thumbCell && thumbCell.dataset.open;
+      if (thumbSid) {
+        s.shots = s.shots || {};
+        s.shots[thumbSid] = Number(el.dataset.stayshot) || 0;
       }
       return paintView(true);
     }
@@ -690,38 +1003,74 @@
        to open a second one that wrote to a different record than the lanes read,
        which is how a stay ended up in To pitch and Waiting at the same time. */
     if ((el = e.target.closest('[data-apply]'))) {
-      window.UKCP.write(el.dataset.apply);
+      var applyId = el.dataset.apply;
+      window.UKCP.write(applyId);
+      var isLeadTarget = D.lead && !!D.lead(applyId);
+      if (isLeadTarget) window.UKCSTATE('stays').tab = 'outreach';
       return go('stays');
     }
-    if ((el = e.target.closest('[data-hotel]'))) { view = 'hotel'; st().stay = el.dataset.hotel; paintNav(); return paintView(); }
+    /* One property design now covers a live stay AND a cold lead (see
+       stayDetail() in ukcviews.js), so "see the property" opens the same
+       stays-view detail page rather than the retired standalone hotel view. */
+    if ((el = e.target.closest('[data-hotel]'))) { window.UKCPREFILL('stays', { open: el.dataset.hotel }); return; }
     if ((el = e.target.closest('[data-open]'))) { s.open = el.dataset.open; return paintView(); }
     if (e.target.closest('[data-back]')) {
       if (s.delivering) { s.delivering = null; s.picked = null; return paintView(); }
       if (s.lesson) { s.lesson = null; return paintView(); }
       s.open = null; s.thread = null; return paintView();
     }
-    if (e.target.closest('[data-newboard]'))    { s.making = true; return paintView(); }
-    if (e.target.closest('[data-cancelboard]')) { s.making = false; s.mk = null; return paintView(); }
-    if ((el = e.target.closest('[data-mkset]'))) { (s.mk = s.mk || {})[el.dataset.mkset] = el.dataset.val; return paintView(); }
-    if (e.target.closest('[data-makeboard]')) {
-      var mk = s.mk || {};
-      var b = D.addBoard({
-        t: (mk.t || '').trim() || (root.querySelector('#ukBoardT') || {}).placeholder || 'New board',
-        kind: mk.kind || 'destination',
-        sub: (mk.sub || '').trim() || (root.querySelector('#ukBoardS') || {}).placeholder || '',
-        note: '', cover: 'reel1', shared: false, picks: []
-      });
-      s.making = false; s.mk = null;
-      view = 'board'; st().board = b.id; paintNav(); return paintView();
-    }
-    if ((el = e.target.closest('[data-shareboard]'))) {
-      var bb = D.board(el.dataset.shareboard);
-      if (bb) bb.shared = !bb.shared;
-      return paintView();
-    }
-
     if (e.target.closest('[data-editme]')) { go('editme'); return; }
-    if ((el = e.target.closest('[data-board]'))) { view = 'board'; st().board = el.dataset.board; paintNav(); return paintView(); }
+    /* ---------------- Discover ---------------- */
+    /* the save toggle sits inside the card's own [data-discitem] hit area, so
+       it has to be checked (and stopped) before the card's own open-it click */
+    if ((el = e.target.closest('[data-dsave]'))) { D.dsToggle(el.dataset.dsave); return repaint(); }
+    if ((el = e.target.closest('[data-discitem]'))) {
+      view = 'discover'; st().discItem = el.dataset.discitem; paintNav(); return paintView();
+    }
+    if ((el = e.target.closest('[data-dsub]'))) { s.dsub = el.dataset.dsub; return repaint(); }
+    if (e.target.closest('[data-newcoll-go]')) {
+      var nameEl = root.querySelector('#ukNewCollName');
+      var name = ((nameEl && nameEl.value) || '').trim();
+      if (name) D.dsNewCollection(name);
+      return repaint();
+    }
+    /* file a saved piece into a collection — the single-select .ukDrop's
+       own generic open/close plumbing already handles the menu; this just
+       applies the pick and repaints, same as every other .ukDropMenu item
+       in the product (data-brief, data-leadfield, etc.) */
+    if ((el = e.target.closest('[data-dsfile]'))) { D.dsFile(el.dataset.dsfile, el.dataset.val); return repaint(); }
+    if ((el = e.target.closest('[data-rencoll-edit]'))) { s.renColl = el.dataset.rencollEdit; return repaint(); }
+    if ((el = e.target.closest('[data-rencoll-go]'))) {
+      var renEl = root.querySelector('#ukRenName');
+      var renName = ((renEl && renEl.value) || '').trim();
+      if (renName) D.dsRename(el.dataset.rencollGo, renName);
+      s.renColl = null;
+      return repaint();
+    }
+    /* "see this property" from a Discover piece — the property is real
+       (D.stay), but it lives in the Stays view's own state, not Discover's;
+       UKCPREFILL (ukcapp.js's own cross-view door, already used by the
+       dashboard's open-collab links) hands Stays its starting state and
+       navigates in one step. */
+    if ((el = e.target.closest('[data-openstay]'))) { window.UKCPREFILL('stays', { open: el.dataset.openstay }); return; }
+    /* "see more from this creator" — there is no per-creator profile route
+       on this side of the app for another creator's byline identity (only
+       D.me has one), so this narrows the SAME feed to their other pieces
+       rather than link to a page that does not exist. Empty value clears
+       it (the "Show everyone" button inside the filter strip). */
+    if ((el = e.target.closest('[data-discby]'))) {
+      window.UKCPREFILL('discover', { discItem: null, dsub: 'feed', dFmt: null, dNiche: null,
+        dBy: el.dataset.discby || null });
+      return;
+    }
+    if ((el = e.target.closest('[data-mset]'))) {
+      var mKey = el.dataset.mset, mVal = el.dataset.mval;
+      var set = Array.isArray(s[mKey]) ? s[mKey].slice() : [];
+      if (mVal === 'all') set = [];
+      else { var mAt = set.indexOf(mVal); if (mAt > -1) set.splice(mAt, 1); else set.push(mVal); }
+      s[mKey] = set; s.pgDisc = 1;
+      return repaint();
+    }
     if ((el = e.target.closest('[data-guide]'))) { view = 'guide'; st().guide = el.dataset.guide; paintNav(); return paintView(); }
     /* [data-sendapply] is gone. It was the second send: it wrote UKAPPLY and then
        ALSO pushed a stage-0 row into D.collabs and navigated there, which
@@ -730,7 +1079,15 @@
        collaboration, only a hope. reconcilePipeline() in ukcdata.js was quietly
        undoing this on the next load. Sending now writes the application and the
        stay moves to Waiting, which is where a sent pitch actually is. */
-    if ((el = e.target.closest('[data-thread]'))) { s.thread = el.dataset.thread; s.delivering = null; s.picked = null; return paintView(); }
+    if ((el = e.target.closest('[data-thread]')) && !e.target.closest('[data-cardact]')) { s.thread = el.dataset.thread; s.delivering = null; s.picked = null; return paintView(); }
+    if ((el = e.target.closest('[data-cardact] [data-thread]'))) { s.thread = el.dataset.thread; s.delivering = null; s.picked = null; return paintView(); }
+
+    /* opens a collab's thread from OUTSIDE the collabs view (the dashboard's
+       project list) — data-thread alone writes into the current view's own
+       state, which does nothing when that view isn't 'collabs' */
+    if ((el = e.target.closest('[data-open-collab]'))) { window.UKCPREFILL('collabs', { thread: el.dataset.openCollab }); return; }
+
+    if (e.target.closest('[data-focus-toggle]')) { s.focus = !s.focus; return paintView(true); }
 
     if ((el = e.target.closest('[data-send]'))) {
       var box = root.querySelector('#ukReply'), txt = ((box && box.value) || '').trim();
@@ -741,6 +1098,13 @@
       var l = root.querySelector('#ukMsgs'); if (l) l.scrollTop = l.scrollHeight;
       var h2 = root.querySelector('#ukSendHint'); if (h2) h2.textContent = 'Sent.';
       return;
+    }
+    if ((el = e.target.closest('[data-markreplied]'))) {
+      var rbox = root.querySelector('#ukReplyLog'), rtxt = ((rbox && rbox.value) || '').trim();
+      var rhint = root.querySelector('#ukReplyLogHint');
+      if (!rtxt) { if (rhint) rhint.textContent = 'Add a note first.'; if (rbox) rbox.focus(); return; }
+      D.markReplied(el.dataset.markreplied, rtxt);
+      return paintView(true);
     }
     /* ---- responding to an invitation ----
        Accepting skips Inquiry entirely and lands in onboarding: the hotel already
@@ -758,6 +1122,12 @@
     }
 
     if ((el = e.target.closest('[data-startdeliver]'))) { s.delivering = el.dataset.startdeliver; s.picked = {}; return paintView(); }
+    /* the creator's own move once approved: post it, then say so. This is what
+       actually finishes the collaboration — see markPublished in ukcdata.js */
+    if ((el = e.target.closest('[data-publish]'))) {
+      D.markPublished(el.dataset.publish);
+      paintNav(); return paintView(true);
+    }
     /* proof of posting: the public link that ties a tracked link to a real placement */
     if ((el = e.target.closest('[data-proof-send]'))) {
       var uEl = root.querySelector('[data-proof-url]');
@@ -789,24 +1159,63 @@
       D.markShooting(el.dataset.startshoot);
       paintNav(); return paintView();
     }
-    if ((el = e.target.closest('[data-lesson]'))) { s.lesson = el.dataset.lesson; return paintView(); }
+    if ((el = e.target.closest('[data-lesson]'))) {
+      s.lesson = el.dataset.lesson;
+      var lsn = D.academy.filter(function (x) { return x.id === s.lesson; })[0];
+      if (lsn) { s.curricOpen = s.curricOpen || {}; s.curricOpen[lsn.mod] = true; }
+      return paintView();
+    }
+    if ((el = e.target.closest('[data-curric-toggle]'))) {
+      s.curricOpen = s.curricOpen || {};
+      var modKey = el.dataset.curricToggle;
+      s.curricOpen[modKey] = !s.curricOpen[modKey];
+      return repaint();
+    }
+    if ((el = e.target.closest('[data-acadmod]'))) { s.acadMod = el.dataset.acadmod; return repaint(); }
+    /* Part 3 — a certificate is a sub-state of Academy, same pattern as
+       st.lesson: clearing lesson here is what lets "View certificate"
+       work from inside a lesson page (academy() checks st.lesson before
+       st.cert, so both being set would otherwise strand it on the lesson). */
+    if ((el = e.target.closest('[data-cert]'))) { s.cert = el.dataset.cert; s.lesson = null; return repaint(); }
+    if (e.target.closest('[data-certclose]')) { s.cert = null; return repaint(); }
+    /* Real, working download: the browser's own print-to-PDF, not a stub.
+       #ukCertPrint plus the @media print rule (ukapp.css) isolate just the
+       certificate — everything else (sidebar, top bar, the button itself)
+       is hidden for the print, so "Save as PDF" in the print dialog is a
+       genuine downloaded file. */
+    if (e.target.closest('[data-certdownload]')) { window.print(); return; }
     if ((el = e.target.closest('[data-watched]'))) {
-      var L = D.academy.filter(function (x) { return x.id === el.dataset.watched; })[0];
-      if (L) L.done = true;
+      markLessonDone(el.dataset.watched);
+      return repaint();
+    }
+    /* Pressing play is what "taking" a lesson actually is here — there is no
+       separate "mark as watched" control on the page any more, so this is
+       the one real signal a lesson happened. */
+    if ((el = e.target.closest('[data-lessonplay]'))) {
+      markLessonDone(el.dataset.lessonplay);
+      var wasP = el.getAttribute('aria-label');
+      el.setAttribute('aria-label', 'Playing');
+      setTimeout(function () { el.setAttribute('aria-label', wasP); }, 1800);
       return repaint();
     }
     if (e.target.closest('[data-clearpp]')) {
       s.q = ''; s.fstyle = null; s.fvibe = null; s.fbudget = null; s.pgPitch = 1; return repaint();
     }
-    if (e.target.closest('[data-join]')) { D.me.member = true; D.me.verified = true; paintNav(); return paintView(); }
-    if (e.target.closest('[data-logopen]'))  { s.logging = true;  return repaint(); }
-    if (e.target.closest('[data-logclose]')) { s.logging = false; return repaint(); }
-    if (e.target.closest('[data-logsave]')) {
-      var h = (root.querySelector('#ukLogHotel') || {}).value || '';
-      if (!h.trim()) { var f0 = root.querySelector('#ukLogHotel'); if (f0) f0.focus(); return; }
-      D.addPitch({ hotel:h.trim(), city:((root.querySelector('#ukLogCity') || {}).value || '').trim(), on:'today', via:(root.querySelector('#ukLogVia') || {}).value || 'Email', status:(root.querySelector('#ukLogStatus') || {}).value || 'Sent', note:'' });
-      s.logging = false;
-      return repaint();
+    if (e.target.closest('[data-join]')) {
+      D.me.member = true; D.me.verified = true;
+      /* the referral half of joining: if this account arrived via someone's
+         link (captured before the account existed — see ukjoin.js), that is
+         recorded now, the one moment membership actually starts. */
+      if (window.UKREFER) window.UKREFER.clearPendingRef();
+      paintNav(); return paintView();
+    }
+    if ((el = e.target.closest('[data-copy]'))) {
+      if (navigator.clipboard) navigator.clipboard.writeText(el.dataset.copy || '');
+      var copyLbl = el.getAttribute('aria-label');
+      el.setAttribute('aria-label', el.dataset.ack || 'Copied');
+      el.classList.add('is-copied');
+      setTimeout(function () { el.setAttribute('aria-label', copyLbl); el.classList.remove('is-copied'); }, 1600);
+      return;
     }
     if ((el = e.target.closest('[data-ack]'))) {
       var was = el.textContent;
@@ -814,6 +1223,15 @@
       setTimeout(function () { el.textContent = was; el.disabled = false; }, 1800);
       return;
     }
+    /* The profile header's "+N" popup (creatorHead, ukprofile.js) — same
+       mechanism as the hotel side's placeCrPop/data-crpop handling. */
+    if ((el = e.target.closest('[data-crpop]'))) {
+      var cp = st();
+      cp.crPop = cp.crPop === el.dataset.crpop ? null : el.dataset.crpop;
+      paintView(true); return placeCrPop();
+    }
+    if (e.target.closest('[data-crpop-close]')) { st().crPop = null; return paintView(true); }
+    if (s.crPop && !e.target.closest('[data-crpop-panel]')) { s.crPop = null; paintView(true); }
   });
 
   document.addEventListener('click', function (e) {

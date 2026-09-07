@@ -117,7 +117,12 @@ body.uk-calc-open{overflow:hidden}
 
 .ukCalcEntry{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;white-space:nowrap}
 .ukCalcEntry svg{width:15px;height:15px;display:block;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.ukPageHead_row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+/* .ukPageHead's own margin-bottom is zeroed below so the flex row aligns the
+   calculator button flush with the title, but that spacing still has to go
+   somewhere — .ukPageHead_row carries it instead, or the tabs/content right
+   after it have nothing separating them from the subtitle. */
+.ukPageHead_row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;margin:0 0 clamp(22px,2.6vw,32px)}
 .ukPageHead_row .ukPageHead{margin-bottom:0;flex:1 1 320px}
 
 @media (max-width:600px){

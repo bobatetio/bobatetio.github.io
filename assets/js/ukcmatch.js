@@ -165,13 +165,17 @@
       score:9, nights:3, room:'Mountain view', style:'Adventure & outdoors',
       inc:'Room, breakfast, coast drive', from:'23 Jan', to:'26 Jan' }
   ];
-  MORE.forEach(function (s) {
+  MORE.forEach(function (s, i) {
     s.vibe = s.vibe || 'Design led';
     s.budget = s.budget || 'Independent';
     s.del = s.del || [{ t:'UGC video', q:1 }, { t:'Photos', q:4 }];
     s.rights = 'They keep and use the content';
     s.saved = false;
     s.why = s.why || '';
+    /* Assistant, not director: a sensible default (the creator themselves,
+       plus one every third stay) rather than leaving it unset, which read on
+       the card as unknown rather than "just you". */
+    s.guests = s.guests || (1 + (i % 3 === 0 ? 1 : 0));
     if (!D.stays.some(function (x) { return x.id === s.id; })) D.stays.push(s);
   });
   /* These arrive after ukcdata.js has run, so they get placed on the globe here.

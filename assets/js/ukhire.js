@@ -48,13 +48,28 @@
 
   /* A menu rather than a row of chips: these lists are long enough that chips
      wrapped to three lines and the answer got lost among the options. */
+  /* The field label and its own caveat, one row, the info icon between them —
+     the same disclosure the capacity field already used, generalised so
+     every field on this brief gets it instead of just the one that happened
+     to be built last. Reused by dropRow/pickRow below. */
+  function fieldLabel(label, key, hint, forId) {
+    var tag = forId ? 'label for="' + forId + '"' : 'p';
+    var closeTag = forId ? 'label' : 'p';
+    if (!hint) return '<' + tag + ' class="ukField_l">' + label + '</' + closeTag + '>';
+    var id = 'ukWhy_' + key;
+    return '<div class="ukField_lRow"><' + tag + ' class="ukField_l">' + label + '</' + closeTag + '>' +
+      '<button class="ukInfo" type="button" data-info-toggle aria-expanded="false" ' +
+        'aria-controls="' + id + '" aria-label="Why this matters">i</button></div>' +
+      '<p class="ukWhy ukWhy--info" id="' + id + '" hidden>' + hint + '</p>';
+  }
+
   function dropRow(label, items, sel, key, hint) {
     var opts = items.map(function (it) {
       return typeof it === 'string' ? { k:it, l:it } : { k:it.k, l:it.l };
     });
     var cur = opts.filter(function (o) { return o.k === sel; })[0];
     return '<div class="ukHire_f">' +
-      '<p class="ukField_l">' + label + '</p>' +
+      fieldLabel(label, key, hint) +
       '<div class="ukDrop ukDrop--wide"><button class="ukDrop_b" type="button" data-drop-toggle ' +
         'aria-haspopup="menu" aria-expanded="false">' +
         '<span class="ukDrop_v">' + esc(cur ? cur.l : 'Choose') + '</span>' +
@@ -64,19 +79,17 @@
         return '<button class="ukDropMenu_i' + (o.k === sel ? ' is-sel' : '') + '" role="menuitem" ' +
           'data-brief="' + key + '" data-val="' + esc(o.k) + '">' + esc(o.l) + '</button>';
       }).join('') + '</div></div>' +
-      (hint ? '<p class="ukWhy">' + hint + '</p>' : '') +
     '</div>';
   }
 
   function pickRow(label, items, sel, key, hint) {
     return '<div class="ukHire_f">' +
-      '<p class="ukField_l">' + label + '</p>' +
+      fieldLabel(label, key, hint) +
       '<div class="ukChoice">' + items.map(function (it) {
         var k = typeof it === 'string' ? it : it.k, l = typeof it === 'string' ? it : it.l;
         return '<button class="ukPick' + (sel === k ? ' is-on' : '') + '" type="button" ' +
           'data-brief="' + key + '" data-val="' + esc(k) + '">' + esc(l) + '</button>';
-      }).join('') + '</div>' +
-      (hint ? '<p class="ukWhy">' + hint + '</p>' : '') + '</div>';
+      }).join('') + '</div></div>';
   }
 
   /* One field, one list, one globe — the shape the onboarding established, so a
@@ -152,28 +165,24 @@
              there when wanted without adding a second block of text to every
              field on the form. */
           '<div class="ukHire_f">' +
-            '<div class="ukField_lRow">' +
-              '<label class="ukField_l" for="ukHireCap">How many creators can you host?</label>' +
-              '<button class="ukInfo" type="button" data-info-toggle aria-expanded="false" ' +
-                'aria-controls="ukCapWhy" aria-label="Why this matters">i</button>' +
-            '</div>' +
+            fieldLabel('How many creators can you host?', 'capacity',
+              'One creator, one hosted stay. We will never recommend more creators than you have said you can put up.',
+              'ukHireCap') +
             '<label class="ukField ukField--num ukField--unit">' +
               '<input class="ukField_i" type="number" inputmode="numeric" min="1" max="20" step="1" ' +
               'id="ukHireCap" data-briefnum="capacity" value="' + (b.capacity || 1) + '" ' +
-              'aria-describedby="ukCapWhy">' +
+              'aria-describedby="ukWhy_capacity">' +
               '<span class="ukField_u">' + ((b.capacity || 1) === 1 ? 'creator' : 'creators') + '</span>' +
             '</label>' +
-            '<p class="ukWhy ukWhy--info" id="ukCapWhy" hidden>One creator, one hosted stay. We will never ' +
-              'recommend more creators than you have said you can put up.</p>' +
           '</div>' +
 
           /* The same picker the onboarding uses: type, choose from the real market
              list, and the globe below follows the choice. Single-select, because a
              hotel is in exactly one place — the onboarding's version takes five. */
           '<div class="ukHire_f">' +
-            '<p class="ukField_l">Where</p>' +
+            fieldLabel('Where', 'where',
+              'Creators are matched against how far they already travel to places like this.') +
             placePicker(b, st) +
-            '<p class="ukWhy">Creators are matched against how far they already travel to places like this.</p>' +
           '</div>' +
         '</section>' +
 
