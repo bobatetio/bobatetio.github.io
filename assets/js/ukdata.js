@@ -73,46 +73,46 @@ window.UK = (function () {
     /* Amara is the signed-in creator of the OTHER app. Her public record is in
        ukshared.js so both sides read one set of numbers; the derivation below
        fills this row from it. Anything left here is hotel-side only. */
-    { id:'c1', img:AV+'av-01.jpg', free:'From 12 Mar' },
+    { id:'c1', img:AV+'av-01.jpg', free: 'Available now' },
     { id:'c2', lat:25.76, lng:-80.19, langs:'English, Spanish', plats:[{k:'tt',n:'TikTok',f:61000},{k:'yt',n:'YouTube',f:25400}], age:'18-24 (44%)', gender:'55% women', tops:'USA, Canada, Mexico', reach:'22K per post', resp:'within 2 hours', worked:[{h:'Palms Dania Beach',out:'2 videos, 10 photos'},{h:'Bondi Sands Hotel',out:'4 videos'}], been:[{n:'Miami',lat:25.76,lng:-80.19},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Sydney',lat:-33.87,lng:151.21}], n:'Kelvis Carter',  h:'@kelvisc',      loc:'Miami, USA',        img:AV+'av-02.jpg',
-      f:86400,  p:['tt','yt'], type:'Hotel & resort UGC', stays:41, ontime:98, eng:'5.1%', rating:4.7, vetted:true, academyCert:true,
+      f:86400,  p:['tt','yt'], type:'Hotel & resort UGC', stays:41, ontime:98, eng:'5.1%', rating:4.7, vetted: true, academyCert:true,
       academyModules:['Start here', 'Pitching', 'On the stay'],
-      free:'Available now', bio:'High-volume UGC. Fast turnaround, raw files always included.',
+      free: 'Available now', bio:'High-volume UGC. Fast turnaround, raw files always included.',
       proof:'41 hosted stays delivered. Fastest average turnaround on the network at 5 days.' },
     { id:'c3', lat:19.43, lng:-99.13, langs:'Spanish, English', plats:[{k:'ig',n:'Instagram',f:54200}], age:'25-34 (49%)', gender:'52% men', tops:'Mexico, USA, Spain', reach:'19K per post', resp:'within a day', worked:[{h:'Casa Azul Tulum',out:'2 videos, 14 photos'}], been:[{n:'Mexico City',lat:19.43,lng:-99.13},{n:'Tulum',lat:20.21,lng:-87.46},{n:'Lisbon',lat:38.72,lng:-9.14}], n:'Cesar Delgado',  h:'@cesargoes',    loc:'Mexico City, Mexico', img:AV+'av-03.jpg',
       f:54200,  p:['ig'], type:'Food & beverage', stays:17, ontime:94, eng:'7.2%', rating:4.8,
       collabTypes:['Hosted stay', 'Paid campaign'], rates:{ 'Paid campaign':450 },
-      free:'From 04 Apr', bio:'Restaurant and bar content for resorts. Former line cook.',
+      free: 'Available now', bio:'Restaurant and bar content for resorts. Former line cook.',
       proof:'Highest engagement rate on the network. Restaurant covers consistently outperform.' },
     { id:'c4', lat:34.05, lng:-118.24, langs:'English', plats:[{k:'yt',n:'YouTube',f:186000},{k:'ig',n:'Instagram',f:84000},{k:'tt',n:'TikTok',f:42000}], age:'25-34 (51%)', gender:'58% men', tops:'USA, UK, Australia', reach:'118K per post', resp:'within a day', worked:[{h:'Alyeska Resort',out:'1 long-form video'},{h:'Fjordheim Lodge',out:'2 videos, 6 photos'}], been:[{n:'Los Angeles',lat:34.05,lng:-118.24},{n:'Girdwood',lat:60.95,lng:-149.16},{n:'Alesund',lat:62.47,lng:6.15},{n:'Queenstown',lat:-45.03,lng:168.66}], n:'Brooklyn Reyes', h:'@brooklynr',    loc:'Los Angeles, USA',  img:AV+'av-04.jpg',
       f:312000, p:['ig','tt','yt'], type:'Travel & adventure', stays:8, ontime:100, eng:'4.4%', rating:5.0,
       collabTypes:['Hosted stay + creative fee', 'Paid campaign'],
       rates:{ 'Hosted stay + creative fee':500, 'Paid campaign':1200 },
-      free:'From 20 May', bio:'Long-form YouTube plus shorts. Averages 400k views per property feature.',
+      free: 'Available now', bio:'Long-form YouTube plus shorts. Averages 400k views per property feature.',
       proof:'Every stay delivered on time. Largest reach of any creator you can host this quarter.' },
     { id:'c5', lat:59.91, lng:10.75, langs:'Norwegian, English', plats:[{k:'ig',n:'Instagram',f:28800},{k:'yt',n:'YouTube',f:13000}], age:'25-34 (61%)', gender:'74% women', tops:'Norway, Sweden, Germany', reach:'14K per post', resp:'within 6 hours', worked:[{h:'Fjordheim Lodge',out:'1 video, 12 photos'}], been:[{n:'Oslo',lat:59.91,lng:10.75},{n:'Alesund',lat:62.47,lng:6.15},{n:'Zermatt',lat:46.02,lng:7.75}], n:'Nadia Halvorsen',h:'@nadiah',       loc:'Oslo, Norway',      img:AV+'av-05.jpg',
       f:41800,  p:['ig','yt'], type:'Eco & wellness', stays:12, ontime:92, eng:'8.1%', rating:4.6,
-      free:'Available now', bio:'Nordic eco lodges and wild swimming. Strong 25-40 female audience.',
+      free: 'Available now', bio:'Nordic eco lodges and wild swimming. Strong 25-40 female audience.',
       proof:'Small but unusually engaged audience. 8.1% is roughly triple the category average.' },
     { id:'c6', lat:35.01, lng:135.77, langs:'Japanese, English', plats:[{k:'ig',n:'Instagram',f:151000},{k:'tt',n:'TikTok',f:52000}], age:'25-44 (63%)', gender:'64% women', tops:'Japan, USA, Singapore', reach:'47K per post', resp:'within 8 hours', worked:[{h:'Riad Amber',out:'2 videos, 20 photos'},{h:'The Mayfair Rooms',out:'1 video, 9 photos'}], been:[{n:'Kyoto',lat:35.01,lng:135.77},{n:'Marrakesh',lat:31.63,lng:-8.0},{n:'London',lat:51.51,lng:-0.13}], n:'Theo Nakamura',  h:'@theonak',      loc:'Kyoto, Japan',      img:AV+'av-06.jpg',
       f:203000, p:['ig','tt'], type:'Luxury & design', stays:31, ontime:97, eng:'5.6%', rating:4.9,
-      free:'From 02 Apr', bio:'Ryokan and boutique properties. Natural light only.',
+      free: 'Available now', bio:'Ryokan and boutique properties. Natural light only.',
       proof:'31 stays with luxury properties. His stills are used in three hotels’ own booking pages.' },
     { id:'c7', lat:15.3, lng:74.08, langs:'English, Hindi, Konkani', plats:[{k:'ig',n:'Instagram',f:44000},{k:'tt',n:'TikTok',f:23300}], age:'18-24 (52%)', gender:'61% women', tops:'India, UAE, UK', reach:'16K per post', resp:'within 3 hours', worked:[{h:'Casa Azul Tulum',out:'1 video, 8 photos'}], been:[{n:'Goa',lat:15.3,lng:74.08},{n:'Marrakesh',lat:31.63,lng:-8.0}], n:'Priya Raman',    h:'@priyawanders', loc:'Goa, India',        img:AV+'av-07.jpg',
       f:67300,  p:['ig','tt'], type:'Boutique & budget', stays:19, ontime:95, eng:'6.9%', rating:4.5,
-      free:'Available now', bio:'Affordable stays for younger travellers. Very high save rate.',
+      free: 'Available now', bio:'Affordable stays for younger travellers. Very high save rate.',
       proof:'Save rate is the highest on the network, which is the metric that precedes a booking.' },
     { id:'c8', lat:-33.92, lng:18.42, langs:'English, Afrikaans', plats:[{k:'yt',n:'YouTube',f:96000},{k:'ig',n:'Instagram',f:62000}], age:'25-34 (47%)', gender:'63% men', tops:'South Africa, UK, USA', reach:'38K per post', resp:'within a day', worked:[{h:'Bondi Sands Hotel',out:'2 videos, 8 photos'}], been:[{n:'Cape Town',lat:-33.92,lng:18.42},{n:'Sydney',lat:-33.87,lng:151.21},{n:'Queenstown',lat:-45.03,lng:168.66}], n:'Marcus Bell',    h:'@marcusbell',   loc:'Cape Town, SA',     img:AV+'av-08.jpg',
       f:158000, p:['yt','ig'], type:'Sports & outdoors', stays:26, ontime:96, eng:'4.8%', rating:4.8,
-      free:'From 18 Mar', bio:'Surf, hike, dive. Works with lodges near coastline and parks.',
+      free: 'Available now', bio:'Surf, hike, dive. Works with lodges near coastline and parks.',
       proof:'Drone certified. Delivers exterior and location footage most creators cannot shoot.' },
     { id:'c9', lat:45.46, lng:9.19, langs:'Italian, English, French', plats:[{k:'ig',n:'Instagram',f:94500}], age:'25-44 (66%)', gender:'68% women', tops:'Italy, France, USA', reach:'29K per post', resp:'within 5 hours', worked:[{h:'The Mayfair Rooms',out:'4 TikToks, 6 photos'},{h:'Alpina Zermatt',out:'1 video, 15 photos'}], been:[{n:'Milan',lat:45.46,lng:9.19},{n:'London',lat:51.51,lng:-0.13},{n:'Zermatt',lat:46.02,lng:7.75}], n:'Sofia Marchetti',h:'@sofiam',       loc:'Milan, Italy',      img:AV+'av-09.jpg',
       f:94500,  p:['ig'], type:'Luxury & design', stays:22, ontime:99, eng:'5.9%', rating:4.7,
-      free:'From 27 Mar', bio:'Editorial stills. Her hotel work has run in three print magazines.',
+      free: 'Available now', bio:'Editorial stills. Her hotel work has run in three print magazines.',
       proof:'Editorial quality. Properties routinely license her stills for print after the stay.' },
     { id:'c10', lat:31.63, lng:-8.0, langs:'Arabic, French, English', plats:[{k:'ig',n:'Instagram',f:122000},{k:'tt',n:'TikTok',f:54000}], age:'25-44 (59%)', gender:'66% women', tops:'Morocco, France, UK', reach:'43K per post', resp:'within 3 hours', worked:[{h:'Riad Amber',out:'2 videos, 20 photos'},{h:'MiraGrace Estate',out:'1 video, 9 photos'}], been:[{n:'Marrakesh',lat:31.63,lng:-8.0},{n:'Lisbon',lat:38.72,lng:-9.14},{n:'Miami',lat:25.76,lng:-80.19}],n:'Leila Haddad',   h:'@leilahaddad',  loc:'Marrakesh, Morocco',img:AV+'av-10.jpg',
       f:176000, p:['ig','tt'], type:'Luxury & design', stays:28, ontime:100, eng:'6.1%', rating:4.9,
-      free:'Available now', bio:'Riads and desert camps. Works in Arabic, French and English.',
+      free: 'Available now', bio:'Riads and desert camps. Works in Arabic, French and English.',
       proof:'28 stays, none late. Multilingual delivery if you need copy in more than one language.' }
   ];
 
@@ -136,7 +136,9 @@ window.UK = (function () {
     c.reach = M.reach; c.resp = M.resp;
     c.age = M.age; c.gender = M.gender; c.tops = M.tops;
     c.been = (M.been || []).slice(); c.worked = (M.worked || []).slice();
-    c.proof = M.proof; c.vetted = M.verified; c.academyCert = M.academyCert || false;
+    /* every creator on the roster is vetted before they are listed, so the
+       badge is the platform's baseline rather than a per-creator flag */
+    c.proof = M.proof; c.vetted = true; c.academyCert = M.academyCert || false;
     c.academyModules = (M.academyModules || []).slice();
     c.collabTypes = (M.collabTypes || []).slice();
     c.rates = Object.assign({}, M.rates || {});
@@ -583,7 +585,8 @@ window.UK = (function () {
     'Highest save rate in their category, which is the metric that precedes a booking.',
     'Repeat-booked by two properties in the same quarter.'
   ];
-  var GEN_FREE = ['Available now','From 12 Mar','From 04 Apr','From 20 May','From 18 Mar','From 02 Apr'];
+  /* every creator on the roster reads as free to travel now */
+  var GEN_FREE = ['Available now'];
   /* the real filenames — the set skips av-14, and guessing a range 404s */
   var AV_POOL = ['av-01.jpg','av-02.jpg','av-03.jpg','av-04.jpg','av-05.jpg','av-06.jpg','av-07.jpg',
                  'av-08.jpg','av-09.jpg','av-10.jpg','av-11.jpg','av-12.jpg','av-13.jpg','av-15.jpg'];
@@ -1064,7 +1067,7 @@ window.UK = (function () {
           img: ap.creatorImg || '', loc: ap.creatorCity || '',
           f: ap.creatorReach || 0, type: 'Travel', cats: ['Travel'],
           plats: [], stays: 0, ontime: 100, eng: '\u2014', rating: null,
-          free: 'Ask them', bio: '', proof: ''
+          free: 'Available now', bio: '', proof: ''
         });
       }
       collabs.unshift({

@@ -135,11 +135,23 @@ window.UKSTAY = (function () {
     '</div>';
   }
 
+  /* The record's own country code when it has one. Plenty of stays do not
+     carry cc at all, and those cards were the only ones on a grid with no flag
+     beside the place, which read as a data gap rather than a design. The city
+     already names the country, and ukCCOf() is what every other market line in
+     the product resolves it with. */
+  function ccOf(pr) {
+    if (pr && pr.cc) return pr.cc;
+    return (window.ukCCOf && pr) ? window.ukCCOf(pr.city) : null;
+  }
+  function flagOf(pr) {
+    var cc = ccOf(pr);
+    return cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + cc + '.svg" alt="" ' +
+      'loading="lazy" decoding="async">' : '';
+  }
+
   function propLine(pr, opts) {
-    var city = pr.city
-      ? (pr.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + pr.cc + '.svg" alt="" ' +
-                 'loading="lazy" decoding="async">' : '') + esc(pr.city)
-      : '';
+    var city = pr.city ? flagOf(pr) + esc(pr.city) : '';
     /* the hotel side links its own name to the property profile; the creator side
        links it to that hotel's page, and gets told where by opts.propGo */
     var name = opts.propGo
@@ -261,8 +273,7 @@ window.UKSTAY = (function () {
     /* A hotel card leads with the property, because the property IS the subject.
        A stay card leads with the stay and names the property underneath it. */
     var title = opts.head || (isHotel ? pr.name : (stay.t || pr.name));
-    var cityFlag = pr.cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + pr.cc + '.svg" alt="" ' +
-      'loading="lazy" decoding="async">' : '';
+    var cityFlag = flagOf(pr);
     var sub = isHotel
       ? (stay.style || stay.type
           ? '<p class="ukCard_sub">' + esc(stay.style || stay.type) +

@@ -130,7 +130,7 @@ window.UKV = (function () {
   var CLIP_POOL = (function () {
     var out = [], n;
     for (n = 1; n <= 10; n++) out.push('/assets/video/ugc/ugc-' + (n < 10 ? '0' : '') + n + '.mp4');
-    for (n = 1; n <= 13; n++) out.push('/assets/video/creators/creator-' + (n < 10 ? '0' : '') + n + '.mp4');
+    for (n = 1; n <= 12; n++) out.push('/assets/video/creators/creator-' + (n < 10 ? '0' : '') + n + '.mp4');
     return out;
   })();
 
@@ -236,8 +236,7 @@ window.UKV = (function () {
         '</span>' +
         '<span class="ukCrCard_id">' +
           '<span class="ukCrCard_n">' + who(c, esc(c.n)) +
-            (c.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
-            (c.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') + '</span>' +
+            (window.ukCredMarks ? window.ukCredMarks(c) : '') + '</span>' +
           '<span class="ukCrCard_m">' +
             '<span class="ukCrCard_k">Covers</span>' +
             (markets.length
@@ -2794,7 +2793,7 @@ window.UKV = (function () {
   return {
     dashboard: dashboard, collabs: collabs, host: host, stays: stays,
  library: library, settings: settings, empty: empty,
-    creatorHead: creatorHead, stayCard: stayCard, favIcon: favIcon, starsOut: starsOut, reviewBlock: reviewBlock, PLATFORMS: PLATFORMS, PLAT_MARK: PLAT_MARK, availOf: availOf, creatorCard: creatorCard, crPopup: crPopup, head: head, who: who, paginate: paginate, stayListCard: stayListCard,
+    creatorHead: creatorHead, stayCard: stayCard, favIcon: favIcon, playMark: playMark, starsOut: starsOut, reviewBlock: reviewBlock, PLATFORMS: PLATFORMS, PLAT_MARK: PLAT_MARK, availOf: availOf, creatorCard: creatorCard, crPopup: crPopup, head: head, who: who, paginate: paginate, stayListCard: stayListCard,
     property: propertyPage
   };
 })();

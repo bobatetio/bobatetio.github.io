@@ -188,7 +188,15 @@ window.UKCC = { Portugal:'pt', USA:'us', Mexico:'mx', Norway:'no', Japan:'jp',
   France:'fr', UK:'gb', Indonesia:'id', Florida:'us', UAE:'ae', Iceland:'is',
   Greece:'gr', Australia:'au', Switzerland:'ch', Ghana:'gh', Germany:'de',
   Austria:'at', Sweden:'se', Singapore:'sg', Brazil:'br', Canada:'ca',
-  'New Zealand':'nz' };
+  'New Zealand':'nz',
+  /* the markets the stay list reaches that the map did not yet name, plus the
+     spelled-out country the public Stays filter groups US states under */
+  Thailand:'th', Tanzania:'tz', Qatar:'qa', Croatia:'hr', Netherlands:'nl',
+  Turkey:'tr', Vietnam:'vn', 'Sri Lanka':'lk', Kenya:'ke', Peru:'pe',
+  Colombia:'co', Argentina:'ar', Chile:'cl', Egypt:'eg', Jordan:'jo',
+  'United States':'us', 'United Kingdom':'gb', Ireland:'ie', Denmark:'dk',
+  Finland:'fi', Poland:'pl', Croatia_:'hr', California:'us', 'New York':'us',
+  Texas:'us', Hawaii:'us', Arizona:'us' };
 window.ukFlagFor = function (loc) {
   var cc = window.ukCCOf(loc);
   return cc ? '<img class="ukCrFlag" src="/assets/img/flags/' + cc + '.svg" alt="" ' +

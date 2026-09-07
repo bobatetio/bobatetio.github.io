@@ -1,27 +1,1119 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ukreate</title>
-<meta name="robots" content="noindex">
-<!-- The published build opens on Get Started, where you choose creator or hotel.
-     A redirect rather than a copy of that page: /join/ is the real door, it owns
-     the side choice and the link across to signing in, and there should not be a
-     second copy of it drifting out of step. Three ways over, because a static
-     host cannot send a 301: the header for browsers that honour it, the script
-     for the rest, and a plain link for anyone with neither. -->
-<meta http-equiv="refresh" content="0; url=/join/">
-<link rel="canonical" href="/join/">
-<script>location.replace('/join/' + location.search + location.hash);</script>
-<style>
-  html,body{height:100%;margin:0}
-  body{display:grid;place-items:center;background:#f4f1ea;color:#0d2026;
-       font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-  a{color:#0d2026}
-</style>
+<title>Ukreate — Hosted stays for content that converts</title>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport">
+<meta name="description" content="Ukreate connects independent hotels with travel creators. Hotels host creators on nights that would otherwise sit empty, in exchange for content they approve and use to drive direct bookings. Creators get real, tracked stays and a platform that finds the hotels, scores them, and writes the pitch.">
+<link rel="canonical" href="/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ukreate">
+<meta property="og:title" content="Ukreate — Hosted stays for content that converts">
+<meta property="og:description" content="Independent hotels host travel creators on nights that would otherwise sit empty. In exchange: content they approve, and bookings they can trace back to it.">
+<meta property="og:image" content="/assets/img/marketing/hotel-roi.png">
+<meta property="og:url" content="/">
+<meta name="twitter:card" content="summary_large_image">
+<link href="/favicon.ico" rel="icon">
+<link href="/favicon.svg" rel="icon" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oranienbaum&family=Marcellus+SC&family=Marcellus&family=DM+Serif+Display:ital@0;1&family=Archivo:wght@600&family=Lato:wght@300;400;500;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/ukapp.css?v=61a26c4a">
+<link rel="stylesheet" href="/assets/css/uktokens.css?v=4">
+<link rel="stylesheet" href="/assets/css/ukfront.css?v=53">
+<link rel="stylesheet" href="/assets/css/fc-shared.css?v=1">
+<link rel="stylesheet" href="/assets/css/aeronav.css?v=5">
+<link rel="stylesheet" href="/assets/css/surfer.css?v=1">
+<link rel="stylesheet" href="/assets/css/ukmarketing.css?v=3">
+<link rel="stylesheet" href="/assets/css/ukbrand.css?v=bd288b22">
+<script>document.documentElement.setAttribute('data-theme','light');</script>
+<link rel="stylesheet" href="/assets/css/uksections.css?v=135">
+<link rel="stylesheet" href="/assets/css/ukglow.css?v=3">
+<link rel="stylesheet" href="/assets/css/problem.css?v=1">
+<link rel="stylesheet" href="/assets/css/ukported.css?v=f331ae07">
+<link rel="stylesheet" href="/assets/css/uk4401.css?v=4">
+<link rel="stylesheet" href="/assets/css/ukdark.css?v=3">
+<link rel="stylesheet" href="/assets/css/ukclose.css?v=1">
+<link rel="stylesheet" href="/assets/css/ukresponsive.css?v=25">
+<link rel="stylesheet" href="/assets/css/ukbutton.css?v=2">
+<link rel="stylesheet" href="/assets/css/ukmock.css?v=56">
+<link rel="stylesheet" href="/assets/css/ukglowfooter.css?v=fc4744ba">
 </head>
-<body>
-  <p>Taking you to <a href="/join/">Get Started</a>.</p>
+<svg class="ukGlowDefs" aria-hidden="true" focusable="false" width="0" height="0"><filter id="ukGlowSat" x="-100%" y="-100%" width="300%" height="300%"><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 9 0"/></filter><filter id="ukGlowSat2" x="-100%" y="-100%" width="300%" height="300%"><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 3 0"/></filter></svg>
+<body class="ukApp ukMkt">
+<a class="ukSkip" href="#main">Skip to content</a>
+
+<header class="aeroNav" data-navigation-color="wolkenwit" aria-label="Primary"><div class="aeroNav_bg" aria-hidden="true"></div><div class="aeroNav_shell"><div class="aeroNav_left"><a class="aeroNav_logo" href="/" aria-label="Ukreate home"><img src="/assets/img/ukreate-logo.png" alt="Ukreate" width="360" height="108"></a></div><div class="aeroNav_center"><nav class="aeroNav_links" aria-label="Primary navigation"><div class="aeroNav_mobileTop"><img class="aeroNav_mobileLogo" src="/assets/img/ukreate-logo.png" alt="Ukreate" width="360" height="108"><button class="aeroNav_mobileClose" type="button" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div><a class="aeroNav_link" href="/for-hotels/" data-no-swup><span><strong data-hover="For Hotels"><em>For Hotels</em></strong></span></a><a class="aeroNav_link" href="/for-creators/" data-no-swup><span><strong data-hover="For Creators"><em>For Creators</em></strong></span></a><a class="aeroNav_link" href="#" data-no-swup><span><strong data-hover="Creator Academy"><em>Creator Academy</em></strong></span></a><a class="aeroNav_link" href="#" data-no-swup><span><strong data-hover="Membership"><em>Membership</em></strong></span></a><div class="aeroNav_mobileCta"><a class="aeroBtn" href="/login/"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Log in"><em>Log in</em></span></strong></a><a class="aeroBtn is-primary" href="/join/?side=hotel"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Get Started"><em>Get Started</em></span></strong></a></div></nav></div><div class="aeroNav_right"><div class="aeroNav_btns"><a class="aeroBtn" href="/login/"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Log in"><em>Log in</em></span></strong></a><a class="aeroBtn is-primary" href="/join/?side=hotel"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Get Started"><em>Get Started</em></span></strong></a></div><button class="aeroNav_burger" type="button" aria-label="Menu" aria-expanded="false"><span class="aeroNav_burgerLine top"></span><span class="aeroNav_burgerLine bottom"></span></button></div></div></header>
+
+<main id="main">
+
+  <div class="homeHeader">
+  <div class="layer homeHeader_contents is-mock">
+    <div class="homeHeader_inner legionHero">
+      <div class="legionHero_main">
+        <span class="hero__badge ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><span class="hero__badgeAvs" aria-hidden="true"><img src="/assets/img/uk/orbit/orbit-09.webp" alt="" width="240" height="240" loading="eager" decoding="async"><img src="/assets/img/uk/orbit/orbit-05.webp" alt="" width="240" height="240" loading="eager" decoding="async"><img src="/assets/img/uk/orbit/orbit-03.webp" alt="" width="240" height="240" loading="eager" decoding="async"></span><b>Trusted by 300+ hotels and creators</b></span>
+        <h1 class="homeHeader_title legionHero_title"><span class="legionHero_line">Turn Unsold Hotel Rooms</span><span class="legionHero_line">into Viral Creator Content.</span></h1>
+        <p class="legionHero_lede">Ukreate handles the collabs and manages everything in between.</p>
+        <div class="hero__buttons"><a href="/for-hotels/" class="btn btn--gold"><strong class="btnRoll"><span data-hover="I'm a hotel"><em>I'm a hotel</em></span></strong></a><a href="/for-creators/" class="btn btn--white"><strong class="btnRoll"><span data-hover="I'm a creator"><em>I'm a creator</em></span></strong></a></div>
+        
+      </div>
+    </div>
+
+    <!-- the stay, the phone and what comes back: the hero mock stage -->
+    <div class="ukMock" aria-hidden="true">
+      <div class="ukMock_stage">
+        <div class="ukMock_rings">
+          <img src="/assets/img/uk/hero/ring-1.svg" alt="" width="663" height="663" decoding="async">
+          <img src="/assets/img/uk/hero/ring-2.svg" alt="" width="547" height="547" decoding="async">
+          <img src="/assets/img/uk/hero/ring-3.svg" alt="" width="412" height="412" decoding="async">
+        </div>
+        <div class="ukMock_phone">
+          <img class="ukMock_body" src="/assets/img/uk/hero/phone-body.png" alt="" width="690" height="985" fetchpriority="high" decoding="async">
+          <div class="ukMock_screen"><video class="ukMock_vid" src="/assets/video/creators/creator-01.mp4" poster="/assets/img/uk/posters/creator-01.webp" muted loop playsinline autoplay preload="auto"></video></div>
+          <img class="ukMock_topnav" src="/assets/img/uk/hero/phone-topnav.png" alt="" width="807" height="194" decoding="async">
+          <img class="ukMock_ui" src="/assets/img/uk/hero/phone-ui.png" alt="" width="849" height="664" decoding="async">
+          <img class="ukMock_cam" src="/assets/img/uk/hero/phone-cam.png" alt="" width="195" height="54" decoding="async">
+          <div class="ukMock_vfade"></div>
+        </div>
+        <div class="ukMock_foot"></div>
+        <div class="ukMock_card ukMock_book">
+          <b class="ukMock_figure ukMock_bookNum">163</b>
+          <span class="ukMock_bookCap">Bookings</span>
+          <i class="ukMock_bookBar"></i>
+          <img class="ukMock_bookImg" src="/assets/img/uk/hero/card-bed.jpg" alt="" width="975" height="1300" decoding="async">
+        </div>
+        <div class="ukMock_card ukMock_comm">
+          <div class="ukMock_commShot"><img src="/assets/img/uk/hero/card-creator.png" alt="" width="862" height="1208" decoding="async"></div>
+          <span class="ukMock_commLabel">Commission Earned</span>
+          <b class="ukMock_figure ukMock_commNum">15.8K</b>
+          <img class="ukMock_commChip" src="/assets/img/uk/hero/chip-trend.svg" alt="" width="29" height="6" decoding="async">
+          <i class="ukMock_bar ukMock_bar--1"></i>
+          <i class="ukMock_bar ukMock_bar--2"></i>
+          <i class="ukMock_bar ukMock_bar--3"></i>
+          <i class="ukMock_bar ukMock_bar--4"></i>
+        </div>
+        <div class="ukMock_card ukMock_stay">
+          <span class="ukMock_stayTitle">Stay confirmed!</span>
+          <span class="ukMock_metaRow"><b>Nobu Hotel</b><i>·</i><img src="/assets/img/uk/hero/flag-us.svg" alt="" width="10" height="8" decoding="async"><b>Miami, Florida</b></span>
+          <div class="ukMock_stayImg">
+            <img src="/assets/img/uk/hero/card-bed.jpg" alt="" width="975" height="1300" decoding="async">
+            <img src="/assets/img/uk/hero/card-loungers.jpg" alt="" width="1880" height="1254" decoding="async">
+          </div>
+        </div>
+        <div class="ukMock_room">
+          <div class="ukMock_roomIn">
+            <img src="/assets/img/uk/hero/card-room.png" alt="" width="677" height="392" decoding="async">
+          </div>
+        </div>
+        <div class="ukMock_hosted">
+          <b>13 Creators Hosted</b>
+          <img src="/assets/img/uk/hero/card-avatars.png" alt="" width="355" height="117" decoding="async">
+        </div>
+      </div>
+    </div>
+  <div class="homeHeader_bg"><canvas class="heroBloom" data-lightbloom aria-hidden="true" data-variant="bloom" data-direction="top" data-background="#04101e" data-base-color="#0d3358" data-accent-color="#1b5183" data-rise="96" data-spread="44" data-speed="100" data-hover="114" data-shaft-count="17" data-shaft-amount="0" data-shaft-drift="79" data-grain="7" data-vignette="16"></canvas><div class="heroBgCustom" aria-hidden="true"></div><div class="homeHeader_img"><div class="heroBgPlain" aria-hidden="true"><img alt="" height="1280" src="/assets/img/hero/hero-photo.jpg?v=3" width="1920" fetchpriority="high" decoding="async"></div></div></div>
+</div>
+
+  <!-- ============ trusted by ============ -->
+  <div class="heroTrust" aria-label="Trusted by marketing teams"><span class="trusted__label"><i aria-hidden="true"></i>Trusted by marketing teams<i aria-hidden="true"></i></span><div class="trusted__logos"><div class="trusted__card" role="img" aria-label="Marriott International"><svg viewBox="0 0 120 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_2113_11134)">
+<path d="M114.475 15.3643H110.731L105.405 22.8488L100.08 15.3643H96.3096L103.586 25.6423V34.0228H107.014V25.8004H107.093L114.475 15.3643Z" fill="currentColor"/>
+<path d="M13.2086 24.2455L12.945 24.0611L13.1559 23.8502C14.0522 22.9015 14.5268 21.7156 14.5268 20.5296C14.5268 17.6834 11.8904 15.3643 8.67391 15.3643H0V33.8647H9.2012C12.6022 33.8647 15.3705 31.4138 15.3705 28.4094C15.3705 26.8282 14.5796 25.2997 13.2086 24.2455H13.2086ZM3.24281 18.0524H8.70027C10.203 18.0524 11.4422 19.1329 11.4422 20.5033C11.4422 21.8473 10.2294 22.9542 8.70027 22.9542H3.24281V18.0524ZM9.20117 31.1502H3.24278V25.6686H9.20117C10.8885 25.6686 12.3122 26.8809 12.3122 28.4094C12.2858 29.9116 10.8885 31.1502 9.20117 31.1502Z" fill="currentColor"/>
+<path d="M69.4444 27.6715L64.066 15.3643H60.5068L68.6798 33.8383H70.1563L78.3556 15.3643H74.77L69.4444 27.6715Z" fill="currentColor"/>
+<path d="M28.2627 14.9951C22.9371 14.9951 18.6396 19.2908 18.6396 24.6143C18.6396 29.9378 22.9634 34.2334 28.2627 34.2334C33.5883 34.2334 37.8857 29.9378 37.8857 24.6143C37.8857 19.2908 33.6147 14.9951 28.2627 14.9951ZM28.2627 31.071C24.7035 31.071 21.8034 28.1984 21.8034 24.6143C21.8034 21.0302 24.6771 18.1576 28.2627 18.1576C31.8482 18.1576 34.722 21.0302 34.722 24.6143C34.7483 28.1457 31.8482 31.071 28.2627 31.071Z" fill="currentColor"/>
+<path d="M53.9157 27.2762L43.37 15.3643H41.7881V33.8383H45.0045V21.9264L55.524 33.8383H57.1586V15.3643H53.9157V27.2762Z" fill="currentColor"/>
+<path d="M79.5156 31.1504H95.7825V33.8648H79.5156V31.1504Z" fill="currentColor"/>
+<path d="M87.4779 15.2852C83.9187 15.2852 81.0186 18.1577 81.0186 21.7419C81.0186 25.326 83.8923 28.1985 87.4779 28.1985C91.0634 28.1985 93.9372 25.326 93.9372 21.7419C93.9372 18.1577 91.0634 15.2852 87.4779 15.2852ZM87.4779 25.4578C85.4214 25.4578 83.7605 23.7975 83.7605 21.7419C83.7605 19.6863 85.4214 18.026 87.4779 18.026C89.5343 18.026 91.1952 19.6863 91.1952 21.7419C91.248 23.7975 89.5343 25.4578 87.4779 25.4578Z" fill="currentColor"/>
+<path d="M17.5321 3.3735V9.64572H15.792V0.395508H17.743L20.5903 5.50816L23.4377 0.395508H25.3886V9.64572H23.6486V3.3735L21.1967 7.85367H19.9839L17.5321 3.3735Z" fill="currentColor"/>
+<path d="M91.1426 0.474609V2.05584H93.8845V9.72483H95.6246V2.05584H98.3665V0.474609H91.1426Z" fill="currentColor"/>
+<path d="M81.1504 0.474609V2.05584H83.8923V9.72483H85.606V2.05584H88.3215V0.474609H81.1504Z" fill="currentColor"/>
+<path d="M64.0918 0.421875H65.8319V9.67209H64.0918V0.421875Z" fill="currentColor"/>
+<path d="M42.5789 5.90349H43.9762L46.56 9.64573H48.5373L45.9008 5.85077C47.3772 5.63995 48.5373 4.50673 48.5373 3.13631C48.5373 1.63414 47.14 0.395508 45.4263 0.395508H40.8125V9.64573H42.5526C42.5789 9.69845 42.5789 5.90349 42.5789 5.90349ZM42.5789 1.87133H45.4527C46.2436 1.87133 46.9027 2.45113 46.9027 3.16269C46.9027 3.87424 46.2436 4.45404 45.4527 4.45404H42.5789V1.87133Z" fill="currentColor"/>
+<path d="M33.3774 3.47891L34.722 6.40419H32.0065L33.3774 3.47891ZM32.982 0.395508L28.6846 9.64572H30.5301L31.3474 7.88001H35.4339L36.2512 9.64572H38.0967L33.8256 0.395508H32.982Z" fill="currentColor"/>
+<path d="M57.1587 0.395508H52.5449V9.64572H54.285V5.90349H55.6823L58.266 9.64572H60.2434L57.6069 5.85077C59.0833 5.63995 60.2434 4.50673 60.2434 3.13631C60.2961 1.6078 58.8724 0.395508 57.1587 0.395508ZM58.6351 3.13634C58.6351 3.8479 57.976 4.42769 57.1851 4.42769H54.3113V1.87137H57.1851C57.976 1.87137 58.6351 2.45117 58.6351 3.13634Z" fill="currentColor"/>
+<path d="M74.2427 0C71.5799 0 69.418 2.161 69.418 4.79639C69.418 7.45813 71.5798 9.59279 74.2427 9.59279C76.9055 9.59279 79.0674 7.43179 79.0674 4.79639C79.0674 2.161 76.9055 0 74.2427 0ZM74.2427 7.90618C72.5554 7.90618 71.1317 6.53576 71.1317 4.79643C71.1317 3.10978 72.5027 1.68668 74.2427 1.68668C75.93 1.68668 77.3537 3.05709 77.3537 4.79643C77.3537 6.53576 75.93 7.90618 74.2427 7.90618Z" fill="currentColor"/>
+<path d="M116.426 15.6014H115.661V15.3115H117.48V15.6014H116.742V17.657H116.426V15.6014Z" fill="currentColor"/>
+<path d="M118.034 17.657H117.744V15.3115H118.219L118.799 17.0772C118.825 17.1563 118.825 17.209 118.878 17.2617C118.878 17.1826 118.904 17.13 118.904 17.0772L119.511 15.3115H119.985V17.657H119.669V15.6805C119.669 15.7596 119.642 15.8123 119.59 15.8913L118.983 17.657H118.693L118.113 15.8913C118.087 15.8123 118.087 15.7596 118.087 15.6805V17.657H118.034Z" fill="currentColor"/>
+</g>
+<defs>
+<clipPath id="clip0_2113_11134">
+<rect width="120" height="34.2337" fill="currentColor"/>
+</clipPath>
+</defs>
+</svg></div><div class="trusted__card" role="img" aria-label="Residence Inn by Marriott"><svg fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 329.2 41.1" style="enable-background:new 0 0 329.2 41.1;" xml:space="preserve">
+ <path d="M326.4,36.9h-0.7v1h0.7c0.3,0,0.5-0.2,0.5-0.5C327,37.1,326.8,36.9,326.4,36.9z M327,39.7l-0.7-1.4h-0.6v1.4h-0.5v-3.2h1.2
+	c0.6,0,1,0.4,1,0.9c0,0.4-0.3,0.8-0.6,0.9l0.7,1.4H327z M317.8,12.1v20.7L300.7,14l-2.9-3.3l0,0.1l0-0.1v22.1L280.7,14l-2.9-3.3v29
+	h3.2V19l17.2,18.9l2.8,3.2V19l0,0l17.2,18.9l2.8,3.2v-29H317.8L317.8,12.1z M268.4,39.7h3.2V12.1h-3.2V39.7z M237.7,20.7v2.5h8.6
+	v-4.1c0-2.5-0.3-4.1-0.9-5.2c-0.6-1.2-1.6-1.6-3.2-1.6c-1.7,0-2.9,0.7-3.6,2.1C238,15.8,237.7,17.8,237.7,20.7L237.7,20.7z
+	 M237.7,24.5v0.2c0,3.6,0.6,6.3,1.9,8.2c1.3,1.9,3.4,2.8,6.4,2.8c1.9,0,3.6-0.4,5-1.1c1.4-0.8,2.5-1.8,3.3-3.1l0.1,0.1
+	c-0.5,2.7-1.8,4.9-3.8,6.5c-2,1.6-4.7,2.4-7.9,2.4c-2.9,0-5.3-0.6-7.4-1.8c-2-1.2-3.6-3-4.6-5.1c-1-2.2-1.6-4.6-1.6-7.4
+	c0-2.8,0.5-5.3,1.6-7.5c1.1-2.2,2.6-3.9,4.7-5.1c2-1.2,4.5-1.9,7.3-1.9c2.5,0,4.7,0.5,6.5,1.5s3.2,2.3,4.1,4.1
+	c0.9,1.7,1.4,3.7,1.4,6c0,0.6,0,1.1-0.1,1.5L237.7,24.5L237.7,24.5z M148.5,20.7v2.5h8.6v-4.1c0-2.5-0.3-4.1-0.9-5.2
+	c-0.6-1.2-1.6-1.6-3.2-1.6c-1.7,0-2.9,0.7-3.6,2.1C148.8,15.8,148.5,17.8,148.5,20.7L148.5,20.7z M164.1,17c0.9,1.7,1.4,3.7,1.4,6
+	c0,0.6,0,1.1-0.1,1.5l-16.9,0v0.2c0,3.6,0.6,6.3,1.9,8.2c1.3,1.9,3.4,2.8,6.4,2.8c1.9,0,3.6-0.4,5-1.1c1.4-0.8,2.5-1.8,3.3-3.1
+	l0.1,0.1c-0.5,2.7-1.8,4.9-3.8,6.5c-2,1.6-4.7,2.4-7.9,2.4c-2.9,0-5.3-0.6-7.4-1.8c-2-1.2-3.6-3-4.6-5.1c-1-2.2-1.6-4.6-1.6-7.4
+	c0-2.8,0.5-5.3,1.6-7.5s2.6-3.9,4.7-5.1c2-1.2,4.5-1.9,7.3-1.9c2.5,0,4.7,0.5,6.5,1.5S163.2,15.2,164.1,17L164.1,17z M43,20.7v2.5
+	h8.6v-4.1c0-2.5-0.3-4.1-0.9-5.2c-0.6-1.2-1.6-1.6-3.2-1.6c-1.7,0-2.9,0.7-3.6,2.1C43.2,15.8,42.9,17.8,43,20.7L43,20.7z M58.5,17
+	c0.9,1.7,1.4,3.7,1.4,6c0,0.6,0,1.1-0.1,1.5l-16.9,0v0.2c0,3.6,0.6,6.3,1.9,8.2c1.3,1.9,3.4,2.8,6.4,2.8c1.9,0,3.6-0.4,5-1.1
+	c1.4-0.8,2.5-1.8,3.3-3.1l0.1,0.1c-0.5,2.7-1.8,4.9-3.8,6.5c-2,1.6-4.7,2.4-7.9,2.4c-2.9,0-5.3-0.6-7.4-1.8c-2-1.2-3.6-3-4.6-5.1
+	c-1-2.2-1.6-4.6-1.6-7.4c0-2.8,0.5-5.3,1.6-7.5c1.1-2.2,2.6-3.9,4.7-5.1c2-1.2,4.5-1.9,7.3-1.9c2.5,0,4.7,0.5,6.5,1.5
+	S57.6,15.2,58.5,17L58.5,17z M21.4,13c0-2.7-0.2-4.8-0.7-6.3c-0.5-1.5-1.2-2-2.4-2.6s-2.9-0.6-5.1-0.6h-1.9v18h6.3
+	c0.4-0.1,0.8-0.3,1.1-0.4c0.9-0.5,1.6-1.4,2-2.7C21.3,17.1,21.4,15.3,21.4,13L21.4,13z M22.8,20.6L34,40.3h-4.6
+	c-1.6,0-2.8-0.1-3.6-0.4s-1.5-0.8-2.1-1.5c-0.6-0.8-1.6-2.2-3-4.3l-7.1-11.3h-2.2v11.8c0,0.8,0.1,1.4,0.2,1.9c0.1,0.5,0.4,1,0.7,1.5
+	c0.4,0.5,0.9,1.1,1.6,1.8v0.1H0v-0.1c0.7-0.7,1.3-1.3,1.6-1.8c0.4-0.5,0.6-1,0.7-1.5c0.1-0.5,0.2-1.1,0.2-1.9V7.4
+	c0-0.8-0.1-1.4-0.2-1.9C2.2,5,2,4.6,1.6,4.1C1.3,3.6,0.7,3,0,2.2V2.2h15.3c5,0,8.8,0.8,11.4,2.4s4,3.9,4,7c0,2.3-0.7,4.2-2.2,5.7
+	S25.1,19.9,22.8,20.6L22.8,20.6z M218.4,35.6c-1.9,0-3.4-0.4-4.5-1.3c-1.1-0.9-1.9-2.2-2.3-4c-0.5-1.8-0.7-4.1-0.7-7
+	c0-2.8,0.2-5,0.5-6.7s0.8-2.6,1.6-3.4c0.7-0.8,1.6-1,2.8-1c0.6,0,1.3,0.1,2,0.3c0.8,0.3,1.7,0.7,2.6,1.3c1.1,0.7,2.7,1.9,5,3.6h0.1
+	l-0.1-5c-1.4-0.3-3-0.6-4.7-0.8c-1.7-0.2-3.1-0.3-4.3-0.3c-3.1,0-5.6,0.7-7.7,1.9c-2.1,1.2-3.7,2.9-4.8,5.1
+	c-1.1,2.2-1.6,4.7-1.6,7.6c0,2.8,0.5,5.2,1.4,7.4c1,2.2,2.4,3.9,4.3,5.1c1.9,1.2,4.2,1.9,6.9,1.9c2,0,3.8-0.4,5.3-1.1
+	c1.6-0.7,2.8-1.7,3.8-3c1-1.3,1.6-2.9,1.9-4.6l-0.1-0.1C224.4,34.2,221.9,35.6,218.4,35.6L218.4,35.6z M196.6,35V19.9
+	c0-2.7-0.7-4.8-2.2-6.2c-1.4-1.5-3.5-2.2-6.2-2.2c-1.9,0-3.6,0.4-4.9,1.3c-1.3,0.8-2.5,1.9-3.2,3.3l-0.2-3.9H169v0.1
+	c0.7,0.7,1.3,1.3,1.6,1.8c0.3,0.5,0.6,0.9,0.7,1.4c0.1,0.5,0.2,1.1,0.2,1.8V35c0,0.9-0.2,1.7-0.5,2.3c-0.3,0.6-0.9,1.4-1.9,2.4v0.1
+	h13.1v-0.1c-0.9-1-1.5-1.8-1.8-2.4c-0.3-0.6-0.4-1.4-0.4-2.3V17.2c1.2-1.1,2.6-2.2,4.1-2.3c1.4-0.1,2.3,0.2,3,0.9
+	c0.6,0.8,0.9,1.9,0.9,3.2V35c0,1-0.1,1.7-0.4,2.3c-0.3,0.6-0.9,1.4-1.8,2.4v0.1h13.1v-0.1c-1-1-1.6-1.8-1.9-2.4
+	C196.7,36.7,196.6,35.9,196.6,35L196.6,35z M125.7,13.8c-1.1-0.5-2.3-1-3.6-1c-1.3,0-2.4,0.1-3.2,0.9s-1.2,1.8-1.6,3.7
+	c-0.4,1.9-0.5,4.6-0.5,8.1c0,3,0.2,5.4,0.5,7.1c0.3,1.7,0.8,2.9,1.5,3.7c0.8,0.7,1.6,1,2.9,1c1.4,0,2.8-1.1,4-2.3V13.8L125.7,13.8z
+	 M123,2.2h11.2v37.5h-8.5l-0.1-3.5c-0.8,1.2-1.8,2.3-3.1,3c-1.3,0.8-2.8,1.2-4.6,1.2c-2.1,0-3.9-0.6-5.5-1.7
+	c-1.6-1.1-2.9-2.7-3.7-4.8c-0.9-2.1-1.3-4.5-1.3-7.3c0-3,0.6-5.6,1.7-7.9c1.1-2.3,2.6-4.1,4.6-5.3c2-1.3,4.2-1.9,6.7-1.9
+	c1.9,0,3.7,0.4,5.3,1.3V7.5c0-0.8-0.1-1.4-0.2-1.9c-0.1-0.5-0.4-1-0.7-1.5C124.3,3.6,123.8,3,123,2.2L123,2.2L123,2.2z M100.6,35
+	V12.1h-11v0.1c0.7,0.7,1.3,1.3,1.6,1.8c0.3,0.5,0.6,0.9,0.7,1.4c0.1,0.5,0.2,1.1,0.2,1.8V35c0,0.9-0.2,1.7-0.5,2.3
+	c-0.3,0.6-0.9,1.4-1.9,2.4v0.1H103v-0.1c-1-1-1.6-1.8-1.9-2.4S100.6,35.9,100.6,35z M96.3,8.6c1.4,0,2.5-0.4,3.4-1.2
+	c0.9-0.8,1.3-1.8,1.3-3.1s-0.4-2.3-1.3-3.1c-0.9-0.8-2-1.2-3.4-1.2c-1.4,0-2.6,0.4-3.4,1.2C92,2,91.5,3.1,91.5,4.3s0.4,2.3,1.3,3.1
+	C93.7,8.2,94.9,8.6,96.3,8.6z M84,27.8c0.6,1.1,0.8,2.4,0.8,3.8c0,1.8-0.4,3.3-1.3,4.6c-0.8,1.3-2.1,2.3-3.7,3
+	c-1.6,0.7-3.6,1.1-6,1.1c-1.3,0-2.7-0.1-4.2-0.3s-2.9-0.5-4.2-0.8l-1.1-5.5h0.1c2.2,1.8,3.6,2.7,4.8,3.6c1.2,0.9,2.4,1.4,3.1,1.8
+	c0.7,0.3,1.4,0.5,2.1,0.5c1.2,0,2.1-0.1,2.8-0.8c0.7-0.7,1.1-1.4,1.1-2.7c0-1-0.2-1.8-0.7-2.5c-0.5-0.7-1.1-1.4-2-2
+	c-0.9-0.6-2.2-1.5-4.1-2.6c-2.1-1.3-3.8-2.7-4.9-4c-1.2-1.4-1.7-3.1-1.7-5.1c0-2.6,0.9-4.6,2.7-6.1c1.8-1.5,4.5-2.3,8-2.3
+	c1.2,0,2.6,0.1,4.1,0.2c1.6,0.2,3,0.5,4.3,0.7l0.4,4.6h-0.1c-2-1.4-3.4-2.3-4.5-2.9c-1.1-0.7-2.2-1.2-2.9-1.5
+	c-0.5-0.1-1.3-0.3-1.8-0.3c-1.2,0-2.1,0.2-2.7,0.8s-1,1.3-1,2.4c0,0.9,0.2,1.7,0.7,2.4c0.4,0.7,1.1,1.3,2,2c0.9,0.6,2.2,1.5,3.9,2.5
+	c1.6,1,2.9,1.9,3.8,2.7C82.7,25.7,83.4,26.7,84,27.8L84,27.8z M326.2,35.1c-1.7,0-3,1.3-3,3s1.3,3,3,3l0,0c1.7,0,3-1.3,3-3
+	S327.9,35.1,326.2,35.1z M326.2,35.4c1.5,0,2.7,1.2,2.7,2.7c0,1.5-1.2,2.7-2.7,2.7c-1.5,0-2.6-1.2-2.6-2.7
+	C323.6,36.6,324.8,35.4,326.2,35.4z">
+ </path>
+</svg></div><div class="trusted__card" role="img" aria-label="Aman Resorts"><svg fill="currentColor"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+  
+  
+   viewBox="0 0 28.97149 7.9373729"
+   version="1.1"
+   id="svg1159"
+   inkscape:version="0.92.0 r15299"
+   sodipodi:docname="aman.svg">
+  <defs
+     id="defs1153">
+    <style
+       id="style1161">.cls-2{fill:currentColor}</style>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="8.267391"
+     inkscape:cx="54.249279"
+     inkscape:cy="14.499761"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px"
+     inkscape:window-width="1280"
+     inkscape:window-height="744"
+     inkscape:window-x="-4"
+     inkscape:window-y="-4"
+     inkscape:window-maximized="1" />
+  
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-208.65272,-329.94069)">
+    <path
+       class="cls-2"
+       id="path-1"
+       d="m 237.34756,334.36228 v 3.38349 h -0.0566 c -1.57744,-1.97617 -3.52121,-4.46881 -3.85022,-4.94043 h -0.0149 v 2.32039 c 0,2.15583 0.0492,2.50772 0.0971,2.50772 v 0.03 h -0.63447 v -0.03 c 0.0504,0 0.1442,-0.35189 0.1442,-2.50772 v -3.39831 h 0.0568 c 1.57758,1.97618 3.52134,4.46882 3.85035,4.94044 h 0.0149 v -2.30558 c 0,-2.15583 -0.0467,-2.50759 -0.0974,-2.50759 v -0.0299 h 0.6346 v 0.0299 c -0.0504,0 -0.14433,0.35176 -0.14433,2.50759 z m -7.75123,3.30107 v -0.0299 c 0.0763,-0.036 -0.018,-0.34435 -0.64585,-1.93833 0,0 -1.03161,-2.70166 -1.1213,-2.98609 h -0.007 c -0.0971,0.28443 -1.1811,2.98609 -1.1811,2.98609 -0.64281,1.59398 -0.75949,1.89838 -0.68025,1.93833 v 0.0299 h -0.64082 v -0.0299 c 0.15862,0 2.48298,-5.90484 2.48298,-5.90484 h 0.0759 c 0,0 2.21946,5.90484 2.37795,5.90484 v 0.0299 z m -7.54182,0 v -0.0299 c 0.15492,0 -0.31393,-4.16851 -0.33628,-4.64754 h -0.0149 c -0.22424,0.59876 -0.54584,1.2872 -0.94946,2.13294 -0.28403,0.59121 -0.6727,1.51183 -1.16602,2.5445 h -0.13454 c -0.49331,-1.03267 -0.88199,-1.95329 -1.16602,-2.5445 -0.40362,-0.84574 -0.72522,-1.53418 -0.94945,-2.13294 h -0.0148 c -0.0225,0.47903 -0.49133,4.64754 -0.33629,4.64754 v 0.0299 h -0.63354 v -0.0299 c 0.20836,0 0.74123,-5.90484 0.74123,-5.90484 h 0.0566 c 2.12288,4.41564 2.16019,4.69252 2.36207,5.14893 h 0.0149 c 0.20187,-0.45641 0.23918,-0.73329 2.36207,-5.14893 h 0.0566 c 0,0 0.53287,5.90484 0.74123,5.90484 v 0.0299 z m -8.99318,0 v -0.0299 c 0.0761,-0.036 -0.0181,-0.34435 -0.64598,-1.93833 0,0 -1.03148,-2.70166 -1.12131,-2.98609 h -0.007 c -0.0972,0.28443 -1.1811,2.98609 -1.1811,2.98609 -0.6428,1.59398 -0.75962,1.89838 -0.68024,1.93833 v 0.0299 h -0.64069 v -0.0299 c 0.15849,0 2.48272,-5.90484 2.48272,-5.90484 h 0.0759 c 0,0 2.21959,5.90484 2.37808,5.90484 v 0.0299 z m -2.65007,-7.59037 h 1.78647 v 0.39053 h -1.78647 z"
+       inkscape:connector-curvature="0"
+       style="fill:currentColor;fill-rule:evenodd;stroke-width:0.13229166" />
+  </g>
+</svg></div><div class="trusted__card" role="img" aria-label="Hyatt Residence Club"><svg fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 149.3 82.3" enable-background="new 0 0 149.3 82.3" xml:space="preserve">
+ <path fill="currentColor" d="M54.1,66v-4.5H49V66h-2.3V55.2H49v4.2h5.1v-4.2h2.3V66H54.1z M65.6,66v-4.4l4.1-6.4h-2.6l-2.7,4.3l-2.7-4.3
+	h-2.6l4.2,6.4V66H65.6z M81.2,66l-4.2-10.8h-2.9L70,66h2.6l0.7-1.8H78l0.7,1.8H81.2z M77.3,62.1H74l1.7-4.6L77.3,62.1z M87.8,66
+	v-8.8H91v-2h-8.6v2h3.2V66H87.8z M99.7,66v-8.8h3.1v-2h-8.6v2h3.2V66H99.7z M8.7,82.1L6.3,78c0.3-0.1,0.6-0.2,0.9-0.3
+	s0.5-0.4,0.8-0.6c0.2-0.3,0.4-0.6,0.5-0.9c0.1-0.4,0.2-0.8,0.2-1.3c0-0.5-0.1-1-0.3-1.4C8.3,73,8,72.6,7.7,72.3
+	C7.4,72,7,71.8,6.6,71.6s-1-0.3-1.5-0.3H0v10.8h2.3v-3.8H4l2.1,3.8H8.7z M2.3,76.3v-2.9h2.4c0.5,0,0.8,0.1,1.2,0.4
+	c0.3,0.3,0.5,0.6,0.5,1.1c0,0.5-0.2,0.8-0.5,1.1c-0.3,0.3-0.7,0.4-1.2,0.4H2.3z M19.2,82.1v-2h-5.3v-2.4H19v-2h-5.2v-2.3h5.3v-2
+	h-7.6v10.8H19.2z M26.6,82.3c0.7,0,1.4-0.1,1.9-0.3c0.5-0.2,1-0.4,1.3-0.7c0.4-0.3,0.6-0.7,0.8-1.1c0.2-0.4,0.3-0.9,0.3-1.4
+	c0-0.7-0.2-1.2-0.5-1.6c-0.3-0.4-0.7-0.7-1.1-1c-0.5-0.2-1-0.4-1.5-0.6c-0.5-0.1-1-0.3-1.5-0.4s-0.8-0.2-1.1-0.4
+	c-0.3-0.2-0.5-0.4-0.5-0.7c0-0.3,0.1-0.6,0.4-0.8c0.3-0.2,0.6-0.3,1.1-0.3c0.5,0,1.1,0.1,1.6,0.3c0.6,0.2,1,0.5,1.5,0.9l1.3-1.7
+	c-1.1-1-2.5-1.5-4.2-1.5c-0.6,0-1.2,0.1-1.7,0.3c-0.5,0.2-0.9,0.4-1.3,0.7s-0.6,0.6-0.8,1c-0.2,0.4-0.3,0.8-0.3,1.3
+	c0,0.7,0.2,1.2,0.5,1.6c0.3,0.4,0.7,0.7,1.1,1s1,0.4,1.5,0.5c0.5,0.1,1,0.3,1.5,0.4c0.5,0.1,0.8,0.3,1.1,0.4
+	c0.3,0.2,0.5,0.4,0.5,0.7c0,0.3-0.2,0.6-0.5,0.8c-0.3,0.2-0.8,0.4-1.4,0.4c-0.7,0-1.4-0.1-2-0.4c-0.6-0.3-1.1-0.6-1.4-1L22,80.6
+	c0.5,0.5,1.1,0.9,1.9,1.3C24.6,82.2,25.5,82.3,26.6,82.3 M34.2,82.1h2.3V71.3h-2.3V82.1z M44.7,82.1c0.8,0,1.6-0.1,2.3-0.4
+	c0.7-0.3,1.3-0.6,1.8-1.1c0.5-0.5,0.9-1,1.2-1.7c0.3-0.7,0.4-1.4,0.4-2.2c0-0.8-0.1-1.5-0.4-2.2c-0.3-0.7-0.7-1.2-1.2-1.7
+	c-0.5-0.5-1.1-0.8-1.8-1.1c-0.7-0.3-1.5-0.4-2.3-0.4h-4.3v10.8H44.7z M42.7,80.1v-6.7h2c0.5,0,1,0.1,1.5,0.3
+	c0.4,0.2,0.8,0.4,1.1,0.7c0.3,0.3,0.5,0.7,0.6,1.1c0.1,0.4,0.2,0.9,0.2,1.3c0,0.5-0.1,0.9-0.2,1.3c-0.2,0.4-0.4,0.8-0.7,1.1
+	s-0.6,0.5-1.1,0.7c-0.4,0.2-0.9,0.3-1.4,0.3H42.7z M60.8,82.1v-2h-5.3v-2.4h5.2v-2h-5.2v-2.3h5.3v-2h-7.6v10.8H60.8z M74,82.1V71.3
+	h-2.3v6.8l-5-6.8h-2.4v10.8h2.3v-7l5.1,7H74z M82.5,82.3c0.6,0,1.1-0.1,1.6-0.2c0.5-0.2,0.9-0.3,1.3-0.6c0.4-0.2,0.7-0.5,1-0.8
+	c0.3-0.3,0.5-0.6,0.7-1l-2-1c-0.2,0.5-0.6,0.8-1,1.1c-0.5,0.3-1,0.4-1.5,0.4c-0.5,0-0.9-0.1-1.4-0.3s-0.8-0.4-1.1-0.7
+	c-0.3-0.3-0.5-0.7-0.7-1.1c-0.2-0.4-0.3-0.9-0.3-1.4c0-0.5,0.1-1,0.3-1.4c0.2-0.4,0.4-0.8,0.7-1.1c0.3-0.3,0.7-0.6,1.1-0.7
+	s0.9-0.3,1.4-0.3c0.6,0,1.1,0.2,1.5,0.5c0.5,0.3,0.8,0.7,1,1.1l2-1c-0.2-0.3-0.4-0.7-0.7-1c-0.3-0.3-0.6-0.6-1-0.8
+	c-0.4-0.2-0.8-0.4-1.3-0.6c-0.5-0.2-1-0.2-1.6-0.2c-0.8,0-1.6,0.1-2.3,0.4c-0.7,0.3-1.3,0.6-1.8,1.1c-0.5,0.5-0.9,1.1-1.2,1.8
+	c-0.3,0.7-0.4,1.4-0.4,2.3c0,0.8,0.1,1.6,0.4,2.3c0.3,0.7,0.7,1.3,1.2,1.8c0.5,0.5,1.1,0.9,1.8,1.1C80.9,82.2,81.7,82.3,82.5,82.3
+	 M97.4,82.1v-2h-5.3v-2.4h5.2v-2h-5.2v-2.3h5.3v-2h-7.6v10.8H97.4z M111,82.3c0.6,0,1.1-0.1,1.6-0.2c0.5-0.2,0.9-0.3,1.3-0.6
+	c0.4-0.2,0.7-0.5,1-0.8c0.3-0.3,0.5-0.6,0.7-1l-2-1c-0.2,0.5-0.6,0.8-1,1.1c-0.5,0.3-1,0.4-1.5,0.4c-0.5,0-0.9-0.1-1.4-0.3
+	c-0.4-0.2-0.8-0.4-1.1-0.7c-0.3-0.3-0.5-0.7-0.7-1.1c-0.2-0.4-0.3-0.9-0.3-1.4c0-0.5,0.1-1,0.3-1.4c0.2-0.4,0.4-0.8,0.7-1.1
+	c0.3-0.3,0.7-0.6,1.1-0.7c0.4-0.2,0.9-0.3,1.4-0.3c0.6,0,1.1,0.2,1.5,0.5c0.5,0.3,0.8,0.7,1,1.1l2-1c-0.2-0.3-0.4-0.7-0.7-1
+	c-0.3-0.3-0.6-0.6-1-0.8c-0.4-0.2-0.8-0.4-1.3-0.6c-0.5-0.2-1-0.2-1.6-0.2c-0.8,0-1.6,0.1-2.3,0.4c-0.7,0.3-1.3,0.6-1.8,1.1
+	c-0.5,0.5-0.9,1.1-1.2,1.8c-0.3,0.7-0.4,1.4-0.4,2.3c0,0.8,0.1,1.6,0.4,2.3c0.3,0.7,0.7,1.3,1.2,1.8c0.5,0.5,1.1,0.9,1.8,1.1
+	C109.4,82.2,110.2,82.3,111,82.3 M125.2,82.1v-2h-4.6v-8.8h-2.3v10.8H125.2z M132.2,82.3c0.8,0,1.5-0.1,2.1-0.3
+	c0.6-0.2,1.1-0.5,1.5-0.9c0.4-0.4,0.7-0.9,0.9-1.4c0.2-0.6,0.3-1.2,0.3-1.8v-6.5h-2.4v6.4c0,0.8-0.2,1.4-0.6,1.8s-1.1,0.7-1.9,0.7
+	c-0.8,0-1.5-0.2-1.9-0.7c-0.4-0.5-0.6-1.1-0.6-1.8v-6.4h-2.3v6.5c0,0.7,0.1,1.3,0.3,1.8c0.2,0.5,0.5,1,0.9,1.4
+	c0.4,0.4,0.9,0.7,1.5,0.9C130.6,82.2,131.3,82.3,132.2,82.3 M146.1,82.1c0.5,0,1-0.1,1.4-0.2c0.4-0.2,0.7-0.4,1-0.6
+	c0.3-0.3,0.5-0.6,0.6-0.9c0.1-0.3,0.2-0.7,0.2-1.1c0-0.3-0.1-0.7-0.2-1c-0.1-0.3-0.3-0.6-0.4-0.8c-0.2-0.2-0.4-0.4-0.7-0.6
+	c-0.2-0.2-0.5-0.3-0.8-0.3c0.3-0.1,0.5-0.1,0.7-0.3c0.2-0.1,0.4-0.3,0.6-0.5c0.2-0.2,0.3-0.5,0.4-0.7c0.1-0.3,0.1-0.6,0.1-0.9
+	c0-0.4-0.1-0.7-0.2-1c-0.1-0.3-0.3-0.6-0.6-0.9c-0.3-0.3-0.6-0.5-1-0.6c-0.4-0.1-0.8-0.2-1.4-0.2h-5.7v10.8H146.1z M142.6,75.7v-2.3
+	h2.9c0.4,0,0.7,0.1,0.9,0.3c0.2,0.2,0.3,0.5,0.3,0.8s-0.1,0.6-0.3,0.8c-0.2,0.2-0.5,0.3-0.9,0.3H142.6z M142.6,80.1v-2.5h3
+	c0.5,0,0.8,0.1,1,0.4c0.2,0.2,0.4,0.5,0.4,0.9c0,0.4-0.1,0.7-0.4,0.9c-0.2,0.2-0.6,0.3-1,0.3H142.6z">
+ </path>
+ <path fill="currentColor" d="M116,41.8v-1.2h-0.4v-0.3h1.2v0.3h-0.4v1.2H116z M118.7,41.8v-1.5h-0.4l-0.4,0.9l-0.4-0.9h-0.4v1.5h0.3v-1
+	l0.4,1h0.1l0.4-1v1H118.7z M54.4,21.2H41.8v-14h-3.6v34.5h3.6V24.5h12.6V21.2z M113.6,34.6l-0.2,0.2c-2.1,2.9-5.8,4.8-9.6,4.8
+	c-7.9,0-13.7-6.1-13.7-14.5s5.8-14.5,13.7-14.5c3.8,0,7.5,1.8,9.6,4.8l0.2,0.2l2.9-1.9l-0.2-0.3c-3.2-4-7.4-6.1-12.5-6.1
+	c-10,0-17.3,7.5-17.3,17.7c0,10.3,7.3,17.7,17.3,17.7c5.1,0,9.1-2,12.5-6.1l0.2-0.3L113.6,34.6z M74.7,24.2
+	c6.2-0.2,11.5-4.4,11.5-12C86.3,4.6,80.8,0,73.6,0H58v41.8h3.6V24.5v-3.3V6.2V3.3h11.7c5.5,0,9.2,3.7,9.2,9c0,5.3-3.7,9-9.2,9h-8.1
+	v3.3h5.6l11.7,17.3h4.3L74.7,24.2z">
+ </path>
+</svg></div><div class="trusted__card" role="img" aria-label="Four Seasons"><svg fill="currentColor" version="1.1" id="svg8" inkscape:version="0.92.0 r15299" xmlns:cc="http://creativecommons.org/ns#" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="34.1 -15.8 265.2 121.8" style="enable-background:new 34.1 -15.8 265.2 121.8;" xml:space="preserve">
+ <sodipodi:namedview id="base" inkscape:window-x="-4" inkscape:window-maximized="1" inkscape:document-units="mm" fit-margin-right="0" inkscape:pageshadow="2" inkscape:window-height="744" inkscape:current-layer="layer1" inkscape:window-width="1280" inkscape:pageopacity="0.0" inkscape:window-y="-4" fit-margin-bottom="0" fit-margin-top="0" showgrid="false" units="px" pagecolor="#ffffff" borderopacity="1.0" inkscape:cy="50.401344" inkscape:zoom="4.0875653" fit-margin-left="0" inkscape:cx="109.72302" bordercolor="#666666">
+ </sodipodi:namedview>
+ <g id="layer1" transform="translate(-45.808404,-343.61173)" inkscape:groupmode="layer" inkscape:label="Layer 1">
+  <g id="g453" transform="translate(0.26458345,-0.2645772)">
+   <path id="Fill-24" inkscape:connector-curvature="0" d="M87.5,449h-7.8v-1.2h2.3v-19.5h-2.1v-1.2h13.8c2.9,0,6.9,0.1,6.9,0.1l0,0
+			l0.8,6.8h-1l-0.1-0.3c-1.2-4.2-2.1-5.4-6.6-5.4h-8.1v9.5h4.8c4,0,5.2-0.4,5.2-3v-0.4h1v7.8h-1v-0.4c0-1.9-1.1-2.9-5.2-2.9h-4.8
+			v8.8h1.9L87.5,449">
+   </path>
+   <path id="Fill-26" inkscape:connector-curvature="0" d="M114.5,431.7c-5.4,0-8.5,3-8.5,8.4c0,5.3,3,8.3,8.5,8.3
+			c5.5,0,8.5-2.9,8.5-8.3C123,434.8,119.9,431.7,114.5,431.7 M114.5,449.4c-7.9,0-12.2-4.8-12.2-9.3c0-5.9,6.2-9.4,12.2-9.4
+			c7.9,0,12.2,4.9,12.2,9.4C126.7,446.1,120.4,449.4,114.5,449.4">
+   </path>
+   <path id="Fill-27" inkscape:connector-curvature="0" d="M139.4,449.4c-4.4,0-9.8-1.6-9.8-9.1v-8.2h-1.8v-1h7.2v1h-2v8.2
+			c0,7,4,8.1,6.4,8.1c3.7,0,7.7-2.1,7.7-8.1v-8.2h-1.8v-1h4.4v1H148v8.2C148,447,143.4,449.4,139.4,449.4">
+   </path>
+   <path id="Fill-28" inkscape:connector-curvature="0" d="M156.5,440h6.5c3.1,0,4.5-1.2,4.5-3.9c0-2.7-1.4-3.9-4.5-3.9h-6.5
+			L156.5,440z M163.2,441h-6.7v6.9h1.7v1h-7v-1h2.1v-15.8h-2.1v-1H163c2,0,8.2,0,8.2,5c0,2.3-1.3,3.8-3.7,4.5
+			C167.5,440.6,166.2,441,163.2,441L163.2,441z">
+   </path>
+   <path id="Fill-29" inkscape:connector-curvature="0" d="M206.4,429.2l0.5,5.3l-1,0l-0.3-0.9c-1.4-4-4.2-5.7-8.6-5.7
+			c-4.4,0-7,1.2-7,3.3c0,2.3,3.6,3.2,7.5,4.2c4.7,1.2,10.1,2.5,10.1,7c0,4.7-3.6,7.1-10.7,7.1c0,0-5.2-0.2-9.3-1.7l-1.2-6.3h0.9
+			l0.4,1c1.5,3.6,5.1,5.9,9.2,5.9c3.1,0,8.2-0.6,8.2-4.3c0-2.7-3.8-3.6-7.9-4.6c-4.8-1.2-9.7-2.3-9.7-6.6c0-3.9,3.5-6.1,9.5-6.1
+			c1.8,0,2.9,0.2,4.7,0.7C201.8,427.5,204.8,428.3,206.4,429.2">
+   </path>
+   <path id="Fill-30" inkscape:connector-curvature="0" d="M229.1,449.2L229.1,449.2c-0.1,0-3.2-0.1-4.9-0.1h-13.4v-1h2v-15.8h-2v-1
+			h13c1.6,0,3.3,0,3.7-0.1l1-0.1l0.6,5l-0.8,0l-0.1-0.3c-1.1-3.3-2.7-3.5-4.4-3.5h-7.7v7h4.3c3.1,0,4.1-0.4,4.1-2.6v-0.4h0.9v6.9
+			h-0.9v-0.4c0-1.7-1-2.4-4.1-2.4h-4.3v7.8h8.2c3,0,3.7-0.9,4.7-3.3l0.1-0.2h1L229.1,449.2">
+   </path>
+   <path id="Fill-31" inkscape:connector-curvature="0" d="M237.5,442.1h10.1l-5.1-9.1L237.5,442.1z M249,449v-1h1.9l-2.7-4.9h-11.3
+			l-2.7,4.9h1.9v1h-4.5v-1h1.6l8.8-15.8h-1.6v-1h4.8l0.1,0.2l9.2,16.7h1.8v1L249,449L249,449z">
+   </path>
+   <path id="Fill-32" inkscape:connector-curvature="0" d="M290,430.7c-6,0-12.2,3.5-12.2,9.4c0,4.5,4.3,9.3,12.2,9.3
+			c5.9,0,12.2-3.3,12.2-9.3C302.2,435.5,298,430.7,290,430.7 M290,448.4c-5.5,0-8.5-2.9-8.5-8.3c0-5.3,3.1-8.4,8.5-8.4
+			c5.4,0,8.5,3,8.5,8.4C298.6,445.4,295.6,448.4,290,448.4">
+   </path>
+   <polyline id="Fill-33" points="303.7,431.1 303.7,432.1 305.1,432.1 305.9,432.9 305.9,448 303.8,448 303.8,449 308.8,449 
+			308.8,448 306.9,448 306.9,433.7 323.8,449.7 324,449.9 324,432.1 325.6,432.1 325.6,431.1 321.1,431.1 321.1,432.1 323.1,432.1 
+			323.1,444.6 308.8,431.1 308.8,431.1 303.7,431.1 		">
+   </polyline>
+   <path id="Fill-34" inkscape:connector-curvature="0" d="M173.3,448.4c-2.7-0.1-3-1.1-3.7-2.5l-2.5-5.4h-3.7l4.6,8.9h5.3
+			L173.3,448.4">
+   </path>
+   <path id="Fill-35" inkscape:connector-curvature="0" d="M274.3,432.9l0.4,4.4l-0.8,0l-0.2-0.7c-1.1-3.3-3.4-4.7-7-4.7
+			c-3.6,0-5.7,1-5.7,2.7c0,1.9,3,2.6,6.1,3.4c3.9,1,8.3,2.1,8.3,5.8c0,3.8-2.9,5.8-8.8,5.8c0,0-4.3-0.2-7.6-1.4l-1-5.2h0.7l0.3,0.8
+			c1.2,2.9,4.2,4.9,7.5,4.9c2.5,0,6.7-0.5,6.7-3.5c0-2.2-3.1-2.9-6.5-3.7c-3.9-0.9-7.9-1.9-7.9-5.4c0-3.2,2.8-5,7.8-5
+			c1.5,0,2.4,0.2,3.8,0.6C270.5,431.5,272.9,432.2,274.3,432.9">
+   </path>
+   <path id="Fill-36" inkscape:connector-curvature="0" d="M343.9,432.9l0.4,4.4l-0.8,0l-0.2-0.7c-1.1-3.3-3.4-4.7-7-4.7
+			c-3.6,0-5.7,1-5.7,2.7c0,1.9,3,2.6,6.1,3.4c3.9,1,8.3,2.1,8.3,5.8c0,3.8-3,5.8-8.8,5.8c0,0-4.3-0.2-7.6-1.4l-1-5.2h0.7l0.3,0.8
+			c1.2,2.9,4.2,4.9,7.5,4.9c2.5,0,6.7-0.5,6.7-3.5c0-2.2-3.1-2.9-6.5-3.7c-3.9-0.9-7.9-1.9-7.9-5.4c0-3.2,2.8-5,7.8-5
+			c1.5,0,2.4,0.2,3.8,0.6C340,431.5,342.5,432.2,343.9,432.9">
+   </path>
+   <path id="Fill-37" inkscape:connector-curvature="0" d="M240.7,379.2c-1.5,0.6-2.5,1.7-2.1,3.7
+			C240.4,382.2,240.9,380.8,240.7,379.2">
+   </path>
+   <path id="Fill-38" inkscape:connector-curvature="0" d="M234.6,380.3c0.3,1.6,1.2,2.8,3.1,2.8
+			C237.5,381.2,236.2,380.4,234.6,380.3">
+   </path>
+   <path id="Fill-39" inkscape:connector-curvature="0" d="M237.7,388.1c-0.1-1.9-1.4-2.7-3.1-2.8
+			C234.8,386.9,235.6,388.1,237.7,388.1">
+   </path>
+   <path id="Fill-40" inkscape:connector-curvature="0" d="M232.1,362.6c-1.6,0.1-2.9,0.9-3.1,2.8
+			C230.9,365.4,231.8,364.2,232.1,362.6">
+   </path>
+   <path id="Fill-41" inkscape:connector-curvature="0" d="M224.6,361.1c0.3,1.6,1.2,2.8,3.1,2.8
+			C227.5,362.1,226.3,361.3,224.6,361.1">
+   </path>
+   <path id="Fill-42" inkscape:connector-curvature="0" d="M224.2,355.2c1.9,0,2.8-1.2,3.1-2.8C225.7,352.5,224.4,353.3,224.2,355.2">
+   </path>
+   <path id="Fill-43" inkscape:connector-curvature="0" d="M225.7,348.1c-1.5,0.7-2.5,1.8-2.1,3.7
+			C225.5,351.1,225.9,349.7,225.7,348.1">
+   </path>
+   <path id="Fill-44" inkscape:connector-curvature="0" d="M220.3,349.4c0.1,1.6,0.8,2.9,2.7,3.2C223,350.8,221.9,349.8,220.3,349.4">
+   </path>
+   <path id="Fill-45" inkscape:connector-curvature="0" d="M219.5,344.8c1.9,0,2.8-1.2,3.1-2.8C221,342.1,219.8,342.9,219.5,344.8">
+   </path>
+   <path id="Fill-46" inkscape:connector-curvature="0" d="M221.2,338.1c-1.4,0.8-2.3,2-1.7,3.9C221.2,341.1,221.6,339.7,221.2,338.1
+			">
+   </path>
+   <path id="Fill-47" inkscape:connector-curvature="0" d="M219,343.3c0.1-1.9-1.1-2.9-2.7-3.2C216.4,341.7,217.1,343,219,343.3">
+   </path>
+   <path id="Fill-48" inkscape:connector-curvature="0" d="M217.9,346.1c-0.2-1.9-1.5-2.7-3.1-2.8C215.1,344.9,216,346.1,217.9,346.1
+			">
+   </path>
+   <path id="Fill-49" inkscape:connector-curvature="0" d="M212.8,349.9c0.6-0.4,6.5-3.8,6.5-3.8c0,0,0,0,0-0.1l-0.3-2.1H219
+			c0,0,0.1,0.9,0.1,1.2c0,0.4-0.1,0.5-0.4,0.7l-6.6,3.4c0,0.5,0,1,0,1.6C212.2,350.5,212.4,350.2,212.8,349.9">
+   </path>
+   <path id="Fill-50" inkscape:connector-curvature="0" d="M211.3,331c-0.2-1.9-1.5-2.7-3.1-2.8C208.5,329.8,209.4,331,211.3,331">
+   </path>
+   <path id="Fill-51" inkscape:connector-curvature="0" d="M211.3,334.2c-0.2-1.9-1.5-2.7-3.1-2.8
+			C208.5,332.9,209.4,334.1,211.3,334.2">
+   </path>
+   <path id="Fill-52" inkscape:connector-curvature="0" d="M211.2,337.3c-0.2-1.9-1.5-2.7-3.1-2.8
+			C208.4,336.1,209.3,337.2,211.2,337.3">
+   </path>
+   <path id="Fill-53" inkscape:connector-curvature="0" d="M211.2,340.4c-0.2-1.9-1.5-2.7-3.1-2.8
+			C208.4,339.2,209.3,340.4,211.2,340.4">
+   </path>
+   <path id="Fill-54" inkscape:connector-curvature="0" d="M211.1,343.5c-0.2-1.9-1.5-2.7-3.1-2.8
+			C208.3,342.3,209.2,343.5,211.1,343.5">
+   </path>
+   <path id="Fill-55" inkscape:connector-curvature="0" d="M211.1,346.7c-0.2-1.9-1.5-2.7-3.1-2.8
+			C208.3,345.5,209.2,346.6,211.1,346.7">
+   </path>
+   <path id="Fill-56" inkscape:connector-curvature="0" d="M206.9,339.5c-1.6,0.5-2.6,1.5-2.4,3.5C206.4,342.5,207,341.2,206.9,339.5
+			">
+   </path>
+   <path id="Fill-57" inkscape:connector-curvature="0" d="M204.6,345.3c1.9,0,2.8-1.2,3.1-2.8C206.1,342.6,204.8,343.4,204.6,345.3">
+   </path>
+   <path id="Fill-58" inkscape:connector-curvature="0" d="M203.8,343.4c0.3-1.9-0.8-3-2.3-3.5C201.4,341.5,202,342.8,203.8,343.4">
+   </path>
+   <path id="Fill-59" inkscape:connector-curvature="0" d="M203.4,345.5c-0.2-1.9-1.5-2.7-3.1-2.8
+			C200.6,344.3,201.5,345.5,203.4,345.5">
+   </path>
+   <path id="Fill-60" inkscape:connector-curvature="0" d="M208,354.3c-1.6,0.1-2.9,0.9-3.1,2.8C206.8,357.1,207.7,355.9,208,354.3">
+   </path>
+   <path id="Fill-61" inkscape:connector-curvature="0" d="M202.6,356c1.9,0,2.8-1.2,3.1-2.8C204.1,353.3,202.8,354.1,202.6,356">
+   </path>
+   <path id="Fill-62" inkscape:connector-curvature="0" d="M210.3,355.5c-1.6,0.1-2.9,0.9-3.1,2.8C209.1,358.3,210,357.1,210.3,355.5
+			">
+   </path>
+   <path id="Fill-63" inkscape:connector-curvature="0" d="M206.2,352.3c1.9,0,2.8-1.2,3.1-2.8C207.7,349.6,206.4,350.4,206.2,352.3">
+   </path>
+   <path id="Fill-64" inkscape:connector-curvature="0" d="M204,351c1.9,0,2.8-1.2,3.1-2.8C205.5,348.3,204.2,349.1,204,351">
+   </path>
+   <path id="Fill-65" inkscape:connector-curvature="0" d="M201.8,349.7c1.9,0,2.8-1.2,3.1-2.8C203.3,347,202,347.8,201.8,349.7">
+   </path>
+   <path id="Fill-66" inkscape:connector-curvature="0" d="M203.4,351.9c-1.6,0.1-2.9,0.9-3.1,2.8
+			C202.3,354.7,203.1,353.5,203.4,351.9">
+   </path>
+   <path id="Fill-67" inkscape:connector-curvature="0" d="M199.7,351.7c0.2-1.9-0.8-3-2.4-3.5C197.3,349.9,197.9,351.2,199.7,351.7">
+   </path>
+   <path id="Fill-68" inkscape:connector-curvature="0" d="M199.2,354.6c-0.2-1.9-1.5-2.7-3.1-2.8
+			C196.3,353.4,197.2,354.6,199.2,354.6">
+   </path>
+   <path id="Fill-69" inkscape:connector-curvature="0" d="M200.8,364.4c-1.6,0.1-2.9,0.9-3.1,2.8
+			C199.6,367.2,200.5,366.1,200.8,364.4">
+   </path>
+   <path id="Fill-70" inkscape:connector-curvature="0" d="M195.5,366c1.9,0,2.8-1.2,3.1-2.8C196.9,363.3,195.7,364.1,195.5,366">
+   </path>
+   <path id="Fill-71" inkscape:connector-curvature="0" d="M203.1,365.6c-1.6,0.1-2.9,0.9-3.1,2.8
+			C201.9,368.4,202.8,367.3,203.1,365.6">
+   </path>
+   <path id="Fill-72" inkscape:connector-curvature="0" d="M205.4,366.8c-1.6,0.1-2.9,0.9-3.1,2.8
+			C204.2,369.6,205.1,368.4,205.4,366.8">
+   </path>
+   <path id="Fill-73" inkscape:connector-curvature="0" d="M207.7,368c-1.6,0.1-2.9,0.9-3.1,2.8C206.5,370.8,207.4,369.6,207.7,368">
+   </path>
+   <path id="Fill-74" inkscape:connector-curvature="0" d="M209.9,369.2c-1.6,0.1-2.9,0.9-3.1,2.8C208.8,372,209.7,370.8,209.9,369.2
+			">
+   </path>
+   <path id="Fill-75" inkscape:connector-curvature="0" d="M206.7,364.5c1.9,0,2.8-1.2,3.1-2.8C208.1,361.8,206.9,362.6,206.7,364.5">
+   </path>
+   <path id="Fill-76" inkscape:connector-curvature="0" d="M204.5,363.2c1.9,0,2.8-1.2,3.1-2.8C205.9,360.5,204.7,361.3,204.5,363.2">
+   </path>
+   <path id="Fill-77" inkscape:connector-curvature="0" d="M202.3,361.9c1.9,0,2.8-1.2,3.1-2.8C203.7,359.2,202.5,360,202.3,361.9">
+   </path>
+   <path id="Fill-78" inkscape:connector-curvature="0" d="M200.1,360.6c1.9,0,2.8-1.2,3.1-2.8C201.5,357.9,200.3,358.7,200.1,360.6">
+   </path>
+   <path id="Fill-79" inkscape:connector-curvature="0" d="M197.9,359.3c1.9,0,2.8-1.2,3.1-2.8C199.3,356.6,198.1,357.4,197.9,359.3">
+   </path>
+   <path id="Fill-80" inkscape:connector-curvature="0" d="M198.5,360.3c-1.6,0.1-2.9,0.9-3.1,2.8
+			C197.3,363.1,198.2,361.9,198.5,360.3">
+   </path>
+   <path id="Fill-81" inkscape:connector-curvature="0" d="M195,361.5c0.5-1.9-0.4-3-1.9-3.8C192.8,359.4,193.2,360.8,195,361.5">
+   </path>
+   <path id="Fill-82" inkscape:connector-curvature="0" d="M194.5,364c-0.2-1.9-1.5-2.7-3.1-2.8C191.7,362.8,192.6,364,194.5,364">
+   </path>
+   <path id="Fill-83" inkscape:connector-curvature="0" d="M194.1,366.9c-0.2-1.9-1.5-2.7-3.1-2.8
+			C191.2,365.6,192.1,366.8,194.1,366.9">
+   </path>
+   <path id="Fill-84" inkscape:connector-curvature="0" d="M199.4,374.8c1.9,0,2.8-1.2,3.1-2.8C200.9,372.1,199.7,372.9,199.4,374.8">
+   </path>
+   <path id="Fill-85" inkscape:connector-curvature="0" d="M199.4,379.2c1.9,0,2.8-1.2,3.1-2.8C200.9,376.5,199.7,377.3,199.4,379.2">
+   </path>
+   <path id="Fill-86" inkscape:connector-curvature="0" d="M197.3,373.5c1.9,0,2.8-1.2,3.1-2.8C198.7,370.8,197.5,371.6,197.3,373.5">
+   </path>
+   <path id="Fill-87" inkscape:connector-curvature="0" d="M195.1,372.2c1.9,0,2.8-1.2,3.1-2.8C196.6,369.5,195.3,370.3,195.1,372.2">
+   </path>
+   <path id="Fill-88" inkscape:connector-curvature="0" d="M192.9,370.9c1.9,0,2.8-1.2,3.1-2.8C194.4,368.2,193.1,369,192.9,370.9">
+   </path>
+   <path id="Fill-89" inkscape:connector-curvature="0" d="M238.1,383.1c0,0,0.3,3.2,0.2,4.5c-0.1,1.5-0.3,2-1.4,2.7L213,402.5v0
+			c0-2.3-0.1-5-0.1-8l0-0.8c0-1.6,0.4-2.5,2.3-3.7c1.6-1,19.3-11.4,19.3-11.4c0,0,0.1-0.1,0.1-0.2l-0.8-6.3h-0.3
+			c0,0,0.2,2.6,0.2,3.7c-0.1,1.2-0.2,1.6-1.2,2.2l-19.8,10.2c-0.1-3-0.1-6.2-0.2-9.5l0-0.9c0-1,0.4-1.6,1.7-2.4
+			c1.2-0.8,14.4-8.5,14.4-8.5c0,0,0.1-0.1,0.1-0.2l-0.6-4.7h-0.2c0,0,0.2,2,0.1,2.8c-0.1,0.9-0.2,1.2-0.9,1.7l-14.7,7.6
+			c-0.1-3.7-0.1-7.4-0.2-11v0c0.1-0.5,0.4-1.2,1.2-1.7c0.9-0.6,10.3-6.1,10.3-6.1c0,0,0.1,0,0.1-0.1l-0.4-3.3h-0.1
+			c0,0,0.1,1.4,0.1,2c0,0.6-0.1,0.9-0.6,1.2l-10.5,5.4v0c-0.1-3.4-0.1-6.7-0.2-9.8c0-0.5,0-1,0-1.6c-0.2-12.1-0.4-21.1-0.4-21.1
+			c0-0.1,0-0.1-0.1-0.1c-0.1,0-0.1,0-0.1,0.1c0,0-0.2,9-0.4,21.1c0,0.2,0,0.5,0,0.7c0-0.2,0-0.5,0-0.7l-6.6-3.4
+			c-0.3-0.2-0.4-0.3-0.4-0.7c0-0.4,0.1-1.2,0.1-1.2h-0.1l-0.3,2.1c0,0,0,0.1,0,0.1c0,0,6,3.5,6.5,3.8c0.4,0.2,0.6,0.5,0.7,0.8v0l0,0
+			c-0.1,3.1-0.1,6.4-0.2,9.8l-10.5-5.4c-0.5-0.3-0.6-0.5-0.6-1.2c0-0.6,0.1-2,0.1-2h-0.1l-0.4,3.3c0,0.1,0,0.1,0.1,0.1
+			c0,0,9.4,5.5,10.3,6.1c0.7,0.5,1.1,1.1,1.2,1.6v0c-0.1,3.7-0.1,7.4-0.2,11.1l-14.7-7.6c-0.7-0.4-0.8-0.8-0.9-1.7
+			c-0.1-0.8,0.1-2.8,0.1-2.8H195l-0.6,4.7c0,0.1,0,0.1,0.1,0.2c0,0,13.2,7.7,14.4,8.5c1.3,0.8,1.7,1.5,1.7,2.5l0,0.9v0
+			c-0.1,3.2-0.1,6.3-0.2,9.3l-19.8-10.2c-0.9-0.6-1.1-1-1.2-2.2c-0.1-1.1,0.2-3.7,0.2-3.7h-0.3l-0.8,6.3c0,0.1,0.1,0.2,0.1,0.2
+			c0,0,17.7,10.3,19.3,11.4c1.9,1.2,2.3,2.1,2.3,3.7v0c-0.1,3.2-0.1,6.2-0.2,8.7l-23.9-12.3c-1.1-0.7-1.3-1.2-1.4-2.7
+			c-0.1-1.3,0.2-4.5,0.2-4.5h-0.3l-1,7.6c0,0.2,0.1,0.2,0.1,0.3c0,0,21.4,12.5,23.4,13.8c2.3,1.5,2.8,1.6,2.8,4.3c0,0.1,0,3.2,0,3.4
+			c0,2.4-1.9,2.4-1.9,2.4l0,0.5h6.9l0-0.5c0,0-1.9-0.1-1.9-2.4c0-0.1,0-3.1,0-3.4c0-2.7,0.5-2.8,2.8-4.3c2-1.3,23.4-13.8,23.4-13.8
+			c0,0,0.1-0.1,0.1-0.3l-1-7.6L238.1,383.1">
+   </path>
+   <path id="Fill-90" inkscape:connector-curvature="0" d="M204,377.5c1.9,0,2.8-1.2,3.1-2.8C205.4,374.8,204.2,375.5,204,377.5">
+   </path>
+   <path id="Fill-91" inkscape:connector-curvature="0" d="M209.3,376c-1.6,0.1-2.9,0.9-3.1,2.8C208.1,378.9,209,377.7,209.3,376">
+   </path>
+   <path id="Fill-92" inkscape:connector-curvature="0" d="M220.9,369.6c1.5-1.2,1.5-2.7,0.7-4.2C220.4,366.6,219.9,368,220.9,369.6">
+   </path>
+   <path id="Fill-93" inkscape:connector-curvature="0" d="M217.8,367.5c-1.2,1.1-1.7,2.5-0.7,4.2C218.5,370.5,218.5,369,217.8,367.5
+			">
+   </path>
+   <path id="Fill-94" inkscape:connector-curvature="0" d="M213.7,361.8c0.3,1.6,1.2,2.8,3.1,2.8
+			C216.6,362.7,215.3,361.9,213.7,361.8">
+   </path>
+   <path id="Fill-95" inkscape:connector-curvature="0" d="M224.8,374.5c-0.2-1.9-1.5-2.7-3.1-2.8
+			C221.9,373.3,222.8,374.5,224.8,374.5">
+   </path>
+   <path id="Fill-96" inkscape:connector-curvature="0" d="M220.9,376.6c-0.2-1.9-1.5-2.7-3.1-2.8C218,375.4,218.9,376.6,220.9,376.6
+			">
+   </path>
+   <path id="Fill-97" inkscape:connector-curvature="0" d="M231.8,392.3c-0.2-1.9-1.5-2.7-3.1-2.9C229,391.1,229.9,392.2,231.8,392.3
+			">
+   </path>
+   <path id="Fill-98" inkscape:connector-curvature="0" d="M227.3,394.3c-0.2-1.9-1.5-2.7-3.1-2.8
+			C224.5,393.1,225.4,394.3,227.3,394.3">
+   </path>
+   <path id="Fill-99" inkscape:connector-curvature="0" d="M222.1,386.7c0.3,1.6,1.2,2.8,3.1,2.8C225,387.6,223.8,386.8,222.1,386.7">
+   </path>
+   <path id="Fill-100" inkscape:connector-curvature="0" d="M219.2,398.5c-0.2-1.9-1.5-2.7-3.1-2.9
+			C216.4,397.3,217.2,398.5,219.2,398.5">
+   </path>
+   <path id="Fill-101" inkscape:connector-curvature="0" d="M236.4,393.7c-0.3,1.9,0.8,2.9,2.5,3.4
+			C239,395.4,238.4,394.1,236.4,393.7">
+   </path>
+   <path id="Fill-102" inkscape:connector-curvature="0" d="M232.1,396.8c0.1,1.9,1.4,2.7,3.1,2.9C235.1,398,234.2,396.8,232.1,396.8
+			">
+   </path>
+   <path id="Fill-103" inkscape:connector-curvature="0" d="M225.6,403.1c1.8-0.7,2.2-2.2,1.9-3.8C226,400,225.1,401.2,225.6,403.1">
+   </path>
+   <path id="Fill-104" inkscape:connector-curvature="0" d="M233.3,373.8c-0.2-1.9-1.5-2.7-3.1-2.8
+			C230.4,372.6,231.3,373.8,233.3,373.8">
+   </path>
+   <path id="Fill-105" inkscape:connector-curvature="0" d="M233.1,376.7c-0.2-1.9-1.5-2.7-3.1-2.8
+			C230.3,375.4,231.2,376.6,233.1,376.7">
+   </path>
+   <path id="Fill-106" inkscape:connector-curvature="0" d="M234.8,378.6c1.9,0,2.8-1.2,3.1-2.8C236.3,375.9,235,376.6,234.8,378.6">
+   </path>
+   <path id="Fill-107" inkscape:connector-curvature="0" d="M237.5,371c-1.6,0.1-2.9,0.9-3.1,2.8C236.3,373.8,237.2,372.6,237.5,371">
+   </path>
+  </g>
+ </g>
+</svg></div></div></div>
+
+
+
+  <!-- ============ the two sides ============ -->
+  <section class="ukSides">
+    <div class="ukSides_grid">
+
+      <article class="ukSides_card ukSides_card--hotel"><div class="ukSides_vis ukSides_vis--hotel">
+        <img class="ukSides_shot" src="/assets/img/sides/for-hotels.webp?v=8" width="1576" height="1318" loading="lazy" decoding="async" alt="The Ukreate dashboard a hotel sees: open nights, creator applications and the bookings each one drove.">
+      </div><div class="ukSides_body"><span class="ukSides_tag ukSides_tag--hotel ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>For Hotels</b></span>
+
+        <h2 class="ukSides_h">Put vacant rooms to work</h2><p class="ukSides_body-text">Open the nights nobody books, and watch what the right creator brings back.</p><ul class="ukZig_points ukSides_points"><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Image"><path id="Image_2" d="M10.3379 0C12.7824 0 14.4248 1.71536 14.4248 4.26758V10.1572C14.4248 12.7093 12.7829 14.4246 10.3379 14.4248H4.08691C1.64239 14.4248 0 12.7094 0 10.1572V4.26758C0 1.71536 1.64239 0 4.08691 0H10.3379ZM11.1338 7.60938C10.3615 7.1276 9.76523 7.80321 9.60352 8.02051C9.44839 8.22955 9.31445 8.46079 9.17383 8.69141C8.83013 9.26067 8.43536 9.91697 7.75391 10.2988C6.76359 10.847 6.01167 10.3422 5.4707 9.97461C5.26792 9.83785 5.07029 9.70841 4.87402 9.62207C4.38962 9.41295 3.95341 9.65125 3.30664 10.4727C2.96731 10.902 2.62984 11.3278 2.28906 11.752C2.08545 12.0058 2.13438 12.3977 2.40918 12.5674C2.84788 12.8374 3.38364 12.9824 3.98828 12.9824H10.0664C10.4093 12.9824 10.7534 12.9352 11.0811 12.8281C11.8191 12.5869 12.4059 12.0348 12.7119 11.3057C12.97 10.6924 13.095 9.94728 12.8535 9.32812C12.773 9.12287 12.6522 8.93177 12.4834 8.76367C12.0404 8.32388 11.6261 7.91302 11.1338 7.60938ZM4.6875 2.88477C3.69348 2.88491 2.88608 3.6938 2.88574 4.6875C2.88574 5.68149 3.69327 6.49107 4.6875 6.49121C5.68091 6.49096 6.49023 5.68142 6.49023 4.6875C6.4899 3.69386 5.6807 2.88502 4.6875 2.88477Z" fill="currentColor"/></g></svg></span>Content you approve before it runs</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Activity"><path id="Activity_2" d="M9.70117 1.28418C9.67233 1.46447 9.65723 1.64491 9.65723 1.8252C9.65734 3.44791 10.9704 4.75977 12.5859 4.75977C12.7661 4.75976 12.939 4.73877 13.1191 4.70996V10.5293C13.1191 12.9751 11.6769 14.4248 9.22461 14.4248H3.89551C1.44254 14.4248 0 12.9751 0 10.5293V5.19336C0 2.74111 1.44254 1.28418 3.89551 1.28418H9.70117ZM9.8457 5.66895C9.65028 5.64735 9.45594 5.73393 9.33984 5.89258L7.5957 8.15039L5.59668 6.57812C5.47409 6.48441 5.32976 6.44775 5.18555 6.46289C5.04213 6.48459 4.91241 6.56338 4.8252 6.67871L2.69141 9.45605L2.64746 9.52051C2.52485 9.75059 2.58245 10.0467 2.79883 10.2061C2.89961 10.2708 3.00755 10.3144 3.12988 10.3145C3.29649 10.3217 3.45469 10.234 3.55566 10.0977L5.36621 7.76758L7.42188 9.31152L7.48633 9.35449C7.71704 9.47706 8.00596 9.42002 8.17188 9.20312L10.2559 6.5127L10.2275 6.52734C10.3428 6.3687 10.3645 6.16656 10.2852 5.98633C10.2065 5.80611 10.0324 5.68337 9.8457 5.66895ZM12.6865 0C13.6458 0 14.4248 0.779019 14.4248 1.73828C14.4248 2.69751 13.6458 3.47656 12.6865 3.47656C11.7274 3.47638 10.9483 2.6974 10.9482 1.73828C10.9482 0.779131 11.7274 0.000182126 12.6865 0Z" fill="currentColor"/></g></svg></span>Bookings traced to each post</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Chart"><path id="Chart_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.84426 0H10.58C13.033 0 14.4178 1.39129 14.425 3.84426V10.5807C14.425 13.033 13.033 14.425 10.58 14.425H3.84426C1.39129 14.425 0 13.033 0 10.5807V3.84426C0 1.39129 1.39129 0 3.84426 0ZM7.24784 11.439C7.5587 11.439 7.81763 11.2082 7.84648 10.8981V3.54855C7.87533 3.32496 7.76786 3.10065 7.57312 2.97876C7.37045 2.85615 7.12523 2.85615 6.93121 2.97876C6.73575 3.10065 6.62829 3.32496 6.6492 3.54855V10.8981C6.68599 11.2082 6.94492 11.439 7.24784 11.439ZM10.5663 11.439C10.8692 11.439 11.1282 11.2082 11.1649 10.8981V8.53239C11.1859 8.30087 11.0784 8.08521 10.8829 7.9626C10.6889 7.83999 10.4437 7.83999 10.2417 7.9626C10.0463 8.08521 9.93882 8.30087 9.96768 8.53239V10.8981C9.99652 11.2082 10.2555 11.439 10.5663 11.439ZM4.48545 10.8981C4.4566 11.2082 4.19767 11.439 3.88682 11.439C3.57668 11.439 3.31703 11.2082 3.2889 10.8981V5.91425C3.26726 5.68994 3.37473 5.46707 3.57019 5.34446C3.7642 5.22185 4.01015 5.22185 4.20489 5.34446C4.3989 5.46707 4.50781 5.68994 4.48545 5.91425V10.8981Z" fill="currentColor"/></g></svg></span>One dashboard for every campaign</li></ul></div></article>
+
+      <article class="ukSides_card ukSides_card--creator"><div class="ukSides_vis ukSides_vis--creator">
+        <img class="ukSides_shot" src="/assets/img/sides/for-creators.webp?v=4" width="1576" height="1318" loading="lazy" decoding="async" alt="The Ukreate view a creator sees: hotels open to hosting, the terms of each stay and what is expected in return.">
+      </div><div class="ukSides_body"><span class="ukSides_tag ukSides_tag--creator ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>For Creators</b></span>
+
+        <h2 class="ukSides_h">Turn your influence into stays</h2><p class="ukSides_body-text">Pick the stays worth making, with the terms settled before you ever arrive.</p><ul class="ukZig_points ukSides_points"><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 12.9825 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Document"><path id="Document_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.46921 0H9.51401C11.742 0 12.9825 1.28382 12.9825 3.48364V10.9341C12.9825 13.17 11.742 14.425 9.51401 14.425H3.46921C1.27661 14.425 0 13.17 0 10.9341V3.48364C0 1.28382 1.27661 0 3.46921 0ZM3.66395 3.36102V3.35381H5.81977C6.13062 3.35381 6.38306 3.60625 6.38306 3.91567C6.38306 4.23374 6.13062 4.48618 5.81977 4.48618H3.66395C3.35309 4.48618 3.10138 4.23374 3.10138 3.9236C3.10138 3.61346 3.35309 3.36102 3.66395 3.36102ZM3.66395 7.74622H9.31855C9.62869 7.74622 9.88112 7.49379 9.88112 7.18365C9.88112 6.87351 9.62869 6.62035 9.31855 6.62035H3.66395C3.35309 6.62035 3.10138 6.87351 3.10138 7.18365C3.10138 7.49379 3.35309 7.74622 3.66395 7.74622ZM3.66395 11.0423H9.31855C9.60633 11.0135 9.82342 10.7675 9.82342 10.4798C9.82342 10.184 9.60633 9.93882 9.31855 9.90998H3.66395C3.44758 9.88834 3.23841 9.98931 3.12301 10.1768C3.00761 10.3572 3.00761 10.5952 3.12301 10.7827C3.23841 10.963 3.44758 11.0712 3.66395 11.0423Z" fill="currentColor"/></g></svg></span>Rates and deliverables agreed up front</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Search"><path id="Search_2" d="M11.2666 11.291C11.5454 11.0141 11.9917 11.0141 12.2705 11.291L14.1133 12.7783H14.1455C14.5181 13.1551 14.5182 13.7659 14.1455 14.1426C13.7728 14.5192 13.1687 14.5191 12.7959 14.1426L11.2666 12.3896C11.1221 12.2441 11.041 12.0461 11.041 11.8398C11.0411 11.6338 11.1222 11.4365 11.2666 11.291ZM6.18652 0C7.82728 0 9.40131 0.658407 10.5615 1.83105C11.7217 3.00369 12.373 4.59457 12.373 6.25293C12.373 9.70647 9.6033 12.5068 6.18652 12.5068C2.76979 12.5068 0 9.70643 0 6.25293C0.000135913 2.79954 2.76988 5.38466e-05 6.18652 0Z" fill="currentColor"/></g></svg></span>Pitch Pilot drafts your outreach</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Chart"><path id="Chart_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.84426 0H10.58C13.033 0 14.4178 1.39129 14.425 3.84426V10.5807C14.425 13.033 13.033 14.425 10.58 14.425H3.84426C1.39129 14.425 0 13.033 0 10.5807V3.84426C0 1.39129 1.39129 0 3.84426 0ZM7.24784 11.439C7.5587 11.439 7.81763 11.2082 7.84648 10.8981V3.54855C7.87533 3.32496 7.76786 3.10065 7.57312 2.97876C7.37045 2.85615 7.12523 2.85615 6.93121 2.97876C6.73575 3.10065 6.62829 3.32496 6.6492 3.54855V10.8981C6.68599 11.2082 6.94492 11.439 7.24784 11.439ZM10.5663 11.439C10.8692 11.439 11.1282 11.2082 11.1649 10.8981V8.53239C11.1859 8.30087 11.0784 8.08521 10.8829 7.9626C10.6889 7.83999 10.4437 7.83999 10.2417 7.9626C10.0463 8.08521 9.93882 8.30087 9.96768 8.53239V10.8981C9.99652 11.2082 10.2555 11.439 10.5663 11.439ZM4.48545 10.8981C4.4566 11.2082 4.19767 11.439 3.88682 11.439C3.57668 11.439 3.31703 11.2082 3.2889 10.8981V5.91425C3.26726 5.68994 3.37473 5.46707 3.57019 5.34446C3.7642 5.22185 4.01015 5.22185 4.20489 5.34446C4.3989 5.46707 4.50781 5.68994 4.48545 5.91425V10.8981Z" fill="currentColor"/></g></svg></span>Commission on every booking you drive</li></ul></div></article>
+
+    </div>
+  </section>
+
+  <!-- ============ what goes in, and what comes back ============ -->
+  <section class="ukScan" aria-labelledby="ukScan-h">
+    <div class="light-curtain" aria-hidden="true"
+         data-background="#061829" data-base="#14507F" data-accent="#6AA3DD" data-high="#E0B054"
+         data-density="150" data-speed="50" data-curtain-width="30" data-spread="0"
+         data-striation="100" data-hover="100" data-reach="30" data-axis=".ukScan_band"></div>
+    <div class="ukScan_copy">
+      <span class="results__label ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>The Pipeline</b></span>
+      <h2 class="ukScan_h" id="ukScan-h">Turn creator stories into direct trackable revenue</h2>
+      <p class="ukScan_p">See what happens when unsold nights meet authentic travel content.</p>
+    </div>
+
+    <div class="ukScan_stage">
+    <div class="ukScan_band" data-uk-scan data-stills="/assets/img/uk/posters/creator-02.webp,/assets/img/uk/posters/creator-03.webp,/assets/img/uk/posters/creator-05.webp,/assets/img/uk/posters/creator-08.webp,/assets/img/uk/posters/creator-09.webp,/assets/img/uk/posters/creator-11.webp"
+         data-clips="/assets/video/creators/creator-02.mp4,/assets/video/creators/creator-03.mp4,/assets/video/creators/creator-05.mp4,/assets/video/creators/creator-08.mp4,/assets/video/creators/creator-09.mp4,/assets/video/creators/creator-11.mp4" aria-hidden="true">
+      <div class="ukScan_track"></div>
+    </div>
+      <canvas class="ukScan_sparks"></canvas>
+      <span class="ukScan_beam"></span>
+    </div>
+
+  </section>
+
+
+  
+
+  
+
+  <!-- ============ how the exchange actually runs ============ -->
+  <section class="ukZig" aria-labelledby="ukZig-h">
+    <div class="ukZig_in">
+      <div class="ukZig_head">
+        <span class="ukZig_tag ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>The Ecosystem</b></span>
+        <h2 class="ukZig_h2" id="ukZig-h">Everything you need to scale hotel-creator collabs</h2>
+        <p class="ukZig_sub">One ecosystem where hotels open unsold nights, creators make the content, and both sides track the return.</p>
+      </div>
+      <div class="ukZig_rows">
+    <article class="ukZig_row">
+        <div class="ukZig_visual">
+          <img class="ukZig_shot" src="/assets/img/hiw/row1-matchmaking.webp?v=1" width="1576" height="1458" loading="lazy" decoding="async" alt="A hotel browsing creator profiles, filtering by format and platform, with reach, engagement and rate on each one.">
+        </div>
+        <div class="ukZig_copy">
+          <p class="ukZig_kicker">01 &mdash; The match</p>
+          <h3 class="ukZig_title"><span>Smart Matchmaking &amp; Outreach</span></h3>
+          <p class="ukZig_body">Pitch Pilot does the reaching out, and every profile that comes back is verified, so the terms are agreed before either side commits.</p>
+          
+          <ul class="ukZig_points"><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Search"><path id="Search_2" d="M11.2666 11.291C11.5454 11.0141 11.9917 11.0141 12.2705 11.291L14.1133 12.7783H14.1455C14.5181 13.1551 14.5182 13.7659 14.1455 14.1426C13.7728 14.5192 13.1687 14.5191 12.7959 14.1426L11.2666 12.3896C11.1221 12.2441 11.041 12.0461 11.041 11.8398C11.0411 11.6338 11.1222 11.4365 11.2666 11.291ZM6.18652 0C7.82728 0 9.40131 0.658407 10.5615 1.83105C11.7217 3.00369 12.373 4.59457 12.373 6.25293C12.373 9.70647 9.6033 12.5068 6.18652 12.5068C2.76979 12.5068 0 9.70643 0 6.25293C0.000135913 2.79954 2.76988 5.38466e-05 6.18652 0Z" fill="currentColor"/></g></svg></span>Pitch Pilot automated outreach</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Tick Square"><path id="Tick Square_2" fill-rule="evenodd" clip-rule="evenodd" d="M4.08949 0H10.3427C12.7878 0 14.425 1.71657 14.425 4.2698V10.1631C14.425 12.7084 12.7878 14.425 10.3427 14.425H4.08949C1.64445 14.425 0 12.7084 0 10.1631V4.2698C0 1.71657 1.64445 0 4.08949 0ZM6.80139 9.36904L10.2273 5.9431C10.4725 5.69787 10.4725 5.30119 10.2273 5.04875C9.9821 4.80352 9.5782 4.80352 9.33298 5.04875L6.35421 8.02751L5.09202 6.76532C4.8468 6.5201 4.4429 6.5201 4.19768 6.76532C3.95245 7.01055 3.95245 7.40724 4.19768 7.65967L5.91425 9.36904C6.03686 9.49165 6.19554 9.54935 6.35421 9.54935C6.5201 9.54935 6.67877 9.49165 6.80139 9.36904Z" fill="currentColor"/></g></svg></span>Verified creator profiles</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 12.9825 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Document"><path id="Document_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.46921 0H9.51401C11.742 0 12.9825 1.28382 12.9825 3.48364V10.9341C12.9825 13.17 11.742 14.425 9.51401 14.425H3.46921C1.27661 14.425 0 13.17 0 10.9341V3.48364C0 1.28382 1.27661 0 3.46921 0ZM3.66395 3.36102V3.35381H5.81977C6.13062 3.35381 6.38306 3.60625 6.38306 3.91567C6.38306 4.23374 6.13062 4.48618 5.81977 4.48618H3.66395C3.35309 4.48618 3.10138 4.23374 3.10138 3.9236C3.10138 3.61346 3.35309 3.36102 3.66395 3.36102ZM3.66395 7.74622H9.31855C9.62869 7.74622 9.88112 7.49379 9.88112 7.18365C9.88112 6.87351 9.62869 6.62035 9.31855 6.62035H3.66395C3.35309 6.62035 3.10138 6.87351 3.10138 7.18365C3.10138 7.49379 3.35309 7.74622 3.66395 7.74622ZM3.66395 11.0423H9.31855C9.60633 11.0135 9.82342 10.7675 9.82342 10.4798C9.82342 10.184 9.60633 9.93882 9.31855 9.90998H3.66395C3.44758 9.88834 3.23841 9.98931 3.12301 10.1768C3.00761 10.3572 3.00761 10.5952 3.12301 10.7827C3.23841 10.963 3.44758 11.0712 3.66395 11.0423Z" fill="currentColor"/></g></svg></span>Custom campaign terms</li></ul>
+        </div>
+      </article>
+    <article class="ukZig_row">
+        <div class="ukZig_visual">
+          <img class="ukZig_shot" src="/assets/img/hiw/row2-stay-management.webp?v=1" width="1576" height="1458" loading="lazy" decoding="async" alt="A booked stay running in one thread: dates locked, the brief agreed and the guest guide shared with the creator.">
+        </div>
+        <div class="ukZig_copy">
+          <p class="ukZig_kicker">02 &mdash; The stay</p>
+          <h3 class="ukZig_title"><span>Seamless Stay Management</span></h3>
+          <p class="ukZig_body">Dates, messages and agreed terms all sit in one place, so the stay runs start to finish without a thread of email between the two sides.</p>
+          
+          <ul class="ukZig_points"><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Tick Square"><path id="Tick Square_2" fill-rule="evenodd" clip-rule="evenodd" d="M4.08949 0H10.3427C12.7878 0 14.425 1.71657 14.425 4.2698V10.1631C14.425 12.7084 12.7878 14.425 10.3427 14.425H4.08949C1.64445 14.425 0 12.7084 0 10.1631V4.2698C0 1.71657 1.64445 0 4.08949 0ZM6.80139 9.36904L10.2273 5.9431C10.4725 5.69787 10.4725 5.30119 10.2273 5.04875C9.9821 4.80352 9.5782 4.80352 9.33298 5.04875L6.35421 8.02751L5.09202 6.76532C4.8468 6.5201 4.4429 6.5201 4.19768 6.76532C3.95245 7.01055 3.95245 7.40724 4.19768 7.65967L5.91425 9.36904C6.03686 9.49165 6.19554 9.54935 6.35421 9.54935C6.5201 9.54935 6.67877 9.49165 6.80139 9.36904Z" fill="currentColor"/></g></svg></span>Automated booking calendars</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Activity"><path id="Activity_2" d="M9.70117 1.28418C9.67233 1.46447 9.65723 1.64491 9.65723 1.8252C9.65734 3.44791 10.9704 4.75977 12.5859 4.75977C12.7661 4.75976 12.939 4.73877 13.1191 4.70996V10.5293C13.1191 12.9751 11.6769 14.4248 9.22461 14.4248H3.89551C1.44254 14.4248 0 12.9751 0 10.5293V5.19336C0 2.74111 1.44254 1.28418 3.89551 1.28418H9.70117ZM9.8457 5.66895C9.65028 5.64735 9.45594 5.73393 9.33984 5.89258L7.5957 8.15039L5.59668 6.57812C5.47409 6.48441 5.32976 6.44775 5.18555 6.46289C5.04213 6.48459 4.91241 6.56338 4.8252 6.67871L2.69141 9.45605L2.64746 9.52051C2.52485 9.75059 2.58245 10.0467 2.79883 10.2061C2.89961 10.2708 3.00755 10.3144 3.12988 10.3145C3.29649 10.3217 3.45469 10.234 3.55566 10.0977L5.36621 7.76758L7.42188 9.31152L7.48633 9.35449C7.71704 9.47706 8.00596 9.42002 8.17188 9.20312L10.2559 6.5127L10.2275 6.52734C10.3428 6.3687 10.3645 6.16656 10.2852 5.98633C10.2065 5.80611 10.0324 5.68337 9.8457 5.66895ZM12.6865 0C13.6458 0 14.4248 0.779019 14.4248 1.73828C14.4248 2.69751 13.6458 3.47656 12.6865 3.47656C11.7274 3.47638 10.9483 2.6974 10.9482 1.73828C10.9482 0.779131 11.7274 0.000182126 12.6865 0Z" fill="currentColor"/></g></svg></span>Direct host messaging</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 12.9825 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Document"><path id="Document_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.46921 0H9.51401C11.742 0 12.9825 1.28382 12.9825 3.48364V10.9341C12.9825 13.17 11.742 14.425 9.51401 14.425H3.46921C1.27661 14.425 0 13.17 0 10.9341V3.48364C0 1.28382 1.27661 0 3.46921 0ZM3.66395 3.36102V3.35381H5.81977C6.13062 3.35381 6.38306 3.60625 6.38306 3.91567C6.38306 4.23374 6.13062 4.48618 5.81977 4.48618H3.66395C3.35309 4.48618 3.10138 4.23374 3.10138 3.9236C3.10138 3.61346 3.35309 3.36102 3.66395 3.36102ZM3.66395 7.74622H9.31855C9.62869 7.74622 9.88112 7.49379 9.88112 7.18365C9.88112 6.87351 9.62869 6.62035 9.31855 6.62035H3.66395C3.35309 6.62035 3.10138 6.87351 3.10138 7.18365C3.10138 7.49379 3.35309 7.74622 3.66395 7.74622ZM3.66395 11.0423H9.31855C9.60633 11.0135 9.82342 10.7675 9.82342 10.4798C9.82342 10.184 9.60633 9.93882 9.31855 9.90998H3.66395C3.44758 9.88834 3.23841 9.98931 3.12301 10.1768C3.00761 10.3572 3.00761 10.5952 3.12301 10.7827C3.23841 10.963 3.44758 11.0712 3.66395 11.0423Z" fill="currentColor"/></g></svg></span>Clear deliverable terms in writing</li></ul>
+        </div>
+      </article>
+    <article class="ukZig_row">
+        <div class="ukZig_visual">
+          <img class="ukZig_shot" src="/assets/img/hiw/row3-attribution.webp?v=1" width="1576" height="1458" loading="lazy" decoding="async" alt="A campaign reporting back: room nights driven, earnings to date, and bookings, revenue and commission attributed to the post.">
+        </div>
+        <div class="ukZig_copy">
+          <p class="ukZig_kicker">03 &mdash; The return</p>
+          <h3 class="ukZig_title"><span>Performance &amp; Attribution</span></h3>
+          <p class="ukZig_body">Every post carries its own tracked link, so a booking lands against the creator who drove it and the return is visible while the campaign is still running.</p>
+          
+          <ul class="ukZig_points"><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Activity"><path id="Activity_2" d="M9.70117 1.28418C9.67233 1.46447 9.65723 1.64491 9.65723 1.8252C9.65734 3.44791 10.9704 4.75977 12.5859 4.75977C12.7661 4.75976 12.939 4.73877 13.1191 4.70996V10.5293C13.1191 12.9751 11.6769 14.4248 9.22461 14.4248H3.89551C1.44254 14.4248 0 12.9751 0 10.5293V5.19336C0 2.74111 1.44254 1.28418 3.89551 1.28418H9.70117ZM9.8457 5.66895C9.65028 5.64735 9.45594 5.73393 9.33984 5.89258L7.5957 8.15039L5.59668 6.57812C5.47409 6.48441 5.32976 6.44775 5.18555 6.46289C5.04213 6.48459 4.91241 6.56338 4.8252 6.67871L2.69141 9.45605L2.64746 9.52051C2.52485 9.75059 2.58245 10.0467 2.79883 10.2061C2.89961 10.2708 3.00755 10.3144 3.12988 10.3145C3.29649 10.3217 3.45469 10.234 3.55566 10.0977L5.36621 7.76758L7.42188 9.31152L7.48633 9.35449C7.71704 9.47706 8.00596 9.42002 8.17188 9.20312L10.2559 6.5127L10.2275 6.52734C10.3428 6.3687 10.3645 6.16656 10.2852 5.98633C10.2065 5.80611 10.0324 5.68337 9.8457 5.66895ZM12.6865 0C13.6458 0 14.4248 0.779019 14.4248 1.73828C14.4248 2.69751 13.6458 3.47656 12.6865 3.47656C11.7274 3.47638 10.9483 2.6974 10.9482 1.73828C10.9482 0.779131 11.7274 0.000182126 12.6865 0Z" fill="currentColor"/></g></svg></span>Custom tracked links</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Tick Square"><path id="Tick Square_2" fill-rule="evenodd" clip-rule="evenodd" d="M4.08949 0H10.3427C12.7878 0 14.425 1.71657 14.425 4.2698V10.1631C14.425 12.7084 12.7878 14.425 10.3427 14.425H4.08949C1.64445 14.425 0 12.7084 0 10.1631V4.2698C0 1.71657 1.64445 0 4.08949 0ZM6.80139 9.36904L10.2273 5.9431C10.4725 5.69787 10.4725 5.30119 10.2273 5.04875C9.9821 4.80352 9.5782 4.80352 9.33298 5.04875L6.35421 8.02751L5.09202 6.76532C4.8468 6.5201 4.4429 6.5201 4.19768 6.76532C3.95245 7.01055 3.95245 7.40724 4.19768 7.65967L5.91425 9.36904C6.03686 9.49165 6.19554 9.54935 6.35421 9.54935C6.5201 9.54935 6.67877 9.49165 6.80139 9.36904Z" fill="currentColor"/></g></svg></span>Direct booking attribution</li><li><span class="ukZig_ico" aria-hidden="true"><svg class="ukZig_glyph" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Chart"><path id="Chart_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.84426 0H10.58C13.033 0 14.4178 1.39129 14.425 3.84426V10.5807C14.425 13.033 13.033 14.425 10.58 14.425H3.84426C1.39129 14.425 0 13.033 0 10.5807V3.84426C0 1.39129 1.39129 0 3.84426 0ZM7.24784 11.439C7.5587 11.439 7.81763 11.2082 7.84648 10.8981V3.54855C7.87533 3.32496 7.76786 3.10065 7.57312 2.97876C7.37045 2.85615 7.12523 2.85615 6.93121 2.97876C6.73575 3.10065 6.62829 3.32496 6.6492 3.54855V10.8981C6.68599 11.2082 6.94492 11.439 7.24784 11.439ZM10.5663 11.439C10.8692 11.439 11.1282 11.2082 11.1649 10.8981V8.53239C11.1859 8.30087 11.0784 8.08521 10.8829 7.9626C10.6889 7.83999 10.4437 7.83999 10.2417 7.9626C10.0463 8.08521 9.93882 8.30087 9.96768 8.53239V10.8981C9.99652 11.2082 10.2555 11.439 10.5663 11.439ZM4.48545 10.8981C4.4566 11.2082 4.19767 11.439 3.88682 11.439C3.57668 11.439 3.31703 11.2082 3.2889 10.8981V5.91425C3.26726 5.68994 3.37473 5.46707 3.57019 5.34446C3.7642 5.22185 4.01015 5.22185 4.20489 5.34446C4.3989 5.46707 4.50781 5.68994 4.48545 5.91425V10.8981Z" fill="currentColor"/></g></svg></span>Real-time ROI analytics</li></ul>
+        </div>
+      </article>
+  </div></section>
+
+
+
+  <section class="ukSection ukFeat"><div class="ukReveal ukFeat_bg" aria-hidden="true"><div class="ukReveal_frame"><img class="ukReveal_img" src="/assets/img/uk/feat-bg.jpg" alt="" loading="lazy"></div></div><div class="ukFeat_scrim" aria-hidden="true"></div><div class="ukFeat_inner"><div class="ukCreators_head uk_head" data-surfer-dock><span class="ukFeat_tag ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>The network</b></span><h2 class="uk_title">Every piece here started as an unsold room</h2><p class="uk_sub">Rated by the properties that hosted them, with the work to show for it.</p></div><div class="ukEx" role="group" aria-label="Featured creators" data-start="0"><div class="ukEx_scroll"><div class="ukEx_row"><div class="ukEx_item ukEx_item--dock" data-i="0" tabindex="0" role="button" aria-expanded="false" aria-label="Diego Marín, verified creator"><video poster="/assets/img/uk/posters/creator-01.webp" class="ukEx_video" src="/assets/video/creators/creator-01.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-01.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Diego Marín<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇵🇹</span>Lisbon</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Hotels</span><span class="fcPro_chip">City Guides</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">128 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="1" tabindex="0" role="button" aria-expanded="false" aria-label="Nadia Kraft, verified creator"><video poster="/assets/img/uk/posters/creator-02.webp" class="ukEx_video" src="/assets/video/creators/creator-02.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-02.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Nadia Kraft<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇩🇪</span>Berlin</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Design Stays</span><span class="fcPro_chip">Nightlife</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">96 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="2" tabindex="0" role="button" aria-expanded="false" aria-label="Kai Rivera, verified creator"><video poster="/assets/img/uk/posters/creator-03.webp" class="ukEx_video" src="/assets/video/creators/creator-03.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-03.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Kai Rivera<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇮🇩</span>Bali</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Island</span><span class="fcPro_chip">Resort UGC</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">5.0<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">210 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="3" tabindex="0" role="button" aria-expanded="false" aria-label="Marco Vitale, verified creator"><video poster="/assets/img/uk/posters/creator-04.webp" class="ukEx_video" src="/assets/video/creators/creator-04.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-04.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Marco Vitale<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇮🇹</span>Milan</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Luxury</span><span class="fcPro_chip">Fashion</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">74 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="4" tabindex="0" role="button" aria-expanded="false" aria-label="Aiko Tanaka, verified creator"><video poster="/assets/img/uk/posters/creator-05.webp" class="ukEx_video" src="/assets/video/creators/creator-05.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-06.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Aiko Tanaka<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇯🇵</span>Kyoto</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Culture</span><span class="fcPro_chip">Ryokan</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">5.0<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">156 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="5" tabindex="0" role="button" aria-expanded="false" aria-label="Liam Brooks, verified creator"><video poster="/assets/img/uk/posters/creator-06.webp" class="ukEx_video" src="/assets/video/creators/creator-06.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-07.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Liam Brooks<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇦🇺</span>Sydney</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Coastal</span><span class="fcPro_chip">Surf</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.7<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">63 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="6" tabindex="0" role="button" aria-expanded="false" aria-label="Yasmin Haddad, verified creator"><video poster="/assets/img/uk/posters/creator-07.webp" class="ukEx_video" src="/assets/video/creators/creator-07.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-08.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Yasmin Haddad<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇦🇪</span>Dubai</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Luxury</span><span class="fcPro_chip">Desert</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">141 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="7" tabindex="0" role="button" aria-expanded="false" aria-label="Sofia Reyes, verified creator"><video poster="/assets/img/uk/posters/creator-08.webp" class="ukEx_video" src="/assets/video/creators/creator-08.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-09.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Sofia Reyes<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇲🇽</span>Tulum</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Wellness</span><span class="fcPro_chip">Beach</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">88 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="8" tabindex="0" role="button" aria-expanded="false" aria-label="Noah Bergström, verified creator"><video poster="/assets/img/uk/posters/creator-09.webp" class="ukEx_video" src="/assets/video/creators/creator-09.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-10.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Noah Bergström<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇸🇪</span>Stockholm</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Design</span><span class="fcPro_chip">Minimal</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">102 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="9" tabindex="0" role="button" aria-expanded="false" aria-label="Diego Marín, verified creator"><video poster="/assets/img/uk/posters/creator-10.webp" class="ukEx_video" src="/assets/video/creators/creator-10.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-01.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Diego Marín<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇵🇹</span>Lisbon</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Hotels</span><span class="fcPro_chip">City Guides</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">128 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="10" tabindex="0" role="button" aria-expanded="false" aria-label="Noor Haddad, verified creator"><video poster="/assets/img/uk/posters/creator-11.webp" class="ukEx_video" src="/assets/video/creators/creator-11.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-01.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Noor Haddad<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇯🇴</span>Wadi Rum</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Desert Stays</span><span class="fcPro_chip">Drone</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">118 jobs completed</span></div></div></div></div><div class="ukEx_item" data-i="11" tabindex="0" role="button" aria-expanded="false" aria-label="Elif Demir, verified creator"><video poster="/assets/img/uk/posters/creator-12.webp" class="ukEx_video" src="/assets/video/creators/creator-12.mp4" muted loop playsinline preload="none"></video><button class="ukCf_mute" type="button" aria-label="Unmute video" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></button><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-04.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Elif Demir<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇹🇷</span>Kalkan</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Coastal</span><span class="fcPro_chip">Hotel Tours</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">96 jobs completed</span></div></div></div></div></div></div></div><div class="ukCreators_cta"><a class="ukTextCta" href="/for-creators/">Browse the network</a></div><dl class="ukStats" data-stat-field><div class="philoStat" data-stat-badge><dt class="philoStat_num">12M+</dt><dd class="philoStat_label">Creator reach</dd></div><div class="philoStat" data-stat-badge><dt class="philoStat_num">50+</dt><dd class="philoStat_label">Countries</dd></div><div class="philoStat" data-stat-badge><dt class="philoStat_num">300+</dt><dd class="philoStat_label">Hotel partners</dd></div><!-- PLACEHOLDER FIGURE: needs the real total before this ships --><div class="philoStat" data-stat-badge><dt class="philoStat_num">8K+</dt><dd class="philoStat_label">Stays hosted</dd></div></dl>
+
+      </div>
+  </section>
+
+  <section class="ukFounders">
+    <div class="ukFounders_in"><div class="homePhilosophy_block"><div class="homePhilosophy_head"><div class="philoBigVideo homePhilosophy_video" data-philo-video data-video-id="v2GtK-ezKoE"><div class="homePhilosophy_videoInner"></div><p class="philoBigCaption"><span class="philoWord">An</span> <span class="philoWord">empty</span> <span class="philoWord">night</span> <span class="philoWord">for</span> <span class="philoWord">the</span> <span class="philoWord">hotel.</span> <span class="philoWord">Paid</span> <span class="philoWord">work</span> <span class="philoWord">for</span> <span class="philoWord">the</span> <span class="philoWord">creator.</span></p></div><svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><defs><linearGradient id="ukIcoGrad" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ecd0a1"/></linearGradient><linearGradient id="ukIcoGradLight" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#8a6414"/><stop offset="1" stop-color="#d7a543"/></linearGradient><linearGradient id="ukIcoGradBlue" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#0B2F52"/><stop offset="1" stop-color="#5C97D4"/></linearGradient><linearGradient id="ukPlayGradHover" x1="0" y1="0" x2="0.25" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d7a543"/></linearGradient></defs></svg><div class="explainer_grid"><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Tick Square"><path id="Tick Square_2" fill-rule="evenodd" clip-rule="evenodd" d="M4.08949 0H10.3427C12.7878 0 14.425 1.71657 14.425 4.2698V10.1631C14.425 12.7084 12.7878 14.425 10.3427 14.425H4.08949C1.64445 14.425 0 12.7084 0 10.1631V4.2698C0 1.71657 1.64445 0 4.08949 0ZM6.80139 9.36904L10.2273 5.9431C10.4725 5.69787 10.4725 5.30119 10.2273 5.04875C9.9821 4.80352 9.5782 4.80352 9.33298 5.04875L6.35421 8.02751L5.09202 6.76532C4.8468 6.5201 4.4429 6.5201 4.19768 6.76532C3.95245 7.01055 3.95245 7.40724 4.19768 7.65967L5.91425 9.36904C6.03686 9.49165 6.19554 9.54935 6.35421 9.54935C6.5201 9.54935 6.67877 9.49165 6.80139 9.36904Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Vetted Travel Creators</h5><p class="explainer_desc">Every creator is manually reviewed for content quality, engagement authenticity, and hospitality experience.</p></div><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Image"><path id="Image_2" d="M10.3379 0C12.7824 0 14.4248 1.71536 14.4248 4.26758V10.1572C14.4248 12.7093 12.7829 14.4246 10.3379 14.4248H4.08691C1.64239 14.4248 0 12.7094 0 10.1572V4.26758C0 1.71536 1.64239 0 4.08691 0H10.3379ZM11.1338 7.60938C10.3615 7.1276 9.76523 7.80321 9.60352 8.02051C9.44839 8.22955 9.31445 8.46079 9.17383 8.69141C8.83013 9.26067 8.43536 9.91697 7.75391 10.2988C6.76359 10.847 6.01167 10.3422 5.4707 9.97461C5.26792 9.83785 5.07029 9.70841 4.87402 9.62207C4.38962 9.41295 3.95341 9.65125 3.30664 10.4727C2.96731 10.902 2.62984 11.3278 2.28906 11.752C2.08545 12.0058 2.13438 12.3977 2.40918 12.5674C2.84788 12.8374 3.38364 12.9824 3.98828 12.9824H10.0664C10.4093 12.9824 10.7534 12.9352 11.0811 12.8281C11.8191 12.5869 12.4059 12.0348 12.7119 11.3057C12.97 10.6924 13.095 9.94728 12.8535 9.32812C12.773 9.12287 12.6522 8.93177 12.4834 8.76367C12.0404 8.32388 11.6261 7.91302 11.1338 7.60938ZM4.6875 2.88477C3.69348 2.88491 2.88608 3.6938 2.88574 4.6875C2.88574 5.68149 3.69327 6.49107 4.6875 6.49121C5.68091 6.49096 6.49023 5.68142 6.49023 4.6875C6.4899 3.69386 5.6807 2.88502 4.6875 2.88477Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Content + Distribution</h5><p class="explainer_desc">Receive finished media for your own channels alongside organic posts to targeted travel audiences.</p></div><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 12.9825 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Document"><path id="Document_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.46921 0H9.51401C11.742 0 12.9825 1.28382 12.9825 3.48364V10.9341C12.9825 13.17 11.742 14.425 9.51401 14.425H3.46921C1.27661 14.425 0 13.17 0 10.9341V3.48364C0 1.28382 1.27661 0 3.46921 0ZM3.66395 3.36102V3.35381H5.81977C6.13062 3.35381 6.38306 3.60625 6.38306 3.91567C6.38306 4.23374 6.13062 4.48618 5.81977 4.48618H3.66395C3.35309 4.48618 3.10138 4.23374 3.10138 3.9236C3.10138 3.61346 3.35309 3.36102 3.66395 3.36102ZM3.66395 7.74622H9.31855C9.62869 7.74622 9.88112 7.49379 9.88112 7.18365C9.88112 6.87351 9.62869 6.62035 9.31855 6.62035H3.66395C3.35309 6.62035 3.10138 6.87351 3.10138 7.18365C3.10138 7.49379 3.35309 7.74622 3.66395 7.74622ZM3.66395 11.0423H9.31855C9.60633 11.0135 9.82342 10.7675 9.82342 10.4798C9.82342 10.184 9.60633 9.93882 9.31855 9.90998H3.66395C3.44758 9.88834 3.23841 9.98931 3.12301 10.1768C3.00761 10.3572 3.00761 10.5952 3.12301 10.7827C3.23841 10.963 3.44758 11.0712 3.66395 11.0423Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Contracts &amp; Coverage</h5><p class="explainer_desc">Terms agreed in writing, clear deliverables, and built-in protection on every hosted collaboration.</p></div><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.4248 14.4248" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Activity"><path id="Activity_2" d="M9.70117 1.28418C9.67233 1.46447 9.65723 1.64491 9.65723 1.8252C9.65734 3.44791 10.9704 4.75977 12.5859 4.75977C12.7661 4.75976 12.939 4.73877 13.1191 4.70996V10.5293C13.1191 12.9751 11.6769 14.4248 9.22461 14.4248H3.89551C1.44254 14.4248 0 12.9751 0 10.5293V5.19336C0 2.74111 1.44254 1.28418 3.89551 1.28418H9.70117ZM9.8457 5.66895C9.65028 5.64735 9.45594 5.73393 9.33984 5.89258L7.5957 8.15039L5.59668 6.57812C5.47409 6.48441 5.32976 6.44775 5.18555 6.46289C5.04213 6.48459 4.91241 6.56338 4.8252 6.67871L2.69141 9.45605L2.64746 9.52051C2.52485 9.75059 2.58245 10.0467 2.79883 10.2061C2.89961 10.2708 3.00755 10.3144 3.12988 10.3145C3.29649 10.3217 3.45469 10.234 3.55566 10.0977L5.36621 7.76758L7.42188 9.31152L7.48633 9.35449C7.71704 9.47706 8.00596 9.42002 8.17188 9.20312L10.2559 6.5127L10.2275 6.52734C10.3428 6.3687 10.3645 6.16656 10.2852 5.98633C10.2065 5.80611 10.0324 5.68337 9.8457 5.66895ZM12.6865 0C13.6458 0 14.4248 0.779019 14.4248 1.73828C14.4248 2.69751 13.6458 3.47656 12.6865 3.47656C11.7274 3.47638 10.9483 2.6974 10.9482 1.73828C10.9482 0.779131 11.7274 0.000182126 12.6865 0Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Streamlined Workflows</h5><p class="explainer_desc">Industry-standard agreements, deliverables, and approval flows built specifically around hotel operations.</p></div><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Search"><path id="Search_2" d="M11.2666 11.291C11.5454 11.0141 11.9917 11.0141 12.2705 11.291L14.1133 12.7783H14.1455C14.5181 13.1551 14.5182 13.7659 14.1455 14.1426C13.7728 14.5192 13.1687 14.5191 12.7959 14.1426L11.2666 12.3896C11.1221 12.2441 11.041 12.0461 11.041 11.8398C11.0411 11.6338 11.1222 11.4365 11.2666 11.291ZM6.18652 0C7.82728 0 9.40131 0.658407 10.5615 1.83105C11.7217 3.00369 12.373 4.59457 12.373 6.25293C12.373 9.70647 9.6033 12.5068 6.18652 12.5068C2.76979 12.5068 0 9.70643 0 6.25293C0.000135913 2.79954 2.76988 5.38466e-05 6.18652 0Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Global Destination Reach</h5><p class="explainer_desc">Access high-performing creators across 60+ countries, covering every luxury, boutique, and niche travel segment.</p></div><div class="explainer_item"><div class="explainer_ico" aria-hidden="true"><svg class="explainer_icon" aria-hidden="true" preserveAspectRatio="xMidYMid meet" overflow="visible" style="display:block" viewBox="0 0 14.425 14.425" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="Chart"><path id="Chart_2" fill-rule="evenodd" clip-rule="evenodd" d="M3.84426 0H10.58C13.033 0 14.4178 1.39129 14.425 3.84426V10.5807C14.425 13.033 13.033 14.425 10.58 14.425H3.84426C1.39129 14.425 0 13.033 0 10.5807V3.84426C0 1.39129 1.39129 0 3.84426 0ZM7.24784 11.439C7.5587 11.439 7.81763 11.2082 7.84648 10.8981V3.54855C7.87533 3.32496 7.76786 3.10065 7.57312 2.97876C7.37045 2.85615 7.12523 2.85615 6.93121 2.97876C6.73575 3.10065 6.62829 3.32496 6.6492 3.54855V10.8981C6.68599 11.2082 6.94492 11.439 7.24784 11.439ZM10.5663 11.439C10.8692 11.439 11.1282 11.2082 11.1649 10.8981V8.53239C11.1859 8.30087 11.0784 8.08521 10.8829 7.9626C10.6889 7.83999 10.4437 7.83999 10.2417 7.9626C10.0463 8.08521 9.93882 8.30087 9.96768 8.53239V10.8981C9.99652 11.2082 10.2555 11.439 10.5663 11.439ZM4.48545 10.8981C4.4566 11.2082 4.19767 11.439 3.88682 11.439C3.57668 11.439 3.31703 11.2082 3.2889 10.8981V5.91425C3.26726 5.68994 3.37473 5.46707 3.57019 5.34446C3.7642 5.22185 4.01015 5.22185 4.20489 5.34446C4.3989 5.46707 4.50781 5.68994 4.48545 5.91425V10.8981Z" fill="currentColor"/></g></svg></div><h5 class="explainer_title">Attribution &amp; Analytics</h5><p class="explainer_desc">Track impression volume, audience engagement, and direct room revenue through custom campaign links.</p></div></div><div class="explainer_cta"><p class="explainer_ctaLead">It starts with one open night.</p><a href="/join/" class="aeroBtn is-primary"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Start Booking Creators"><em>Start Booking Creators</em></span></strong></a></div></div><div class="homePhilosophy_singleImg" aria-hidden="true"></div></div></div>
+  </section>
+
+
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+  <section class="results">
+  <div class="csHold" data-cs-hold>
+  <div class="csHold_stage">
+    <div class="results__bg">
+    <img src="images/298df834-4d50-4185-a0d0-f4f398468592.png" alt="">
+  </div>
+    <div class="csHold_inner">
+      <div class="results__header">
+    <span class="results__label ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>Case studies</b></span>
+    <div>
+      <h2 class="results__title">What this looks like when it works</h2>
+      <p class="results__sub">Properties that opened a few unsold nights, and the creators who filled them.</p>
+    </div>
+  </div>
+      <div class="csDeck" data-cs-deck>
+    <div class="csDeck_panel" data-cs-panel="0">
+<div class="cs-card">
+
+    <!-- Left: hotel image + thumbnail strip -->
+    <div class="cs-left">
+      <img class="cs-hotel-img" src="images/a868e59e-b20c-491c-a6ae-f8781b5ae365.png" alt="Hotel">
+      <div class="cs-gradient"></div>
+      <div class="cs-thumbs">
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-01.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-01.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-02.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-02.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-03.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-03.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-04.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-04.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-05.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-05.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        <div class="cs-thumb" data-video="/assets/video/ugc/ugc-06.mp4"><img class="cs-thumb-img" src="/assets/img/uk/posters/ugc-06.jpg" alt=""><div class="cs-play"><svg viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+      </div>
+    </div>
+
+    <!-- Right: case study details -->
+    <div class="cs-right">
+
+      <!-- Hotel logo -->
+      <div class="cs-logo-card">
+        <img id="cs-logo" src="images/f3d7a04e-92ac-48d6-b34f-62eb519b38b9.png" alt="">
+      </div>
+
+      <!-- Sections -->
+      <div class="cs-sections">
+
+        <div class="cs-section">
+          <h3 class="cs-section-title">Problem</h3>
+          <p class="cs-section-text" id="cs-problem">Needed fresh social content to drive direct bookings ahead of their peak summer season</p>
+        </div>
+        <hr class="cs-divider">
+
+        <div class="cs-section">
+          <h3 class="cs-section-title">Solution</h3>
+          <p class="cs-section-text" id="cs-solution">Booked 3 travel creators for 2-night complimentary stays with a UGC-only content package</p>
+        </div>
+        <hr class="cs-divider">
+
+        <div class="cs-section">
+          <h3 class="cs-section-title">Results</h3>
+          <div class="cs-stats">
+            <div class="cs-stat">
+              <div class="cs-stat-value"><span id="cs-stat1">340K</span>
+                <svg class="cs-trending" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              </div>
+              <div class="cs-stat-label" id="cs-label1">Impressions</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-value"><span id="cs-stat2">28</span>
+                <svg class="cs-trending" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              </div>
+              <div class="cs-stat-label" id="cs-label2">Assets</div>
+            </div>
+            <div class="cs-stat">
+              <div class="cs-stat-value"><span id="cs-stat3">12%</span>
+                <svg class="cs-trending" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              </div>
+              <div class="cs-stat-label" id="cs-label3">Engagement</div>
+            </div>
+          </div>
+        </div>
+        <hr class="cs-divider">
+
+      </div>
+
+      <!-- CTA row -->
+      <div class="cs-cta-row">
+        <a href="#" class="aeroBtn is-primary"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="View Full Case Study"><em>View Full Case Study</em></span></strong></a>
+        <div class="cs-nav">
+          <button class="cs-nav-btn cs-nav-btn--prev" id="cs-prev" aria-label="Previous">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="cs-nav-btn cs-nav-btn--next" id="cs-next" aria-label="Next">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+    </div>
+    <div class="csDeck_panel" data-cs-panel="1">
+<div data-rs>
+  <div class="cs-card cs-card--creator" data-rs-study>
+    <div class="cs-left">
+      <div class="ukPhone">
+        <span class="ukPhone_ring ukPhone_ring--1" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--2" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--3" aria-hidden="true"></span>
+        <video class="ukPhone_video" poster="/assets/img/uk/creators/phone/poster-creator-02.webp?v=3"
+               src="/assets/video/creators/creator-02.mp4" muted loop playsinline preload="metadata"
+               aria-label="Sofia Reyes posting from her stay"></video>
+        <img class="ukPhone_frame" src="/assets/img/uk/creators/phone/frame.webp?v=4" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_island" src="/assets/img/uk/creators/phone/island.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_nav" src="/assets/img/uk/creators/phone/nav.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <span class="ukPhone_home" aria-hidden="true"></span>
+        <span class="ukPhone_avatar" aria-hidden="true"><img class="ukPhone_avatarPic" src="/assets/img/uk/creators/phone/bubble-01.webp" alt="" decoding="async"><img class="ukPhone_avatarRing" src="/assets/img/uk/creators/phone/avatar-ring.webp?v=1" alt="" decoding="async"></span>
+        <img class="ukPhone_heart" src="/assets/img/uk/creators/phone/heart.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <button class="ukPhone_mute" type="button" aria-pressed="false" data-rs-mute>
+          <span class="ukRs_muteIco" data-muted="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 5 6.5 9H3v6h3.5L11 19z"/>
+              <path class="ukRs_muteOff" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/>
+              <path class="ukRs_muteOn" d="m16.5 9.5 5 5m0-5-5 5"/>
+            </svg>
+          </span>
+          <span class="ukRs_sr">Unmute the video</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cs-right">
+      <div class="cs-who">
+        <img class="cs-avatar" src="/assets/img/fc/av/av-09.jpg" alt="" width="46" height="46" loading="lazy">
+        <span class="cs-whoText"><b>Sofia Reyes</b><i>Joined March 2026</i></span>
+        <span class="cs-plats" aria-hidden="true"><img src="/assets/img/brand/tiktok.svg" alt="TikTok" width="22" height="22" loading="lazy"><img src="/assets/img/brand/instagram.svg" alt="Instagram" width="22" height="22" loading="lazy"><img src="/assets/img/brand/youtube.svg" alt="Youtube" width="22" height="22" loading="lazy"></span>
+      </div>
+      <hr class="cs-divider">
+
+      <div class="cs-sections">
+        <p class="cs-section-text cs-quote">&ldquo;Free stays, a shoot that was genuinely fun, and a tracked link that still pays me commission months after I posted it.&rdquo;</p>
+        <hr class="cs-divider">
+
+        <div class="cs-section">
+          <div class="cs-stats"><div class="cs-stat"><div class="cs-stat-value"><span>1.2M</span></div><div class="cs-stat-label">Views Generated</div></div><div class="cs-stat"><div class="cs-stat-value"><span>34</span></div><div class="cs-stat-label">Assets Delivered</div></div><div class="cs-stat"><div class="cs-stat-value"><span>12</span></div><div class="cs-stat-label">Stays Hosted</div></div><div class="cs-stat"><div class="cs-stat-value"><span>4.9</span><svg class="cs-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.03l-5.66 2.98 1.08-6.3L2.85 9.25l6.32-.92z" fill="#e0b054"/></svg></div><div class="cs-stat-label">Hotel Rating</div></div></div>
+        </div>
+        <hr class="cs-divider">
+
+        <div class="cs-cta-row">
+          <a href="/for-creators/" class="aeroBtn is-primary"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Read Her Full Story"><em>Read Her Full Story</em></span></strong></a>
+          <div class="cs-nav">
+            <button class="cs-nav-btn cs-nav-btn--prev" type="button" aria-label="Previous creator" data-rs-prev><svg viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="cs-nav-btn cs-nav-btn--next" type="button" aria-label="Next creator" data-rs-next><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cs-card cs-card--creator" hidden data-rs-study>
+    <div class="cs-left">
+      <div class="ukPhone">
+        <span class="ukPhone_ring ukPhone_ring--1" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--2" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--3" aria-hidden="true"></span>
+        <video class="ukPhone_video" poster="/assets/img/uk/creators/phone/poster-creator-08.webp?v=3"
+               src="/assets/video/creators/creator-08.mp4" muted loop playsinline preload="metadata"
+               aria-label="Nadia Kraft posting from her stay"></video>
+        <img class="ukPhone_frame" src="/assets/img/uk/creators/phone/frame.webp?v=4" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_island" src="/assets/img/uk/creators/phone/island.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_nav" src="/assets/img/uk/creators/phone/nav.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <span class="ukPhone_home" aria-hidden="true"></span>
+        <span class="ukPhone_avatar" aria-hidden="true"><img class="ukPhone_avatarPic" src="/assets/img/uk/creators/phone/bubble-02.webp" alt="" decoding="async"><img class="ukPhone_avatarRing" src="/assets/img/uk/creators/phone/avatar-ring.webp?v=1" alt="" decoding="async"></span>
+        <img class="ukPhone_heart" src="/assets/img/uk/creators/phone/heart.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <button class="ukPhone_mute" type="button" aria-pressed="false" data-rs-mute>
+          <span class="ukRs_muteIco" data-muted="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 5 6.5 9H3v6h3.5L11 19z"/>
+              <path class="ukRs_muteOff" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/>
+              <path class="ukRs_muteOn" d="m16.5 9.5 5 5m0-5-5 5"/>
+            </svg>
+          </span>
+          <span class="ukRs_sr">Unmute the video</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cs-right">
+      <div class="cs-who">
+        <img class="cs-avatar" src="/assets/img/fc/av/av-02.jpg" alt="" width="46" height="46" loading="lazy">
+        <span class="cs-whoText"><b>Nadia Kraft</b><i>Joined January 2026</i></span>
+        <span class="cs-plats" aria-hidden="true"><img src="/assets/img/brand/instagram.svg" alt="Instagram" width="22" height="22" loading="lazy"><img src="/assets/img/brand/youtube.svg" alt="Youtube" width="22" height="22" loading="lazy"></span>
+      </div>
+      <hr class="cs-divider">
+
+      <div class="cs-sections">
+        <p class="cs-section-text cs-quote">&ldquo;Nobody asked for a follower count. They looked at what my audience books, and the offer came back higher.&rdquo;</p>
+        <hr class="cs-divider">
+
+        <div class="cs-section">
+          <div class="cs-stats"><div class="cs-stat"><div class="cs-stat-value"><span>3.4M</span></div><div class="cs-stat-label">Views Generated</div></div><div class="cs-stat"><div class="cs-stat-value"><span>58</span></div><div class="cs-stat-label">Assets Delivered</div></div><div class="cs-stat"><div class="cs-stat-value"><span>21</span></div><div class="cs-stat-label">Stays Hosted</div></div><div class="cs-stat"><div class="cs-stat-value"><span>5.0</span><svg class="cs-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.03l-5.66 2.98 1.08-6.3L2.85 9.25l6.32-.92z" fill="#e0b054"/></svg></div><div class="cs-stat-label">Hotel Rating</div></div></div>
+        </div>
+        <hr class="cs-divider">
+
+        <div class="cs-cta-row">
+          <a href="/for-creators/" class="aeroBtn is-primary"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Read Her Full Story"><em>Read Her Full Story</em></span></strong></a>
+          <div class="cs-nav">
+            <button class="cs-nav-btn cs-nav-btn--prev" type="button" aria-label="Previous creator" data-rs-prev><svg viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="cs-nav-btn cs-nav-btn--next" type="button" aria-label="Next creator" data-rs-next><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cs-card cs-card--creator" hidden data-rs-study>
+    <div class="cs-left">
+      <div class="ukPhone">
+        <span class="ukPhone_ring ukPhone_ring--1" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--2" aria-hidden="true"></span>
+        <span class="ukPhone_ring ukPhone_ring--3" aria-hidden="true"></span>
+        <video class="ukPhone_video" poster="/assets/img/uk/creators/phone/poster-creator-11.webp?v=3"
+               src="/assets/video/creators/creator-11.mp4" muted loop playsinline preload="metadata"
+               aria-label="Yasmin Haddad posting from her stay"></video>
+        <img class="ukPhone_frame" src="/assets/img/uk/creators/phone/frame.webp?v=4" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_island" src="/assets/img/uk/creators/phone/island.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <img class="ukPhone_nav" src="/assets/img/uk/creators/phone/nav.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <span class="ukPhone_home" aria-hidden="true"></span>
+        <span class="ukPhone_avatar" aria-hidden="true"><img class="ukPhone_avatarPic" src="/assets/img/uk/creators/phone/bubble-03.webp" alt="" decoding="async"><img class="ukPhone_avatarRing" src="/assets/img/uk/creators/phone/avatar-ring.webp?v=1" alt="" decoding="async"></span>
+        <img class="ukPhone_heart" src="/assets/img/uk/creators/phone/heart.webp?v=3" alt="" aria-hidden="true" decoding="async">
+        <button class="ukPhone_mute" type="button" aria-pressed="false" data-rs-mute>
+          <span class="ukRs_muteIco" data-muted="true" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 5 6.5 9H3v6h3.5L11 19z"/>
+              <path class="ukRs_muteOff" d="M16.5 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12"/>
+              <path class="ukRs_muteOn" d="m16.5 9.5 5 5m0-5-5 5"/>
+            </svg>
+          </span>
+          <span class="ukRs_sr">Unmute the video</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="cs-right">
+      <div class="cs-who">
+        <img class="cs-avatar" src="/assets/img/fc/av/av-08.jpg" alt="" width="46" height="46" loading="lazy">
+        <span class="cs-whoText"><b>Yasmin Haddad</b><i>Joined May 2026</i></span>
+        <span class="cs-plats" aria-hidden="true"><img src="/assets/img/brand/tiktok.svg" alt="TikTok" width="22" height="22" loading="lazy"><img src="/assets/img/brand/instagram.svg" alt="Instagram" width="22" height="22" loading="lazy"></span>
+      </div>
+      <hr class="cs-divider">
+
+      <div class="cs-sections">
+        <p class="cs-section-text cs-quote">&ldquo;Deciding used to take a week of emails. Now it takes ten seconds, because everything is on the listing.&rdquo;</p>
+        <hr class="cs-divider">
+
+        <div class="cs-section">
+          <div class="cs-stats"><div class="cs-stat"><div class="cs-stat-value"><span>820K</span></div><div class="cs-stat-label">Views Generated</div></div><div class="cs-stat"><div class="cs-stat-value"><span>19</span></div><div class="cs-stat-label">Assets Delivered</div></div><div class="cs-stat"><div class="cs-stat-value"><span>7</span></div><div class="cs-stat-label">Stays Hosted</div></div><div class="cs-stat"><div class="cs-stat-value"><span>4.8</span><svg class="cs-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.03l-5.66 2.98 1.08-6.3L2.85 9.25l6.32-.92z" fill="#e0b054"/></svg></div><div class="cs-stat-label">Hotel Rating</div></div></div>
+        </div>
+        <hr class="cs-divider">
+
+        <div class="cs-cta-row">
+          <a href="/for-creators/" class="aeroBtn is-primary"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Read Her Full Story"><em>Read Her Full Story</em></span></strong></a>
+          <div class="cs-nav">
+            <button class="cs-nav-btn cs-nav-btn--prev" type="button" aria-label="Previous creator" data-rs-prev><svg viewBox="0 0 24 24" fill="none" stroke="#d9a441" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <button class="cs-nav-btn cs-nav-btn--next" type="button" aria-label="Next creator" data-rs-next><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+</section>
+
+  
+
+  <section class="faqs">
+
+  <div class="faqs__header">
+    <!-- Desktop header -->
+    <div class="faqs__desktop-header">
+      <div class="faqs__row1">
+        <div class="faqs__big">COMMON</div>
+        <div class="faqs__side">
+          <span>Some questions</span>
+          <span>People usually ask</span>
+        </div>
+      </div>
+      <div class="faqs__big">QUESTIONS</div>
+    </div>
+    <!-- Mobile header -->
+    <div class="faqs__mobile-header">
+      <span class="ukZig_tag ukGlow faqs__mobile-label"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>FAQ</b></span>
+      <div>
+        <h2 class="faqs__mobile-title">Common Questions</h2>
+        <p class="faqs__mobile-sub">Everything you need to know about Ukreate</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="faqs__list">
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">How does Ukreate work for hotels?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Hotels create a profile, set their campaign brief, and browse our vetted creator network. Once you find the right match, Ukreate handles contracts, scheduling, and content delivery — all in one platform.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">How are creators vetted on Ukreate?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Every creator goes through a multi-step review covering content quality, audience authenticity, engagement rates, and a track record of professional hotel collaborations. Less than 10% of applicants are accepted.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">What content formats do creators produce?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Creators on Ukreate produce UGC videos, Instagram Reels, TikToks, YouTube vlogs, photography packages, and native content for your owned channels — all tailored to your brief.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">How much does a creator collaboration cost?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Collaboration costs vary by creator tier and deliverables. Our Starter plan includes 3 projects per month from $1,950/year. Enterprise and custom packages are available for larger hotel groups.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">Who handles contracts and terms?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Ukreate manages the contracts, NDAs and deliverable terms on your behalf. Every piece is approved by you before it is published.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">How long does a typical campaign take?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">From brief to published content, most campaigns complete in 2–4 weeks. Rush timelines are available on Growth and Enterprise plans.</p>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-item__header">
+        <span class="faq-item__q">Can I choose which creators I work with?</span>
+        <span class="faq-item__icon">+</span>
+      </div>
+      <p class="faq-item__answer">Yes. You can browse creator profiles, review their portfolio and metrics, and select the exact creators you want — or let our matching algorithm suggest the best fit for your campaign goals.</p>
+    </div>
+
+  </div>
+
+
+  <div class="faqCta">
+    <p class="faqCta_lead">Still not sure? We answer in a day, usually less.</p>
+    <div class="faqCta_btn"><a class="aeroBtn is-primary" href="mailto:support@ukreate.com"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Contact support"><em>Contact support</em></span></strong></a></div>
+  </div>
+</section>
+
+
+  
+
+  
+
+  <!-- ============ closing call to action ============ -->
+<section class="ukSection ukClose">
+    <div class="ukClose_inner">
+      <span class="ukZig_tag ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>Trusted by hotels and creators</b></span>
+      <h2 class="uk_title">Turn the nights nobody booked into the ones that book</h2>
+      <div class="ukClose_cta"><a class="aeroBtn is-primary is-deep" href="/join/"><span class="aeroBtn_fill" aria-hidden="true"></span><strong><span data-hover="Get started"><em>Get started</em></span></strong></a></div>
+      <ul class="ukClose_avs" aria-hidden="true"><li><img src="/assets/img/fc/av/av-01.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-03.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-04.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-05.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-06.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-07.jpg" alt="" loading="lazy" width="96" height="96"></li><li><img src="/assets/img/fc/av/av-08.jpg" alt="" loading="lazy" width="96" height="96"></li></ul>
+      <p class="ukClose_alt"><a href="/for-creators/">Or join Ukreate as a creator</a></p>
+    </div>
+  </section>
+
+
+  <div class="ukOutro">
+    <span class="ukOutro_mark" aria-hidden="true"><img src="/assets/img/ukreate-wordmark.webp?v=1" alt="" decoding="async"></span><section class="ukSection ukNews"><div class="ukNews_inner"><span class="ukFeat_tag ukNews_tag ukGlow"><i class="ukGlow_g" aria-hidden="true"></i><i class="ukGlow_g ukGlow_g--in" aria-hidden="true"></i><i class="ukGlow_face" aria-hidden="true"></i><b>Stay Updated</b></span><h2 class="uk_title">Join Our Newsletter</h2><p class="uk_sub">Get the latest insights on travel creator marketing and exclusive opportunities.</p><form class="ukNews_form" onsubmit="return false"><input class="ukNews_input" type="email" placeholder="Your email address" aria-label="Your email address"><button class="btn btn--gold ukNews_btn" type="submit"><strong class="btnRoll"><span data-hover="Subscribe"><em>Subscribe</em></span></strong></button></form></div></section>
+
+  <footer class="ukFooter"><div class="ukFoot_inner"><div class="ukFoot_brand"><a class="ukFoot_logo" href="/" aria-label="Ukreate Travel"><img src="/assets/img/ukreate-logo.png" alt="Ukreate Travel" width="360" height="108"></a><p class="ukFoot_tag">The world’s premium travel creator marketplace connecting hotels with elite content creators.</p><div class="ukFoot_socials"><a class="ukFoot_sns" href="https://www.instagram.com/" aria-label="Instagram" target="_blank" rel="noopener"><img src="/assets/img/brand/instagram.svg" alt="" width="18" height="18" loading="lazy"></a><a class="ukFoot_sns" href="https://www.tiktok.com/" aria-label="TikTok" target="_blank" rel="noopener"><img src="/assets/img/brand/tiktok.svg" alt="" width="18" height="18" loading="lazy"></a><a class="ukFoot_sns" href="https://www.youtube.com/" aria-label="YouTube" target="_blank" rel="noopener"><img src="/assets/img/brand/youtube.svg" alt="" width="18" height="18" loading="lazy"></a><a class="ukFoot_sns" href="https://www.linkedin.com/" aria-label="LinkedIn" target="_blank" rel="noopener"><img src="/assets/img/brand/linkedin.svg" alt="" width="18" height="18" loading="lazy"></a></div></div><div class="ukFoot_cols"><div class="ukFoot_col"><h4>For Hotels</h4><ul><li><a href="#">How It Works</a></li><li><a href="/join/?side=hotel">Browse Creators</a></li><li><a href="#">Pricing</a></li><li><a href="#">Case Studies</a></li></ul></div><div class="ukFoot_col"><h4>For Creators</h4><ul><li><a href="#">Apply Now</a></li><li><a href="#">Dashboard</a></li><li><a href="#">Resources</a></li><li><a href="#">Community</a></li></ul></div><div class="ukFoot_col"><h4>Company</h4><ul><li><a href="#">About Us</a></li><li><a href="#">Blog</a></li><li><a href="#">Press</a></li><li><a href="#">Contact</a></li></ul></div><div class="ukFoot_col"><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy</a></li><li><a href="#">Cookie Policy</a></li></ul></div></div></div><div class="ukFoot_bar"><span>© 2026 Ukreate. All rights reserved.</span></div></footer></div>
+
+</main>
+<div class="surfer" data-surfer-off data-surfer-static aria-label="Featured creator content"><div class="surfer_scene"><div class="surfer_track"><div class="surfer_card" style="--i:0"><video src="/assets/video/ugc/ugc-01.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-01.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-01.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Maya Lin<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇸🇬</span>Marina Bay</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Testimonials</span><span class="fcPro_chip">POV Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">132 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:1"><video src="/assets/video/ugc/ugc-02.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-02.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-02.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Lena Petrou<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇬🇷</span>Oia</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Hotel Tours</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">98 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:2"><video src="/assets/video/ugc/ugc-03.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-03.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-03.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Amira Hassan<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇦🇪</span>Jumeirah</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Luxury Reels</span><span class="fcPro_chip">Testimonials</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.7<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">87 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:3"><video src="/assets/video/ugc/ugc-04.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-04.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-04.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Ava Bennett<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇬🇧</span>Notting Hill</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Lifestyle</span><span class="fcPro_chip">POV Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">5.0<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">154 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:4"><video src="/assets/video/ugc/ugc-05.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-05.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-05.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Stella Laurent<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇫🇷</span>Le Marais</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Fashion</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.6<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">76 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:5"><video src="/assets/video/ugc/ugc-06.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-06.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-06.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Marco Rossi<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇮🇹</span>Trastevere</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Food & Dining</span><span class="fcPro_chip">Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">121 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:6"><video src="/assets/video/ugc/ugc-07.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-07.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-07.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Priya Nair<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇲🇻</span>Maafushi</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Resort Tours</span><span class="fcPro_chip">Drone</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">93 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:7"><video src="/assets/video/ugc/ugc-08.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-08.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-08.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Sofia Reyes<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇺🇸</span>South Beach</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Golden Hour</span><span class="fcPro_chip">Reels</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.7<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">68 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:8"><video src="/assets/video/ugc/ugc-09.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-09.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-09.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Kanya Som<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇹🇭</span>Thonglor</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Poolside</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">112 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:9"><video src="/assets/video/ugc/ugc-10.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-10.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-10.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Diego Marin<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇪🇸</span>El Born</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Drone</span><span class="fcPro_chip">Hotel Tours</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">105 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:10"><video src="/assets/video/ugc/ugc-01.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-01.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-01.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Maya Lin<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇸🇬</span>Marina Bay</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Testimonials</span><span class="fcPro_chip">POV Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">132 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:11"><video src="/assets/video/ugc/ugc-02.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-02.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-02.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Lena Petrou<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇬🇷</span>Oia</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Hotel Tours</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">98 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:12"><video src="/assets/video/ugc/ugc-03.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-03.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-03.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Amira Hassan<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇦🇪</span>Jumeirah</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Luxury Reels</span><span class="fcPro_chip">Testimonials</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.7<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">87 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:13"><video src="/assets/video/ugc/ugc-04.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-04.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-04.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Ava Bennett<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇬🇧</span>Notting Hill</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Lifestyle</span><span class="fcPro_chip">POV Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">5.0<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">154 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:14"><video src="/assets/video/ugc/ugc-05.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-05.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-05.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Stella Laurent<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇫🇷</span>Le Marais</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Fashion</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.6<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">76 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:15"><video src="/assets/video/ugc/ugc-06.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-06.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-06.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Marco Rossi<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇮🇹</span>Trastevere</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Food & Dining</span><span class="fcPro_chip">Vlogs</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">121 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:16"><video src="/assets/video/ugc/ugc-07.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-07.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-07.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Priya Nair<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇲🇻</span>Maafushi</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Resort Tours</span><span class="fcPro_chip">Drone</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">93 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:17"><video src="/assets/video/ugc/ugc-08.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-08.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-08.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Sofia Reyes<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇺🇸</span>South Beach</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Golden Hour</span><span class="fcPro_chip">Reels</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.7<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">68 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:18"><video src="/assets/video/ugc/ugc-09.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-09.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-09.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Kanya Som<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇹🇭</span>Thonglor</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Poolside</span><span class="fcPro_chip">B-Roll</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.9<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">112 jobs completed</span></div></div></div></div><div class="surfer_card" style="--i:19"><video src="/assets/video/ugc/ugc-10.mp4" muted loop playsinline poster="/assets/img/uk/posters/ugc-10.jpg" preload="none"></video><div class="fcMini" aria-hidden="true"><div class="fcPro"><div class="fcPro_head"><img class="fcPro_avatar" src="/assets/img/fc/av/av-10.jpg" alt=""><div class="fcPro_id"><span class="fcPro_name">Diego Marin<img class="fcPro_check" src="/assets/img/fc/verified.svg" alt=""></span><span class="fcPro_loc"><span class="fcPro_flag">🇪🇸</span>El Born</span></div></div><div class="fcPro_chips"><span class="fcPro_chip">Drone</span><span class="fcPro_chip">Hotel Tours</span></div><div class="fcPro_foot"><span class="fcPro_rating"><img src="/assets/img/fc/star.svg" alt="">4.8<i class="fcPro_ratingWord">rating</i></span><span class="fcPro_jobs">105 jobs completed</span></div></div></div></div></div></div></div>
+
+<div class="ukMktFootWrap"></div>
+
+
+<script>
+/* The card layer belongs to the hero. Its scroll choreography was written for a
+   page that is dark and mostly negative space below the fold; here the sections
+   underneath carry copy, and the cards ride straight over it. So the ride runs
+   for as long as the hero is on screen and stands down once it leaves. */
+(function () {
+  var hero = document.querySelector('.homeHeader'), layer = document.querySelector('.surfer');
+  if (!hero || !layer || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (es) {
+    layer.classList.toggle('is-gone', !es[0].isIntersecting);
+  }, { threshold: 0 }).observe(hero);
+})();
+</script>
+
+<script src="/assets/js/aeronav.js?v=2"></script>
+<script src="/assets/js/surfer.js?v=3"></script>
+<script src="/assets/js/lightbloom.js?v=1" defer></script>
+<script>
+/* Keep the card row with the hero: the scene is viewport-fixed, so it is the
+   hero leaving that has to take it away. */
+(function () {
+  var hero = document.querySelector('.homeHeader'), layer = document.querySelector('.surfer');
+  if (!hero || !layer || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(function (es) {
+    layer.classList.toggle('is-gone', !es[0].isIntersecting);
+  }, { threshold: 0, rootMargin: '-35% 0px 0px 0px' }).observe(hero);
+})(); /* ukHeroRow */
+</script>
+<script src="/assets/js/reveal.js?v=1"></script>
+<script src="/assets/js/expand-cards.js?v=1"></script>
+<script src="/assets/js/problem.js?v=1"></script>
+<script src="/assets/js/statbadges.js?v=1"></script>
+<script src="/assets/js/hiw.js?v=1"></script>
+<script src="/assets/js/ukcards.js?v=1"></script>
+<script src="/assets/js/casestudy.js?v=2"></script>
+<script src="/assets/js/testimonials.js?v=1"></script>
+<script src="/assets/js/philowords.js?v=2"></script>
+<script src="/assets/js/philovideo.js?v=1"></script>
+<script src="/assets/js/uksections.js?v=2"></script>
+  <!-- case-study video lightbox: the CSS (.cs-modal) and the wiring in
+       casestudy.js both existed, but this markup never did, so clicking a
+       thumbnail silently did nothing -->
+  <div class="cs-modal" id="cs-modal" role="dialog" aria-modal="true" aria-label="Creator video">
+    <div class="cs-modal-inner">
+      <video id="cs-modal-video" playsinline controls preload="none"></video>
+      <button class="cs-modal-close" id="cs-modal-close" type="button" aria-label="Close video">
+        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+<script src="/assets/js/ukcurtain.js?v=4" defer></script>
+<script src="/assets/js/ukscan.js?v=9" defer></script>
+<script src="/assets/js/ukcase.js?v=27"></script>
+<script src="/assets/js/ukglowfooter.js?v=3?v=e5f1eba3"></script>
 </body>
 </html>

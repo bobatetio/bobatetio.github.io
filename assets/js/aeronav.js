@@ -50,6 +50,15 @@
         }, { passive: true });
       }
     }
+
+    /* the bar steps aside once the footer is reached: nothing up there is worth
+       covering the footer for, and it reads as the end of the page */
+    var foot = document.querySelector('.ukFooter, footer');
+    if (foot && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        nav.classList.toggle('is-gone', entries[0].isIntersecting);
+      }, { rootMargin: '-' + navH + 'px 0px 0px 0px', threshold: 0 }).observe(foot);
+    }
   }
 
   if (document.readyState === 'loading') {

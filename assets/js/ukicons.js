@@ -99,3 +99,41 @@ window.ukVetBadge = function (cls) {
     '<title>Vetted creator</title>' +
     '<path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" d="' + window.UK_VET_D + '"/></svg>';
 };
+
+/* ---- credential badges ----
+   Two credentials, two marks, one place. They were both drawn with ukVetBadge
+   and told apart only by colour, so a card showed the same glyph twice and
+   neither was the badge art the platform actually issues. */
+window.UK_CRED_BADGE = {
+  vetted: {
+    src: '/assets/img/badges/badge-vetted.webp',
+    t: 'Vetted creator',
+    d: 'Identity, channels and past work checked by Ukreate before they were listed'
+  },
+  certified: {
+    src: '/assets/img/badges/badge-certified.webp',
+    t: 'Academy certified',
+    d: 'Trained by Ukreate on writing to a brief, shooting a property and delivering on time'
+  }
+};
+/* The marks beside a name, both inside one frame. Two frames side by side read
+   as two separate things; the credentials are one standing, so they share a
+   single plate. The detail for each is on the mark itself, on hover. */
+window.ukCredMarks = function (c) {
+  function mark(kind) {
+    var b = window.UK_CRED_BADGE[kind];
+    return '<img class="ukCrVetB_i" src="' + b.src + '" alt="' + b.t + '" ' +
+      'title="' + b.t + ': ' + b.d + '" width="30" height="30" ' +
+      'loading="lazy" decoding="async">';
+  }
+  /* Vetting is the platform's baseline, not a per-creator flag: nobody is
+     listed without it, so the mark is on every card. */
+  var marks = mark('vetted') + (c.academyCert ? mark('certified') : '');
+  return '<span class="ukCrVetB' + (c.academyCert ? ' is-pair' : '') + '">' + marks + '</span>';
+};
+window.ukCredBadge = function (kind, cls) {
+  var b = window.UK_CRED_BADGE[kind];
+  if (!b) return '';
+  return '<img class="' + (cls || 'ukCrVet') + '" src="' + b.src + '" alt="' + b.t +
+    '" title="' + b.t + '" width="30" height="30" loading="lazy" decoding="async">';
+};

@@ -448,8 +448,7 @@
           '</span>' +
           '<div class="ukMini_b">' +
             '<p class="ukMini_n">' + esc(c.n) +
-              (c.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
-              (c.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') + '</p>' +
+              (window.ukCredMarks ? window.ukCredMarks(c) : '') + '</p>' +
             '<p class="ukMini_m">' + esc(c.loc) + '</p>' +
             '<p class="ukMini_s">' + esc(c.eng) + ' engagement &middot; ' + c.stays + ' stays' +
               (fromRate != null ? ' &middot; from $' + D.fmt(fromRate) : '') + '</p>' +

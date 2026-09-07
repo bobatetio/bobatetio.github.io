@@ -15,7 +15,15 @@
   height:var(--aero-h); display:flex; align-items:center;
   color:var(--aero-white);
   font-family:'Unica77',-apple-system,BlinkMacSystemFont,sans-serif;
-  transition:color .5s cubic-bezier(.66,0,.34,1);
+  transition:color .5s cubic-bezier(.66,0,.34,1),
+             transform .45s cubic-bezier(.22,.9,.35,1),
+             opacity .3s ease;
+}
+/* at the footer it lifts out of the way */
+.aeroNav.is-gone{transform:translateY(-100%);opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){
+  .aeroNav{transition:color .5s cubic-bezier(.66,0,.34,1),opacity .2s ease}
+  .aeroNav.is-gone{transform:none;visibility:hidden}
 }
 /* floating white pill that fades in once scrolled past the hero */
 .aeroNav_bg{
@@ -100,16 +108,23 @@
 .aeroBtn strong span:before{content:attr(data-hover); position:absolute; top:100%; left:0; color:currentColor; transform:translateY(32%); transition:transform .5s cubic-bezier(.66,0,.34,1)}
 .aeroBtn strong span em{font-style:normal; display:inline-block; transform-origin:0 50%; transition:transform .5s cubic-bezier(.66,0,.34,1)}
 .aeroBtn:hover strong span{transform:translateY(-100%)}
+/* the incoming label has to land flush in the clip. Without this it keeps the
+   translateY(32%) it rests at, so once the span has rolled up the duplicate
+   sits 32% of its own height below the top of the window and overflow:hidden
+   cuts its bottom off. The nav link has always had the equivalent reset
+   (.aeroNav_link:hover span strong:before); the button never did, so every
+   .aeroBtn on the site rolled into a clipped label. */
+.aeroBtn:hover strong span:before{transform:translateY(0)}
 .aeroBtn:hover strong span em{transform:rotate(-20deg) translateY(-32%)}
 
 /* ---- mobile hamburger ---- */
 .aeroNav_burger{
-  display:none; width:48px; height:48px; border-radius:9999px; background:#e3ebf1;
+  display:none; width:48px; height:48px; border-radius:0; background:transparent;
   border:none; cursor:pointer; position:relative;
   transition:rotate .6s cubic-bezier(.66,0,.34,1);
 }
 .aeroNav_burger.is-open{rotate:180deg}
-.aeroNav_burgerLine{position:absolute; left:50%; width:18px; height:2px; border-radius:9999px; background:#05275b; transform:translateX(-50%); transition:transform .4s cubic-bezier(.66,0,.34,1)}
+.aeroNav_burgerLine{position:absolute; left:50%; width:18px; height:2px; border-radius:9999px; background:#fff; transform:translateX(-50%); transition:transform .4s cubic-bezier(.66,0,.34,1)}
 .aeroNav_burgerLine.top{top:calc(50% - 3px)}
 .aeroNav_burgerLine.bottom{top:calc(50% + 1px)}
 .aeroNav_burger.is-open .aeroNav_burgerLine.top{transform:translateX(-50%) translateY(2px)}
@@ -127,47 +142,86 @@
 /* ---- responsive: collapse to overlay below lg ---- */
 @media (max-width:1023px){
   .aeroNav{--aero-h:72px}
-  /* The overlay is position:fixed with inset:0, but .aeroNav_center is
-     transformed to centre the links on desktop, and a transform makes an element
-     the containing block for fixed descendants. So inset:0 resolved to that
-     element's box, which is 0x0 here, and the "full screen" menu was a zero-size
-     panel: the items rendered on top of the page with nothing behind them.
-     The centring is a desktop job; at this width the links are an overlay. */
-  .aeroNav_center{position:static; transform:none}
+  /* The panel is position:fixed, but .aeroNav_center is transformed to centre
+     the links on desktop, and a transform makes an element the containing block
+     for fixed descendants, so the "full screen" menu resolved to a 0x0 box.
+     The z-index goes too: a flex item builds a stacking context from z-index
+     even when static, which would cap the panel under the button group. */
+  .aeroNav_center{position:static; transform:none; z-index:auto}
   .aeroNav_burger{display:block}
   .aeroNav_btns{display:none}
-  .aeroNav_links{
-    position:fixed; inset:0; flex-direction:column; justify-content:center; align-items:center; gap:14px;
-    background:var(--aero-mid); color:var(--aero-white); z-index:1;
-    opacity:0; pointer-events:none; transition:opacity .3s cubic-bezier(.66,0,.34,1);
+
+  /* ---- the full-screen menu ----
+     Ported from the earlier Ukreate build, where this was already worked out and
+     tested on device. The structure and behaviour are that build's; the colour is
+     this one's. The panel takes --uk-deep-2, the same navy the nav bar itself is
+     painted in, because this menu is that bar opened out rather than a new
+     surface. The links are Marcellus, the display face this site already uses. */
+  .aeroNav .aeroNav_links{
+    position:fixed; top:0; left:0; width:100%; height:100vh; height:100dvh;
+    box-sizing:border-box;
+    flex-direction:column; align-items:stretch; justify-content:flex-start; gap:0;
+    padding:0 28px 40px; background:var(--uk-deep-2, #08233D); color:#fff;
+    z-index:200; overflow-y:auto;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity .3s cubic-bezier(.66,0,.34,1), visibility 0s linear .3s;
   }
-  .aeroNav_links.is-open{opacity:1; pointer-events:auto}
-  /* The overlay's own z-index is scoped inside .aeroNav's stacking context, so
-     raising it there did nothing: the promo banner sits at 120 and .aeroNav at
-     80, which put the banner over the open menu and swallowed taps on its close
-     button. The whole nav lifts while the menu is open, and only then. */
-  .aeroNav:has(.aeroNav_links.is-open){z-index:130}
-  /* the overlay has its own close button, so the burger behind it is a second
-     control for the same job sitting on top of the menu */
+  .aeroNav_links.is-open{opacity:1; visibility:visible; pointer-events:auto; transition-delay:0s}
+
+  /* the whole nav lifts over page-level fixed furniture, and only while open:
+     the promo banner sits at 120 and .aeroNav at 80, which used to put the
+     banner over the open menu and swallow taps on its close button */
+  .aeroNav:has(.aeroNav_links.is-open){z-index:200}
+  /* the panel carries its own close button, so the burger steps aside */
   .aeroNav:has(.aeroNav_links.is-open) .aeroNav_burger{opacity:0; pointer-events:none}
-  .aeroNav_links .aeroNav_link{font-family:'Quaria Display',serif; font-size:44px}
-  .aeroNav_links .aeroNav_link span{height:auto; overflow:visible}
-  .aeroNav_links .aeroNav_link span strong:before{display:none}
-  .aeroNav_links .aeroNav_link:hover span strong{transform:none}
+
+  /* topbar: logo left, round close right */
   .aeroNav_mobileTop{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-    position:absolute; top:0; left:0; right:0; height:72px; padding:0 20px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:20px; margin-bottom:8px; flex-shrink:0;
   }
-  .aeroNav_mobileLogo{height:30px; width:auto; filter:brightness(0) invert(1)}
+  .aeroNav_mobileLogo{display:block; height:35px; width:auto; object-fit:contain}
   .aeroNav_mobileClose{
-    flex:0 0 40px; width:40px; height:40px; display:grid; place-items:center; padding:0;
-    border:0; border-radius:9999px; background:rgba(255,255,255,.10);
-    color:var(--aero-white); cursor:pointer;
+    width:40px; height:40px; padding:0; border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.25); background:rgba(255,255,255,.06);
+    color:#fff; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
   }
-  .aeroNav_mobileClose svg{width:18px; height:18px}
-  .aeroNav_mobileClose:hover{background:rgba(255,255,255,.18)}
-  .aeroNav_mobileCta{display:flex; margin-top:24px}
+  .aeroNav_mobileClose svg{width:16px; height:16px; display:block}
+  .aeroNav_mobileClose:hover{background:rgba(255,255,255,.14)}
+
+  /* stacked rows with hairline rules; the desktop hover roll is switched off */
+  .aeroNav_links .aeroNav_link{
+    display:block; width:100%; box-sizing:border-box; max-width:100%;
+    padding:20px 0;
+    font-family:'Marcellus',Georgia,serif; font-size:22px; line-height:1.3;
+    letter-spacing:0; color:#fff;
+    border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .aeroNav_links .aeroNav_link:first-of-type{margin-top:36px}
+  .aeroNav_links .aeroNav_link:before{display:none}
+  .aeroNav_links .aeroNav_link span{display:block; height:auto; overflow:visible; line-height:inherit}
+  .aeroNav_links .aeroNav_link span strong{display:block; line-height:inherit}
+  .aeroNav_links .aeroNav_link span strong em{display:inline}
+  .aeroNav_links .aeroNav_link span strong:before{display:none}
+  .aeroNav_links .aeroNav_link:hover span strong,
+  .aeroNav_links .aeroNav_link:hover span strong em{transform:none}
+
+  /* the pair pins to the foot of the panel, full width. The face comes from
+     ukbutton.css, which is the one place the button is defined. */
+  .aeroNav_mobileCta{
+    display:flex; flex-direction:column; gap:12px;
+    margin-top:auto; padding-top:36px; flex-shrink:0;
+    box-sizing:border-box; max-width:100%;
+  }
+  .aeroNav_mobileCta .aeroBtn{
+    box-sizing:border-box; width:100%; max-width:100%; min-height:48px; font-size:15px;
+  }
 }
+
+/* the current page reads bold and full white, not just underlined */
+.aeroNav_link.active,
+.aeroNav_links .aeroNav_link.active{font-weight:700; color:#fff}
 @media (prefers-reduced-motion:reduce){
   .aeroNav *{transition:none!important}
 }

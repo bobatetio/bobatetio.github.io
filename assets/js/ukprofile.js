@@ -49,9 +49,9 @@ window.UKPROFILE = (function () {
      MODULE_BADGE/badgeImg now delegate to this copy instead of keeping a
      second one that could drift. */
   var MODULE_BADGE = {
-    'Start here':  '/assets/img/badges/badge-start-here.svg',
-    'Pitching':    '/assets/img/badges/badge-pitching.svg',
-    'On the stay': '/assets/img/badges/badge-on-the-stay.svg'
+    'Start here':  '/assets/img/badges/badge-start-here.webp',
+    'Pitching':    '/assets/img/badges/badge-pitching.webp',
+    'On the stay': '/assets/img/badges/badge-on-the-stay.webp'
   };
   function badgeImg(mod, cls) {
     var src = MODULE_BADGE[mod];
@@ -228,8 +228,7 @@ window.UKPROFILE = (function () {
                 ? badgeImg(cr.academyModules[cr.academyModules.length - 1], 'ukCrD_latestBadge')
                 : '') +
               who(cr, esc(cr.n)) +
-              (cr.vetted && window.ukVetBadge ? window.ukVetBadge('ukCrVet') : '') +
-              (cr.academyCert && window.ukVetBadge ? window.ukVetBadge('ukCrVet ukCrVet--academy') : '') +
+              (window.ukCredMarks ? window.ukCredMarks(cr) : '') +
               '<button class="ukCrD_open" type="button" data-creator="' + cr.id + '" ' +
                 'title="Open full profile" aria-label="Open ' + esc(cr.n) + '&rsquo;s full profile">' + OPEN_ICON + '</button>' +
             '</h2>' +
