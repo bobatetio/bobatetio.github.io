@@ -1,0 +1,676 @@
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12.782px 23.239px;border-radius:13.944px;font-family:'Lato',sans-serif;font-size:16px;line-height:23.239px;cursor:pointer;white-space:nowrap;text-decoration:none}
+.btn--gold{background:linear-gradient(5.71deg,#d7a543 13.297%,#efc470 89.683%);border:1.162px solid rgba(215,165,67,0.57);box-shadow:0px 1.162px 2.324px 0px #d7a543,0px 0px 0px 2.324px rgba(255,255,255,0.4);color:#fff;text-shadow:0px 0px 0.581px white}
+.btn{position:relative;overflow:hidden;transition:transform .25s cubic-bezier(.22,.9,.35,1)}
+.btn:hover{transform:scale(1.02)}
+.btn:active{transform:scale(.96)}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-60px;width:50px;transform:skewX(-20deg);background:linear-gradient(to right,transparent,rgba(255,255,255,.28),transparent);pointer-events:none;z-index:3}
+.btn:hover::after{animation:btnGlare 1.85s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.btn:hover::after{animation:none}.btn:hover,.btn:active{transform:none}}
+.btnRoll{display:block;overflow:hidden;height:23.239px;position:relative}
+.btnRoll span{display:block;position:relative;line-height:23.239px;transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btnRoll span:before{content:attr(data-hover);position:absolute;top:100%;left:0;color:currentColor;transform-origin:0 50%;transform:rotate(20deg) translateY(132%);transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btnRoll span em{font-style:normal;display:inline-block;transform-origin:0 50%;transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btn:hover .btnRoll span{transform:translateY(-100%)}
+.btn:hover .btnRoll span:before{transform:rotate(0)}
+.btn:hover .btnRoll span em{transform:rotate(-20deg) translateY(-32%)}
+.hero__buttons .btnRoll{font-weight:400}
+@media (max-width:860px){.hiw__inner{flex-direction:column;align-items:center;gap:0}.hiw__left{position:relative;top:auto;width:100%;max-width:460px;flex:0 0 auto}.hiw__left-content{align-items:center;text-align:center}.hiw__left-body{align-items:center}.hiw__left-body .btn{display:none}.hiw__title{max-width:none}.hiw__right{width:100%;max-width:420px;padding-top:36px}.hiw__step--hidden{opacity:1;transform:none}.hiw__mobile-cta{display:flex;justify-content:center;margin-top:8px}}
+/* ===== Ukreate new sections — dark theme, matching the site ===== */.ukSection{position:relative;padding-block:clamp(64px,9vw,128px);padding-inline:clamp(24px,7vw,120px);color:#fff}
+.uk_head{max-width:780px;margin:0 auto clamp(40px,5vw,72px);text-align:center}
+.uk_eyebrow{font-family:'Lato',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:clamp(11px,1vw,13px);color:#d7a543;margin:0 0 clamp(9px,1vw,13px)}
+.uk_title{font-family:"Marcellus SC",serif;font-weight:400;font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);letter-spacing:var(--uk-h2-track);margin:0;text-wrap:balance;background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.uk_sub{font-family:'Lato',sans-serif;font-size:clamp(14px,1.3vw,17px);line-height:1.6;color:rgba(255,255,255,.66);margin:clamp(8px,.9vw,12px) auto 0;max-width:600px;text-wrap:pretty}
+.ukCreators_dot.is-on{background:#d7a543;width:22px;border-radius:9999px}
+.ukCreators_cta{display:flex;justify-content:center;margin-top:clamp(28px,3.4vw,44px)}
+.ukEx{width:100%;margin-top:clamp(20px,3vw,42px);--exH:clamp(300px,50vw,420px);--exW:clamp(168px,40vw,308px);--coW:clamp(40px,7vw,74px)}
+.ukEx_scroll{display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ukEx_scroll::-webkit-scrollbar{display:none}
+.ukEx_row{display:flex;align-items:center;gap:7px;margin:auto;padding:6px 14px}
+.ukEx_item .fcPro{left:10px;right:10px;bottom:10px;padding:12px 13px 11px;border-radius:15px}
+.ukEx_item .fcPro_head{gap:9px}
+.ukEx_item .fcPro_avatar{width:36px;height:36px;border-width:1px}
+.ukEx_item .fcPro_name{font-size:15px;gap:5px;line-height:1.2}
+.ukEx_item .fcPro_check{width:13px;height:13px}
+.ukEx_item .fcPro_loc{font-size:11.5px;gap:5px;margin-top:2px}
+.ukEx_item .fcPro_flag{font-size:12px}
+.ukEx_item .fcPro_chips{gap:6px;margin-top:10px}
+.ukEx_item .fcPro_chip{font-size:10px;padding:4.5px 10px;letter-spacing:.05em}
+.ukEx_item .fcPro_foot{margin-top:9px}
+.ukEx_item .fcPro_rating{font-size:13px;gap:4px}
+.ukEx_item .fcPro_rating img{width:12px;height:12px}
+.ukEx_item .fcPro_ratingWord{font-size:10.5px;margin-left:3px}
+.ukEx_item .fcPro_jobs{font-size:10.5px}
+.ukReveal{position:relative;width:100%;padding:clamp(28px,6vw,88px) 0;overflow:hidden}
+.ukReveal_frame{position:relative;width:100%;height:clamp(360px,58vw,640px);overflow:hidden;clip-path:inset(38% 0 38% 0);will-change:clip-path}
+.ukReveal_img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 46%;transform:scale(1.14);will-change:transform}
+.ukReveal_frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to bottom,rgba(11,47,82,.6),transparent 20%,transparent 74%,rgba(11,47,82,.9))}
+@media(prefers-reduced-motion:reduce){.ukReveal_frame{clip-path:inset(0)!important}.ukReveal_img{transform:scale(1)!important}}
+.ukFeat{overflow:hidden}
+.ukFeat_bg{position:absolute;inset:0;z-index:0;padding:0}
+.ukFeat_bg .ukReveal_frame{position:absolute;inset:0;height:100%}
+.ukFeat_bg .ukReveal_frame::after{display:none}
+.ukFeat_bg .ukReveal_img{object-position:center 42%}
+.ukFeat_scrim{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(11,47,82,.22) 0%,rgba(11,47,82,.26) 30%,rgba(11,47,82,.34) 55%,rgba(11,47,82,.58) 80%,#0B2F52 100%)}
+.ukFeat_inner{position:relative;z-index:2}
+.ukEx_item{position:relative;flex:0 0 auto;width:var(--coW);height:var(--exH);border-radius:22px;overflow:hidden;cursor:pointer;background:#0a1a23;box-shadow:0 20px 46px rgba(0,0,0,.4);transition:width .55s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;outline:none;-webkit-tap-highlight-color:transparent}
+.ukEx_item:focus-visible{box-shadow:0 20px 46px rgba(0,0,0,.4),0 0 0 2px rgba(101,210,233,.6)}
+.ukEx_item.is-exp{width:var(--exW);box-shadow:0 30px 66px rgba(0,0,0,.55)}
+.ukEx_video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#0a1a23;filter:brightness(.6) saturate(.9);transition:filter .55s ease}
+.ukEx_item.is-exp .ukEx_video{filter:brightness(1) saturate(1)}
+.ukEx_item::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0) 52%,rgba(6,14,18,.55) 100%);opacity:0;transition:opacity .45s ease}
+.ukEx_item.is-exp::after{opacity:1}
+.ukEx_item.is-exp .ukCf_mute{opacity:1;pointer-events:auto}
+.ukEx_item.is-exp .fcMini{opacity:1;transform:translateY(0) scale(1)}
+.ukEx_item.is-exp .fcPro_head,.ukEx_item.is-exp .fcPro_chips,.ukEx_item.is-exp .fcPro_foot{opacity:1;transform:none}
+.ukEx_item.is-exp .fcPro_head{transition-delay:.08s}
+.ukEx_item.is-exp .fcPro_chips{transition-delay:.16s}
+.ukEx_item.is-exp .fcPro_foot{transition-delay:.22s}
+@media(prefers-reduced-motion:reduce){.ukEx_item{transition:box-shadow .3s ease}}
+.ukCf_mute{position:absolute;top:12px;right:12px;z-index:5;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(8,18,24,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .35s ease,background .25s ease,color .25s ease}
+.ukCf_card.is-active .ukCf_mute{opacity:1;pointer-events:auto}
+.ukCf_mute:hover{background:rgba(101,210,233,.92);color:#06222b}
+.ukCf_mute.is-on{background:rgba(46,131,157,.95);color:#fff;border-color:transparent}
+.ukCf_card:hover .fcMini,.ukCf_card.is-active .fcMini{opacity:1;transform:translateY(0) scale(1)}
+.ukCf_card:hover .fcPro_head,.ukCf_card.is-active .fcPro_head{opacity:1;transform:none;transition-delay:.06s}
+.ukCf_card:hover .fcPro_chips,.ukCf_card.is-active .fcPro_chips{opacity:1;transform:none;transition-delay:.14s}
+.ukCf_card:hover .fcPro_foot,.ukCf_card.is-active .fcPro_foot{opacity:1;transform:none;transition-delay:.2s}
+.ukCf_dot.is-on{background:#2e839d}
+/* ---- Proven Results ---- */.ukResults_stage{position:relative;max-width:1120px;margin-inline:auto}
+.ukRes_slide{display:none;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,48px);align-items:stretch;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.09);border-radius:28px;padding:clamp(18px,1.8vw,26px);box-shadow:0 34px 80px rgba(0,0,0,.45)}
+.ukRes_slide.is-on{display:grid}
+.ukRes_visual{position:relative;border-radius:20px;overflow:hidden;min-height:clamp(280px,32vw,420px)}
+.ukRes_visual img{width:100%;height:100%;object-fit:cover;display:block}
+.ukRes_logo{position:absolute;top:16px;left:16px;width:auto;height:34px;object-fit:contain;background:#fff;padding:8px 12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.ukRes_body{display:flex;flex-direction:column;justify-content:center;padding:clamp(6px,1vw,20px) clamp(6px,1.4vw,26px)}
+.ukRes_row{padding-block:clamp(12px,1.4vw,18px);border-bottom:1px solid rgba(255,255,255,.1)}
+.ukRes_row:last-of-type{border-bottom:none}
+.ukRes_k{display:block;font-family:"Marcellus SC",serif;font-size:clamp(17px,1.6vw,21px);color:#fff;margin-bottom:6px}
+.ukRes_row p{margin:0;font:400 clamp(13px,1.15vw,15px)/1.55 'Lato',sans-serif;color:rgba(255,255,255,.72)}
+.ukRes_stats{display:flex;gap:clamp(18px,2.4vw,38px);flex-wrap:wrap}
+.ukRes_num{display:block;font-family:"Marcellus SC",serif;font-size:clamp(22px,2.2vw,30px);color:#e6b64c;line-height:1}
+.ukRes_lbl{font:400 11px/1.3 'Lato',sans-serif;color:rgba(255,255,255,.6)}
+.ukRes_actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:clamp(18px,2vw,26px);flex-wrap:wrap}
+.ukRes_nav{display:flex;gap:10px}
+.ukRes_arrow{width:44px;height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:transparent;color:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s ease}
+.ukRes_arrow:hover{border-color:rgba(215,165,67,.6);color:#fff}
+.ukRes_arrow--on{background:linear-gradient(5.71deg,#d7a543,#efc470);border-color:transparent;color:#3a2a06}
+.ukT_card.is-on{display:flex}
+.ukT_dot.is-on{background:#d7a543;width:22px;border-radius:9999px}
+.ukFc .uk_eyebrow{margin-bottom:14px}
+.ukFc .uk_title,.ukFc_text .uk_title{text-align:left}
+.ukFc .uk_sub{margin-left:0;text-align:left;max-width:460px}
+/* ---- Pricing ---- */.ukPr_grid{display:flex;gap:clamp(16px,1.8vw,26px);justify-content:center;align-items:stretch;max-width:1120px;margin-inline:auto;flex-wrap:wrap}
+.ukPr_card{flex:1 1 300px;max-width:360px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);border-radius:26px;padding:clamp(26px,2.6vw,36px);display:flex;flex-direction:column}
+.ukPr_card--feat{background:linear-gradient(180deg,#0d3358,#061829);border:1px solid rgba(215,165,67,.4);box-shadow:0 34px 80px rgba(0,0,0,.5);transform:translateY(-10px)}
+.ukPr_name{font-family:"Marcellus SC",serif;font-weight:400;font-size:clamp(24px,2.3vw,30px);color:#fff;margin:0}
+.ukPr_pre{font:400 12px/1.4 'Lato',sans-serif;color:rgba(255,255,255,.55);margin-top:4px}
+.ukPr_price{display:flex;align-items:flex-start;gap:2px;margin:6px 0 2px}
+.ukPr_cur{font-family:"Marcellus SC",serif;font-size:clamp(22px,2vw,28px);color:#fff;margin-top:8px}
+.ukPr_amt{font-family:"Marcellus SC",serif;font-size:clamp(40px,4.4vw,58px);color:#fff;line-height:1}
+.ukPr_per{align-self:flex-end;font:400 13px/1 'Lato',sans-serif;color:rgba(255,255,255,.55);margin-bottom:8px}
+.ukPr_sub{font:400 12px/1.4 'Lato',sans-serif;color:rgba(255,255,255,.55);margin-bottom:clamp(18px,2vw,24px)}
+.ukPr_card .btn{margin-bottom:clamp(20px,2.4vw,28px);align-self:stretch;text-align:center}
+.ukPr_card .btn--gold{justify-content:center}
+.ukPr_feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(11px,1.3vw,16px)}
+.ukPr_feats li{display:flex;align-items:center;gap:10px;font:500 clamp(13px,1.05vw,14.5px)/1.35 'Lato',sans-serif;color:rgba(255,255,255,.82)}
+.ukPr_feats li svg{flex-shrink:0;color:#65d2e9}
+.ukPr_card--feat .ukPr_feats li svg{color:#e6b64c}
+/* ---- FAQ ---- */.ukFaq{max-width:1000px;margin-inline:auto}
+.ukFaq_head{text-align:center;margin-bottom:clamp(36px,4.4vw,60px)}
+.ukFaq_title{font-family:"Marcellus SC",serif;font-size:clamp(40px,7vw,92px);line-height:.98}
+.ukFaq_list{max-width:900px;margin-inline:auto}
+.ukFaq_item{border-bottom:1px solid rgba(255,255,255,.12)}
+.ukFaq_q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;background:none;border:none;cursor:pointer;text-align:left;padding:clamp(18px,2vw,26px) 4px;font:600 clamp(13px,1.15vw,16px)/1.4 'Lato',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.9)}
+.ukFaq_ic{position:relative;flex-shrink:0;width:20px;height:20px}
+.ukFaq_ic::before,.ukFaq_ic::after{content:"";position:absolute;background:rgba(255,255,255,.7);left:50%;top:50%;transition:transform .3s ease}
+.ukFaq_ic::before{width:16px;height:1.6px;transform:translate(-50%,-50%)}
+.ukFaq_ic::after{width:1.6px;height:16px;transform:translate(-50%,-50%)}
+.ukFaq_q[aria-expanded="true"] .ukFaq_ic::after{transform:translate(-50%,-50%) scaleY(0)}
+.ukFaq_q[aria-expanded="true"]{color:#d7a543}
+.ukFaq_a{overflow:hidden;max-height:0;transition:max-height .4s ease}
+.ukFaq_a p{margin:0;padding:0 4px clamp(18px,2vw,26px);font:400 clamp(13px,1.15vw,15px)/1.6 'Lato',sans-serif;color:rgba(255,255,255,.66);max-width:760px;text-transform:none;letter-spacing:0}
+.ukPr_feats li svg{width:16px;height:16px;flex:0 0 16px}
+.ukRes_visual img.ukRes_logo{width:auto;height:34px;max-width:58%;object-fit:contain}
+.ukPr_feats svg,.ukFc_list svg{flex:0 0 auto}
+.ukResults{overflow:hidden;isolation:isolate}
+.ukResults::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,#0B2F52 0%,rgba(11,47,82,.5) 22%,rgba(11,47,82,.5) 74%,#0B2F52 100%),url(/assets/img/uk/298df834-4d50-4185-a0d0-f4f398468592.webp) center/cover}
+.ukResults .uk_head,.ukResults_stage{position:relative;z-index:1}
+.ukNews .uk_title,.ukNews .uk_sub{text-shadow:0 2px 16px rgba(0,0,0,.55)}
+/* ====================================================================
+   These four sections were authored for a page whose whole body is dark:
+   .ukSection sets color:#fff and every rule inside assumes it. Dropped
+   onto this page, whose sections are cream, the pricing and FAQ were
+   white-on-white. They carry their own dark ground now, so they read as
+   designed and give the page a light / dark / light rhythm.
+
+   Featured Creators and Proven Results already bring their own imagery
+   and scrim, so only these two need it.
+   ==================================================================== */
+.ukPricing,.ukFaq{background:var(--uk-deep)}
+
+/* the title on those two is a white-to-gold gradient — on the deep ground
+   that is correct; it only failed because the ground was cream */
+.ukPricing .uk_title,.ukFaq_title{-webkit-text-fill-color:transparent}
+
+/* Featured Creators is NOT the light one: it carries feat-bg.jpg behind a deep
+   scrim (.ukFeat_bg / .ukFeat_scrim) and its heading is the white-to-gold
+   gradient over that. Forcing a cream ground here flattened the image out and
+   left the heading reading as ink on cream — so nothing overrides it. */
+
+/* .ukFaq carries max-width:1000px in the source, which constrains the SECTION
+   rather than its list — so the dark ground stopped short of the page edges and
+   sat in a cream frame. The band runs full width; the list keeps its measure. */
+.ukFaq{max-width:none;margin-inline:0;
+  padding-inline:clamp(20px,5vw,48px);padding-block:clamp(56px,7vw,104px)}
+.ukFaq_list{max-width:900px;margin-inline:auto}
+
+/* fc-shared.css forces .ukFeat .uk_title to solid ink (#102e37) — a rule written
+   for a light-ground variant of this block elsewhere. Over feat-bg.jpg it made
+   the heading read as dark type on a photograph. The white-to-gold gradient the
+   other section titles use is restored here. */
+.ukFeat .uk_title{
+  background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important}
+.ukFeat .uk_sub{color:rgba(255,255,255,.72)}
+
+
+/* ---------- no shadows on the carousel cards ----------
+   Each item carried 0 20px 46px at 40% black, the open one 0 30px 66px at 55%.
+   Over a photograph that does not read as lift — it pools as dark murk down the
+   sides and above the row, which is the shadow that kept showing. The cards are
+   already separated by their gaps and their own edges. */
+/* the expanded state is .is-exp, not .is-on — a two-class selector, so it
+   outranked a plain .ukEx_item override and kept its 0 30px 66px */
+.ukEx_item,
+.ukEx_item.is-exp,
+.ukEx_item:hover,
+.ukEx_item:focus-visible{box-shadow:none}
+
+/* the creator chip inside the open card carried one too */
+.ukEx_item .fcPro{box-shadow:none}
+
+/* ---------- the band across the top of this section ----------
+   reveal.js animates clip-path from inset(16%) to inset(0) as the section
+   scrolls in. Here the frame IS the section's background, and the scrim is a
+   sibling covering the whole section rather than being clipped with it — so
+   while the image sat clipped, that strip showed scrim over bare page and read
+   as a navy band laid on top of the layout.
+
+   This frame is a full-bleed background, not a reveal, so it is pinned open.
+   The !important beats reveal.js's inline style; the data-* attributes come off
+   the element too, so the script has nothing to animate in the first place. */
+.ukFeat .ukReveal_frame{clip-path:inset(0)!important}
+.ukFeat .ukReveal_img{transform:scale(1)!important}
+
+/* ---------- the section's tag, in the hero's accepted style ----------
+   The plain eyebrow becomes the glow pill the hero uses: two rings behind an
+   opaque face, with the label above them. This one sits on a photograph, so it
+   takes the hero badge's dark face rather than the cards' light one. */
+.ukFeat_tag{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;padding:7px 16px;margin:0 auto;
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--uk-gold)}
+.ukFeat_tag .ukGlow_face{background:var(--uk-badge-face-dark);border:0;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+/* ---------- tightened ----------
+   The section ran a full viewport tall with the row floating in the middle of
+   it. The padding comes in and the head sits closer to the cards. */
+.ukFeat{padding-block:clamp(44px,5vw,76px)}
+.ukFeat .uk_head{margin-bottom:clamp(22px,2.6vw,36px)}
+.ukFeat .uk_title{margin-top:clamp(10px,1.2vw,16px)}
+.ukFeat .uk_sub{margin-top:clamp(8px,1vw,13px)}
+.ukFeat .ukCreators_cta{margin-top:clamp(22px,2.6vw,34px)}
+
+
+/* The footer and newsletter as they are built on the main branch, with the
+   rules that belong to them. Replaced rather than recoloured. */
+/* ---- Newsletter ---- */.ukNews_inner{text-align:center;max-width:640px;margin-inline:auto}
+.ukNews_form{display:flex;gap:12px;margin-top:clamp(24px,3vw,36px);max-width:560px;margin-inline:auto}
+.ukNews_input{flex:1 1 auto;min-width:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9999px;padding:14px 22px;color:#fff;font:400 15px/1 'Lato',sans-serif;outline:none}
+.ukNews_input::placeholder{color:rgba(255,255,255,.5)}
+.ukNews_input:focus{border-color:rgba(215,165,67,.55)}
+.ukNews_btn{flex:0 0 auto}
+/* ---- Footer ---- */.ukFooter{position:relative;padding:clamp(56px,7vw,96px) clamp(24px,7vw,120px) clamp(34px,4vw,52px);border-top:1px solid rgba(255,255,255,.08)}
+.ukFoot_inner{display:flex;gap:clamp(40px,6vw,110px);max-width:1200px;margin-inline:auto;flex-wrap:wrap}
+.ukFoot_brand{flex:1 1 280px;max-width:340px}
+.ukFoot_logo{font-family:"Marcellus SC",serif;font-size:24px;color:#fff}
+.ukFoot_logo em{font-style:italic;font-size:13px;color:#65d2e9;margin-left:4px}
+.ukFoot_tag{font:400 14px/1.6 'Lato',sans-serif;color:rgba(255,255,255,.6);margin:16px 0 20px}
+.ukFoot_socials{display:flex;gap:12px}
+.ukFoot_sns{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+.ukFoot_sns span{width:15px;height:15px;border-radius:4px;background:rgba(255,255,255,.55)}
+.ukFoot_sns:hover{border-color:#d7a543}
+.ukFoot_cols{flex:2 1 520px;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,3vw,48px)}
+.ukFoot_col h4{font-family:"Marcellus SC",serif;font-weight:400;font-size:17px;color:#fff;margin:0 0 16px}
+.ukFoot_col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.ukFoot_col a{font:400 14px/1.4 'Lato',sans-serif;color:rgba(255,255,255,.62);text-decoration:none;transition:color .2s ease}
+.ukFoot_col a:hover{color:#fff}
+.ukFoot_bar{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1200px;margin:clamp(34px,4vw,52px) auto 0;padding-top:clamp(22px,2.4vw,30px);border-top:1px solid rgba(255,255,255,.1);flex-wrap:wrap;font:400 13px/1.4 'Lato',sans-serif;color:rgba(255,255,255,.5)}
+.ukFoot_legal{display:flex;gap:22px}
+.ukFoot_legal a{color:rgba(255,255,255,.5);text-decoration:none}
+.ukFoot_legal a:hover{color:#fff}
+@media (max-width:640px){  .ukPf_grid{grid-template-columns:1fr}  .ukNews_form{flex-direction:column;border-radius:20px}  .ukCrd{width:60vw}.ukCrd--center{width:68vw}}
+.ukOutro .ukNews,.ukOutro .ukFooter{background:transparent;border-top:none;position:relative;z-index:1}
+/* The photograph and its scrim, exactly as main builds them, with the scrim
+   carried onto the brand's deep blue instead of the legacy green. */
+.ukOutro{position:relative;isolation:isolate;overflow:hidden}
+.ukOutro::before{content:'';position:absolute;inset:0;z-index:-1;
+  background:url(../img/uk/df9cb076-c2cb-4f8b-9956-1eaff744b0b5.webp) center/cover}
+.ukOutro::after{content:'';position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(to bottom,var(--uk-deep-3) 0%,rgba(6,24,41,.5) 15%,
+    rgba(6,24,41,.66) 52%,rgba(6,24,41,.8) 100%)}
+.ukOutro .ukNews,.ukOutro .ukFooter{background:transparent;border-top:none;position:relative;z-index:1}
+
+/* the newsletter's eyebrow becomes the same pill, and it sits on a
+   photograph too, so it keeps the dark face the section tag uses */
+.ukNews_tag{margin:0 auto clamp(14px,1.6vw,20px)}
+
+/* the footer wordmark is the real logo, and the social boxes are the
+   brand's own marks */
+.ukFoot_logo{display:inline-block;line-height:0}
+.ukFoot_logo img{display:block;width:auto;height:clamp(30px,2.6vw,38px)}
+.ukFoot_sns{display:inline-flex;align-items:center;justify-content:center}
+.ukFoot_sns img{width:18px;height:18px;display:block;
+  filter:brightness(0) invert(1);opacity:.82;transition:opacity .2s ease}
+.ukFoot_sns:hover img{opacity:1}
+
+/* The profile card comes off the featured-creators videos — the work carries
+   itself there. The surfer row below keeps its own cards. */
+.ukEx_item .fcMini{display:none}
+
+/* ---- creator case studies ----
+   The hotel case study card, adapted. Everything structural comes from
+   .cs-card. Three things are set here: the two cards hold the same height,
+   the identity block carries no surface where the hotel card carries its logo
+   panel, and the stat labels hold one line. */
+.cs-card--creator[hidden]{display:none}
+
+/* The hotel card's height is set by its copy, so it cannot be inherited: it is
+   515 across the desktop range and grows as that copy wraps at narrower widths.
+   Matching it by min-height keeps the two cards level, and the picture column
+   stretches into whatever height that gives. */
+/* .cs-card carries zoom:.9 above 1024 (ukported) and zoom:1 below it
+   (ukresponsive), so the value differs either side: 572 * .9 renders 515. */
+.cs-card--creator{--uk-cardH:572px;--uk-cardPad:17px;min-height:var(--uk-cardH)}
+@media (max-width:1024px){.cs-card--creator{--uk-cardH:571px}}
+@media (max-width:1000px){.cs-card--creator{--uk-cardH:597px}}
+@media (max-width:768px){.cs-card--creator{min-height:0}}
+.cs-card--creator .cs-left{min-height:0;
+  /* the frame is taller than it is wide — Figma 626:542, 471.578 x 538.889 */
+  flex:0 0 calc((var(--uk-cardH) - 2 * var(--uk-cardPad)) * 0.875138);
+  width:auto;align-self:stretch;
+  background:
+    radial-gradient(120% 90% at 50% 12%, rgba(122,176,232,.06) 0%, rgba(122,176,232,0) 62%),
+    linear-gradient(180deg, rgba(3,11,20,.34) 0%, rgba(3,11,20,.5) 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+
+/* ── The phone mock (Figma 626:543). Every child is placed as a percentage of
+      the 471.578 x 538.889 frame, so the whole composition scales as one. ── */
+.ukPhone{position:absolute;inset:0;--uk-phoneY:1.8834%}
+.ukPhone_ring{position:absolute;display:block;pointer-events:none;opacity:.02;
+  background:linear-gradient(180deg,#f2f3f9 0%,#ebf0fb 52.436%)}
+.ukPhone_ring--1{left:4.1234%;top:9.9174%;width:91.6076%;height:80.1651%;
+  border-radius:64.392%;box-shadow:0 5.697px 119.635px 28.485px rgba(56,59,151,.12)}
+.ukPhone_ring--2{left:12.8177%;top:17.5254%;width:74.3639%;height:65.0748%;
+  border-radius:64.281%;box-shadow:0 4.617px 96.951px 23.083px rgba(56,59,151,.12)}
+.ukPhone_ring--3{left:calc(50% - .16px);top:calc(50% + .19px);transform:translate(-50%,-50%);
+  width:55.6377%;height:48.6885%;
+  border-radius:64.377%;box-shadow:0 3.459px 72.645px 17.297px rgba(56,59,151,.12)}
+
+.ukPhone_video{position:absolute;left:30.4767%;top:calc(10.7568% + var(--uk-phoneY));
+  width:39.1789%;height:74.7791%;
+  border-radius:11.2417% / 5.1541%;
+  object-fit:cover;display:block;background:#000}
+
+.ukPhone_frame,.ukPhone_island,.ukPhone_nav,.ukPhone_avatar,.ukPhone_heart{
+  position:absolute;display:block;pointer-events:none}
+/* the bubble is the creator's own photo behind the shared story ring */
+.ukPhone_avatarPic{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:67.59%;height:67.59%;border-radius:50%;object-fit:cover;display:block}
+.ukPhone_avatarRing{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ukPhone_frame{left:28.4085%;top:calc(9.2953% + var(--uk-phoneY));width:43.0466%;height:77.6597%}
+.ukPhone_island{left:45.3583%;top:calc(12.0720% + var(--uk-phoneY));width:9.0508%;height:2.1676%}
+.ukPhone_nav{left:30.9052%;top:calc(10.8994% + var(--uk-phoneY));width:37.5379%;height:7.4583%;
+  filter:drop-shadow(0 .428px .919px rgba(0,0,0,.49))}
+.ukPhone_home{position:absolute;left:43.7752%;top:calc(84.9245% + var(--uk-phoneY));
+  width:12.6032%;height:.3967%;border-radius:100px;background:#fff;pointer-events:none}
+.ukPhone_avatar{left:59.8036%;top:calc(18.4577% + var(--uk-phoneY));width:22.8524%;height:19.9982%}
+.ukPhone_heart{left:18.5432%;top:calc(59.2794% + var(--uk-phoneY));width:16.6896%;height:14.6051%;
+  transform-origin:50% 50%;will-change:transform;
+  animation:ukHeartBreathe 2.9s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes ukHeartBreathe{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.13)}}
+@media (prefers-reduced-motion:reduce){
+  .ukPhone_heart{animation:none}}
+
+/* the sound control sits on the clip itself */
+.ukPhone_mute{position:absolute;right:32.7%;bottom:calc(16.6% - var(--uk-phoneY));
+  width:5.513%;aspect-ratio:1;display:grid;place-items:center;
+  padding:0;border:1px solid rgba(255,255,255,.28);border-radius:50%;
+  background:rgba(6,16,28,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  color:#fff;cursor:pointer;z-index:2;
+  transition:background-color .25s ease,border-color .25s ease,transform .2s ease}
+.ukPhone_mute:hover{background:rgba(6,16,28,.72);border-color:rgba(255,255,255,.5);transform:scale(1.06)}
+.ukPhone_mute:focus-visible{outline:2px solid #e0b054;outline-offset:2px}
+.ukRs_muteIco{display:block;width:58%}
+.ukRs_muteIco svg{display:block;width:100%;height:auto}
+.ukRs_muteIco[data-muted="true"] .ukRs_muteOff{display:none}
+.ukRs_muteIco[data-muted="false"] .ukRs_muteOn{display:none}
+.ukRs_sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
+  clip-path:inset(50%);white-space:nowrap}
+.cs-card--creator .cs-hotel-img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover}
+/* the copy spreads to fill the taller card, which drops the action to the foot */
+/* .cs-right and .cs-sections each carry a 15px flex gap; this card spaces
+   itself with explicit margins instead, so that 30px goes to the quote */
+.cs-card--creator .cs-right{display:flex;flex-direction:column;gap:0}
+.cs-card--creator .cs-sections{display:flex;flex-direction:column;flex:1 1 auto;
+  gap:0;margin-top:0;padding-top:0}
+.cs-card--creator .cs-cta-row{margin-top:auto}
+
+/* top aligned with the platform marks, not centred on them */
+.cs-who{display:flex;align-items:flex-start;gap:13px;
+  padding-top:clamp(4px,.6vw,8px);padding-bottom:clamp(12px,1.35vw,17px)}
+.cs-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;
+  flex:0 0 auto}
+.cs-whoText{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+/* this card sits on the dark ground, the same as the hotel study beside it,
+   so the identity takes ukdark's inks rather than the light-section ones */
+.cs-whoText b{font:400 clamp(19px,1.6vw,22px)/1.25 "Marcellus",Georgia,serif;
+  color:#fff;white-space:nowrap}
+.cs-whoText i{font:400 clamp(14px,1.2vw,16.5px)/1.4 'Lato',sans-serif;
+  font-style:normal;color:rgba(255,255,255,.62);white-space:nowrap}
+
+/* the marks overlap, the way a stack of faces does */
+.cs-plats{margin-left:auto;display:inline-flex;align-items:center;padding-right:6px}
+.cs-plats img{display:block;width:30px;height:30px;object-fit:contain;
+  margin-right:-8px;border-radius:50%;box-shadow:0 0 0 2px #123152}
+.cs-plats img:last-child{margin-right:0}
+
+/* .cs-section-text caps this at 17px and ukported.css loads after this file,
+   so the size only sticks from a two-class selector */
+.cs-card--creator .cs-quote{font-style:normal;font-weight:300;text-wrap:pretty;
+  flex:1 1 auto;display:grid;align-content:center;
+  font-size:clamp(19px,2.2vw,29px);line-height:1.42;
+  color:rgba(255,255,255,.84);
+  margin:clamp(9px,1vw,12px) 0}
+
+/* The figures sit at the foot with the hotel card's own gap to the action:
+   the slack goes ABOVE them, not between them and the button. */
+.cs-card--creator .cs-sections > hr:first-of-type{margin-top:0}
+/* the figures and their two rules ride up by this much: the row is pinned to
+   the card's foot, so growing its top padding pulls the group above it higher
+   without moving the button. Matched to the hotel card's rule-to-button gap. */
+.cs-card--creator .cs-cta-row{margin-top:0;padding-top:31px}
+/* the two rules sit the same distance off the figures */
+.cs-card--creator .cs-stats{margin:clamp(12px,1.35vw,17px) 0;
+  justify-content:space-between;gap:clamp(12px,1.4vw,20px);
+  padding-right:clamp(16px,3.2vw,42px)}
+.cs-card--creator .cs-stat{width:auto}
+.cs-card--creator .cs-stat-label{white-space:nowrap}
+
+/* the action matches the hotel card's button, and sits lighter */
+.cs-cta-row .aeroBtn.is-primary{font-weight:300;text-shadow:none;
+  min-height:49px;height:49px;font-size:16px;letter-spacing:-.1px}
+.cs-cta-row .aeroBtn strong{height:21px}
+.cs-cta-row .aeroBtn strong span{line-height:21px}
+.cs-cta-row .aeroBtn.is-primary{min-width:172px}
+.cs-star{width:1em;height:1em;flex:0 0 auto;margin-left:5px;
+  transform:translateY(-.06em)}
+
+
+/* On phones the card stacks, so the frame takes the full width and keeps its ratio */
+@media (max-width:768px){
+  .cs-card--creator .cs-left{flex:0 0 auto;width:auto;margin-inline:auto;
+    height:min(93vw,420px);aspect-ratio:471.578/538.889}
+}
+
+/* ── Case studies: the section holds while the reader scrolls, and the hotel's
+      card dissolves into the creator's. The motion is small and scroll-linked —
+      the reader never does anything, and never notices a switch happening. ── */
+.csHold_stage{display:block}
+/* the flow layout spaced this card off the heading; the stage does that now */
+.csDeck .cs-card{margin-top:0}
+/* the card sits a little smaller here so the heading and it share the screen */
+@media (min-width:1000px){.csDeck .cs-card{zoom:.84}}
+
+@media (min-width:1000px){
+  /* both ancestors clip with overflow:hidden, which would make the stage stick to
+     them instead of the viewport; clip does the same job without a scrollport */
+  .homeHeader:has(.csHold),.results:has(.csHold){overflow:clip}
+
+  /* the section runs edge to edge while it is held: its own padding would
+     otherwise read as dead space above and below the stage */
+  .results:has(.csHold:not([data-cs-flat])){padding-block:0}
+  .csHold{position:relative;height:230vh}
+  .csHold_stage{position:sticky;top:0;height:100svh;overflow:clip}
+  .csHold_stage .results__bg{position:absolute;inset:0;height:100%;width:100%;top:0;left:0}
+  /* the photograph sits well back: it is a field for the card, not a picture */
+  .csHold_stage .results__bg img{opacity:.26}
+  .csHold_stage .results__bg::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(6,20,36,.42) 0%,rgba(6,20,36,.62) 100%)}
+  .csHold_inner{position:relative;z-index:1;height:100%;
+    display:flex;flex-direction:column;align-items:center}
+
+  /* the two cards share one cell and run across the stage on one track: each
+     arrives from the right, rests in the centre, and leaves to the left */
+  .csDeck{position:relative;width:100%;flex:0 0 auto;display:grid}
+  .csDeck_panel{grid-area:1/1;will-change:transform}
+
+  /* too short to hold a heading and a card at once: plain stacked flow */
+  .csHold[data-cs-flat]{height:auto}
+  .csHold[data-cs-flat] .csHold_stage{position:static;height:auto;overflow:visible}
+  .csHold[data-cs-flat] .csHold_inner{display:block;height:auto}
+  .csHold[data-cs-flat] .csDeck{display:flex;flex-direction:column;
+    gap:clamp(40px,5vw,72px)}
+  .csHold[data-cs-flat] .csDeck_panel{opacity:1!important;transform:none!important}
+}
+
+@media (max-width:999px),(prefers-reduced-motion:reduce){
+  .csDeck{display:flex;flex-direction:column;gap:clamp(40px,5vw,72px);width:100%}
+  .csDeck_panel{opacity:1!important;transform:none!important}
+}
+
+/* ── The exchange, drawn. A creator's video travels left to right, crosses the
+      beam, and leaves the other side as what the stay actually returned. The
+      two states are stacked layers; the beam is where the clip meets. ── */
+.ukScan{position:relative;overflow:clip;background:#061829;
+  padding:clamp(58px,6.2vw,88px) 0 clamp(104px,11vw,156px);isolation:isolate}
+.ukScan_copy{position:relative;z-index:2;max-width:660px;margin:0 auto;
+  padding-inline:clamp(20px,5vw,48px);text-align:center}
+.ukScan_h{font-family:var(--uk-font-display,"Marcellus SC",serif);font-weight:400;
+  font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);letter-spacing:var(--uk-h2-track);
+  margin:clamp(9px,1vw,13px) 0 0;text-wrap:balance;
+  background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ukScan_copy .results__label{margin:0 auto clamp(8px,.9vw,12px)}
+.ukScan_p{font-family:'Lato',sans-serif;font-size:clamp(14px,1.3vw,17px);line-height:1.6;
+  color:rgba(255,255,255,.70);margin:clamp(8px,.9vw,12px) auto 0;max-width:54ch;text-wrap:pretty}
+
+/* the band the stream runs through */
+.ukScan_stage{position:relative;margin-top:clamp(64px,7.2vw,106px)}
+.ukScan_band{position:relative;z-index:1;height:260px;overflow:clip;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 12%,#000 88%,transparent 100%)}
+/* the light the rod throws onto the cards leaving it. A radial anchored on the
+   rod: it reaches zero well inside its own box, so there is no edge to see.
+   No blur and no blend mode — together those forced a layer whose bounds
+   showed up as a rectangle. */
+.ukScan_stage::before{content:"";position:absolute;z-index:2;pointer-events:none;
+  left:50%;width:240px;top:50%;height:392px;transform:translateY(-50%);
+  background:radial-gradient(115% 58% at 0% 50%,
+    rgba(246,227,180,.26) 0%,rgba(232,194,116,.145) 22%,rgba(224,176,84,.070) 40%,
+    rgba(215,165,67,.028) 58%,rgba(215,165,67,.008) 74%,rgba(215,165,67,0) 88%)}
+/* the sparks sit above that light, at the same height. The width is explicit:
+   a canvas is a replaced element, so with a set height and auto width it takes
+   its width from the backing store's ratio, not from the box. */
+.ukScan_sparks{position:absolute;z-index:3;left:0;width:100%;top:50%;height:392px;
+  transform:translateY(-50%);pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0%,#000 18%,#000 82%,transparent 100%)}
+.ukScan_track{position:absolute;top:0;left:0;height:100%;
+  display:flex;align-items:center;gap:44px;will-change:transform}
+.ukScan_card{position:relative;flex:0 0 auto;width:208px;height:260px}
+
+/* what goes in */
+.ukScan_in,.ukScan_out{position:absolute;inset:0;border-radius:12px;overflow:hidden}
+.ukScan_in{z-index:2;box-shadow:0 16px 40px rgba(0,0,0,.42)}
+.ukScan_in img,.ukScan_in video{width:100%;height:100%;object-fit:cover;display:block;background:#0a1a2b}
+.ukScan_play{position:absolute;left:50%;top:50%;width:42px;height:42px;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:rgba(6,16,28,.5);border:1px solid rgba(255,255,255,.34);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.ukScan_play::after{content:"";position:absolute;left:53%;top:50%;
+  transform:translate(-50%,-50%);border-style:solid;border-width:6px 0 6px 10px;
+  border-color:transparent transparent transparent #fff}
+
+/* what comes out — Figma 630:214, measured off the reference:
+   card 411x515 (0.798), radius 23; figure 128 tall (24.9% of the card),
+   label block 38, note 26, gaps 36 and 14; ground #1C3958 to #122437 */
+.ukScan_out{z-index:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:18px 16px;border-radius:12px;
+  background:linear-gradient(180deg,#1C3958 0%,#122437 100%);
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:0 16px 40px rgba(0,0,0,.42)}
+.ukScan_out b{display:block;
+  font-family:"Marcellus",Georgia,serif;font-weight:400;
+  /* the line box has to contain the glyphs: background-clip:text paints only
+     inside it, so a tight line-height chips the figure top and bottom */
+  font-size:72px;line-height:1;letter-spacing:-.01em;
+  background:linear-gradient(100deg,#FFE698 0%,#E9D99A 24%,#C5D4C2 52%,#A6CAD7 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+.ukScan_out i{font:400 16.5px/1.15 'Lato',sans-serif;font-style:normal;
+  color:#D5D9DD;margin-top:2px}
+.ukScan_out em{font:400 12.5px/1.35 'Lato',sans-serif;font-style:normal;
+  color:#8A949F;margin-top:4px;text-wrap:pretty}
+
+/* the beam itself */
+.ukScan_beam{position:absolute;z-index:4;left:50%;top:50%;
+  width:2.5px;height:392px;transform:translate(-50%,-50%);border-radius:9999px;
+  background:linear-gradient(180deg,transparent 0%,rgba(215,165,67,0) 6%,#d7a543 22%,
+    #e8c274 38%,#f6e3b4 50%,#e8c274 62%,#d7a543 78%,rgba(215,165,67,0) 94%,transparent 100%);
+  opacity:.72;transition:opacity .3s ease}
+/* the glow the rod throws, at the rod's own height */
+.ukScan_stage::after{content:"";position:absolute;z-index:0;left:calc(50% + 30px);top:50%;
+  width:250px;height:392px;transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(closest-side,rgba(224,176,84,.13),rgba(224,176,84,0) 100%)}
+
+
+
+@media (max-width:640px){
+  .ukScan_band{height:208px}
+  .ukScan_card{width:158px;height:208px}
+  .ukScan_track{gap:28px}
+  .ukScan_out{padding:14px 12px}
+  .ukScan_out b{font-size:68px}
+  .ukScan_out i{font-size:15px;margin-top:14px}
+  .ukScan_out em{font-size:11.5px;margin-top:5px}
+  .ukScan_beam{height:300px}
+}
+
+/* the curtain is the section's ground: behind everything, and never in the way
+   of a click — the pointer is read off the section itself. Its bright axis runs
+   through the middle of its own box, so the box is centred on the animation
+   rather than on the section: the light lines up with the stream. */
+.light-curtain{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.light-curtain canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* ── The wordmark behind the footer glow. It sits low enough that the glow
+      covers its foot, and fades from white at the top to nothing at the
+      bottom, so it reads as rising out of the light rather than sitting on it.
+      Painted before the glow band, which the script appends last. ── */
+.ukOutro_mark{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--uk-glow-h,38vh) - 13vh);
+  z-index:0;pointer-events:none;user-select:none;-webkit-user-select:none;
+  font-family:'Lato',sans-serif;font-weight:700;font-style:normal;
+  font-size:clamp(84px,16.5vw,300px);line-height:.78;letter-spacing:-.035em;
+  white-space:nowrap;
+  background:linear-gradient(180deg,
+    #ffffff 0%,
+    rgba(255,255,255,.86) 26%,
+    rgba(255,255,255,.46) 55%,
+    rgba(255,255,255,.14) 80%,
+    rgba(255,255,255,0) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+
+
+/* ── The footer as specified: the wordmark rising out of the glow, and the
+      copyright alone on the last line. The photograph stays as it was. ── */
+"/* the rule above zeroes the footer's border; the divider belongs over the
+   items, so it is restored here and the bar carries none */
+/* the rule sits inside the footer's measure rather than bleeding to the edges:
+   107px in on either side of 1524, which is 7% */
+.ukOutro .ukFooter{border-top:0;position:relative}
+.ukOutro .ukFooter::before{content:"";position:absolute;top:0;left:7%;right:7%;
+  height:1px;background:rgba(255,255,255,.10)}
+.ukFoot_bar{justify-content:center;text-align:center;border-top:0}
+/* the reference leaves 245px between the last link and the glow; that distance
+   is this padding plus the outro's own band, so it is set from the measurement
+   rather than guessed. Scoped past the rules that were beating it. */
+.ukOutro.has-ukGlow .ukFooter{padding-bottom:234px}
+/* the copyright sits under the glow, on the dark floor of the page */
+/* the copyright clears the gold and sits on the dark floor: 94px up from the
+   foot, as the reference has it */
+.ukOutro.has-ukGlow .ukFoot_bar{position:relative;z-index:2;
+  /* the space left under the bar is what sets how high the line sits, so the
+     extra comes off the margin; adding padding only makes the page taller and
+     cancels itself out */
+  /* two distances have to hold at once: 94px from the copyright to the foot,
+     and 531px from the last link to it. The margin sets the first, the padding
+     the second; solved together rather than tuned one at a time. */
+  margin-bottom:calc(-1 * var(--uk-glow-h,30.6vh) - 184px);
+  padding-top:36vh;
+  /* a transform, so the line drops without changing the page's height and
+     pulling the columns and the wordmark with it */
+  transform:translateY(24px)}
+
+.ukOutro_mark{
+  /* the same seat the tracked-out text had: the same width, the same top, and
+     the same fade — carried on a mask now that it is artwork, not type */
+  left:50%;width:87.1%;transform:translateX(-50%);
+  bottom:calc(var(--uk-glow-h,30.6vh) - 11.7vh);
+  background:none}
+.ukOutro_mark img{display:block;width:100%;height:auto;opacity:.155;
+  -webkit-mask-image:linear-gradient(180deg,
+    rgba(0,0,0,1) 0%,rgba(0,0,0,.98) 16%,rgba(0,0,0,.77) 34%,rgba(0,0,0,.57) 50%,
+    rgba(0,0,0,.36) 64%,rgba(0,0,0,.18) 76%,rgba(0,0,0,.05) 86%,rgba(0,0,0,0) 94%);
+  mask-image:linear-gradient(180deg,
+    rgba(0,0,0,1) 0%,rgba(0,0,0,.98) 16%,rgba(0,0,0,.77) 34%,rgba(0,0,0,.57) 50%,
+    rgba(0,0,0,.36) 64%,rgba(0,0,0,.18) 76%,rgba(0,0,0,.05) 86%,rgba(0,0,0,0) 94%)}
+
+
+/* the copyright clears the gold and sits on the dark floor: 94px up from the
+   foot, as the reference has it */
+.ukOutro.has-ukGlow .ukFoot_bar{position:relative;z-index:2;
+  /* the space left under the bar is what sets how high the line sits, so the
+     extra comes off the margin; adding padding only makes the page taller and
+     cancels itself out */
+  /* two distances have to hold at once: 94px from the copyright to the foot,
+     and 531px from the last link to it. The margin sets the first, the padding
+     the second; solved together rather than tuned one at a time. */
+  margin-bottom:calc(-1 * var(--uk-glow-h,30.6vh) - 184px);
+  padding-top:36vh;
+  /* a transform, so the line drops without changing the page's height and
+     pulling the columns and the wordmark with it */
+  transform:translateY(24px)}
+
+
+/* ── The footer's photograph is cut off where the glow starts, and on a phone
+      that edge reads as a rule above the wordmark. Its foot is feathered so it
+      dissolves instead. ── */
+.ukOutro.has-ukGlow::before{
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 82%,rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 82%,rgba(0,0,0,0) 100%)}
+
+@media (max-width:720px){
+  /* the wordmark rides higher: closer to the links it belongs with, and clear
+     of the glow it was sitting on top of */
+  .ukOutro_mark{bottom:calc(var(--uk-glow-h,30.6vh) - 5.2vh)}
+}

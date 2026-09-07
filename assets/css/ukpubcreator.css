@@ -1,0 +1,727 @@
+/* Ukreate — the public creator detail page.
+   Marketplace layout: headline, one large image, identity and packages on the
+   left, a booking card that travels with you on the right. Brand ink and gold
+   throughout, never the app's blue-on-blue panels. */
+
+/* The shared public shell clears the fixed nav and then adds up to 52px more,
+   which is right above a page title but leaves a breadcrumb floating in the
+   middle of it. On these pages the crumb is a single 18px line, so it sits a
+   normal gap under the nav and a normal gap above the work. */
+.ukPub_main--prof{padding-top:calc(var(--aero-h,88px) + clamp(16px,1.6vw,24px))}
+.ukPub_main--prof .ukPub_crumb{margin-bottom:clamp(10px,1.1vw,14px)}
+
+.ukCp{max-width:1180px;margin:0 auto;--uk-cp-gap:clamp(12px,1.2vw,16px)}
+body.ukCp-locked{overflow:hidden}
+
+/* ---- the identity card ----
+   UKPROFILE.creatorHead, the app's own profile header, dropped straight in.
+   Only page-level fit is adjusted: it is the masthead here, so it loses the
+   panel margin the app gives it and the name steps up to page-title size. */
+.ukCp_idCard{margin:0}
+/* One radius across the three cards. The app gives its profile header 24px,
+   the frames here are 16px, and side by side the mismatch reads as a mistake. */
+.ukCp_idCard .ukCrD{margin:0;border-radius:16px}
+/* .ukProfLink clips to hidden, which cut the availability dot's pulse ring off
+   at the edge of the avatar */
+.ukCp_idCard .ukProfLink.ukCrAv{overflow:visible}
+.ukCp_idCard .ukCrD_n{font-size:clamp(21px,2.1vw,26px);line-height:1.22}
+
+/* Two figures, not the app's six, so they never need to shrink. Kept as the
+   app's own stats row rather than a second treatment invented here. */
+.ukCp_idCard .ukCrD_stats{flex-wrap:wrap;row-gap:11px;margin-top:14px}
+.ukCp_idCard .ukCrD_stats li{flex:0 0 auto}
+
+
+/* ---- content samples ---- */
+/* One row at a fixed height, every piece at its own proportions. A grid of
+   equal cells could only fit them by cropping, and a wide frame cropped to a
+   tall cell is not the work the creator made. The height is the constant; the
+   width follows the file, and the row scrolls if the set is wider than the
+   frame. */
+.ukCp_samples{
+  display:flex;align-items:flex-start;
+  gap:clamp(10px,1.2vw,16px);
+  overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  /* the row still scrolls, it just does not show a bar doing it */
+  scrollbar-width:none;-ms-overflow-style:none;
+}
+
+
+.ukCp_samples::-webkit-scrollbar{display:none}
+
+/* the app's own play mark, already centred by its own rule. It is drawn for a
+   clip that plays in place and so starts hidden until hover; these tiles open
+   the gallery, so it stands on the frame from the start. */
+.ukCp_tile .ukCrPlay{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.ukCp_tile:hover .ukCrPlay{transform:translate(-50%,-50%) scale(1.08)}
+
+/* The share and save controls the app's header card carries. Its own icon rule
+   sizes .ukFav_i only, so a plain svg came in at its natural size and filled
+   the 36px button. */
+/* The app sizes .ukFav_i only, so a plain svg came in at its natural size and
+   filled the button. The frame keeps the app's own 36px; only the glyph
+   changes, and the height is restated because with padding:0 the box was
+   collapsing to whatever the glyph measured. */
+.ukCp_idCard .ukStatusBadge_b--ic{height:36px}
+.ukCp_idCard .ukStatusBadge_b--ic svg{width:16px;height:16px;display:block}
+.ukCp_idCard .ukStatusBadge_act{display:flex;align-items:center;gap:8px}
+
+/* ---- credentials ----
+   Two components the app already owns, used as they are: the creator card's
+   stat strip for the figures, the Academy's badge tiles for the badges. Only
+   their fit on this page is set here. */
+
+
+/* ---- badges ----
+   The mark, its name, and one line on what it certifies. No frame: they sit on
+   the page's own ground. */
+/* two share the row; one takes the whole width rather than sitting in half of
+   it with an empty cell beside it */
+.ukCp_badges{
+  list-style:none;margin:var(--uk-cp-gap) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:clamp(12px,1.4vw,18px);
+}
+.ukCp_badge{
+  display:flex;align-items:center;gap:14px;min-width:0;
+  padding:14px 16px;border-radius:16px;
+  border:1px solid var(--line);background:#fff;
+}
+/* both marks in one circle, so the star and the rosette read at the same size
+   rather than one running wider than the other */
+.ukCp_badgeRing{
+  flex:0 0 56px;width:56px;height:56px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(160deg,#fdf6e8,#f6e6c8);
+  border:1px solid rgba(215,165,67,.28);
+}
+.ukCp_badgeArt{width:34px;height:34px;display:block;object-fit:contain}
+.ukCp_badgeB{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ukCp_badgeB b{font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukCp_badgeB > span{
+  font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty;
+}
+@media (max-width:640px){ .ukCp_badges{grid-template-columns:minmax(0,1fr)} }
+
+.ukCp_all{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;flex:0 0 auto;
+  padding:9px 15px;border-radius:9px;border:1px solid var(--line);
+  background:#fff;color:var(--text);
+  font:600 12.5px/1 'Lato',sans-serif;white-space:nowrap;
+  transition:border-color .16s ease;
+}
+.ukCp_all svg{width:14px;height:14px;display:block}
+.ukCp_all:hover{border-color:var(--text-3)}
+
+/* ---- two columns ---- */
+/* Recent work, the profile card and the invite card read as one arrangement,
+   so the space between all three is the same measure. */
+.ukCp_body{
+  display:grid;grid-template-columns:minmax(0,1fr) 384px;
+  gap:var(--uk-cp-gap);
+  align-items:start;
+  margin-top:0;
+}
+.ukCp_mainCol{min-width:0}
+
+/* ---- identity ---- */
+.ukCp_id{display:flex;gap:clamp(14px,1.6vw,20px);align-items:flex-start}
+.ukCp_av{
+  flex:0 0 auto;width:62px;height:62px;border-radius:12px;object-fit:cover;display:block;
+  border:1px solid var(--line);
+}
+.ukCp_idB{min-width:0}
+.ukCp_n{
+  margin:0;display:flex;align-items:center;gap:6px;
+  font:700 17px/1.2 'Lato',sans-serif;color:var(--text);
+}
+.ukCp_tick{width:16px;height:16px;fill:var(--uk-gold);display:block}
+.ukCp_loc{margin:3px 0 0;font:400 13.5px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukCp_fol{
+  margin:9px 0 0;display:inline-flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:9999px;background:rgba(11,47,82,.06);
+  font:400 12.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+}
+.ukCp_fol b{font-weight:700;color:var(--text)}
+.ukCp_pIco{width:16px;height:16px;display:block;border-radius:3px;flex:0 0 16px}
+.ukCp_bio{
+  margin:11px 0 0;max-width:62ch;
+  font:400 14px/1.65 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+
+.ukCp_rule{border:0;border-top:1px solid var(--line);margin:clamp(24px,2.8vw,34px) 0}
+.ukCp_h2{
+  margin:0 0 clamp(13px,1.5vw,18px);
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(19px,1.9vw,23px);line-height:1.2;color:var(--text);
+}
+.ukCp_h2--rev{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ukCp_h2--rev b{font:700 15px/1 'Lato',sans-serif;color:var(--text)}
+.ukCp_h3{
+  margin:0 0 12px;font:700 12.5px/1.2 'Lato',sans-serif;color:var(--text);
+  text-transform:uppercase;letter-spacing:.09em;
+}
+
+/* ---- packages ---- */
+/* ---- analytics ---- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ---- portfolio ---- */
+.ukCp_folio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.4vw,18px)}
+
+
+.ukCp_tile:hover img{transform:scale(1.04)}
+
+/* ---- reviews ---- */
+.ukCp_stars{display:inline-flex;gap:2px}
+.ukCp_star{width:14px;height:14px;display:block;fill:rgba(11,47,82,.16)}
+.ukCp_star.is-on{fill:var(--uk-gold)}
+.ukCp_revWrap{position:relative}
+.ukCp_revs{display:flex;flex-direction:column;gap:clamp(14px,1.7vw,20px)}
+/* ---- gated sections ----
+   Shown but not readable: the content blurs, and one control says what an
+   account opens. */
+/* The block has to be at least as tall as the control that covers it: a
+   creator with one review made a section shorter than the lock, which then
+   hung past the section and sat over the FAQ under it. */
+.ukCp_gate{position:relative;min-height:168px}
+.ukCp_gateIn{
+  filter:blur(5px);opacity:.6;pointer-events:none;user-select:none;
+}
+/* the lock sits near the head of the block rather than at its centre: a tall
+   section would otherwise put it hundreds of pixels below where the section
+   starts */
+/* Centred, but only within the first stretch of the block: percentage padding
+   resolves against width, so a fixed top offset put the lock past the foot of
+   the short reviews block while sitting too high on the tall stats one. */
+.ukCp_gateOver{
+  position:absolute;left:0;right:0;top:0;max-height:520px;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.ukCp_gate .ukCp_lockB{pointer-events:auto}
+.ukCp_rev{padding:0}
+.ukCp_revTop{display:flex;align-items:center;gap:10px}
+.ukCp_revAv{
+  width:34px;height:34px;border-radius:50%;flex:0 0 34px;display:block;
+  background:linear-gradient(140deg,rgba(11,47,82,.16),rgba(215,165,67,.22));
+}
+.ukCp_revN{margin:0 0 3px;font:700 13.5px/1.2 'Lato',sans-serif;color:var(--text)}
+.ukCp_revP{margin:8px 0 0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+.ukCp_lockB{
+  display:inline-flex;align-items:center;gap:10px;max-width:min(100%,340px);
+  padding:13px 18px;border-radius:12px;text-decoration:none;
+  background:#12253c;color:#fff;
+  font:600 13.5px/1.4 'Lato',sans-serif;text-wrap:pretty;
+  box-shadow:0 14px 34px rgba(0,0,0,.24);
+}
+.ukCp_lockB svg{width:17px;height:17px;flex:0 0 17px;display:block}
+
+/* ---- FAQ ---- */
+.ukCp_faq{border-top:1px solid var(--line)}
+.ukCp_q{border-bottom:1px solid var(--line)}
+.ukCp_qB{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 0;border:0;background:transparent;cursor:pointer;text-align:left;
+  font:600 14.5px/1.4 'Lato',sans-serif;color:var(--text);
+}
+.ukCp_qB i{
+  flex:0 0 auto;font-style:normal;font-size:19px;line-height:1;color:var(--text-3);
+  transition:transform .2s ease;
+}
+.ukCp_q.is-open .ukCp_qB i{transform:rotate(45deg)}
+.ukCp_qA{display:none;padding:0 0 16px}
+.ukCp_q.is-open .ukCp_qA{display:block}
+.ukCp_qA p{margin:0;max-width:70ch;font:400 13.5px/1.65 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+/* ---- related ---- */
+.ukCp_rel{display:flex;flex-wrap:wrap;gap:8px}
+.ukCp_relA{
+  padding:8px 14px;border-radius:9999px;border:1px solid var(--line);
+  background:transparent;text-decoration:none;white-space:nowrap;
+  font:500 12.5px/1 'Lato',sans-serif;color:var(--text-2);
+  transition:border-color .16s ease,color .16s ease;
+}
+.ukCp_relA:hover{border-color:var(--text-3);color:var(--text)}
+
+/* ---- the booking card ---- */
+.ukCp_side{position:sticky;top:96px}
+.ukCp_buy{
+  padding:clamp(16px,1.8vw,20px);border-radius:16px;
+  border:1px solid var(--line);background:#fff;
+  box-shadow:0 10px 34px rgba(11,47,82,.08);
+}
+
+.ukCp_sel{position:relative}
+.ukCp_sel select{
+  width:100%;appearance:none;-webkit-appearance:none;cursor:pointer;
+  padding:11px 36px 11px 13px;border-radius:9px;
+  border:1px solid var(--line);background:#fff;color:var(--text);
+  font:500 13.5px/1.3 'Lato',sans-serif;
+}
+.ukCp_sel select:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukCp_selChev{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;pointer-events:none;color:var(--text-3);
+}
+.ukCp_go{
+  display:block;margin-top:11px;padding:13px 16px;border-radius:9px;text-align:center;
+  text-decoration:none;white-space:nowrap;
+  background:linear-gradient(100deg,#c9922f,#d7a543 58%,#b8801f);
+  color:#fff;font:700 14px/1 'Lato',sans-serif;
+  transition:filter .16s ease,transform .16s ease;
+}
+.ukCp_go:hover{filter:brightness(1.05);transform:translateY(-1px)}
+
+.ukCp_or::before{
+  content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line);
+}
+.ukCp_or span{position:relative;background:#fff;padding:0 10px}
+.ukCp_neg{
+  display:block;text-align:center;text-decoration:underline;text-underline-offset:3px;
+  font:600 13.5px/1 'Lato',sans-serif;color:var(--text);
+}
+.ukCp_neg:hover{color:var(--uk-deep)}
+.ukCp_how{margin:13px 0 0;text-align:center}
+.ukCp_how a{
+  display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+  font:400 12.5px/1 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+}
+.ukCp_how svg{width:14px;height:14px;display:block}
+.ukCp_how a:hover{color:var(--text-2)}
+
+/* ---- the gallery ----
+   A solid white sheet, the work in a masonry column flow so nothing is cropped
+   to a common ratio, each caption over its own image. */
+.ukCp_modal{
+  position:fixed;inset:0;z-index:120;background:rgba(11,24,40,.45);
+  overflow:auto;padding:clamp(16px,3vw,44px);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+}
+.ukCp_modalIn{
+  max-width:1080px;margin:0 auto;background:#fff;border-radius:18px;
+  padding:clamp(16px,2vw,26px);box-shadow:0 30px 80px rgba(0,0,0,.3);
+}
+.ukCp_modalHead{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin:0 0 clamp(14px,1.6vw,20px);
+}
+.ukCp_modalT{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(18px,1.9vw,23px);line-height:1.2;color:var(--text);
+}
+.ukCp_close{
+  width:38px;height:38px;border-radius:50%;flex:0 0 38px;
+  display:grid;place-items:center;cursor:pointer;border:1px solid var(--line);
+  background:#fff;color:var(--text-2);
+}
+.ukCp_close svg{width:16px;height:16px;display:block}
+.ukCp_close:hover{background:var(--surface-2);color:var(--text)}
+.ukCp_masonry{columns:3 240px;column-gap:clamp(10px,1.2vw,16px)}
+.ukCp_mFig{margin:0 0 clamp(10px,1.2vw,16px);break-inside:avoid}
+
+/* ---- narrower ---- */
+@media (max-width:980px){
+  .ukCp_body{grid-template-columns:minmax(0,1fr)}
+  .ukCp_side{position:static;order:-1;margin-bottom:clamp(20px,2.6vw,28px)}
+  .ukCp_aud{grid-template-columns:minmax(0,1fr);gap:clamp(20px,3vw,28px)}
+}
+@media (max-width:620px){
+  .ukCp_hero{aspect-ratio:4/3}
+  .ukCp_folio{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ukCp_kpis{gap:10px}
+  .ukCp_id{gap:13px}
+  .ukCp_av{width:54px;height:54px}
+  .ukCp_gender{gap:20px}
+  .ukCp_cols{height:120px}
+}
+
+
+/* ---- adapted for the collaboration model ---- */
+.ukCp_lead{
+  margin:-4px 0 14px;max-width:70ch;
+  font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+
+.ukCp_chips{display:flex;flex-wrap:wrap;gap:7px}
+.ukCp_chip{
+  padding:6px 12px;border-radius:9999px;background:rgba(11,47,82,.06);
+  font:500 12.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+}
+.ukCp_deliverBox{margin-top:clamp(18px,2.2vw,24px)}
+
+
+
+
+
+/* work with a caption */
+.ukCp_wk{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ukCp_wk figcaption{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ukCp_wk figcaption b{
+  font:600 13px/1.35 'Lato',sans-serif;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ukCp_wk figcaption span{
+  font:400 12px/1.3 'Lato',sans-serif;color:var(--text-3);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+
+/* reviews are no longer walled */
+.ukCp_rev{padding:0}
+
+/* ---- the invite panel ---- */
+.ukCp_avail{
+  margin:0 0 9px;display:inline-flex;align-items:center;gap:7px;
+  font:600 12.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+}
+.ukCp_dot{width:8px;height:8px;border-radius:50%;background:var(--uk-gold);display:block;flex:0 0 8px}
+.ukCp_dot.is-now{background:#2f9e6b}
+.ukCp_price{
+  margin:0 0 14px;display:flex;flex-direction:column;gap:3px;
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(24px,2.4vw,29px);line-height:1;color:var(--text);white-space:nowrap;
+}
+.ukCp_price span{
+  font:400 12.5px/1.3 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+}
+
+
+.ukCp_deliv li{
+  padding:5px 10px;border-radius:9999px;border:1px solid var(--line);
+  font:500 11.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+}
+
+.ukCp_trust li{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ukCp_trust b{
+  font:700 13px/1.2 'Lato',sans-serif;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ukCp_trust li:first-child b{font-size:12px}
+.ukCp_trust li span,.ukCp_trust li{font:400 11px/1.25 'Lato',sans-serif;color:var(--text-3)}
+
+@media (max-width:760px){
+  .ukCp_samples{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+/* ---- media in a frame, with its own information inside ---- */
+/* One frame around the set, not a frame around each piece: the panel is the
+   card, and every clip and its caption live inside it. */
+.ukCp_frame{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:clamp(14px,1.6vw,20px);
+}
+/* the media sits flush to the foot of the frame: with the scrollbar gone there
+   is nothing under it that needs the room */
+.ukCp_frame--lead{padding-bottom:clamp(12px,1.3vw,16px)}
+.ukCp_frame--lead{margin:0 0 var(--uk-cp-gap)}
+.ukCp_frameHead{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin:0 0 clamp(12px,1.4vw,16px);
+}
+.ukCp_frameT{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(17px,1.7vw,20px);line-height:1.2;color:var(--text);white-space:nowrap;
+}
+
+
+
+
+
+
+
+
+/* the title wraps rather than truncating: it is the name of a real piece of
+   work, and half of it with a dot is not a name */
+
+
+
+/* ---- arrangements and shapes ---- */
+.ukCp_accepts{margin-bottom:4px}
+
+.ukCp_rec{
+  margin-left:8px;padding:3px 8px;border-radius:9999px;
+  background:rgba(215,165,67,.16);color:#8a6414;
+  font:700 10px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.08em;
+  white-space:nowrap;
+}
+.ukCp_packT{display:inline-flex;align-items:center;min-width:0}
+
+/* ---- the invite panel ---- */
+.ukCp_invT{
+  margin:0 0 14px;
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(18px,1.8vw,21px);line-height:1.25;color:var(--text);text-wrap:balance;
+}
+.ukCp_selL{
+  margin:0 0 7px;
+  font:700 10.5px/1 'Lato',sans-serif;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.11em;display:block;
+}
+.ukCp_selL--gap{margin-top:16px}
+.ukCp_terms{margin:13px 0 0;display:flex;flex-direction:column;gap:9px}
+.ukCp_terms div{display:flex;align-items:baseline;gap:10px;min-width:0}
+.ukCp_terms dt{
+  flex:0 0 66px;font:400 12px/1.35 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+}
+.ukCp_terms dd{
+  margin:0;flex:1 1 auto;min-width:0;
+  font:600 12.5px/1.45 'Lato',sans-serif;color:var(--text);text-wrap:pretty;
+}
+.ukCp_buy .ukChips{margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.ukCp_go{margin-top:16px}
+.ukCp_neg{display:block;margin-top:11px}
+.ukCp_fine{
+  margin:13px 0 0;padding-top:12px;border-top:1px solid var(--line);
+  font:400 11.5px/1.55 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty;
+}
+
+
+/* ---- the panel's dropdown and its terms ----
+   The app's own .ukDrop, filling the panel width, and the package commitments
+   as .ukCPack cards rather than a bare list. */
+.ukCp_drop{display:block}
+.ukCp_drop .ukDrop_b{width:100%;justify-content:flex-start}
+.ukCp_drop .ukDrop_v{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ukCp_drop .ukDropMenu{left:0;right:0;min-width:0}
+.ukCp_facts{margin-top:14px}
+.ukCp_facts .ukCPack{margin-bottom:8px}
+.ukCp_facts .ukCPack:last-child{margin-bottom:0}
+.ukCp_facts .ukCPack_n{
+  font:700 10.5px/1 'Lato',sans-serif;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.11em;
+}
+.ukCp_facts .ukCPack_d{font-weight:600;color:var(--text);margin-top:6px}
+
+
+/* the trade card, in a panel narrower than the app gives it. The arrow is the
+   exchange itself, so it carries the brand gold rather than body ink. */
+/* The app gives each side a 96px floor so a stay's several lines of inclusions
+   always clear. Two short lines here left a block of empty box under them. */
+.ukCp_trade{margin-top:14px}
+.ukCp_trade .ukTrade_side{min-height:0;padding:11px 13px 12px}
+.ukCp_trade .ukTrade_v{font-size:17px;line-height:1.2;white-space:nowrap}
+.ukCp_trade .ukTrade_s{margin-top:5px}
+.ukCp_trade .ukTrade_ar{
+  align-self:center;color:var(--uk-gold);font-size:19px;line-height:1;flex:0 0 auto;
+}
+
+
+/* the arrangements row above the shapes */
+.ukCp_ways{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+
+.ukCp_ways .ukChips{margin:0}
+.ukCp_credRow--in{margin:14px 0 0}
+/* the rule that used to open this section is gone, so the heading carries the
+   space itself */
+.ukCp_badges + .ukCp_h2,
+.ukCp_credRow + .ukCp_h2,
+.ukCp_idCard + .ukCp_h2{margin-top:clamp(30px,3.4vw,44px)}
+@media (max-width:700px){
+  .ukCp_pack{grid-template-columns:minmax(0,1fr) 17px;gap:6px 12px}
+  .ukCp_packN{grid-column:1}
+  .ukCp_packD{grid-column:1}
+  .ukCp_radio,.ukCp_plus{grid-row:1/4;grid-column:2;align-self:start}
+}
+
+
+
+
+
+.ukCp_waysK{
+  margin:0 0 10px;font:700 10.5px/1 'Lato',sans-serif;color:var(--text-3);
+  text-transform:uppercase;letter-spacing:.11em;
+}
+
+.ukCp_lead{
+  margin:14px 0 0;max-width:66ch;
+  font:400 13.5px/1.65 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+/* rating and stays on the card's own meta line */
+.ukCp_meta{margin-top:7px}
+.ukCp_rate{display:inline-flex;align-items:center;gap:5px}
+.ukCp_rate b{font-weight:700;color:var(--text)}
+.ukCp_meta .ukCrStar{width:12px;height:12px;display:block}
+.ukCp_own{margin:14px 0 0}
+.ukCp_own a{
+  font:600 13px/1.5 'Lato',sans-serif;color:var(--text-2);
+  text-decoration:underline;text-underline-offset:3px;
+}
+.ukCp_own a:hover{color:var(--uk-deep)}
+
+
+
+
+/* ---- package shapes ----
+   One bordered card per offer, the way the reference reads them: the mark, the
+   name, what it costs in nights and the pick on the top line, then one line
+   saying what comes back. */
+.ukCp_packs{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ukCp_row{
+  padding:15px 18px;border-radius:14px;cursor:pointer;
+  border:1px solid var(--line);background:#fff;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+.ukCp_row:hover{border-color:var(--active-ring)}
+.ukCp_row.is-on{border-color:var(--uk-deep);box-shadow:0 0 0 1px var(--uk-deep) inset}
+.ukCp_row:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+/* The plus circle is taller than the radio, so the negotiate row's first line
+   ran 26px against the others' 20px and its title sat lower than the three
+   above it. One height for every row's top line. */
+.ukCp_rowTop{display:flex;align-items:center;gap:12px;min-height:28px}
+/* the radio leads the row where the mark used to be */
+.ukCp_radio--none{border-style:dashed;opacity:.55}
+.ukCp_rowN{
+  flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:9px;
+  font:700 15px/1.3 'Lato',sans-serif;color:var(--text);
+}
+.ukCp_rowV{
+  flex:0 0 auto;font:700 15px/1.3 'Lato',sans-serif;color:var(--text);white-space:nowrap;
+}
+.ukCp_radio{
+  flex:0 0 19px;width:19px;height:19px;border-radius:50%;position:relative;
+  border:1.5px solid var(--line);background:#fff;
+}
+.ukCp_row.is-on .ukCp_radio{border-color:var(--uk-deep);background:var(--uk-deep)}
+.ukCp_row.is-on .ukCp_radio::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fff}
+.ukCp_rowD{
+  margin:8px 0 0;padding-left:31px;
+  font:400 13px/1.5 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty;
+}
+.ukCp_row--neg{padding:0;cursor:default}
+.ukCp_rowLink{display:block;padding:15px 18px;text-decoration:none}
+/* the circled plus the reference uses, not a bare hairline glyph */
+.ukCp_rowPlus{
+  flex:0 0 26px;width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1.5px solid var(--line);color:var(--text-2);
+  transition:border-color .16s ease,color .16s ease;
+}
+.ukCp_rowPlus svg{width:16px;height:16px;display:block}
+.ukCp_rowPlus svg rect{fill:currentColor}
+.ukCp_row--neg:hover .ukCp_rowPlus{border-color:var(--uk-deep);color:var(--uk-deep)}
+@media (max-width:520px){
+  .ukCp_rowD{padding-left:0}
+  .ukCp_rowN{font-size:14px}
+}
+
+
+/* ---- audience ----
+   The profile's own switcher, hero, rank list and charts. The panel shell is
+   restated here under its own class because uktokens.css owns .ukPanel on the
+   marketing site as a dashed placeholder box. */
+.ukCp_aud{margin-top:clamp(14px,1.6vw,20px)}
+.ukCp_panel{
+  background:#fff;border:1px solid var(--line);border-radius:16px;
+  padding:clamp(16px,1.8vw,22px);
+  margin-bottom:clamp(14px,1.6vw,18px);
+}
+.ukCp_panel:last-child{margin-bottom:0}
+.ukCp_panelHead{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin:0 0 clamp(12px,1.4vw,16px);
+}
+.ukCp_panelT{
+  margin:0;font:700 13px/1.3 'Lato',sans-serif;color:var(--text);
+  text-transform:uppercase;letter-spacing:.09em;
+}
+.ukCp_panelN{
+  font:600 11.5px/1 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;
+}
+.ukCp_note{
+  margin:12px 0 0;font:400 12px/1.5 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty;
+}
+/* the flag is a block element in the app's own sheet, which pushed the country
+   name onto a line of its own in this narrower column */
+.ukCp_aud .ukRank_n{display:flex;align-items:center;gap:8px}
+.ukCp_aud .ukRank_n img{flex:0 0 auto;display:block}
+.ukCp_aud .ukRank--plain .ukRank_n{flex:1 1 auto}
+.ukCp_aud .ukRank--plain .ukCrFlag{width:17px;height:12px;flex:0 0 17px;border-radius:2px;object-fit:cover;display:block}
+.ukCp_mainCol .ukSubTabs{margin-bottom:clamp(12px,1.4vw,16px)}
+.ukCp_mainCol .ukSocHero{margin:0}
+
+
+/* ================= work tiles =================
+   One frame, three contexts. The caption is always inside the frame, sitting on
+   the foot of the picture; nothing is ever printed under the box. */
+.ukCp_shot{margin:0;padding:0;display:block;min-width:0}
+.ukCp_tile{
+  position:relative;display:block;padding:0;border:0;cursor:pointer;
+  overflow:hidden;border-radius:12px;background:var(--surface-2);
+  line-height:0;
+}
+.ukCp_tile img{display:block;border-radius:inherit;transition:transform .4s ease}
+.ukCp_tile:hover img{transform:scale(1.04)}
+.ukCp_tile .ukCrPlay{opacity:1;transform:translate(-50%,-50%) scale(1);z-index:2}
+.ukCp_tile:hover .ukCrPlay{transform:translate(-50%,-50%) scale(1.08)}
+
+/* the caption, on the picture and at its foot */
+.ukCp_cap{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  display:flex;flex-direction:column;gap:2px;text-align:left;
+  padding:22px 12px 10px;pointer-events:none;
+  background:linear-gradient(0deg,rgba(6,17,29,.78),rgba(6,17,29,.34) 58%,transparent);
+}
+.ukCp_cap b{
+  font:700 12.5px/1.35 'Lato',sans-serif;color:#fff;text-wrap:pretty;
+  text-shadow:0 1px 3px rgba(0,0,0,.45);
+}
+.ukCp_cap > span{
+  font:400 11.5px/1.3 'Lato',sans-serif;color:rgba(255,255,255,.84);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ukCp_vid{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  display:block;z-index:3;background:#000;border-radius:inherit;
+}
+.ukCp_tile.is-playing .ukCp_cap,
+.ukCp_tile.is-playing .ukCrPlay{display:none}
+
+/* 1. the strip: one height for every piece, the width follows the file */
+.ukCp_samples .ukCp_shot{flex:0 0 auto;min-width:0}
+.ukCp_samples .ukCp_tile{width:auto;height:var(--uk-cp-shotH,clamp(190px,21vw,300px))}
+.ukCp_samples .ukCp_tile img{height:100%;width:auto;max-width:none;object-fit:cover}
+
+/* 2. the delivered grid: equal cells */
+.ukCp_folio .ukCp_tile{width:100%;aspect-ratio:4/5}
+.ukCp_folio .ukCp_tile img{width:100%;height:100%;object-fit:cover}
+
+/* 3. the gallery: natural height, masonry decides the column */
+.ukCp_mFig .ukCp_tile{width:100%;height:auto}
+.ukCp_mFig .ukCp_tile img{width:100%;height:auto}

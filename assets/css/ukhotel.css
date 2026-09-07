@@ -1,0 +1,1464 @@
+/* For Hotels — the creator grid.
+
+   Everything inside a card is an existing component (fcPro and its parts, the
+   same overlay the network band uses). What was missing was a static grid to
+   hold them: the network band's own tile (.ukEx_item) is a collapsed accordion
+   column driven by expand-cards.js, and that script binds a single .ukEx per
+   page, which the proof band above already takes. So this file adds the grid
+   and the 9:16 tile, and nothing else. Values are lifted from .ukEx_item. */
+
+.ukHc_grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(14px,1.6vw,22px);
+  width:100%;
+  max-width:1100px;
+  margin:clamp(20px,3vw,42px) auto 0;
+  padding:0;
+  list-style:none;
+}
+.ukHc_card{
+  position:relative;
+  aspect-ratio:9/16;
+  border-radius:22px;
+  overflow:hidden;
+  background:#0a1a23;
+  box-shadow:0 20px 46px rgba(0,0,0,.4);
+}
+.ukHc_media{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  background:#0a1a23;
+}
+/* the overlay is the same fcPro card the network band uses; here it is always
+   legible rather than revealed on hover, because these are the page's evidence */
+.ukHc_card .fcMini{opacity:1;transform:none}
+.ukHc_card .fcPro_head,
+.ukHc_card .fcPro_chips,
+.ukHc_card .fcPro_foot{opacity:1;transform:none}
+.ukHc_handle{
+  display:block;
+  font:400 11.5px/1.3 'Lato',sans-serif;
+  color:rgba(255,255,255,.62);
+  margin-top:2px;
+}
+.ukHc_note{
+  max-width:62ch;
+  margin:clamp(18px,2.2vw,26px) auto 0;
+  text-align:center;
+  font:400 13px/1.6 'Lato',sans-serif;
+  color:rgba(255,255,255,.66);
+  text-wrap:pretty;
+}
+
+@media (max-width:900px){
+  .ukHc_grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .ukHc_grid{grid-template-columns:minmax(0,1fr);max-width:340px}
+}
+
+/* fcPro's base sizing lives in surfer.css, tuned for the small hero cards; the
+   network band re-sizes it under .ukEx_item. These cards are the same size as
+   that band's expanded tile, so they take the same values, copied from
+   uksections.css lines 29-42 rather than re-invented. */
+.ukHc_card .fcPro{left:10px;right:10px;bottom:10px;padding:12px 13px 11px;border-radius:15px;box-shadow:none}
+.ukHc_card .fcPro_head{gap:9px}
+.ukHc_card .fcPro_avatar{width:36px;height:36px;border-width:1px}
+.ukHc_card .fcPro_name{font-size:15px;gap:5px;line-height:1.2}
+.ukHc_card .fcPro_loc{font-size:11.5px;gap:5px;margin-top:2px}
+.ukHc_card .fcPro_flag{font-size:12px}
+.ukHc_card .fcPro_chips{gap:6px;margin-top:10px;flex-wrap:wrap}
+.ukHc_card .fcPro_chip{font-size:10px;padding:4.5px 10px;letter-spacing:.05em}
+.ukHc_card .fcPro_foot{margin-top:9px;gap:8px}
+.ukHc_card .fcPro_rating{font-size:13px;gap:4px}
+.ukHc_card .fcPro_rating img{width:12px;height:12px}
+.ukHc_card .fcPro_ratingWord{font-size:10.5px;margin-left:3px}
+.ukHc_card .fcPro_jobs{font-size:10.5px;text-align:right}
+
+/* The proof band above ends on --uk-deep, where its scrim resolves. This band
+   carries no photograph behind it, so it takes that same deep as a flat fill
+   and the two sections read as one dark stretch. */
+.ukHc_band{background:var(--uk-deep)}
+
+
+
+/* The three ownership points sit under the rate comparison rather than beside a
+   screenshot, so the list centres itself instead of running the full column. */
+.ukComm_points{
+  width:-moz-fit-content;width:fit-content;
+  margin:clamp(24px,3vw,36px) auto 0;
+  text-align:left;
+}
+
+/* Hero badge: the flags reuse .hero__badgeAvs verbatim, the same overlapping
+   circle row the general page runs its creator avatars in, so they inherit the
+   22px circle, the dark ring and the -8px overlap with no new styling. Marks are
+   the real country SVGs from /assets/img/flags, the set the app already reads.
+   The one addition: these are wide flags cropped square, and a centre crop cuts
+   the canton off the US mark entirely, so that one crops from the left. */
+.hero__badgeAvs img[src$="/us.svg"]{object-position:left center}
+
+/* ukblue.css runs the hero lines at line-height .92, which is shorter than the
+   em: at 55px the ink measures 69px tall, so a descender on one line lands in
+   the cap-height of the next and the y in Empty and the g in Guests read as
+   cut off. The type size is untouched; the lines are just given room to sit in. */
+.homeHeader .legionHero_line{line-height:1.12}
+
+/* the ring reads as the separation between overlapping circles, so it carries a
+   little more weight than the avatars' hairline */
+.hero__badgeAvs img{border-width:2px}
+
+/* Hero type face, pinned rather than inherited. ukhero-main.css and
+   ukmarketing.css both ask for "Marcellus SC" on .legionHero_title, and only a
+   more specific rule in ukported.css pulls it back to plain Marcellus. That is
+   a fragile chain to leave a headline resting on, so this page states it. */
+.homeHeader .legionHero_title,
+.homeHeader .legionHero_line{font-family:'Marcellus',Georgia,serif;font-variant-caps:normal}
+
+/* ---------- hero: the Ask AI bar ----------
+   The field, its border, the orb, the Ask AI button and the chips are the app's
+   own .ukAsk component out of ukapp.css. The radii are left alone on purpose:
+   the app draws this as a rounded rectangle, not a pill, and that is the house
+   style. All this adds is the hero context the app never needs, since the
+   component is built for a light dashboard topbar at 460px. */
+.ukHeroAsk{
+  width:min(680px,100%);
+  margin:clamp(22px,3vw,32px) auto clamp(20px,2.6vw,28px);
+}
+.ukHeroAsk .ukAskShell{--ask-h:60px}
+.ukHeroAsk .ukAsk_frame{padding:0 128px 0 56px}
+.ukHeroAsk .ukAsk_i{font-size:15.5px}
+.ukHeroAsk .ukAsk_go{right:8px;padding:11px 18px;font-size:13px}
+
+.ukHeroAsk_chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  margin:10px 0 0;padding:0;list-style:none;
+}
+/* the chip is the app's .ukAsk_chip; on the hero's dark ground it inverts */
+.ukHeroAsk_chips .ukAsk_chip{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.20);
+  color:rgba(255,255,255,.88);
+  padding:8px 14px;
+  font-size:12px;
+  cursor:pointer;
+  transition:background .18s ease,border-color .18s ease;
+}
+.ukHeroAsk_chips .ukAsk_chip:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.34)}
+.ukHeroAsk_chips .ukAsk_chip:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+/* the caret that trails the typed-out example */
+.ukHeroAsk .ukAsk_i::placeholder{color:var(--text-3);opacity:1}
+
+@media (max-width:560px){
+  .ukHeroAsk .ukAskShell{--ask-h:54px}
+  .ukHeroAsk .ukAsk_frame{padding:0 56px 0 48px}
+  .ukHeroAsk .ukAsk_go{padding:0;width:40px;justify-content:center}
+  .ukHeroAsk .ukAsk_go span:last-child{display:none}
+}
+
+/* ---------- hero: the creator rail ----------
+   One row of cards drifting right to left, forever. The list is written twice
+   and the track is translated by exactly half its width, so the loop closes on
+   itself with no visible seam and no JS driving it. The second copy is
+   aria-hidden: a screen reader should hear nine creators, not eighteen.
+
+   Cards carry the picture, the platforms and reach top left, and the name with
+   the one market they cover bottom left. The platform marks are the app's own
+   .ukCrPlat and the flag its .ukCrFlag, both full colour. */
+.ukHeroRail{
+  position:relative;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-top:clamp(26px,3.2vw,40px);
+  overflow:hidden;
+  /* the row runs out of the frame rather than stopping at an edge */
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+}
+.ukHeroRail_track{
+  display:flex;
+  width:max-content;
+  gap:clamp(12px,1.2vw,18px);
+  margin:0;padding:0 0 4px;
+  list-style:none;
+  animation:ukRailDrift 64s linear infinite;
+  will-change:transform;
+}
+@keyframes ukRailDrift{
+  from{transform:translate3d(0,0,0)}
+  /* half the track is the full list once: landing here is landing on the start */
+  to{transform:translate3d(calc(-50% - (clamp(12px,1.2vw,18px) / 2)),0,0)}
+}
+/* let someone stop it and read a card */
+.ukHeroRail:hover .ukHeroRail_track,
+.ukHeroRail:focus-within .ukHeroRail_track{animation-play-state:paused}
+
+.ukHeroRail_card{
+  position:relative;
+  flex:0 0 auto;
+  width:clamp(216px,17.5vw,252px);
+  aspect-ratio:1/1.02;
+  border-radius:16px;
+  overflow:hidden;
+  background:#0d2a45;
+}
+.ukHeroRail_media{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;background:#0a1a23;
+}
+.ukHeroRail_scrim{
+  position:absolute;left:0;right:0;bottom:0;height:52%;z-index:1;
+  background:linear-gradient(180deg,rgba(6,16,24,0) 0%,rgba(6,16,24,.60) 60%,rgba(6,16,24,.90) 100%);
+  pointer-events:none;
+}
+
+/* top left: up to three platforms, then what one of their posts reaches */
+/* No frame. The marks and the number sit straight on the picture, the way the
+   reference does it, and carry their own legibility: each logo gets a white
+   disc with one hairline ring, and the number gets a shadow. */
+.ukHeroRail_reach{
+  position:absolute;top:12px;left:12px;z-index:3;
+  display:inline-flex;align-items:center;gap:9px;
+  font:700 12.5px/1 'Lato',sans-serif;color:#fff;
+  text-shadow:0 1px 4px rgba(4,12,20,.75), 0 0 12px rgba(4,12,20,.5);
+}
+/* the discs overlap the way the badge avatars do, so three of them read as one
+   stack rather than three loose stickers */
+.ukHeroRail_plats{display:inline-flex;align-items:center}
+/* The stack we already built: .hero__badgeAvs, the same overlapping circle row
+   the badge flags use. The brand marks are opaque tiles, so cropping them round
+   with its ring needs nothing behind them. Size only, everything else inherited. */
+.ukHeroRail_plats.hero__badgeAvs img{width:21px;height:21px}
+.ukHeroRail_plats.hero__badgeAvs img + img{margin-left:-8px}
+
+/* bottom left: who they are and the market they cover */
+.ukHeroRail_id{
+  position:absolute;left:14px;right:14px;bottom:13px;z-index:3;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  min-width:0;text-align:left;
+}
+.ukHeroRail_n{
+  font:700 16px/1.2 'Lato',sans-serif;color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
+}
+.ukHeroRail_m{
+  display:flex;align-items:center;gap:6px;width:100%;min-width:0;
+  font:400 12px/1.25 'Lato',sans-serif;color:rgba(255,255,255,.82);
+  white-space:nowrap;
+}
+.ukHeroRail_k{color:rgba(255,255,255,.54);flex:0 0 auto}
+.ukHeroRail_m .ukCrFlag{width:15px;height:11px;display:block;flex:0 0 15px;border-radius:2px;object-fit:cover}
+.ukHeroRail_mkt{min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+@media (max-width:560px){
+  .ukHeroRail_card{width:180px;border-radius:14px}
+  .ukHeroRail_n{font-size:14px}
+  .ukHeroRail_reach{font-size:11.5px;gap:7px}
+  .ukHeroRail_plats.hero__badgeAvs img{width:18px;height:18px}
+}
+
+/* Someone who asked for less motion gets a row they scroll themselves. */
+@media (prefers-reduced-motion:reduce){
+  .ukHeroRail{overflow-x:auto}
+  .ukHeroRail_track{animation:none}
+}
+
+/* ---------- hero: tightened now the buttons are gone ----------
+   The stack was spaced for a headline, a lede and two buttons. It now carries a
+   field, chips and a card row, so the gaps close up and the block stops trying
+   to sit in the vertical middle of a 900px hero. */
+.ukHeroAsk{margin-block:clamp(8px,1vw,12px) 0}
+.homeHeader .legionHero_lede{margin-bottom:0}
+
+/* reach reads as a badge on the media, the way the reference does it, which
+   keeps the chip row to one line and the overlay off most of the picture */
+.ukHeroCards_reach{
+  position:absolute;top:8px;left:8px;z-index:4;
+  padding:4px 8px;border-radius:8px;
+  background:rgba(8,18,24,.62);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.16);
+  font:700 10px/1 'Lato',sans-serif;color:#fff;letter-spacing:.02em;
+}
+.ukHeroCards_card .fcPro_chips{flex-wrap:nowrap}
+.ukHeroCards_card .fcPro_loc{white-space:nowrap;overflow:hidden}
+
+/* ---------- hero Ask bar: the marketing-side corrections ---------- */
+
+/* Headline sized to the main hero. The general page renders its lines at 46px
+   at desktop; ukblue.css pins this one at a flat 55px, so it takes the general
+   page's own clamp instead of a second, larger scale. */
+.homeHeader .legionHero_line{font-size:clamp(18px,3.6vw,42px)}
+
+/* The field is the whole invitation here, so it does not dim its own way in.
+   In the app the button waits at .7 until you start typing, because there the
+   bar sits in a topbar beside other controls. */
+.ukHeroAsk .ukAsk_go{opacity:1}
+
+/* ---------- the field's active state ----------
+   The stray rectangle was the input's own outline, not the frame's halo.
+   ukmarketing.css sets `.ukMkt :focus-visible{outline:2px solid gold; offset:3px}`
+   as a blanket keyboard-focus ring, and that beats the `outline:none` ukapp.css
+   puts on .ukAsk_i. The input sits inset inside the frame, so the ring was drawn
+   tight around the text box rather than around the control, which is why it read
+   as a floating rectangle with square corners inside a rounded field.
+
+   The ring comes off this one input and the state moves onto the frame, which is
+   the shape a user thinks of as the field. The halo is the app's own value for a
+   focused input, the same 3px gold at .2 that .ukSearch input:focus and
+   .ukField_i:focus already use, so the hero field now answers focus the way
+   every other field on the product does. The frame's border stays on its
+   gradient: colouring it would paint over the animated border.
+
+   The state is on :focus-within, so it holds while text is being typed. */
+.ukHeroAsk .ukAsk_i:focus,
+.ukHeroAsk .ukAsk_i:focus-visible{outline:none}
+.ukHeroAsk .ukAsk_frame{transition:outline-color .18s ease}
+/* The newsletter field in the footer is the reference: ukmarketing.css draws a
+   blanket `outline:2px solid gold; outline-offset:3px` on :focus-visible, and
+   .ukNews_input turns its own border gold underneath it, so the state reads as a
+   gold line set just off the edge of the control.
+
+   That is the same rule that was firing here. The only thing wrong was where it
+   landed: .ukAsk_i sits inset inside the frame, so the ring was drawn tight
+   around the text box, square-cornered, inside a rounded field. It comes off the
+   input and goes on the frame, which is the control's real outline and carries
+   the 16px rounding, so it matches the footer exactly. */
+.ukHeroAsk .ukAsk_i:focus,
+.ukHeroAsk .ukAsk_i:focus-visible{outline:none}
+.ukHeroAsk .ukAsk_frame:focus-within{
+  outline:2px solid rgba(215,165,67,.34);
+  outline-offset:3px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+/* A bigger orb, lit with the brand's own gold and the cool note from the
+   frame's gradient. */
+.ukHeroAsk .ukAsk_icon{
+  width:52px;height:52px;left:6px;
+  filter:var(--ai-orb-filter)
+    drop-shadow(0 2px 9px rgba(215,165,67,.42))
+    drop-shadow(0 1px 3px rgba(127,173,193,.30));
+}
+.ukHeroAsk .ukAsk_frame{padding-left:68px}
+@media (max-width:560px){
+  .ukHeroAsk .ukAsk_icon{width:42px;height:42px;left:4px}
+  .ukHeroAsk .ukAsk_frame{padding-left:52px}
+}
+
+/* ---------- hero Ask bar: the Find Creators button ----------
+   It stops floating in the middle of the field and instead insets to the
+   frame's edges, so the gap top, right and bottom is one even 6px and the
+   button reads as part of the field rather than a chip dropped into it. The
+   10px radius is concentric with the frame's 16px at that inset, so the two
+   curves stay parallel. Label and glyph go white. */
+.ukHeroAsk .ukAsk_go{
+  top:6px;
+  right:6px;
+  bottom:6px;
+  transform:none;
+  height:auto;
+  padding:0 22px;
+  border-radius:10px;
+  color:#fff;
+  font-size:13.5px;
+  letter-spacing:.01em;
+}
+.ukHeroAsk .ukAsk_goIco{color:#fff}
+.ukHeroAsk .ukAsk_goIco svg{width:15px;height:15px;display:block}
+
+@media (max-width:560px){
+  .ukHeroAsk .ukAsk_go{padding:0;width:42px;justify-content:center}
+}
+
+/* ---------- hero: the badge, headline and subhead sit as one block ----------
+   Measured off the general page rather than guessed at. There the badge clears
+   the headline by 16px, the subhead follows by 16px, and the headline runs at
+   1.05 leading. This page had 30px above the headline, because ukhero-main.css
+   adds a 14px top margin on top of the badge's own 16px, and it was running
+   looser leading besides. Same three numbers now. */
+.homeHeader .legionHero_title{margin-top:0}
+.homeHeader .legionHero_lede{margin-top:16px}
+.homeHeader .legionHero_line{line-height:1.05}
+
+/* ---------- hero rail: shadows, hover and stack order ----------
+
+   1. The rail clips horizontally so the row can run off both edges, and that
+      same overflow was cutting each card's shadow flat at the top and bottom.
+      The clip stays; the rail just carries enough vertical padding for the
+      shadow to finish inside it, with the margin pulled back by the same amount
+      so nothing moves. The shadow is 0 18px 40px, so it reaches ~2px above a
+      card and ~38px below. */
+.ukHeroRail{
+  padding-top:8px;
+  padding-bottom:44px;
+  margin-top:calc(clamp(56px,5.8vw,80px) - 14px);
+}
+.ukHeroRail_track{padding-bottom:0}
+
+/* 2. Hovering one card pulls the rest back, so the one under the cursor is the
+      one being read. */
+.ukHeroRail_card{transition:opacity .28s ease, box-shadow .28s ease}
+.ukHeroRail_track:hover .ukHeroRail_card{opacity:.68}
+/* the shadow is the hover state, not the resting one: at rest the row is flat,
+   and the card under the cursor is the only one lifted off the page */
+.ukHeroRail_track .ukHeroRail_card:hover{
+  opacity:1;
+  box-shadow:0 18px 40px rgba(0,0,0,.40);
+}
+
+/* 3. ukapp.css stacks .ukCrPlat left-over-right (z-index 6,5,4...) for the app's
+      creator cards. Here the stack reads the other way: the last mark sits on
+      top of the one before it. */
+.ukHeroRail_plats .ukCrPlat:nth-child(1){z-index:1}
+.ukHeroRail_plats .ukCrPlat:nth-child(2){z-index:2}
+.ukHeroRail_plats .ukCrPlat:nth-child(3){z-index:3}
+
+/* 4. The ring that separates one mark from the next is white, not near-black. */
+.ukHeroRail_plats.hero__badgeAvs img{border-color:rgba(255,255,255,.95)}
+
+/* The hero's photographic layer is gone: the ground is the home page's now,
+   which is gradient, cloud plate and scrim with no picture under it. */
+
+
+/* ---------- hero: clearance under the nav ----------
+   The nav floats over the hero, and the stack only cleared it by 37px, so the
+   badge read as tucked under the bar. The nav's own height is already a token
+   (--aero-h), so the clearance on top of it is what widens here; the rail gives
+   back the difference so the whole block still lands inside the hero. */
+.homeHeader .homeHeader_contents{
+  padding-top:calc(var(--aero-h,88px) + clamp(24px,2.6vw,40px));
+  padding-bottom:clamp(20px,2.4vw,34px);
+  /* the hero is as tall as what it holds. ukhero-main.css and ukmarketing.css
+     both pin it to 100svh, which leaves a band of empty gradient under the card
+     rail on a tall screen and squeezes it on a short one. */
+  height:auto;
+  min-height:0;
+}
+.ukHeroRail{
+  margin-top:calc(clamp(42px,4.4vw,62px) - 12px);
+  padding-bottom:42px;
+}
+
+/* ---------- hero chips: darker, closer to the badge ----------
+   The badge sits on --uk-badge-face-dark. The chips take the same ink at
+   partial strength so they read as the same family without competing with it,
+   and the hairline picks up the cool blue from the Ask field's own border
+   gradient rather than plain white. */
+.ukHeroAsk_chips .ukAsk_chip{
+  background:rgba(8,21,36,.72);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  /* a hairline at rest, barely there, brightening to blue on hover */
+  border-color:rgba(255,255,255,.13);
+  color:rgba(255,255,255,.90);
+  transition:background .18s ease,border-color .18s ease;
+}
+.ukHeroAsk_chips .ukAsk_chip:hover{
+  background:rgba(8,21,36,.88);
+  border-color:rgba(127,173,193,.70);
+}
+
+/* ---------- hero rail: a sheen on the card ----------
+   A single light-to-dark pass over the picture so the card has some surface to
+   it rather than reading as a flat crop. Kept faint: it is a highlight rolling
+   off the top edge, not a scrim, and the existing bottom gradient still does
+   the work of holding the name. */
+.ukHeroRail_card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      rgba(255,255,255,.16) 0%,
+      rgba(255,255,255,.06) 14%,
+      rgba(255,255,255,.01) 30%,
+      rgba(4,12,20,.06) 62%,
+      rgba(4,12,20,.16) 100%);
+}
+/* one hairline along the top edge finishes the metal */
+.ukHeroRail_card::after{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;height:1px;
+  z-index:3;
+  pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(255,255,255,.05) 0%,
+    rgba(255,255,255,.34) 50%,
+    rgba(255,255,255,.05) 100%);
+}
+
+/* the ring separating one platform mark from the next was reading heavy */
+.ukHeroRail_plats.hero__badgeAvs img{border-width:1px}
+
+/* ---------- hero background: the general page's, at the general page's scale ----------
+   Both pages carry the same rule, but .homeHeader on the general page wraps the
+   whole document and runs about 11,500px tall, so its vertical gradient only
+   ever shows its first few percent: a flat, bright #0b3157. Here .homeHeader is
+   the hero alone at 900px, so the identical gradient runs its entire range
+   inside the fold and reads darker and duller by the bottom. Same colours, very
+   different result. The vertical pass is pinned to that first stop so this hero
+   sits on the blue the other one actually shows. */
+/* The hero ground is the home page's, and is not restated here. ukported.css
+   sets .homeHeader's background with !important — the brand radial over the
+   navy — and these two pages load that file too. This block used to declare its
+   own version after it, which is the whole reason the blue read pale and flat
+   next to home's. Only the height belongs to this file now. */
+.homeHeader{
+  min-height:0;
+  height:auto;
+}
+/* Nothing else in the hero needed re-anchoring: .heroScroll is display:none on
+   both of these pages, and .heroTrust is a sibling of the hero rather than a
+   child of it, already sitting in normal flow at top:0 — so it follows the
+   hero's new bottom edge on its own. */
+
+/* ---------- hero chips: brushed metal ----------
+   Turned to 45 degrees and pulled back again: the ends barely darken and the
+   highlight through the middle is a whisper. At this strength it reads as a
+   surface catching a little light, not as a gradient. */
+.ukHeroAsk_chips .ukAsk_chip{
+  font-weight:400;
+  background:
+    linear-gradient(45deg,
+      rgba(2,10,20,.12) 0%,
+      rgba(255,255,255,.02) 28%,
+      rgba(255,255,255,.06) 50%,
+      rgba(255,255,255,.02) 72%,
+      rgba(2,10,20,.10) 100%),
+    rgba(8,21,36,.14);
+  -webkit-backdrop-filter:blur(10px) saturate(1.05);
+  backdrop-filter:blur(10px) saturate(1.05);
+}
+.ukHeroAsk_chips .ukAsk_chip:hover{
+  background:
+    linear-gradient(45deg,
+      rgba(2,10,20,.16) 0%,
+      rgba(255,255,255,.03) 28%,
+      rgba(255,255,255,.09) 50%,
+      rgba(255,255,255,.03) 72%,
+      rgba(2,10,20,.14) 100%),
+    rgba(8,21,36,.24);
+}
+
+/* ---------- hero rail: the live feed on hover ----------
+   Hovering a card runs its delivery record past like a live chat: each line
+   rises, holds, and fades out, one after the next, looping while the cursor is
+   there. Every line is real: the properties that creator has delivered to and
+   what they handed over, their host rating, how fast they reply, their
+   engagement. Nothing runs until hover, so at rest the row stays quiet. */
+.ukHeroRail_live{
+  position:absolute;
+  left:11px;right:11px;
+  bottom:56px;
+  height:108px;
+  z-index:3;
+  display:block;
+  pointer-events:none;
+  overflow:hidden;
+}
+/* Measured off the reference: the capsule is exactly as tall as the face inside
+   it, the face is flush to its left edge with no ring and no padding, and the
+   rows sit a few pixels apart rather than spread down the card. */
+.ukHeroRail_rev{
+  position:absolute;
+  left:0;
+  /* one station up from the floor, so the row arriving from below at +26 lands
+     inside the window instead of under its clipped edge */
+  bottom:26px;
+  max-width:100%;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  height:22px;
+  padding:0 12px 0 0;
+  border-radius:9999px;
+  background:rgba(10,12,14,.80);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  border:0;
+  white-space:nowrap;
+  opacity:0;
+}
+.ukHeroRail_revAv{
+  width:22px;height:22px;flex:0 0 22px;
+  border-radius:50%;object-fit:cover;display:block;
+  border:0;
+}
+.ukHeroRail_revT{
+  flex:0 1 auto;min-width:0;
+  font:500 12.5px/1 'Lato',sans-serif;
+  color:#fff;
+  overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Four rows, four stations, and the lap split into four equal quarters, so a
+   row sits still on a station for most of each quarter and the whole column
+   steps up together in the gap between them. That is what a live comment feed
+   actually does, and it is why three rows on this curve never worked: three
+   items cannot land on four stations, so the column kept bunching two rows
+   together with neither of them at full.
+
+   At rest on any station: one arriving out of sight below, one faint under the
+   middle, one at full in the middle, one faint above on its way out. */
+.ukHeroRail_track .ukHeroRail_card:hover .ukHeroRail_rev{
+  animation:ukLiveRise 7s linear infinite;
+  animation-delay:calc(var(--n) * -1.75s);
+}
+/* The step is quick and the pause is short: each row holds a station for about
+   1.5s, then the whole column moves up in under a third of a second. */
+@keyframes ukLiveRise{
+  0%,  21%  {opacity:0;   transform:translateY(52px)}
+  25%, 46%  {opacity:.34; transform:translateY(26px)}
+  50%, 71%  {opacity:1;   transform:translateY(0)}
+  75%, 96%  {opacity:.34; transform:translateY(-26px)}
+  100%      {opacity:0;   transform:translateY(-52px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ukHeroRail_track .ukHeroRail_card:hover .ukHeroRail_rev{animation:none}
+  /* no motion: the first review simply shows */
+  .ukHeroRail_track .ukHeroRail_card:hover .ukHeroRail_rev[style*="--n:0"]{opacity:1;transform:none}
+}
+@media (max-width:560px){
+  .ukHeroRail_live{display:none}
+}
+
+/* ---------- hero rail, creator page: the stay card itself ----------
+
+   The rail on /for-creators/ is showing stays, and a stay is already a card in
+   this product: a photograph, the property and where it is, and then the trade —
+   what the creator gets against what the hotel gets. That card is ukstaycard.js,
+   rendered inside the app by both sides of the marketplace. The marketing hero
+   was showing a different thing entirely, a photo tile with the nights stamped
+   in a corner, so someone met the offer here and then met it again, drawn
+   another way, the moment they signed up.
+
+   This is that card, in static markup, at hero scale. Same order, same two
+   panels, same labels ("The stay" / "They get") the creator app uses, on the
+   deep-2 face and hairline the nav and .trusted__card already sit on.
+
+   Scoped to .ukHeroRail--stay throughout: /for-hotels/ runs the same rail with
+   creators in it, and that one is unchanged. That rail's hover feed of creator
+   quotes stays there too — it is a record of what a creator has delivered, and
+   it has nothing to say sitting on a photograph of a hotel. */
+
+/* the card is taller than the tile it replaces, so the air above it gives back
+   what it takes and the hero still finishes inside one screen */
+/* the 34px under the rail was clearance for the hover shadow, which has gone;
+   it becomes room under the cards instead */
+.ukHeroRail--stay{margin-top:calc(clamp(42px,4.4vw,62px) - 34px);padding-bottom:14px}
+
+.ukHeroRail--stay .ukHeroRail_card{
+  width:clamp(256px,19.8vw,284px);
+  aspect-ratio:auto;
+  height:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:10px;
+  border-radius:18px;
+  background:#0d2a45;
+  text-align:left;
+}
+/* No stroke on the card, and none on its top edge either: the base rail draws a
+   hairline there to finish the photo tile it used to be, and on a solid face
+   with no border around it that line reads as a stray mark rather than an edge.
+   The tone of the face against the hero is what separates the card now. */
+.ukHeroRail--stay .ukHeroRail_card::after{content:none}
+/* and no lift on hover — the row stays flat, the card under the cursor is the
+   one at full strength and that is the whole signal */
+.ukHeroRail--stay .ukHeroRail_track .ukHeroRail_card:hover,
+.ukHeroRail--stay .ukHeroRail_card:hover{box-shadow:none}
+/* the sheen belongs on the photograph now, not across the whole face: over the
+   panels it only muddied them */
+.ukHeroRail--stay .ukHeroRail_card::before{content:none}
+
+/* the photograph, clipped by its own frame rather than by the card */
+.ukHeroRail--stay .ukHeroRail_shot{
+  position:relative;
+  display:block;
+  aspect-ratio:1.83/1;
+  border-radius:11px;
+  overflow:hidden;
+  background:#0a1a23;
+  flex:0 0 auto;
+}
+.ukHeroRail--stay .ukHeroRail_shot::before{
+  content:"";
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.16) 0%,
+    rgba(255,255,255,.06) 14%,
+    rgba(255,255,255,.01) 30%,
+    rgba(4,12,20,.06) 62%,
+    rgba(4,12,20,.16) 100%);
+}
+
+/* the property, then where it is and when, on one line: the dates belong to the
+   place, and giving them a line of their own only made the card taller */
+.ukHeroRail--stay .ukHeroRail_id{
+  position:static;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  padding:1px 4px 0;
+}
+.ukHeroRail--stay .ukHeroRail_n{
+  font:400 clamp(18px,1.32vw,19.5px)/1.16 'Marcellus',Georgia,serif;
+  color:#fff;
+  white-space:normal;overflow:visible;text-overflow:clip;
+  text-wrap:balance;
+}
+.ukHeroRail--stay .ukHeroRail_m{
+  display:flex;align-items:center;gap:5px;
+  font:400 12.5px/1.35 'Lato',sans-serif;
+  color:rgba(255,255,255,.88);
+  white-space:nowrap;
+}
+/* the flag is the one the rest of the product uses — .ukCrFlag is 15x11 with a
+   2px radius and a hairline ring, and it sits on the text baseline rather than
+   being blown up into a badge of its own */
+.ukHeroRail--stay .ukHeroRail_m .ukCrFlag{
+  width:15px;height:11px;flex:0 0 15px;
+  margin-right:0;vertical-align:0;
+  box-shadow:0 0 0 1px rgba(255,255,255,.22);
+}
+.ukHeroRail--stay .ukHeroRail_when{color:rgba(255,255,255,.62)}
+.ukHeroRail--stay .ukHeroRail_when::before{content:"\00b7";margin:0 6px 0 0}
+
+/* the trade: the stay against what it costs, the pairing ukstaycard.js draws.
+   Both panels carry the same three lines — label, value, one detail line — so
+   they match each other line for line, not just box for box, and the two values
+   sit on one baseline across the pair. */
+.ukHeroRail--stay .ukHeroRail_trade{
+  display:flex;align-items:stretch;gap:7px;
+  margin-top:auto;
+}
+.ukHeroRail--stay .ukHeroRail_side{
+  flex:1 1 0;min-width:0;
+  display:flex;flex-direction:column;
+  padding:9px 10px 10px;
+  border-radius:11px;
+  /* the panels sit INTO the card, not on top of it: a step darker than the
+     deep-2 face rather than a lighter tile, with the hairline pulled back to
+     almost nothing so the tone alone does the separating */
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.045);
+}
+.ukHeroRail--stay .ukHeroRail_tl{
+  font:700 9px/1 'Lato',sans-serif;
+  text-transform:uppercase;letter-spacing:.13em;
+  color:rgba(255,255,255,.56);
+  margin-bottom:7px;
+}
+.ukHeroRail--stay .ukHeroRail_tv{
+  font:400 17px/1 'Marcellus',Georgia,serif;
+  color:#fff;
+  white-space:nowrap;
+}
+.ukHeroRail--stay .ukHeroRail_ts{
+  display:block;
+  font:400 11px/1.35 'Lato',sans-serif;
+  color:rgba(255,255,255,.72);
+  margin-top:5px;
+  text-wrap:balance;
+}
+/* the arrow the app already draws between these two panels: .ukTrade_ar, which
+   is the harr glyph in the gold ink, not a shape built by hand for this rail */
+.ukHeroRail--stay .ukHeroRail_ar{
+  align-self:center;flex:0 0 auto;
+  font:400 15px/1 'Lato',sans-serif;
+  color:var(--uk-gold-2,#efc470);
+}
+
+@media (max-width:560px){
+  .ukHeroRail--stay .ukHeroRail_card{width:262px;border-radius:16px}
+  .ukHeroRail--stay .ukHeroRail_n{font-size:17px}
+  .ukHeroRail--stay .ukHeroRail_m{font-size:12px}
+  .ukHeroRail--stay .ukHeroRail_tv{font-size:16px}
+}
+
+/* ---------- trusted by ----------
+   The band is the general page's, and it is left exactly as it renders there:
+   its own white card, its own label, its own logo plates, untouched.
+
+   The only thing set here is where it sits. On the general page .homeHeader
+   wraps the whole document, so the band is positioned against it and carries
+   top/left/right/bottom offsets to place itself. Here the hero is a block of
+   its own and the band follows it in flow, where those same offsets stop being
+   placement and become a shove: it was landing 783px down the page, on top of
+   the section below. Clearing them puts it back in the flow it belongs in, and
+   centres it the way the offsets used to. */
+.ukMkt .homeHeader + .heroTrust{
+  position:relative;
+  inset:auto;
+  transform:none;
+  margin-inline:auto;
+  /* ukhero-main.css line 38 sets align-items:flex-start on this band, for the
+     hero layout it was written for. That file is loaded here and not on the
+     general page, which is why the label and the logo row sat hard left at 90px
+     instead of centred at 418px and 243px. The general page's own value, back. */
+  align-items:center;
+}
+/* five plates fit a desktop row and not a phone; wrapping is the difference
+   between the band being readable at 375 and the page scrolling sideways */
+.ukMkt .homeHeader + .heroTrust .trusted__logos{flex-wrap:wrap}
+
+/* The plates came out teal here and navy on the general page. Not a choice of
+   mine: this page loads ukhero-main.css for its hero, and that file restyles
+   .trusted__card to #0f262d with a warm-grey mark. The general page does not
+   load it, so there the plate falls through to ukbrand.css and its --uk-deep-2
+   face with a white mark. These two lines are the general page's own values,
+   put back, so the band reads identically on both. */
+.ukMkt .homeHeader + .heroTrust .trusted__card{
+  background:color-mix(in srgb,var(--uk-deep) 8%,#fff);
+  border:1px solid color-mix(in srgb,var(--uk-deep) 16%,#fff);
+  color:var(--uk-deep);
+}
+
+/* ---------- the network at a glance ----------
+   The card is the one the scan band already uses: .ukScan_out, with its navy
+   gradient face, its hairline, its gold-to-white figure and its label and note
+   underneath. Nothing about the card is redefined here. What this adds is the
+   section it sits in: a white ground, the lead column beside it, and a row that
+   holds three of them at an even height rather than the scan band's filmstrip. */
+.ukGlance{
+  background:#fff;
+  padding:clamp(56px,7vw,104px) clamp(20px,5vw,48px);
+}
+.ukGlance_in{
+  max-width:1180px;margin-inline:auto;
+  display:grid;grid-template-columns:minmax(0,0.98fr) minmax(0,1fr);
+  gap:clamp(28px,4vw,56px);
+  /* the lead sits at the top of the column rather than centred against it: the
+     cards run tall because they are offset, and centring pushed the text down
+     into the gap between the first card and the second */
+  align-items:start;
+}
+.ukGlance_lead{padding-top:clamp(0px,1.4vw,20px)}
+
+/* ---- the lead ---- */
+/* the badge is the page's own glow pill, the one the commercial section uses;
+   it only needs to sit at the top of the column rather than centred */
+.ukGlance_lead .ukZig_tag{margin:0 0 16px}
+.ukGlance_h{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,3.4vw,44px);line-height:1.1;letter-spacing:-.02em;
+  color:var(--uk-deep);text-wrap:balance;
+}
+.ukGlance_p{
+  margin:18px 0 0;max-width:54ch;
+  font:400 14.5px/1.65 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+
+/* ---- the arrangement ----
+   Two columns, three cards, offset against each other: one high on the right,
+   one dropped to the left below it, one falling lowest on the right again.
+   .ukScan_out positions itself absolute inside its card, so each one needs a
+   box of its own to fill. */
+.ukGlance_cards{
+  list-style:none;
+  /* the same top offset the lead carries, so the first card and the badge start
+     on the same line rather than the cards floating above the text */
+  margin:clamp(0px,1.4vw,20px) 0 0;
+  padding:0;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(14px,1.7vw,24px);
+}
+/* with the card narrower than its column, where it sits inside that column is
+   what scatters them: left of one, right of the next */
+/* the top card starts level with the badge, and the other two fall from there */
+.ukGlance_card:nth-child(1){grid-column:2;grid-row:1;justify-self:start;transform:none}
+.ukGlance_card:nth-child(2){grid-column:1;grid-row:2;justify-self:end;transform:translateY(-6%)}
+.ukGlance_card:nth-child(3){grid-column:2;grid-row:2;justify-self:center;transform:translateY(26%)}
+/* back to the size the row carried: a 4:5 card capped at the width it had
+   there, so the scatter changes where they sit and not how big they are */
+.ukGlance_card{
+  position:relative;
+  /* shorter than the 4:5 the row used: the face only carries a figure, a label
+     and a note, and the extra height was empty */
+  aspect-ratio:1/0.94;
+  width:100%;
+  max-width:clamp(186px,17.3vw,238px);
+  min-height:0;
+}
+.ukGlance_card .ukScan_out{position:absolute;inset:0;padding:clamp(14px,1.4vw,20px)}
+/* The scan band's figure is a fixed 72px, sized for a single digit on a card of
+   its own width. These carry "12M+" in a narrower column, where 72px ran past
+   both edges. The figure is scaled to the card instead, and the label and note
+   with it, so the three read at one size whatever the column does. */
+.ukGlance_card .ukScan_out b{font-size:clamp(30px,3.5vw,50px)}
+.ukGlance_card .ukScan_out i{font-size:clamp(13px,1.15vw,15.5px);margin-top:10px}
+.ukGlance_card .ukScan_out em{font-size:clamp(11px,.95vw,12.5px);margin-top:4px}
+
+@media (max-width:960px){
+  .ukGlance_in{grid-template-columns:minmax(0,1fr);gap:clamp(30px,6vw,44px)}
+  .ukGlance_cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ukGlance_card:nth-child(1),
+  .ukGlance_card:nth-child(2),
+  .ukGlance_card:nth-child(3){grid-column:auto;grid-row:1;justify-self:stretch;transform:none}
+  .ukGlance_card{max-width:none}
+}
+@media (max-width:560px){
+  .ukGlance_cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* The odd card used to take the whole second row at 16:6. The artwork inside
+     is close to square, so a letterbox that wide shrank it to fit the height
+     and the card read as a gold band with a small picture in it, next to two
+     cards drawn at full size. It keeps the others' size and shape now and sits
+     centred under them, which is what an odd third of a pair looks like. */
+  .ukGlance_card:nth-child(3){
+    grid-column:1/-1;grid-row:2;justify-self:center;
+    width:calc(50% - (clamp(14px,1.7vw,24px) / 2));
+  }
+}
+
+/* ---------- the hero photograph stays in the hero ----------
+   The picture is sized width:100% / height:auto so its own width matches the
+   page's, which is what makes it sit centred rather than cropped. The cost is
+   that its height then follows the viewport width: at 1280 it runs 998px tall
+   against an 813px hero and spills 229px past it, and by 2560 it is 1996px tall
+   and spilling 1183px. Nothing was clipping it, so that overhang was painting
+   pale blue sky straight over the logo row and the glance section below, which
+   is why their background looked like it changed colour on zooming out. The
+   hero clips its own contents now. */
+.ukMkt .homeHeader{overflow:hidden}
+
+/* ---------- the glance cards carry their own artwork ----------
+   Each card is now one exported composition rather than a figure and two lines
+   of type: the gold numeral, its label and the cluster of circular bubbles all
+   arrive inside the SVG, drawn for a navy ground, which is the ground .ukScan_out
+   already provides. So the card face, its hairline and its shadow stay exactly
+   as they were and only the contents change. The three files are 330x249,
+   355x249 and 357x274 — near enough to a common ratio that one aspect on the
+   card plus object-fit:contain lands them all without letterboxing worth seeing.
+   The graphics run close to full bleed because the bubbles are meant to touch
+   the edges; the padding that used to hold the figure would inset them. */
+/* taller than the artwork's own 355/249 on purpose: the bubbles in the export
+   run right up to the edge of its box, and the extra height is the room they
+   need to sit in rather than touch. */
+.ukGlance_card{aspect-ratio:355/300}
+.ukGlance_card .ukScan_out{padding:clamp(8px,0.8vw,12px);display:flex;
+  align-items:center;justify-content:center;overflow:hidden;
+  /* the scan band's card casts a 40px shadow, which reads as depth against its
+     dark ground but as grime against this white one */
+  box-shadow:none}
+/* the artwork sits a little inside the wider face rather than running to its
+   edge, so the bubbles read as held by the card instead of cropped by it */
+.ukGlance_card .ukScan_out img{width:88%;height:88%;object-fit:contain;display:block}
+
+/* ---------- the dotted world under the section ----------
+   The export is a black dot map on transparency, so it ships as greyscale plus
+   alpha and gets its colour here: the alpha is the mask and --uk-deep is what
+   the mask lets through. That way the map moves with the palette instead of
+   being baked blue, and the file stays 125KB.
+
+   It sits at the section's own width so the landmasses line up with the content
+   rather than the window, and it is faded from the middle outward so the lead
+   column and the cards both keep a clean ground to sit on. The section stays
+   white; this is a tint over it, not a new background. */
+.ukGlance{position:relative;overflow:hidden}
+.ukGlance::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:var(--uk-deep);opacity:.1364;
+  /* the export came out of Figma with a peak alpha of 8 in 255, so as a mask it
+     was letting through almost nothing. The alpha is normalised in the file. */
+  /* a negative z-index would have put this behind the section's own white
+     background rather than over it. It sits at 0 and the content at 1. */
+  /* two masks intersected: the map itself, and a gradient that takes it back
+     out over the lead column and at the top and bottom edges, so the headline
+     keeps a clean ground and the dots do not cut off in a hard line. */
+  -webkit-mask:
+    url(../img/uk-worldmap-dots.svg?v=4) no-repeat center/100% auto,
+    linear-gradient(to right,transparent 0,rgba(0,0,0,.35) 26%,#000 46%),
+    linear-gradient(to bottom,transparent 0,#000 16%,#000 82%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask:
+    url(../img/uk-worldmap-dots.svg?v=4) no-repeat center/100% auto,
+    linear-gradient(to right,transparent 0,rgba(0,0,0,.35) 26%,#000 46%),
+    linear-gradient(to bottom,transparent 0,#000 16%,#000 82%,transparent 100%);
+  mask-composite:intersect;
+}
+.ukGlance_in{position:relative;z-index:1}
+
+/* ---------- the pipeline band's lede ----------
+   uksections.css caps this at a 54ch measure, which is narrower than the
+   sentence here and was breaking it over two lines. The line is meant to hold
+   as one, so the cap comes off rather than the type coming down; it still wraps
+   below the width where one line genuinely stops fitting. */
+/* The real constraint was the column, not the paragraph: .ukScan_copy is capped
+   at 660px with 48px of padding either side, leaving 564px of content, and this
+   sentence needs 629px on one line. A line wider than its box overflows to the
+   right rather than splitting the difference, which is what tilted it off the
+   axis the badge and headline share. The column is widened to hold it; the
+   paragraph just stops wrapping. */
+.ukMkt .ukScan_copy{max-width:800px}
+.ukMkt .ukScan_p{max-width:none;text-wrap:nowrap}
+@media (max-width:820px){ .ukMkt .ukScan_p{text-wrap:pretty;max-width:44ch} }
+
+
+/* ---------- hero: the home page's own sky ----------
+   The photograph these two pages used to lay over the hero at .28 has gone, and
+   the home page's ground takes its place: .heroBgCustom, which carries home's
+   drifting cloud plate on ::before and its dark radial on ::after. Both are
+   already declared in ukported.css and both already load here, so the element
+   is all that was missing.
+
+   One thing has to be restated. ukblue.css overrides .heroBgCustom::after with
+   !important and loads after ukported.css, so on these two pages its older,
+   paler scrim was winning. These are ukported's values, verbatim, from the last
+   stylesheet in the chain. */
+.homeHeader .heroBgCustom::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(62% 58% at 50% 48%,
+    rgba(5,17,30,.88) 0%,
+    rgba(5,17,30,.80) 26%,
+    rgba(5,17,30,.66) 45%,
+    rgba(5,17,30,.48) 62%,
+    rgba(5,17,30,.30) 78%,
+    rgba(5,17,30,.16) 90%,
+    rgba(5,17,30,.08) 100%)!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+
+/* ---------- the hotel side of the product ----------
+   The grid needs no override: ukbrand.css opens .ukSides_grid as two columns
+   but sets it back to one further down, so the homepage's cards already run the
+   full 1200 and lay their screenshot and copy out side by side inside that. The
+   card is left at exactly that width here, because the narrower column it was
+   first given squeezed the shot and flattened the feature glyphs. Only the head
+   above it is new. */
+.ukSides_head{max-width:760px;margin:0 auto clamp(26px,3vw,40px);text-align:center;
+  display:flex;flex-direction:column;align-items:center}
+.ukSides_head .ukZig_tag{margin:0 0 16px}
+.ukSides_head .ukZig_h2{margin:0;text-wrap:balance}
+.ukSides_head .ukZig_sub{margin:14px 0 0;text-wrap:pretty}
+
+/* ---------- hero: the home page's photograph, at the home page's settings ----------
+   The ground layers ported above (.homeHeader_bg > bloom + .heroBgCustom +
+   .heroBgPlain) are home's markup exactly, but two of the numbers that dress
+   them live in ukmock.css, behind .homeHeader_contents.is-mock — and ukmock.css
+   is a home-only stylesheet. Without them the picture came through at ukported's
+   .62 under its long fade instead of home's .28 under a short one, which is the
+   whole difference between the two grounds.
+
+   These are ukmock.css's own values: --uk-photo .28, --uk-photoHold 33%,
+   --uk-photoReach 83%. Stated here rather than by loading ukmock.css, which
+   also carries the phone composite these pages do not have. */
+.homeHeader .heroBgPlain img{
+  opacity:.28;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 33%,transparent 83%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 33%,transparent 83%);
+}
+/* and the layers follow the hero's own box, not the viewport, now that the
+   hero is no longer a screen tall */
+.homeHeader .homeHeader_bg,
+.homeHeader .heroBgPlain,
+.homeHeader .heroBgPlain img,
+.homeHeader .heroBgCustom::after{height:100%}
+
+/* ---------- the commercial argument, as a row ----------
+   The section used to run centred and full width. It reads as one of the how-it-
+   works rows now: the argument on the left, the results view on the right. Three
+   things have to give for that to work. .ukZig_head centres itself and caps its
+   own width, which is right above a full-width section and wrong inside a half
+   column. .ukZig_copy caps at 42ch, which is narrower than the rate cards need.
+   And the two cards keep sitting side by side rather than stacking, because the
+   whole point of them is the 22 against the 8. */
+/* the list centres itself under a full-width comparison; in a column it runs
+   with the copy above it */
+
+/* ---------- with and without, as two cards ----------
+   The first pass gave each card five bullets, which put ten lines of argument
+   side by side and was too much to read at a glance. Each card carries three
+   things now: who is charging, how much, and the one sentence that says when.
+   The pale card and the navy card are .ukMktCompareCard--them and --us, which
+   the section already used, so nothing here is new styling. */
+.ukComm .ukMktCompare{max-width:900px;margin-inline:auto;
+  gap:clamp(16px,2vw,24px);align-items:stretch}
+.ukComm .ukMktCompareCard{padding:clamp(28px,3vw,40px)}
+.ukComm .ukMktCompareCard_p{max-width:34ch}
+
+
+
+
+/* ---------- the For Creators card: its step selector ----------
+   The app's .ukSeg is this shape already — a rounded track with the active
+   choice lifted onto a pill — so the markup is that component and only the skin
+   changes. The ground is a golden grey — the gold ink at a low alpha rather
+   than a neutral grey, so the track sits with the cream card instead of reading
+   as chrome borrowed from the app. The gold itself stays an accent: the
+   selected step lifts onto plain white and only its number is gold. */
+.ukSidesTabs{display:flex;justify-content:center;margin:0 0 clamp(14px,1.5vw,20px)}
+.ukSidesTabs .ukSeg{
+  gap:3px;padding:5px;border-radius:9999px;
+  background:rgba(138,100,20,.085);border:0;
+  flex-wrap:wrap;justify-content:center;max-width:100%;
+}
+.ukSidesTabs .ukSeg_b{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:10px 18px;border-radius:9999px;
+  font:400 clamp(13px,1.02vw,14.5px)/1 'Lato',sans-serif;color:var(--text-2);
+  white-space:nowrap;
+  transition:background .18s ease,color .18s ease,box-shadow .18s ease;
+}
+/* the step's number, ahead of its name */
+.ukSidesTabs_n{
+  font-style:normal;font-weight:700;font-size:.78em;
+  display:inline-grid;place-items:center;
+  width:1.75em;height:1.75em;border-radius:50%;
+  background:rgba(138,100,20,.14);color:#8a6414;
+  transition:background .18s ease,color .18s ease;
+}
+.ukSidesTabs .ukSeg_b:hover{color:var(--uk-deep);background:none}
+/* the selected step lifts onto white; the gold is on its number alone */
+.ukSidesTabs .ukSeg_b.is-on{
+  background:#fff;color:var(--uk-deep);
+  box-shadow:0 1px 2px rgba(11,47,82,.06), 0 5px 14px rgba(11,47,82,.07);
+}
+.ukSidesTabs .ukSeg_b.is-on .ukSidesTabs_n{
+  background:linear-gradient(5.71deg,#d7a543 13.297%,#efc470 89.683%);color:#fff;
+}
+@media (prefers-reduced-motion:reduce){
+  .ukSidesTabs .ukSeg_b,.ukSidesTabs_n{transition:none}
+}
+
+/* ---------- the card, and the section around it ----------
+   The copy reads left, not centred: it is a sentence, and a sentence is easier
+   to read off a straight left edge. The head, the selector and the card close
+   up on each other so the three read as one block. */
+.ukSides_card--creator .ukSides_body{align-items:flex-start;text-align:left}
+.ukSides_card--creator .ukSides_h{margin-bottom:0}
+@media (min-width:861px){
+  .ukSides_card--creator{gap:clamp(10px,1.2vw,20px)}
+  .ukSides_card--creator .ukSides_body{padding-inline:clamp(14px,1.8vw,28px)}
+}
+.ukSides .ukZig_head{margin-bottom:clamp(18px,2vw,26px)}
+.ukSides{padding-top:clamp(34px,4vw,56px)}
+
+/* The 4px of page ground showing between this white section and the white one
+   above it, which read as a faint rule across the page. */
+.ukTrade{margin-bottom:0}
+
+/* ---------- the stage headlines break on their own ----------
+   ukported.css puts each span of .ukZig_title on its own line, which works when
+   the two halves are written to fit the column. The new headlines are longer, so
+   each is a single span now and balance decides the break.
+
+   The 42ch cap on .ukZig_copy is what made that hard: it holds the column well
+   short of the half the grid gives it, and at 38px the headline had to take
+   three lines and break inside "high-performing" at its hyphen. The cap comes
+   off for this section so the headline gets the width the row already has. The
+   body keeps its own 46ch measure, so only the headline gains the room. */
+.ukZig[aria-labelledby="ukZig-h"] .ukZig_copy{max-width:none}
+/* The row keeps the even split ukported.css gives it. What was wrong was not the
+   column but the two measures inside it, and widening the column only made the
+   description run wider than the headline above it.
+
+   The headline is capped just under the width its shortest line needs on one
+   line (586px for "Track direct bookings and real ROI."), so all four set in two
+   lines rather than one of them collapsing. 470 also sits above half of the
+   longest (764), so none of them falls to three.
+
+   The description is capped narrower again, so its block can never be wider than
+   the headline's. */
+.ukZig[aria-labelledby="ukZig-h"] .ukZig_title{max-width:470px}
+.ukZig[aria-labelledby="ukZig-h"] .ukZig_body{max-width:440px}
+.ukZig_title{text-wrap:balance;hyphens:none;-webkit-hyphens:none}
+/* hyphens:none does not stop a line breaking at a hyphen that is actually in the
+   word, so "high-performing" was still splitting across two lines. The compound
+   is held together instead; the characters are untouched. */
+.ukNb{font-style:inherit;white-space:nowrap}
+
+/* ---------- the hero feature: the How it works row on deep blue ----------
+   Same component as the hotel page's rows, same grid, same tick glyph. What a
+   dark ground changes is the ink, and only the ink: the title goes white, the
+   body and the points take the white steps the app uses on --uk-deep, the tag
+   swaps its light face for the dark one, and the glyph takes #ukIcoGrad, the
+   white-into-pale-gold twin of the light-ground gradient it already had.
+
+   The copy sits first in the DOM, so it takes the left column: this is one row,
+   and there is nothing for the zig-zag to alternate against. */
+.ukZig--deep{
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(23,82,127,.55) 0%, rgba(23,82,127,0) 62%),
+    linear-gradient(180deg,#0b3157 0%,#08233d 100%);
+}
+.ukZig--deep .ukZig_title{color:#fff}
+.ukZig--deep .ukZig_body{color:rgba(255,255,255,.74)}
+.ukZig--deep .ukZig_points li{color:rgba(255,255,255,.80)}
+.ukZig--deep .ukZig_tag{color:var(--uk-badge-ink-dark,#efc470)}
+.ukZig--deep .ukZig_tag .ukGlow_face{background:var(--uk-badge-face-dark,#08233d)}
+.ukZig--deep .ukZig_ico{background:rgba(215,165,67,.18);color:#efc470}
+.ukZig--deep .ukZig_ico .ukZig_glyph path{fill:url(#ukIcoGrad)}
+
+/* ---------- the Academy ----------
+   A name, one way in, a rule, then three classes — and the class itself is the
+   hero rail's stay card: the same deep-2 face with no stroke and no lift, the
+   same 10px of padding holding the picture in its own rounded frame at the top,
+   the same 1.83 crop on it. What sits under the picture is the module, the
+   class and how long it runs, in place of the property and its trade. */
+.ukAcad{background:#fff;padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px)}
+.ukAcad_in{max-width:1120px;margin-inline:auto}
+.ukAcad_head{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding-bottom:clamp(16px,1.8vw,24px);border-bottom:1px solid var(--line);
+  margin-bottom:clamp(28px,3.4vw,46px)}
+.ukAcad_h2{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(20px,1.9vw,26px);line-height:1.2;letter-spacing:-.008em;color:var(--uk-deep)}
+.ukAcad_cta{flex:0 0 auto}
+.ukAcad_grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(16px,1.8vw,26px)}
+
+/* the card, as the rail draws it */
+.ukAcad_card{
+  display:flex;flex-direction:column;gap:10px;
+  padding:10px;border-radius:18px;
+  background:var(--uk-deep-2,#08233D);
+  text-align:left;
+}
+.ukAcad_shot{display:block;border-radius:11px;overflow:hidden;background:#0a1a23;margin:0}
+.ukAcad_shot img{display:block;width:100%;height:auto;aspect-ratio:1.83/1;object-fit:cover;
+  transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.ukAcad_shot:hover img{transform:scale(1.03)}
+/* the sheen the rail's own photograph carries */
+.ukAcad_shot{position:relative}
+.ukAcad_shot::before{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.16) 0%, rgba(255,255,255,.06) 14%, rgba(255,255,255,.01) 30%,
+    rgba(4,12,20,.06) 62%, rgba(4,12,20,.16) 100%);
+}
+.ukAcad_body{padding:1px 4px 4px}
+.ukAcad_k{margin:0 0 6px;
+  font:700 9px/1 'Lato',sans-serif;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(255,255,255,.56)}
+.ukAcad_t{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(18px,1.32vw,19.5px);line-height:1.18;letter-spacing:-.008em;text-wrap:balance}
+.ukAcad_t a{color:#fff;text-decoration:none}
+.ukAcad_t a:hover{text-decoration:underline;text-underline-offset:3px}
+.ukAcad_len{margin:6px 0 0;font:400 12.5px/1.35 'Lato',sans-serif;color:rgba(255,255,255,.62)}
+@media (prefers-reduced-motion:reduce){ .ukAcad_shot img{transition:none} }
+@media (max-width:860px){
+  .ukAcad_grid{grid-template-columns:minmax(0,1fr);gap:clamp(20px,4vw,28px)}
+  .ukAcad_head{flex-direction:column;align-items:flex-start;gap:16px}
+}
+
+/* ---------- section headlines: the home page's standard ----------
+   uktokens.css names it — --uk-h2-size clamp(26px,3.1vw,42px), --uk-h2-line
+   1.04, --uk-h2-track -.014em, Marcellus with the gradient clipped to the type.
+   Every section head on these two pages now uses the home page's own markup for
+   it (.ukZig_head with .ukZig_tag and .ukZig_h2), so the only headline left
+   needing this is .ukGlance_h, which sits in a section of its own.
+
+   background-image, NOT the background shorthand: the shorthand resets
+   background-clip to border-box, which paints the gradient as a filled
+   rectangle behind type that has been made transparent. That is exactly what
+   went wrong the first time. */
+.ukGlance_h{
+  font-family:var(--uk-font-display,'Marcellus',Georgia,serif)!important;
+  font-weight:400!important;
+  font-size:var(--uk-h2-size)!important;
+  line-height:var(--uk-h2-line)!important;
+  letter-spacing:var(--uk-h2-track)!important;
+  text-wrap:balance;
+  background-image:linear-gradient(101.34deg,#0B2F52 0.18%,#8a6414 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important;
+}
+
+/* the class is a video, so it carries the product's own play mark, centred on
+   the picture at the size the app's own media slots use */
+.ukAcad_shot{position:relative;display:block}
+.ukAcad_shot .ukM_play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;z-index:3;
+  fill:rgba(255,255,255,.94);pointer-events:none;
+  filter:drop-shadow(0 3px 12px rgba(6,18,25,.45));
+  transition:transform .3s cubic-bezier(.16,1,.3,1);
+}
+.ukAcad_shot:hover .ukM_play{transform:translate(-50%,-50%) scale(1.06)}
+@media (prefers-reduced-motion:reduce){ .ukAcad_shot .ukM_play{transition:none} }
+
+/* the frame a step with no artwork yet shows, carrying the size it should be
+   drawn to — the card's own visual is 1576x1318 */
+.ukSides_ph{
+  display:grid;place-items:center;
+  aspect-ratio:1576/1318;
+  border-radius:12px;
+  border:1px dashed rgba(11,47,82,.22);
+  background:rgba(11,47,82,.035);
+}
+.ukSides_ph[hidden]{display:none}
+.ukSides_ph span{
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.14em;color:rgba(11,47,82,.42);
+}
+
+/* the Pitch Pilot artwork is drawn at 1488:1318, not the 788:729 ukported.css
+   frames the hotel page's exports at, so the frame takes the picture's own
+   ratio and nothing letterboxes inside it */
+.ukZig--deep .ukZig_shot{aspect-ratio:1488/1318;object-fit:contain}
+
+/* The picture takes the left of the row and the copy the right. The copy sits
+   first in the DOM — it is what the section is saying — so the two are ordered
+   rather than reordered in the markup, and the wider of the two columns is the
+   first one now that the artwork is in it. */
+@media (min-width:900px){
+  .ukZig--deep .ukZig_row{grid-template-columns:1.08fr 0.92fr}
+  .ukZig--deep .ukZig_visual{order:1}
+  .ukZig--deep .ukZig_copy{order:2}
+}
+
+
+/* ---- how it works: blue glyphs, not gold ----
+   The chip and its glyph take the brand blue on the hotel side. ukported.css
+   gives every .ukZig_ico a gold tint and the light-ground gold gradient, which
+   is the creator side's colour; on this page the icons belong to the hotel. */
+.ukZig:not(.ukZig--deep) .ukZig_ico{background:rgba(11,47,82,.09);color:var(--uk-deep)}
+.ukZig:not(.ukZig--deep) .ukZig_ico .ukZig_glyph path{fill:url(#ukIcoGradBlue);stroke:none}
+
+
+/* ---- work from hosted stays ----
+   Less photograph, more brand blue: the scrim over this band starts far
+   deeper than the shared one and closes solid, so the images read as a texture
+   under the section rather than as the section itself. */
+.ukHp_band .ukFeat_scrim{
+  background:linear-gradient(180deg,
+    rgba(11,47,82,.62) 0%,
+    rgba(11,47,82,.68) 30%,
+    rgba(11,47,82,.76) 55%,
+    rgba(11,47,82,.88) 80%,
+    #0B2F52 100%);
+}
+.ukHp_band .ukFeat_bg .ukReveal_img{opacity:.72}
+
+
+/* ---- hero headline: room for the descenders ----
+   The line box computes to 44px against ink that needs 48, so the tail of a
+   "g" or "y" on the last line falls outside its own box and is painted over by
+   whatever follows. The extra sits under the line rather than between the two,
+   so the headline's spacing is unchanged. */
+.homeHeader .legionHero_line{padding-bottom:.09em}
+.homeHeader .legionHero_line + .legionHero_line{padding-bottom:.12em}
+
+
+/* ---- hero: the headline block and the card rail ----
+   The subhead sat a full paragraph gap under the headline, which read as two
+   separate thoughts; and the rail finished hard against the foot of the hero
+   with nothing under it. */
+.homeHeader .legionHero_title + .legionHero_lede{margin-top:clamp(6px,.7vw,9px)}
+.homeHeader .ukHeroRail{margin-bottom:clamp(34px,4vw,58px)}
+
+
+/* ================= the glance section, in gold =================
+   The creators page runs the same arrangement as the hotels page: a lead
+   column, three cards scattered against it, the dotted map behind. Only the
+   colour changes. The card face becomes gold with deep ink on it, the figure
+   drops its light-on-dark gradient for a solid deep blue, and the map takes a
+   gold tint instead of a navy one. Everything structural is inherited. */
+.ukGlance--gold .ukScan_out{
+  /* the gold ground, measured off the Figma card: a straight vertical ramp,
+     no frame and no shadow */
+  background:linear-gradient(180deg,#dcbc7d 0%,#a3761f 100%);
+  border:0;
+  box-shadow:none;
+}
+/* the figure and the label live inside the artwork now, so the face only has to
+   carry the ground */
+/* the map behind it, in the same gold rather than the navy */
+.ukGlance--gold::before{background:#b8801f;opacity:.16}
+
+/* ---- the card face ----
+   The cards are the hotels page's own exports with the ink swapped, so nothing
+   about the composition, the proportions or the type is set here: the section's
+   base rules size and scatter them exactly as they do on that page. Only the
+   ground changes. */
+
+
+/* the section heading carries a descender in "joining"; its line box is short
+   enough that the tail of the g is painted over by what follows */
+.ukGlance_h{padding-bottom:.06em}
+
+/* the section head sits on the gold ground, where the navy-into-gold gradient
+   the hotels page uses turns muddy; here the ink is the flat deep navy */
+.ukGlance--gold .ukGlance_h{
+  background-image:none!important;
+  -webkit-text-fill-color:var(--uk-deep)!important;
+  color:var(--uk-deep)!important;
+}
+
+/* ---- the pitch pilot band ----
+   Only the creators page runs this section, and it was carrying the tall
+   default band: the artwork stretched to the full column while the copy beside
+   it needed barely two thirds of that, leaving a dead strip above and below.
+   Capping the visual pulls the band back to the height of its own content. */
+.ukZig--deep{padding-block:clamp(46px,4.4vw,62px)}
+.ukZig--deep .ukZig_visual{max-width:463px;margin-inline:auto}
+/* the export carries a soft glow ring that runs a fifth of the canvas above and
+   below the screenshots themselves; the band was sizing itself to that empty
+   halo, so it is pulled back in rather than the artwork being shrunk */
+.ukZig--deep .ukZig_shot{margin-block:-38px}
+@media (max-width:900px){
+  .ukZig--deep .ukZig_visual{max-width:372px}
+  .ukZig--deep .ukZig_shot{margin-block:-30px}
+}
+
+/* ---- the pitch pilot ground ----
+   It matches the case studies band: the section's photo sits under the same
+   brand scrim, over the navy the section already carries. The photo is held
+   well back so the blue stays the dominant colour and the screenshots keep
+   their contrast. */
+.ukZig--deep{position:relative;isolation:isolate;overflow:hidden}
+.ukZig_bg{position:absolute;inset:0;z-index:-2;pointer-events:none}
+.ukZig_bg img{width:100%;height:100%;object-fit:cover;opacity:.38}
+/* the case studies scrim holds its solid ends over a 1200px band; this one is
+   a third of that, so the ends are pulled in or they close over the whole
+   picture and the photo stops reading at all */
+.ukZig--deep::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(to bottom,var(--uk-deep-3) 0%,rgba(6,24,41,.45) 14%,
+    rgba(6,24,41,.45) 86%,var(--uk-deep-3) 100%);
+}
+
+/* ====================================================================
+   Tablet and phone, across the two landing pages.
+   ==================================================================== */
+
+/* ---- the hero rail's place-and-date line ----
+   The row is one nowrap line holding a flag, a market and a date. Everything in
+   it could shrink, so the date was the thing that gave: "04 Mar - 09 Mar" came
+   back as "04 Mar - 09 Ma". The date never shrinks now; the market name is the
+   one that gives, and it already ellipsises. */
+.ukHeroRail_when{flex:0 0 auto}
+.ukHeroRail_mkt,
+.ukHeroRail--stay .ukHeroRail_mkt{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- the oversized FAQ word ----
+   121px is a desktop measure. On a tablet "COMMON" ran 12px wider than the
+   column it sits in, so the section's own heading was the thing overflowing.
+   It scales with the viewport now and its tracking goes with it. */
+.faqs__big{
+  font-size:clamp(46px,13.2vw,121px)!important;
+  line-height:.87!important;
+  letter-spacing:-.025em!important;
+}
+
+/* ---- the pitch pilot band, stacked ----
+   Above 900px the artwork takes the left of the row and the copy the right.
+   Below it the row becomes one column and the DOM order takes over, which put
+   the copy first and the picture under it: the reverse of the reading the
+   section was drawn for. The artwork leads in both. */
+@media (max-width:899px){
+  .ukZig--deep .ukZig_visual{order:1}
+  .ukZig--deep .ukZig_copy{order:2}
+  .ukZig--deep .ukZig_row{gap:clamp(20px,3.4vw,30px)}
+  /* the negative pull that trims the export's empty halo is sized for the
+     desktop card; at this width it eats into the copy under it */
+  .ukZig--deep .ukZig_shot{margin-block:-22px}
+}

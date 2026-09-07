@@ -1,0 +1,88 @@
+/* ====================================================================
+   Ukreate — the brand surface on /for-hotels/.
+
+   Everything the hero, nav and footer need in order to sit on the brand
+   blue rather than the legacy green. ukapp.css names that colour already:
+   --uk-deep #0B2F52, with --uk-deep-2 and --uk-deep-3 as the steps below
+   it. Its own note records that the token exists because the dark surface
+   used to be five near-identical greens written out by hand, which had
+   drifted apart. This only puts the marketing page back on the token.
+
+   Loaded by /for-hotels/ alone, after ukhero-main.css.
+   ==================================================================== */
+
+
+
+/* The nav pill was authored blue — rgba(11,35,72,.82) — and a later rule in
+   aeronav.css forces it to #0f262d with a grey border. That was the green. */
+.aeroNav_bg{background:var(--uk-deep-2)!important;border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 4px 18px rgba(6,24,41,.38)!important}
+
+/* The photograph is the point of the hero and stays legible: these are main's
+   own gradient weights, recoloured. The one change is the last stop, which
+   closes on the brand surface at the image's bottom edge. */
+.heroBgCustom::after{
+  background:
+    linear-gradient(to right,rgba(11,47,82,.60),rgba(11,47,82,.24) 55%,rgba(11,47,82,.34)),
+    linear-gradient(to bottom,rgba(11,47,82,.32),rgba(11,47,82,.08) 40%,
+      rgba(11,47,82,.46) 84%,var(--uk-deep) 100%)!important;
+  /* main masks this scrim away below 72%, which brings the photo back hard at
+     the fold and reads as a seam. It closes here instead. */
+  -webkit-mask-image:none!important;mask-image:none!important}
+
+/* the footer stands on the same surface */
+.ukMktFootWrap{background:var(--uk-deep)!important}
+
+/* the hero's floating card layer, retired by the observer on the page */
+.surfer{transition:opacity .4s ease,visibility .4s ease}
+.surfer.is-gone{opacity:0;visibility:hidden;pointer-events:none}
+
+/* The hero photograph is a 100vw square anchored to the top — at 1440 wide
+   that is 1440 tall, which was stretching the hero past its one screen. The
+   photo layer is clipped to the viewport; the headline still overflows its
+   column horizontally, so the clip goes here and not on .homeHeader. */
+
+
+
+
+/* ---------- the photographic ground ----------
+   The original canvas is a flat gradient. A photograph sits under the artwork
+   here, with a scrim over it so the copy and the composite still read, and the
+   brand surface closing the bottom where the flare takes over. */
+.ukHeroBg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  pointer-events:none;z-index:0;opacity:.28}
+.ukHeroScrim{position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    linear-gradient(to bottom,rgba(11,47,82,.45) 0%,rgba(11,47,82,.20) 34%,
+      rgba(11,47,82,.42) 62%,var(--uk-deep) 92%)}
+/* the skyline and clouds ride on top of the photograph rather than under it */
+.ukHeroSky{z-index:1}
+.ukHeroClouds{z-index:1}
+
+
+/* ====================================================================
+   Hero typography — the settings arrived at in the tuner.
+
+   These supersede four earlier passes that had stacked up overriding one
+   another; that is now one block, so the cascade reads in one place.
+   ==================================================================== */
+
+/* line-height and letter-spacing live on the LINES, not on the h1. The h1's own
+   font-size is 16px — the 55px is set on the line spans — so a unitless 0.92 and
+   an em-relative -0.06em resolved against 16px there, giving a 15px leading that
+   collapsed the stack. On the lines they resolve against 55px, as intended. */
+.legionHero_title{font-family:'Marcellus',Georgia,serif;text-transform:lowercase}
+.legionHero_line{font-size:55px;line-height:0.92;letter-spacing:-0.06em;margin-inline:auto}
+.legionHero_lede{font-size:17px;line-height:1.6;
+  max-width:61ch;margin-inline:auto;text-align:center}
+.legionHero_main{text-align:center;max-width:none;display:block}
+.legionHero_main>*+*{margin-top:14px}
+.homeHeader_contents.layer{align-items:center}
+.hero__buttons{justify-content:center}
+.hero__badge{align-self:center;opacity:1}
+.ukHeroBg{opacity:0.42}
+
+/* 55px is a fixed size, which holds on a desktop canvas but is wider than a
+   phone: at 390px the longest line would run off the screen. The tuned value
+   stands everywhere it fits, and only scales below that. */
+@media (max-width:900px){ .legionHero_line{font-size:clamp(30px,6.1vw,55px)} }

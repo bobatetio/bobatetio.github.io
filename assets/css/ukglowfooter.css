@@ -1,0 +1,121 @@
+/* Ukreate — the gradient footer glow.
+
+   .ukOutro already isolates a stacking context: its photograph and scrim sit at
+   z-index -1 and its newsletter and footer at z-index 1. The glow takes 0, so
+   it lies over the picture and under every word. It is fixed to the viewport
+   rather than to the footer, which is what lets it sit on the floor of the
+   screen the whole way down the page and rise into place at the end. */
+.ukGlowBand{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  height:var(--uk-glow-h,38vh);
+  z-index:0;
+  pointer-events:none;
+  transform-origin:bottom;
+  transform:scaleY(0.045);
+  will-change:transform;
+}
+.ukGlowBand svg{display:block;width:100%;height:100%}
+
+/* the room the glow lands in, under the footer's own content */
+.has-ukGlow{padding-bottom:var(--uk-glow-h,38vh)}
+
+/* a fixed child is only free of its ancestors while none of them establishes a
+   containing block; overflow alone does not, but it would clip nothing anyway */
+.ukOutro.has-ukGlow{overflow:visible}
+
+@media (max-width:720px){
+  .ukGlowBand{height:28vh}
+  .has-ukGlow{padding-bottom:28vh}
+}
+
+/* the older marketing footer wrapper carries its own solid fill; the glow needs
+   to read through it, so it becomes the layer under rather than over */
+.ukMktFootWrap.has-ukGlow{position:relative;isolation:isolate;overflow:visible}
+.ukMktFootWrap.has-ukGlow > .ukFooter{position:relative;z-index:1}
+
+/* ---------- the footer photograph, with the glow in front of it ----------
+   Reserving a band for the glow makes .ukOutro that much taller, and a cover
+   background grows with its box: the picture stretched down into the strip the
+   glow sits over, so most of what it was of ended up behind the gradient.
+   Nudging background-position only trades one crop for another. The picture is
+   given its own end instead — it stops where the glow begins, so it fills the
+   footer a reader can actually see and none of it is spent underneath. */
+.ukOutro.has-ukGlow::before,
+.ukOutro.has-ukGlow::after{
+  bottom:var(--uk-glow-h,38vh);
+}
+.ukOutro.has-ukGlow::before{
+  background-position:center 62%;
+  background-size:cover;
+}
+/* the scrim now closes on the deep navy exactly where the glow takes over, so
+   the two meet on the same colour instead of on a seam */
+.ukOutro.has-ukGlow::after{
+  background:linear-gradient(to bottom,
+    var(--uk-deep-3) 0%,
+    rgba(6,24,41,.46) 16%,
+    rgba(6,24,41,.62) 52%,
+    rgba(6,24,41,.88) 88%,
+    var(--uk-deep-3) 100%);
+}
+/* and the band's own floor carries that navy, so nothing shows through under
+   the picture before the glow has risen */
+.ukOutro.has-ukGlow{background:var(--uk-deep-3)}
+
+@media (max-width:720px){
+  .ukOutro.has-ukGlow::before,
+  .ukOutro.has-ukGlow::after{bottom:28vh}
+}
+
+/* ====================================================================
+   One gutter, on tablet and phone.
+
+   This sheet loads last on every page, which is the only place a single edge
+   can be set without unpicking five stylesheets that each grew their own.
+   Measured before this rule, one page put its hero and footer on a 7vw inset,
+   its sections on 5vw and the search band on 4vw: a 25px spread at 834, so the
+   left edge stepped in and out as you scrolled. The sections' 5vw is the one
+   the type was drawn to, so everything else comes to meet it, and below the
+   phone breakpoint the whole page sits on the 20px the body sections already
+   used.
+   ==================================================================== */
+@media (max-width:1024px){
+  .homeHeader_inner.legionHero,
+  .homeHeader_inner,
+  .ukFooter,
+  .ukPubBand_in,
+  .ukPub_main{padding-inline:5vw}
+}
+@media (max-width:560px){
+  .homeHeader_inner.legionHero,
+  .homeHeader_inner,
+  .ukFooter,
+  .ukPubBand_in,
+  .ukPub_main{padding-inline:20px}
+}
+
+/* ---- footer links on touch ----
+   Each is a 17px line of text, which on a phone is a target a thumb misses as
+   often as it hits. The rows get the height without the column getting looser:
+   the padding replaces the list's own row gap rather than adding to it. */
+@media (pointer:coarse) and (max-width:900px){
+  .ukFoot_col ul{row-gap:0}
+  .ukFoot_col li{margin:0}
+  .ukFoot_col li > a{display:block;padding-block:11px}
+  /* the same for the single link under the closing call to action */
+  .ukClose_alt{display:inline-block;padding-block:10px}
+}
+/* the view switcher is a real control and should be thumb-sized on touch */
+@media (pointer:coarse){
+  .ukSeg--ic .ukSeg_b{min-height:42px}
+}
+
+/* The body sections floor their inset at 18px while the hero, the footer and
+   the search band now sit at 20. Two pixels is not a lot, but it is a step in
+   the left edge on the narrowest phones, and the edge is the one thing on a
+   page this long that should never move. They meet at 20. */
+@media (max-width:560px){
+  .ukZig, .ukScan, .ukGlance, .ukSection, .results, .faqs, .ukSides,
+  .ukTrade, .ukAcad, .ukPubBand{padding-inline:20px}
+}

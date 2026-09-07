@@ -1,0 +1,300 @@
+/* ===== Ukreate marketing site — general / for-hotels / for-creators ===== */
+/* Tokens, buttons, chips, the .ukPanel card, the .ukPath "choose your side"
+   card and the .ukM gradient-scrim media contract all come from ukapp.css /
+   ukfront.css, already loaded on every page this stylesheet sits beside.
+   Nothing here redefines a token — only marketing-specific layout: the public
+   nav, hero, section rhythm, proof strip, comparison table and footer. */
+
+.ukMkt{background:var(--bg);color:var(--text)}
+.ukMkt img{max-width:100%;display:block}
+.ukMkt :focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+
+/* ---------- skip link (shared visual with the app) ---------- */
+.ukSkip{position:absolute;left:-9999px;top:0;background:var(--uk-deep);color:#fff;
+  padding:12px 18px;border-radius:0 0 10px 0;z-index:200;font:700 13px/1 'Lato',sans-serif}
+.ukSkip:focus{left:0}
+
+/* ---------- public nav ---------- */
+.ukPubNav{position:sticky;top:0;z-index:50;background:rgba(245,243,239,.92);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.ukPubNav_row{max-width:1220px;margin:0 auto;padding:14px 24px;position:relative;
+  display:flex;align-items:center;gap:28px}
+.ukPubNav_brand{display:flex;align-items:center;flex:0 0 auto;margin-right:auto}
+.ukPubNav_brand img{height:28px;width:auto;display:block}
+.ukPubNav_links{display:flex;align-items:center;gap:26px;flex:0 0 auto}
+.ukPubNav_a{font:600 14px/1 'Lato',sans-serif;color:var(--text-2);text-decoration:none;
+  white-space:nowrap;transition:color .15s ease}
+.ukPubNav_a:hover{color:var(--text)}
+.ukPubNav_a.is-on{color:var(--text)}
+.ukPubNav_cta{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.ukPubNav_signin{font:600 14px/1 'Lato',sans-serif;color:var(--text-2);text-decoration:none;white-space:nowrap}
+.ukPubNav_signin:hover{color:var(--text)}
+.ukPubNav .ukBtn{padding:10px 18px;font-size:13.5px}
+.ukPubNav_burger{display:none;flex:0 0 auto;width:38px;height:38px;border-radius:10px;
+  border:1px solid var(--line);background:var(--surface);align-items:center;justify-content:center;cursor:pointer}
+.ukPubNav_burger svg{width:18px;height:18px}
+.ukPubNav_sheet{display:none}
+@media (max-width:860px){
+  .ukPubNav_links{display:none}
+  .ukPubNav_signin{display:none}
+  .ukPubNav_burger{display:inline-flex}
+  .ukPubNav_row{gap:14px}
+  /* a plain dropdown panel under the bar — no third-party menu component,
+     just the same nav links the desktop bar hides at this width */
+  .ukPubNav_sheet{display:block;position:absolute;left:16px;right:16px;top:calc(100% + 8px);
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:10px;z-index:60}
+  .ukPubNav_sheet[hidden]{display:none}
+  .ukPubNav_sheet a{display:block;padding:12px 14px;border-radius:10px;
+    font:600 15px/1 'Lato',sans-serif;color:var(--text);text-decoration:none}
+  .ukPubNav_sheet a:hover{background:var(--hover)}
+  .ukPubNav_sheet_rule{height:1px;background:var(--line);margin:6px 4px}
+}
+
+/* ---------- section rhythm ---------- */
+.ukMktSection{max-width:1220px;margin:0 auto;padding:clamp(56px,8vw,104px) 24px}
+.ukMktSection--tight{padding-top:clamp(36px,5vw,60px);padding-bottom:clamp(36px,5vw,60px)}
+.ukMktSection--band{max-width:none;padding-left:0;padding-right:0}
+.ukMktEyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;
+  font:700 11.5px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink)}
+.ukMktEyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--uk-gold)}
+.ukMktH2{font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(28px,4vw,44px);line-height:1.14;letter-spacing:-.01em;
+  margin:0 0 16px;color:var(--text);text-wrap:balance;max-width:26ch}
+.ukMktLede{font:400 17px/1.65 'Lato',sans-serif;color:var(--text-2);margin:0;
+  max-width:58ch;text-wrap:pretty}
+.ukMktHead{max-width:720px;margin:0 0 clamp(32px,4vw,48px)}
+.ukMktHead--center{margin-left:auto;margin-right:auto;text-align:center}
+.ukMktHead--center .ukMktEyebrow{justify-content:center}
+.ukMktHead--center .ukMktH2{margin-left:auto;margin-right:auto}
+.ukMktHead--center .ukMktLede{margin-left:auto;margin-right:auto}
+
+/* ---------- hero ---------- */
+.ukHero2{position:relative;padding:clamp(48px,7vw,88px) 24px clamp(56px,8vw,96px);
+  overflow:hidden}
+.ukHero2_grid{max-width:1220px;margin:0 auto;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:clamp(28px,4vw,56px);align-items:center}
+.ukHero2_txt{max-width:560px}
+.ukHero2_eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;
+  padding:7px 14px 7px 10px;border-radius:9999px;background:var(--surface);border:1px solid var(--line);
+  font:700 11.5px/1 'Lato',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-ink)}
+.ukHero2_eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--uk-gold)}
+.ukHero2_h1{font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(38px,5.4vw,64px);line-height:1.07;letter-spacing:-.015em;
+  margin:0 0 20px;color:var(--text);text-wrap:balance}
+.ukHero2_p{font:400 18px/1.62 'Lato',sans-serif;color:var(--text-2);margin:0 0 30px;
+  max-width:52ch;text-wrap:pretty}
+.ukHero2_cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.ukHero2_cta .ukBtn{padding:14px 26px;font-size:15.5px}
+.ukHero2_cta .ukGhost{padding:14px 26px;font-size:15.5px}
+.ukHero2_note{margin:18px 0 0;font:400 13px/1.5 'Lato',sans-serif;color:var(--text-3)}
+.ukHero2_media{position:relative}
+@media (max-width:980px){
+  .ukHero2_grid{grid-template-columns:minmax(0,1fr)}
+  .ukHero2_media{order:-1}
+}
+
+/* ---------- device frame: real interface, screenshot-shaped ---------- */
+.ukDevice{position:relative;border-radius:20px;overflow:hidden;background:var(--surface);
+  border:1px solid var(--line);box-shadow:0 30px 70px -20px rgba(6,24,41,.35)}
+.ukDevice_bar{display:flex;align-items:center;gap:6px;padding:12px 14px;
+  background:var(--uk-deep-3);border-bottom:1px solid rgba(255,255,255,.08)}
+.ukDevice_dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25)}
+.ukDevice img,.ukDevice video{width:100%;height:auto;display:block}
+
+/* ---------- feature grid ---------- */
+.ukMktGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ukMktGrid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ukMktGrid--4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.ukMktCard{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:26px;display:flex;flex-direction:column;gap:12px}
+.ukMktCard_ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:var(--active-bg);color:var(--gold-ink);flex:0 0 auto}
+.ukMktCard_ic svg{width:20px;height:20px}
+.ukMktCard_t{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:19px;line-height:1.25;
+  margin:0;color:var(--text)}
+.ukMktCard_p{font:400 14px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+@media (max-width:900px){
+  .ukMktGrid,.ukMktGrid--4{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .ukMktGrid,.ukMktGrid--2,.ukMktGrid--4{grid-template-columns:1fr}
+}
+
+/* ---------- stat / proof strip ---------- */
+.ukMktStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.ukMktStat{background:var(--surface);padding:26px 22px;display:flex;flex-direction:column;gap:6px}
+.ukMktStat_v{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:clamp(28px,3.4vw,38px);
+  line-height:1;color:var(--text);white-space:nowrap}
+.ukMktStat_l{font:600 12.5px/1.4 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+
+/* ---------- numbered steps (workflow) ---------- */
+.ukMktSteps{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.ukMktStep{display:grid;grid-template-columns:44px minmax(0,1fr);gap:20px;padding:22px 0;
+  border-top:1px solid var(--line)}
+.ukMktStep:first-child{border-top:0}
+.ukMktStep_n{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:20px;color:var(--gold-ink)}
+.ukMktStep_t{font:700 15.5px/1.4 'Lato',sans-serif;color:var(--text);margin:0 0 5px}
+.ukMktStep_p{font:400 14px/1.6 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+
+/* ---------- comparison table (hotels: 8% vs 22%) ---------- */
+.ukMktCompare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.ukMktCompareCard{border-radius:20px;padding:28px}
+.ukMktCompareCard--them{background:var(--surface);border:1px solid var(--line)}
+.ukMktCompareCard--us{background:var(--uk-deep);color:var(--uk-on-deep);border:1px solid var(--uk-deep)}
+.ukMktCompareCard_k{font:700 11.5px/1 'Lato',sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  margin:0 0 14px;opacity:.7}
+.ukMktCompareCard_v{font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:clamp(38px,4.4vw,52px);
+  line-height:1;margin:0 0 10px}
+.ukMktCompareCard--us .ukMktCompareCard_v{color:var(--uk-gold-2)}
+.ukMktCompareCard_p{font:400 14.5px/1.6 'Lato',sans-serif;margin:0;opacity:.85;text-wrap:pretty}
+@media (max-width:700px){ .ukMktCompare{grid-template-columns:1fr} }
+
+/* ---------- soothe cards (creator anxieties) ---------- */
+.ukMktSoothe{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;
+  display:flex;flex-direction:column;gap:10px}
+.ukMktSoothe_q{font-family:'Marcellus',Georgia,serif;font-weight:400;font-style:italic;font-size:18px;
+  line-height:1.3;margin:0;color:var(--gold-ink)}
+.ukMktSoothe_p{font:400 14.5px/1.62 'Lato',sans-serif;color:var(--text-2);margin:0;text-wrap:pretty}
+
+/* ---------- reels row (vertical creator media) ---------- */
+.ukMktReels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:900px){ .ukMktReels{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:600px){ .ukMktReels{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+/* ---------- CTA band ---------- */
+.ukMktCta{background:var(--uk-deep);color:var(--uk-on-deep);border-radius:28px;
+  padding:clamp(40px,6vw,64px);text-align:center;
+  background-image:radial-gradient(circle at 18% 20%,rgba(215,165,67,.14),transparent 55%)}
+.ukMktCta_h{font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(26px,3.6vw,38px);line-height:1.16;margin:0 0 14px;text-wrap:balance}
+.ukMktCta_p{font:400 15.5px/1.6 'Lato',sans-serif;color:rgba(255,255,255,.78);margin:0 0 28px;
+  max-width:52ch;margin-left:auto;margin-right:auto;text-wrap:pretty}
+.ukMktCta_row{display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+.ukMktCta .ukBtn{padding:14px 28px;font-size:15.5px}
+.ukMktCta .ukGhost{padding:14px 28px;font-size:15.5px;background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.28);color:#fff}
+.ukMktCta .ukGhost:hover{background:rgba(255,255,255,.16)}
+
+/* ---------- footer ---------- */
+.ukMktFoot{border-top:1px solid var(--line);background:var(--surface)}
+.ukMktFoot_row{max-width:1220px;margin:0 auto;padding:clamp(40px,5vw,56px) 24px 28px;
+  display:grid;grid-template-columns:1.3fr repeat(3,minmax(0,1fr));gap:32px}
+.ukMktFoot_brand img{height:26px;width:auto;margin-bottom:14px}
+.ukMktFoot_p{font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-3);margin:0;max-width:32ch;text-wrap:pretty}
+.ukMktFoot_h{font:700 11.5px/1 'Lato',sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-3);margin:0 0 14px}
+.ukMktFoot_l{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ukMktFoot_l a{font:400 14px/1.4 'Lato',sans-serif;color:var(--text-2);text-decoration:none}
+.ukMktFoot_l a:hover{color:var(--text)}
+.ukMktFoot_bottom{max-width:1220px;margin:0 auto;padding:20px 24px 32px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  border-top:1px solid var(--line-soft)}
+.ukMktFoot_copy{font:400 12.5px/1.5 'Lato',sans-serif;color:var(--text-3)}
+@media (max-width:760px){
+  .ukMktFoot_row{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:480px){
+  .ukMktFoot_row{grid-template-columns:1fr}
+}
+
+/* ---------- honesty note (small, quiet, never hidden) ---------- */
+.ukMktHonest{margin-top:14px;font:400 12.5px/1.6 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
+
+/* ---------- responsive: hero media, section padding, grids ---------- */
+@media (max-width:1080px){
+  .ukMktGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .ukPubNav_row{padding:12px 16px}
+  .ukMktSection{padding-left:18px;padding-right:18px}
+  .ukMktCompareCard{padding:22px}
+  .ukMktStep{grid-template-columns:34px minmax(0,1fr);gap:14px}
+}
+
+/* ===================================================================
+   Ported from the main-branch site: the hero, its background and the
+   trusted strip. The nav (aeronav.css), the rolling buttons and the
+   footer (fc-shared.css) come from their own stylesheets unchanged —
+   only the pieces that lived inline on that page are restated here.
+   =================================================================== */
+
+.homeHeader{display:grid;grid-template-columns:minmax(0,1fr);align-content:center;position:relative;background:#0d2026;overflow:hidden}
+.homeHeader_contents{grid-area:1/1;display:grid;grid-template-columns:minmax(0,1fr);align-content:center;height:100svh;min-width:0}
+.homeHeader_bg{grid-area:1/1;display:grid;grid-template-columns:minmax(0,1fr);position:relative;z-index:0;min-width:0}
+.homeHeader_img{grid-area:1/1}
+.layer{position:relative;z-index:2}
+.heroBgPlain,.heroBgPlain img{width:100%;height:100svh;object-fit:cover;display:block}
+
+.heroBgCustom{position:absolute;inset:0;background:transparent;pointer-events:none;z-index:1}
+.heroBgCustom:after{content:'';position:absolute;top:0;left:0;right:0;height:100svh;
+  background:linear-gradient(to right,rgba(13,32,38,.86),rgba(13,32,38,.52) 48%,rgba(13,32,38,.34)),
+             linear-gradient(to bottom,rgba(13,32,38,.46),rgba(13,32,38,.20) 38%,rgba(13,32,38,.62) 85%,#0d2026 100%)}
+
+.homeHeader_inner.legionHero{padding-inline:clamp(24px,7vw,132px);display:flex;align-items:center;
+  justify-content:space-between;gap:clamp(28px,5vw,96px);width:100%;min-width:0}
+.legionHero_main{flex:0 1 auto;min-width:0;max-width:min(720px,100%)}
+.legionHero_title{font-family:"Marcellus SC",serif;font-weight:400;letter-spacing:-.045em;line-height:1.05;margin:0;color:#fff}
+.legionHero_line{display:block;width:-moz-max-content;width:max-content;max-width:100%;font-size:clamp(28px,4.2vw,60px);
+  background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.legionHero_lede{font-family:'Lato','Inter',sans-serif;margin:clamp(10px,1.2vw,16px) 0 0;max-width:min(580px,100%);
+  font-size:clamp(14px,1.12vw,16.2px);line-height:1.6;color:rgba(255,255,255,.82);text-wrap:pretty}
+.legionHero_note{font-family:'Lato','Inter',sans-serif;margin:clamp(12px,1.4vw,18px) 0 0;max-width:min(640px,100%);
+  font-size:clamp(12px,.95vw,13.5px);line-height:1.5;color:rgba(255,255,255,.55);text-wrap:pretty}
+.hero__badge{display:inline-flex;align-items:center;padding:5px 14px;background:rgba(255,255,255,.10);
+  border-radius:9999px;font-family:'Lato','Inter',sans-serif;font-size:clamp(13px,1.02vw,14.6px);
+  line-height:1.15;color:rgba(255,255,255,.82);margin-bottom:16px}
+.hero__buttons{display:flex;align-items:center;gap:12px;margin-top:clamp(18px,2vw,28px);flex-wrap:wrap}
+
+/* the product shot that rides the right of the two inner pages' heroes */
+.legionHero_shot{flex:0 0 auto;width:clamp(280px,30vw,440px);max-width:100%}
+.legionHero_shot .ukDevice{box-shadow:0 40px 90px rgba(0,0,0,.55)}
+
+/* trusted strip — sits on the hero's bottom rail */
+.heroTrust{max-width:100%;position:absolute;left:clamp(24px,7vw,132px);top:calc(100svh - clamp(112px,15vh,140px));
+  z-index:5;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.trusted__label{font-family:'Lato',sans-serif;font-weight:400;font-size:11px;letter-spacing:1.5px;
+  text-transform:uppercase;color:rgba(255,255,255,.82);white-space:nowrap}
+.trusted__logos{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.trusted__card{width:118px;height:48px;border-radius:10px;overflow:hidden;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+  background:#0f262d;border:1px solid rgba(255,255,255,.16);color:rgba(232,220,199,.68)}
+.trusted__card svg{width:80%;height:64%;display:block}
+.trusted__card img{max-width:80%;max-height:80%;object-fit:contain}
+
+/* scroll cue */
+.heroScroll{position:absolute;top:calc(100svh - clamp(92px,13vh,118px));right:clamp(24px,7vw,132px);
+  z-index:5;display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;
+  cursor:pointer;padding:6px;color:rgba(232,220,199,.92);font-family:'Lato',sans-serif;font-size:11px;
+  letter-spacing:.16em;text-transform:uppercase}
+.heroScroll_oval{width:24px;height:40px;border:1px solid rgba(232,220,199,.55);border-radius:9999px;
+  display:flex;align-items:center;justify-content:center}
+.heroScroll_oval svg{animation:heroScrollNudge 1.8s ease-in-out infinite}
+@keyframes heroScrollNudge{0%,100%{transform:translateY(-2px)}50%{transform:translateY(3px)}}
+@media (prefers-reduced-motion:reduce){.heroScroll_oval svg{animation:none}}
+
+@media (max-width:900px){
+  .homeHeader_inner.legionHero{flex-direction:column;align-items:flex-start;gap:clamp(30px,7vw,48px)}
+  /* the nav is a floating pill over the hero: clear it before the badge */
+  .homeHeader_contents{padding-top:clamp(96px,22vw,132px);height:auto;min-height:100svh}
+  .legionHero_line{font-size:clamp(30px,8.4vw,60px)}
+  .legionHero_shot{width:100%}
+  .heroTrust{position:static;margin-top:clamp(32px,8vw,48px);padding-inline:clamp(24px,7vw,132px)}
+  .heroScroll{display:none}
+  /* the travelling card layer is choreographed against a two-column hero and
+     has no room to fly here, so it stands down rather than crossing the copy */
+  .surferSlot{display:none}
+  .surfer{display:none!important}
+}
+
+/* ---------- the footer's dark ground ---------- */
+.ukMktFootWrap{background:#0d2026}
+.ukFooter .ukFoot_sns svg{width:15px;height:15px;color:rgba(255,255,255,.55);transition:color .25s ease}
+.ukFooter .ukFoot_sns:hover svg{color:#d7a543}
+
+/* the card layer retires with the hero (see the observer on the home page) */
+.surfer{transition:opacity .5s ease,visibility .5s ease}
+.surfer.is-gone{opacity:0;visibility:hidden;pointer-events:none}

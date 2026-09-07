@@ -1,0 +1,32 @@
+/* ====================================================================
+   Proven Results and Common Questions on the dark ground.
+   Colour only: the ported 4401 type, sizing and layout are untouched.
+   ==================================================================== */
+
+/* ---- the ground: the section's own photo, under the brand scrim ---- */
+.results{position:relative;isolation:isolate;overflow:hidden;background:var(--uk-deep-3)}
+.results__bg{z-index:-2}
+.results::before{content:'';position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(to bottom,var(--uk-deep-3) 0%,rgba(6,24,41,.5) 22%,
+    rgba(6,24,41,.5) 74%,var(--uk-deep-3) 100%)}
+
+/* ---- header ---- */
+.results__label{color:var(--uk-gold)}
+/* the system dark-ground headline gradient, as .uk_title sets it */
+.results__title{background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+.results__sub{color:rgba(255,255,255,.66)}
+
+/* ---- the case-study card ---- */
+/* translucent, so the field behind it reads through and the card sits on the
+   section rather than on top of it */
+.cs-card{background:rgba(9,32,54,.62);border:1px solid rgba(255,255,255,.10)}
+.cs-section-title{color:#fff}
+.cs-section-text{color:rgba(255,255,255,.66)}
+.cs-divider{border-top-color:rgba(255,255,255,.12)}
+.cs-stat-value{color:#fff}
+.cs-stat-label{color:rgba(255,255,255,.6)}
+
+/* the logo chip stays a white card: the marks are printed for light grounds */
+.cs-logo-card{border-color:rgba(0,0,0,.14)}

@@ -1,0 +1,132 @@
+/* ====================================================================
+   Ukreate landing tokens and components.
+
+   Everything in this file was arrived at by measurement during the build,
+   not invented: the section-head rhythm was taken from How It Works once
+   that section was agreed, the button sizing from the section CTAs, the
+   badge from the pill the page settled on, the placeholder panel from the
+   marked-out row visuals, and the hairline and chip values from the stats
+   strip. They live here so there is one source of truth rather than the
+   same numbers restated per section, which is what let the four section
+   heads drift apart in the first place.
+
+   Loads BEFORE the component sheets so anything can consume it.
+   ==================================================================== */
+
+:root{
+  /* ---- stages: the widths the page actually uses ---- */
+  --uk-head-max: 780px;     /* a centred section head */
+  --uk-stage: 1120px;       /* stats strip, results stage */
+  --uk-stage-wide: 1240px;  /* the six-item grid, footer rule */
+  --uk-measure: 56ch;       /* a sub under a headline */
+
+  /* ---- section rhythm ---- */
+  --uk-sec-pad-block: clamp(48px, 6vw, 88px);
+  --uk-sec-pad-inline: clamp(20px, 5vw, 48px);
+  --uk-head-gap-tag: clamp(14px, 1.6vw, 20px);   /* badge -> headline */
+  --uk-head-gap-sub: clamp(12px, 1.4vw, 18px);   /* headline -> sub */
+  --uk-head-gap-end: clamp(40px, 5vw, 72px);     /* head -> content */
+
+  /* ---- type ---- */
+  --uk-font-display: 'Marcellus', Georgia, serif;
+  --uk-font-body: 'Lato', 'Inter', sans-serif;
+  --uk-h2-size: clamp(26px, 3.1vw, 42px);
+  --uk-h2-line: 1.04;
+  --uk-h2-track: -.014em;
+  --uk-h2-descender: .1em;   /* background-clip:text needs room for g,y,p */
+  --uk-sub-size: 16px;
+  --uk-sub-line: 1.6;
+  --uk-eyebrow: 700 11px/1 var(--uk-font-body);
+  --uk-eyebrow-track: .16em;
+
+  /* ---- badge ---- */
+  --uk-badge-pad: 7px 16px;
+  --uk-badge-face-light: #f7edd8;
+  --uk-badge-ink-light: #8a6414;
+  /* the dark tag: the deep navy at the foot of the hero, not the brand
+     mid-navy, which read too bright. One value, every dark tag on the site. */
+  --uk-badge-face-dark: #081524;
+  --uk-badge-ink-dark: var(--uk-gold);
+
+  /* ---- buttons ---- */
+  --uk-btn-h: 56px;                       /* a section call to action */
+  --uk-btn-pad-x: 40px;
+  --uk-btn-size: 17px;
+  --uk-btn-weight: 400;
+  --uk-btn-min: clamp(220px, 20vw, 280px);
+  --uk-btn-roll: 23px;                    /* clip window, must fit the type */
+  --uk-btn-gold: linear-gradient(5.7deg, #d7a543 13%, #efc470 90%);
+  --uk-btn-gold-hover: linear-gradient(5.7deg, #e0b055 13%, #f2cd82 90%);
+  --uk-btn-deep: linear-gradient(5.7deg, #0B2F52 13%, #1c5183 90%);
+  --uk-btn-deep-hover: linear-gradient(5.7deg, #123c66 13%, #2a6099 90%);
+
+  /* ---- surfaces ---- */
+  --uk-rule-dark: rgba(255,255,255,.14);
+  --uk-rule-light: rgba(16,46,55,.12);
+  --uk-chip-dark: rgba(255,255,255,.07);
+  --uk-chip-gold: rgba(215,165,67,.16);
+  --uk-ico-grad-a: #ffffff;   /* the paint the stat numbers carry */
+  --uk-ico-grad-b: #ecd0a1;
+
+  /* ---- marked-out artwork ---- */
+  --uk-panel-radius: 24px;
+  --uk-panel-border: 1px dashed color-mix(in srgb, var(--uk-deep) 24%, transparent);
+  --uk-panel-fill: color-mix(in srgb, var(--uk-deep) 4%, transparent);
+}
+
+/* ====================================================================
+   Components. Each is the shape the page converged on, available by class
+   so a new section does not have to restate it.
+   ==================================================================== */
+
+/* ---- section head ---- */
+.ukHead{max-width:var(--uk-head-max);margin:0 auto var(--uk-head-gap-end);text-align:center}
+.ukHead_tag{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;padding:var(--uk-badge-pad);margin:0 0 var(--uk-head-gap-tag);
+  font:var(--uk-eyebrow);letter-spacing:var(--uk-eyebrow-track);text-transform:uppercase}
+.ukHead_tag--light{color:var(--uk-badge-ink-light)}
+.ukHead_tag--light .ukGlow_face{background:var(--uk-badge-face-light);border:0}
+.ukHead_tag--dark{color:var(--uk-badge-ink-dark)}
+.ukHead_tag--dark .ukGlow_face{background:var(--uk-badge-face-dark);border:0;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ukHead_title{margin:0;font-family:var(--uk-font-display);font-weight:400;
+  font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);
+  letter-spacing:var(--uk-h2-track);text-wrap:balance;
+  padding-bottom:var(--uk-h2-descender)}
+.ukHead_sub{margin:var(--uk-head-gap-sub) auto 0;max-width:var(--uk-measure);
+  font-family:var(--uk-font-body);font-weight:400;font-size:var(--uk-sub-size);
+  line-height:var(--uk-sub-line);text-wrap:pretty}
+
+/* ---- section call to action: a line, then the button ---- */
+.ukCta{text-align:center;margin-top:var(--uk-head-gap-end)}
+.ukCta_lead{margin:0 0 var(--uk-head-gap-tag);text-wrap:balance;
+  font:400 var(--uk-sub-size)/var(--uk-sub-line) var(--uk-font-body)}
+.ukCta_row{display:flex;justify-content:center}
+
+/* ---- button sizing (the roll window has to scale with the type) ---- */
+.ukBtn{min-height:var(--uk-btn-h);padding:0 var(--uk-btn-pad-x);
+  font-size:var(--uk-btn-size);font-weight:var(--uk-btn-weight);
+  min-width:var(--uk-btn-min)}
+.ukBtn strong,.ukBtn em,.ukBtn span{font-weight:var(--uk-btn-weight);font-style:normal}
+.ukBtn strong{height:var(--uk-btn-roll)}
+.ukBtn strong span{line-height:var(--uk-btn-roll)}
+
+/* ---- marked-out artwork placeholder ---- */
+.ukPanel{border-radius:var(--uk-panel-radius);overflow:hidden;display:grid;
+  place-items:center;border:var(--uk-panel-border);background:var(--uk-panel-fill)}
+.ukPanel_label{display:grid;gap:6px;justify-items:center;text-align:center;
+  font:var(--uk-eyebrow);letter-spacing:var(--uk-eyebrow-track);text-transform:uppercase;
+  color:color-mix(in srgb, var(--uk-deep) 55%, transparent)}
+.ukPanel_label b{font-weight:400;letter-spacing:.06em;
+  color:color-mix(in srgb, var(--uk-deep) 38%, transparent)}
+
+/* ---- icon chips ---- */
+.ukChip{display:grid;place-items:center;flex:none}
+.ukChip--dark{width:34px;height:34px;border-radius:10px;background:var(--uk-chip-dark)}
+.ukChip--dark svg{width:17px;height:17px;display:block}
+.ukChip--gold{width:30px;height:30px;border-radius:9px;
+  background:var(--uk-chip-gold);color:var(--uk-badge-ink-light)}
+.ukChip--gold svg{width:16px;height:16px;display:block}
+
+/* ---- hairline ---- */
+.ukRule{height:1px;border:0;margin:0;background:var(--uk-rule-dark)}

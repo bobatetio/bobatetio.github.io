@@ -1,0 +1,644 @@
+/* Ukreate — the public browsing pages.
+
+   Results and detail pages a visitor sees before they have an account. The
+   shell (nav, footer, tokens, type) is the marketing site's; the cards borrow
+   the hero rail's treatment, which is already the image-led, scrim-over-photo
+   card this context wants. Nothing here is loaded by /app/ or /creator/. */
+
+.ukPub{background:var(--bg)}
+.ukPub_main{
+  max-width:1180px;
+  margin-inline:auto;
+  padding:calc(var(--aero-h,88px) + clamp(28px,3.4vw,52px)) clamp(18px,4vw,40px) clamp(56px,7vw,96px);
+}
+
+/* ---------- page head ---------- */
+.ukPub_head{max-width:var(--uk-head-max,720px);margin:0 0 clamp(22px,2.6vw,34px)}
+.ukPub_eyebrow{
+  margin:0 0 10px;font:700 11.5px/1 'Lato',sans-serif;
+  text-transform:uppercase;letter-spacing:.2em;color:var(--uk-gold);
+}
+.ukPub_h1{
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(28px,3.4vw,44px);line-height:1.08;letter-spacing:-.02em;
+  margin:0;color:var(--text);text-wrap:balance;
+}
+.ukPub_lede{
+  margin:14px 0 0;max-width:60ch;
+  font:400 15.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+
+/* ---------- search ---------- */
+.ukPub_search{display:flex;gap:10px;margin-top:clamp(18px,2.2vw,26px);max-width:620px}
+.ukPub_q{
+  flex:1 1 auto;min-width:0;height:48px;padding:0 16px;
+  border:1px solid var(--line);border-radius:12px;background:var(--card-solid);
+  font:400 15px/1 'Lato',sans-serif;color:var(--text);
+}
+.ukPub_q:focus{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukPub_go{
+  flex:0 0 auto;height:48px;padding:0 20px;border:0;border-radius:12px;cursor:pointer;
+  background:linear-gradient(5.71deg,var(--uk-gold) 13%,var(--uk-gold-2) 90%);
+  color:var(--uk-on-gold);font:700 14px/1 'Lato',sans-serif;
+}
+.ukPub_go:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+/* ---------- filters ---------- */
+.ukPub_bar{
+  display:flex;flex-direction:column;gap:12px;
+  padding:clamp(14px,1.8vw,20px) 0 clamp(16px,2vw,22px);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.ukPubGroup{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.ukPubGroup_k{
+  flex:0 0 74px;padding-top:6px;
+  font:700 11px/1.2 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--text-3);
+}
+.ukPubGroup_v{display:flex;flex-wrap:wrap;gap:7px;flex:1 1 auto;min-width:0}
+.ukPubFilter{
+  padding:7px 13px;border-radius:9999px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;
+  font:500 12.5px/1 'Lato',sans-serif;color:var(--text-2);
+  transition:background .16s ease,border-color .16s ease,color .16s ease;
+}
+.ukPubFilter:hover{border-color:var(--text-3);color:var(--text)}
+.ukPubFilter.is-on{background:var(--uk-deep);border-color:var(--uk-deep);color:#fff}
+.ukPubFilter:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+.ukPub_count{
+  margin:clamp(18px,2.2vw,26px) 0 clamp(14px,1.8vw,20px);
+  font:600 14px/1.4 'Lato',sans-serif;color:var(--text-2);
+}
+.ukPub_empty{margin:32px 0;font:400 15px/1.6 'Lato',sans-serif;color:var(--text-2)}
+
+/* ---------- the image-led card ----------
+   Same shape as the hero rail's: the work fills it, a scrim holds the type, and
+   only the five facts a first look turns on sit over the picture. */
+.ukPub_grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(12px,1.4vw,20px);margin:0;padding:0;list-style:none;
+}
+.ukPubCard{margin:0}
+.ukPubCard_a{
+  position:relative;display:block;
+  aspect-ratio:9/11;border-radius:16px;overflow:hidden;
+  background:#0a1a23;text-decoration:none;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.ukPubCard_a:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,0,0,.28)}
+.ukPubCard_a:focus-visible{outline:2px solid var(--uk-gold);outline-offset:3px}
+.ukPubCard_media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ukPubCard_scrim{
+  position:absolute;left:0;right:0;bottom:0;height:62%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,16,24,0) 0%,rgba(6,16,24,.58) 52%,rgba(6,16,24,.92) 100%);
+}
+.ukPubCard_reach{
+  position:absolute;top:10px;left:10px;z-index:3;
+  padding:5px 10px;border-radius:8px;
+  background:rgba(8,18,24,.62);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.16);
+  font:700 11px/1 'Lato',sans-serif;color:#fff;
+}
+.ukPubCard_id{
+  position:absolute;left:13px;right:13px;bottom:12px;z-index:3;
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;
+}
+.ukPubCard_n{
+  font:700 15px/1.2 'Lato',sans-serif;color:#fff;max-width:100%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ukPubCard_m{
+  display:flex;align-items:center;gap:6px;width:100%;min-width:0;
+  font:400 12px/1.25 'Lato',sans-serif;color:rgba(255,255,255,.86);white-space:nowrap;
+}
+.ukPubCard_m .ukCrFlag{width:15px;height:11px;flex:0 0 15px;border-radius:2px;object-fit:cover;display:block}
+.ukPubCard_mkt{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.ukPubCard_foot{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;min-width:0;margin-top:2px;
+}
+.ukPubCard_niche{
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font:400 11.5px/1.3 'Lato',sans-serif;color:rgba(255,255,255,.74);
+}
+.ukPubCard_rating{
+  display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;
+  font:700 12px/1 'Lato',sans-serif;color:var(--uk-gold-2);
+}
+.ukPubCard_rating svg{width:11px;height:11px;display:block}
+
+@media (max-width:1100px){ .ukPub_grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
+@media (max-width:820px){
+  .ukPub_grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ukPubGroup{flex-direction:column;gap:7px}
+  .ukPubGroup_k{flex:0 0 auto;padding-top:0}
+}
+@media (max-width:460px){
+  .ukPub_grid{grid-template-columns:minmax(0,1fr)}
+  .ukPub_search{flex-direction:column}
+  .ukPub_go{width:100%}
+}
+
+/* ---------- profile pages ---------- */
+.ukPub_main--prof{max-width:1180px}
+.ukPub_crumb{
+  display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  margin:0 0 clamp(16px,2vw,24px);
+  font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-3);
+}
+.ukPub_crumb a{color:var(--text-2);text-decoration:none}
+.ukPub_crumb a:hover{color:var(--text);text-decoration:underline}
+.ukPub_crumb [aria-current]{color:var(--text)}
+
+/* the gate: the visitor has already seen everything, so this names the one
+   thing an account adds rather than reading as a wall */
+/* ---------- the sign-up under the results ----------
+   A centred block closing the grid: how many there are in total, what an
+   account gets you, and the button. It sits on the page's own ground rather
+   than on a navy panel, so it reads as the end of the list instead of as a
+   separate advert parked under it. */
+.ukPubGate{
+  margin:clamp(34px,4vw,56px) 0 0;
+  padding:clamp(28px,3.4vw,44px) clamp(20px,2.6vw,32px);
+  border-top:1px solid var(--line);
+  text-align:center;
+}
+.ukPubGate_t{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(24px,2.6vw,34px);line-height:1.16;letter-spacing:-.012em;
+  color:var(--uk-deep);text-wrap:balance;
+}
+.ukPubGate_p{
+  margin:12px auto 22px;max-width:56ch;
+  font:400 15px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;
+}
+.ukPubGate .btn{display:inline-flex}
+
+/* the stay card renders at app width; on a public page it gets the column */
+.ukPubStay{max-width:980px}
+.ukPubGate_row{display:flex;flex-wrap:wrap;gap:12px}
+
+/* the divider between an exact set and the nearest ones under it */
+.ukPub_more{grid-column:1/-1;height:1px;background:var(--line);margin:clamp(18px,2.4vw,30px) 0 0}
+.ukPub_span{grid-column:1/-1;margin:clamp(14px,1.8vw,22px) 0 0}
+.ukPub_spanH{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(17px,1.7vw,21px);line-height:1.2;color:var(--text);
+}
+.ukPub_spanP{margin:6px 0 0;max-width:56ch;font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text-2)}
+
+/* ---------- the results grid is the app's own ----------
+   .ukCrGrid is the container ukcreators.js puts these cards in, and .ukCrCard's
+   internal layout (the clip strip, the stat strip, the action row) is written
+   against it. Wrapping the card in anything else collapsed all three, so the
+   public page uses the same container and adds nothing to it. */
+.ukPub_main .ukCrGrid{margin-top:0}
+.ukPub_span{margin:clamp(14px,1.8vw,22px) 0 0}
+.ukPub_more{height:1px;background:var(--line);margin:clamp(18px,2.4vw,30px) 0 0}
+
+/* ---------- the app screen, hosted publicly ----------
+   V.network() draws the whole Creators view here. Its controls are buttons in
+   the app; three of them become links so a signed-out visitor is asked for an
+   account rather than silently doing nothing. An <a> does not inherit a
+   button's box, so the three that changed tag are given it back: the same flex
+   basis, centring and inline-flex .ukBtn--sm and .ukGhost--sm already carry. */
+.ukPub_main .ukCrCard_act > a{
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;text-align:center;white-space:nowrap;
+}
+.ukPub_main .ukCrCard_act > a.ukBtn--sm{flex:1 1 0}
+.ukPub_main .ukCrCard_act > a.ukGhost--sm{flex:1 1 0}
+.ukPub_main a.ukFav{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+
+/* the app screen supplies its own heading and spacing, so the page frame
+   stands back and only holds it */
+.ukPub_main > .ukC{display:block}
+.ukPub_main .ukPageHead{margin-top:0}
+
+/* the nearest-first block that keeps the grid from ever coming back empty */
+.ukPubNear{margin:clamp(22px,2.8vw,36px) 0 clamp(12px,1.6vw,18px);padding-top:clamp(18px,2.2vw,26px);border-top:1px solid var(--line)}
+.ukPubNear_h{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;font-size:clamp(17px,1.7vw,21px);line-height:1.2;color:var(--text)}
+.ukPubNear_p{margin:6px 0 0;max-width:56ch;font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text-2)}
+/* when nothing matched, the block is the whole answer and needs no rule above it */
+.ukPubNear--only{border-top:0;padding-top:0;margin-top:clamp(12px,1.6vw,20px)}
+.ukPubNear,.ukPubNear_grid{text-align:left}
+
+/* ---------- the band ----------
+   A short version of the hero's own treatment: the same deep gradient with the
+   same faint photograph over it, carrying the breadcrumb, the heading, the
+   subhead and the real Ask field. Everything below it sits on the page's own
+   light ground, which is where the app's own screen belongs. */
+.ukPubBand{
+  position:relative;
+  overflow:hidden;
+  /* The gutter moves onto the inner box so the band's content column and the
+     results column below it are the same measure. The band capped its content
+     at 1180 while the results cap the padded box at 1180, which left the two
+     left edges 40px apart at full width. */
+  padding:calc(var(--aero-h,88px) + clamp(26px,3vw,44px)) 0 clamp(30px,3.4vw,46px);
+  /* the hero's ground, stop for stop: ukported.css's own .homeHeader gradient */
+  background:
+    radial-gradient(120% 72% at 50% 0%, #17527f 0%, rgba(23,82,127,0) 60%),
+    linear-gradient(180deg, #0b3157 0%, #0b2f52 50%, #0b3055 100%);
+}
+/* ---------- the band's ground is the hero's ----------
+   The band used to be a flat gradient with a photograph at .16 laid over it,
+   which is what the hero was before it was rebuilt. It now carries the hero's
+   own layers, in the hero's own markup: the bloom canvas, .heroBgCustom with
+   its drifting cloud plate and dark radial, and .heroBgPlain with the picture
+   at .28 under the same 33% to 83% fade. Two of those numbers live in
+   ukmock.css, a home-only stylesheet, so they are stated here as they are on
+   /for-creators/ and /for-hotels/. */
+.ukPubBand .homeHeader_bg{position:absolute;inset:0;z-index:0;display:grid;pointer-events:none}
+.ukPubBand .homeHeader_bg > *{grid-area:1/1}
+.ukPubBand .heroBloom{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.ukPubBand .heroBgCustom{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ukPubBand .homeHeader_img,
+.ukPubBand .heroBgPlain{position:absolute;inset:0}
+.ukPubBand .heroBgPlain img{
+  width:100%;height:100%;object-fit:cover;object-position:center;display:block;
+  opacity:.28;
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 33%,transparent 83%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 33%,transparent 83%);
+}
+.ukPubBand_in{position:relative;z-index:1;max-width:1180px;margin-inline:auto;padding-inline:clamp(18px,4vw,40px)}
+.ukPubBand .ukPub_crumb{margin-bottom:14px}
+.ukPubBand .ukPub_crumb a{color:rgba(255,255,255,.72)}
+.ukPubBand .ukPub_crumb a:hover{color:#fff}
+.ukPubBand .ukPub_crumb [aria-current]{color:#fff}
+.ukPubBand .ukPub_crumb [aria-hidden]{color:rgba(255,255,255,.4)}
+.ukPubBand_h{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,3.4vw,44px);line-height:1.08;letter-spacing:-.02em;color:#fff;
+}
+.ukPubBand_p{
+  margin:10px 0 0;max-width:60ch;
+  font:400 15px/1.6 'Lato',sans-serif;color:rgba(255,255,255,.80);text-wrap:pretty;
+}
+.ukPubBand_ask{width:min(680px,100%);margin-top:clamp(18px,2.2vw,26px)}
+.ukPubBand_ask .ukAskShell{--ask-h:58px}
+.ukPubBand_ask .ukAsk_frame{padding-left:66px}
+.ukPubBand_ask .ukAsk_icon{width:50px;height:50px;left:6px;
+  filter:var(--ai-orb-filter) drop-shadow(0 2px 9px rgba(215,165,67,.42))}
+.ukPubBand_ask .ukAsk_go{opacity:1;top:6px;right:6px;bottom:6px;transform:none;height:auto;
+  padding:0 20px;border-radius:10px;color:#fff;font-size:13px}
+.ukPubBand_ask .ukAsk_goIco{color:#fff}
+.ukPubBand_ask .ukAsk_i:focus,
+.ukPubBand_ask .ukAsk_i:focus-visible{outline:none}
+.ukPubBand_ask .ukAsk_frame:focus-within{
+  outline:2px solid var(--uk-gold);
+  outline-offset:3px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+/* the screen below the band */
+.ukPub_main--under{
+  max-width:1180px;margin-inline:auto;
+  padding:clamp(24px,3vw,40px) clamp(18px,4vw,40px) clamp(56px,7vw,96px);
+}
+
+/* ---------- the card action row ----------
+   As anchors these two pick up the marketing button styling (56px tall, 40px
+   side padding, 17px type) instead of .ukBtn--sm's own. The app's values are
+   restated so the pair sits at the size the card was drawn for and splits the
+   row evenly. */
+.ukPub_main--under .ukCrCard_act > a.ukBtn--sm,
+.ukPub_main--under .ukCrCard_act > a.ukGhost--sm{
+  flex:1 1 0;
+  min-width:0;
+  height:auto;
+  min-height:0;
+  line-height:1.25;
+  padding:9px 12px;
+  border-radius:10px;
+  font:600 13.5px/1.25 'Lato',sans-serif;
+  letter-spacing:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;text-align:center;white-space:nowrap;
+}
+
+/* ---------- the toolbar, with the tabs gone ----------
+   The row was drawn for a tab group on the left and everything else pushed
+   right. With the tabs removed the filters take the left and the view switcher
+   keeps the right, and the row fills its width instead of leaving a hole. */
+.ukPub_main--under .ukCrBar{width:100%;gap:12px;flex-wrap:wrap}
+.ukPub_main--under .ukCrBar_l{display:flex;flex:1 1 auto;gap:10px;flex-wrap:wrap;align-items:center}
+.ukPub_main--under .ukCrBar .ukDrop{flex:0 1 auto}
+
+/* The segmented control: the selected pill was sitting 5px from the top and
+   1px from the bottom, so it read as touching the base. The tray stretches its
+   children instead of centring them, which makes the tray's own padding the
+   inset on all four sides, and the pill is given no height of its own to fight
+   it with. Written past the app's own .ukSeg rules, which are more specific
+   than a single class and were winning. */
+.ukPub .ukPub_main--under .ukSeg{
+  display:inline-flex;
+  align-items:stretch;
+  gap:3px;
+  flex:0 0 auto;
+  padding:4px;
+  border-radius:13px;
+  background:rgba(16,46,55,.06);
+  border:1px solid var(--line);
+}
+.ukPub .ukPub_main--under .ukSeg [data-view]{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  height:auto;min-height:0;margin:0;
+  padding:8px 14px;
+  border:0;border-radius:9px;background:transparent;cursor:pointer;
+  font:600 12.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap;
+}
+.ukPub .ukPub_main--under .ukSeg [data-view]:hover{color:var(--text)}
+.ukPub .ukPub_main--under .ukSeg [data-view].is-on{
+  background:var(--card-solid);color:var(--text);
+  box-shadow:0 1px 3px rgba(6,18,28,.14),0 0 0 1px rgba(6,18,28,.05);
+}
+.ukPub .ukPub_main--under .ukSeg [data-view]:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+
+/* ---------- the signup banner in the grid ----------
+   Three rows in, the visitor has seen enough of the network to know whether it
+   is worth an account. The banner spans the grid rather than sitting beside it,
+   so it reads as a pause in the results and not as an advert in a sidebar. */
+.ukPubBanner{
+  grid-column:1/-1;
+  position:relative;overflow:hidden;isolation:isolate;
+  display:flex;align-items:center;justify-content:space-between;gap:clamp(16px,2.4vw,32px);
+  flex-wrap:wrap;
+  margin:clamp(6px,0.8vw,10px) 0;
+  padding:clamp(20px,2.4vw,30px) clamp(20px,2.6vw,34px);
+  border-radius:18px;
+  background:var(--uk-deep);color:var(--uk-on-deep);
+}
+/* the card carries the same photograph its page's hero does. The file is handed
+   in as --uk-banner-img by the script, so the hotels feed gets hero-hotels and
+   the stays feed gets hero-creators without either script owning a path twice.
+   It sits at the hero's own 0.28, with the deep surface still under it and a
+   scrim over it, so the type keeps the contrast it had on the flat card. */
+.ukPubBanner::before{
+  content:"";position:absolute;inset:0;z-index:-2;
+  background-image:var(--uk-banner-img);background-size:cover;background-position:center;
+  opacity:.28;
+}
+.ukPubBanner::after{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg,rgba(11,47,82,.86),rgba(11,47,82,.42));
+}
+.ukPubBanner_b{min-width:0;flex:1 1 380px}
+.ukPubBanner_t{
+  margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  /* the description is gone, so the headline carries the card on its own and
+     steps up from 18-24 to 22-30 */
+  font-size:clamp(22px,2.4vw,30px);line-height:1.2;color:#fff;text-wrap:balance;
+}
+/* one line, so it is written short rather than set small: the card runs about
+   1100px and this is 69 characters at 14px, which clears it comfortably. It
+   wraps only on the narrow layout, where the card stacks anyway. */
+.ukPubBanner_p{
+  margin:7px 0 0;
+  font:400 15.5px/1.55 'Lato',sans-serif;color:rgba(255,255,255,.82);
+}
+.ukPubBanner_a{flex:0 0 auto}
+@media (max-width:760px){ .ukPubBanner{flex-direction:column;align-items:flex-start} }
+
+/* the top-up simply continues the grid now, with no heading over it */
+.ukPubNear{margin:0;padding:0;border:0}
+.ukPubNear_grid{margin-top:clamp(12px,1.4vw,20px)}
+
+/* The dark radial the hero closes its ground with. Another stylesheet earlier
+   in the chain sets .heroBgCustom::after to the older, paler left-to-right
+   scrim with !important, and that rule is not scoped to the hero, so it lands
+   here too. These are the hero's values, restated from the last stylesheet
+   these pages load. */
+.ukPubBand .heroBgCustom::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(62% 58% at 50% 48%,
+    rgba(5,17,30,.88) 0%,
+    rgba(5,17,30,.80) 26%,
+    rgba(5,17,30,.66) 45%,
+    rgba(5,17,30,.48) 62%,
+    rgba(5,17,30,.30) 78%,
+    rgba(5,17,30,.16) 90%,
+    rgba(5,17,30,.08) 100%)!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+
+/* ---- the search readout ----
+   A plain row under the search field, on the hero's own ground: no card, no
+   frame, no explaining. Gold marks a filter the sentence set, plain is one you
+   set yourself, and every one of them carries an x. */
+.ukRead{margin:14px 0 0;max-width:100%}
+.ukRead_row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ukRead_chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 5px 5px 11px;border-radius:9999px;
+  border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.08);
+  font:500 12.5px/1 'Lato',sans-serif;color:#fff;
+  white-space:nowrap;max-width:100%;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.ukRead_chip.is-auto{
+  border-color:rgba(215,165,67,.55);
+  background:rgba(215,165,67,.20);
+}
+.ukRead_k{
+  font:700 9.5px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.11em;
+  color:rgba(255,255,255,.62);
+}
+.ukRead_chip.is-auto .ukRead_k{color:#f0cd8b}
+.ukRead_ico{display:block;width:14px;height:14px;border-radius:3px}
+.ukRead_v{overflow:hidden;text-overflow:ellipsis}
+.ukRead_x{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:19px;height:19px;flex:0 0 19px;padding:0;cursor:pointer;
+  border:0;border-radius:9999px;background:rgba(255,255,255,.14);color:rgba(255,255,255,.86);
+  transition:background .16s ease,color .16s ease;
+}
+.ukRead_x svg{width:10px;height:10px;display:block}
+.ukRead_x:hover{background:#fff;color:var(--uk-deep)}
+.ukRead_x:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukRead_clear{
+  margin-left:2px;padding:6px 12px;border-radius:9999px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.20);background:transparent;
+  font:600 12px/1 'Lato',sans-serif;color:rgba(255,255,255,.78);white-space:nowrap;
+  transition:border-color .16s ease,color .16s ease;
+}
+.ukRead_clear:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.ukRead_clear:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukRead_note{
+  margin:0;font:400 12.5px/1.55 'Lato',sans-serif;color:rgba(255,255,255,.66);
+  text-wrap:pretty;
+}
+.ukRead_row + .ukRead_note{margin-top:9px}
+@media (max-width:640px){ .ukRead_chip{font-size:12px} }
+
+
+/* the signup row under the list and the map, where it cannot sit inside them */
+.ukPubBanner--wide{margin-top:clamp(14px,1.8vw,22px)}
+
+
+/* ---- the stays grid, as a public listing ----
+   Cards level with each other, the dates beside the place, and the list view
+   filling its own width rather than centring in it. */
+/* Every card the same height, sized on the cards themselves rather than with
+   grid-auto-rows:1fr. That sized every row alike, and the signup row spans the
+   grid, so it was being stretched to a full card's height for two lines. */
+.ukPub_main .ukGrid--stays{align-items:stretch}
+/* The floor was 515px because the detail runs used to be one or two lines
+   depending on the stay. They are one line each now, so every card comes out
+   the same height on its own and the floor only bought 53px of dead space
+   above the button. align-items:stretch still levels any row that needs it. */
+.ukPub_main .ukStayCell{height:100%;display:flex}
+.ukPub_main .ukPubBanner{align-self:start}
+.ukPub_main .ukStayCell > .ukCard{width:100%;display:flex;flex-direction:column}
+.ukPub_main .ukStayCell .ukCard_pad{flex:1 1 auto;display:flex;flex-direction:column}
+/* Equal-height rows leave slack somewhere. It goes above the trade block, not
+   above the action, so the button stays tight to the card it belongs to. */
+.ukPub_main .ukStayCell .ukTrade--card{margin-top:auto}
+.ukPub_main .ukStayCell .ukStayCell_act{margin-top:0}
+
+/* both halves of the trade sit on one baseline whatever they carry */
+.ukPub_main .ukStayCell .ukTrade--card{align-items:stretch}
+
+.ukPubStay_dot{
+  display:inline-block;width:3px;height:3px;border-radius:50%;
+  background:currentColor;opacity:.5;margin:0 8px;vertical-align:middle;
+}
+.ukPubStay_when{white-space:nowrap}
+
+/* ---- the app's panel, on a marketing page ----
+   uktokens.css owns .ukPanel here as the site's dashed placeholder box:
+   display:grid, place-items:center, a dashed border and a tinted ground. Every
+   app panel dropped onto these pages inherits it, which is why the list view
+   sat centred and inset instead of filling its column. Restated as the app's
+   own card for the public screens only. */
+.ukPub_main .ukPanel{
+  display:block;place-items:normal;overflow:visible;
+  background:var(--surface);border:1px solid var(--line);border-radius:22px;
+  padding:clamp(16px,1.8vw,22px);
+}
+.ukPub_main .ukList--rows{width:100%}
+.ukPub_main .ukList--rows > *{width:100%}
+.ukPub_main .ukList_body{flex:1 1 auto;min-width:0;text-align:left}
+.ukPub_main .ukList_row,
+.ukPub_main .ukList--rows li{justify-content:flex-start;text-align:left}
+
+
+
+/* ---- the stays filter bar ----
+   The public page carries four facets the signed-in screen does not need, so
+   the row is fuller than the app's. The menus wrap among themselves and the
+   view switcher stays pinned to the right of the first row, rather than the
+   switcher being the thing that drops to a line of its own. */
+.ukPub_main .ukCrBar{flex-wrap:nowrap;align-items:flex-start}
+.ukPub_main .ukCrBar_r{flex:1 1 auto;min-width:0;flex-wrap:wrap}
+.ukPub_main .ukCrBar > .ukSeg{flex:0 0 auto;margin-left:auto}
+@media (max-width:860px){
+  .ukPub_main .ukCrBar{flex-wrap:wrap}
+  .ukPub_main .ukCrBar > .ukSeg{margin-left:0;width:100%}
+}
+
+/* ---- Pitch this stay ----
+   The card's own gold button carries the app's resting drop shadow and the
+   app's deep ink. On a grid of cards that shadow reads as a stack of floating
+   chips, so it is kept for the hover alone, and the label goes white. */
+.ukPub_main .ukStayCell .ukBtn{
+  color:#fff;
+  box-shadow:none;
+  transition:box-shadow .22s ease, transform .22s ease;
+}
+.ukPub_main .ukStayCell .ukBtn:hover,
+.ukPub_main .ukStayCell .ukBtn:focus-visible{
+  box-shadow:0 8px 22px rgba(3,12,22,.28);
+}
+
+/* ---- one item to a line ----
+   The run shows its first item and puts the rest behind the "+N". A single
+   item can still be longer than the card is wide (a "restored machiya room"),
+   so the line is held to one and the badge stays put beside it. Nothing is
+   lost: pressing the badge lists every item in full. */
+.ukPub_main .ukTrade_s{display:flex;align-items:baseline;gap:6px;min-width:0}
+.ukPub_main .ukTrade_s .ukClamp{
+  min-width:0;flex:0 1 auto;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ukPub_main .ukTrade_s .ukClamp .ukMoreDot{display:none}
+.ukPub_main .ukTrade_s > .ukMoreDot{flex:0 0 auto}
+
+/* The trade block sat a full block-gap below the place-and-date line, which on
+   a card this dense reads as a hole rather than a separation. It used to carry
+   margin-top:auto to hold the cards level; with that fixed, the slack has to
+   go somewhere else, and the right place is above the button rather than
+   under it. */
+.ukPub_main .ukStayCell .ukTrade--card{margin-top:10px}
+.ukPub_main .ukStayCell .ukCard_sub{margin-bottom:0}
+.ukPub_main .ukStayCell .ukStayCell_act{margin-top:auto}
+
+/* the flag rides with the country name in the Where menu, at the size every
+   other market line in the product draws it */
+.ukPub_main .ukDrop_v .ukCrFlag,
+.ukPub_main .ukDropMenu_i .ukCrFlag{
+  width:16px;height:12px;border-radius:2px;object-fit:cover;
+  margin-right:7px;vertical-align:-1px;display:inline-block;
+}
+
+/* ---- the card's category chips, on a narrow card ----
+   The app keeps this row to one line because its cards are never narrower than
+   a desktop column. Here they are, and the first chip was allowed to shrink
+   below its own text, so "Adventure" was cut mid-word with nothing to show it
+   had been. Below the two-column band the row wraps instead. */
+@media (max-width:1180px){
+  .ukPub_main .ukCrTags{flex-wrap:wrap;row-gap:5px}
+  .ukPub_main .ukCrTags .ukCrTag,
+  .ukPub_main .ukCrTags .ukCrTag:first-child{flex:0 0 auto}
+}
+
+/* ---- the "+N" badge on touch ----
+   It is a 21px circle by design and it should stay one. The press target grows
+   around it instead, so the badge is reachable with a thumb without the card's
+   line height moving. */
+@media (pointer:coarse){
+  .ukPub_main .ukMoreDot{position:relative}
+  .ukPub_main .ukMoreDot::after{
+    content:"";position:absolute;left:50%;top:50%;
+    width:44px;height:44px;transform:translate(-50%,-50%);
+  }
+}
+
+/* ---- the search button's label, on a phone ----
+   The button goes icon-only at this width by being narrowed to 40px, but the
+   label inside it is a block element with nothing hiding it: at zero width it
+   still paints, so "Find Stays" was rendering across the input beside it. The
+   landing pages hide the same span through .ukHeroAsk; the band gets its own
+   rule because its ask bar is not that component. */
+@media (max-width:560px){
+  .ukPubBand_ask .ukAsk_go > span:not(.ukAsk_goIco){display:none}
+}
+
+/* ---- creator cards, level across a row ----
+   The grid aligns its items to the start, which is right when every card is
+   the same height. Below the desktop band the chip row wraps on some cards and
+   not others, so a two-up row could hold a 367px card beside a 393px one. The
+   cards stretch to their row instead, and the card's own action block is what
+   takes the slack, so the buttons line up across the row. */
+@media (max-width:1180px){
+  .ukPub_main .ukCrGrid{align-items:stretch}
+  .ukPub_main .ukCrCard{height:100%}
+  .ukPub_main .ukCrCard_act,
+  .ukPub_main .ukCrCard_cta{margin-top:auto}
+}
+
+/* ---- the stat tiles, on a narrow card ----
+   Five tiles across only hold "Engagement" whole while the card is near its
+   desktop width. The app drops to three tiles at 620px, which is the right
+   answer but the wrong trigger here: on this page the card goes two-up at
+   1180 and is already too narrow, so the word was ellipsised on a full-size
+   tablet. The same three-tile fallback, at the width the cards actually
+   narrow. */
+@media (max-width:1180px) and (min-width:621px){
+  .ukPub_main .ukCrStats{grid-template-columns:repeat(3,1fr);gap:6px}
+}

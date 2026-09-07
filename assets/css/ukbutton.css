@@ -1,0 +1,94 @@
+/* ============================================================
+   The Ukreate button.
+
+   There is one button on this site and this file is where it lives. Its face
+   is the hero pair's: a 12px radius, a 1px stroke, a soft shadow, the gold
+   gradient for primary and the white for secondary, and a glare that sweeps
+   on hover. Sizes are not part of it. A nav pill, a section CTA and a
+   dashboard button are different sizes on purpose, and each keeps its own.
+
+   This loads last on every page, so the treatment reaches the marketing site
+   and the web app alike rather than living inside one page's stylesheet.
+   ============================================================ */
+
+/* ---------- the hero pair ----------
+   The two hero buttons sized to their own labels, so they came out unequal.
+   A two-column track makes both as wide as the wider label needs, and keeps
+   them matched whatever the copy does. */
+.hero__buttons{display:grid;grid-template-columns:repeat(2,1fr);
+  max-width:min(392px,100%);margin-inline:auto}
+.hero__buttons .btn{width:100%}
+@media (max-width:420px){
+  .hero__buttons{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ---------- the .btn classes carry the face themselves ----------
+   On the homepage these were tuned inside .homeHeader .hero__buttons, so the
+   other marketing pages were still showing the old 13.944px radius and the
+   gold ring. Stated on the class, every .btn on the site matches. */
+.btn{border-radius:12px}
+.btn--gold{border:1px solid rgba(255,255,255,.30);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+.btn--white{border:1px solid rgba(11,47,82,.16);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+
+/* ---------- .aeroBtn takes the same face ----------
+   The nav pair, the section CTAs, the FAQ and the closing sign-off. */
+.aeroBtn{border-radius:12px;font-family:'Lato',sans-serif;font-weight:400;
+  overflow:hidden;transition:color .6s ease-in-out,transform .25s cubic-bezier(.22,.9,.35,1)}
+.aeroBtn .aeroBtn_fill{border-radius:12px;transform:none;
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+
+.aeroBtn.is-primary:not(.is-deep){color:#fff;text-shadow:0 0 .581px #fff}
+/* aeronav.css states this three classes deep, so the shadow has to be stated
+   at the same specificity here or its old white-spread ring wins */
+.aeroBtn.is-primary:not(.is-deep) .aeroBtn_fill,
+.aeroBtn.is-primary:not(.is-deep):hover .aeroBtn_fill{
+  background:linear-gradient(5.71deg,#d7a543 13.297%,#efc470 89.683%);
+  border:1px solid rgba(255,255,255,.30);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+
+.aeroBtn:not(.is-primary){color:#0B2F52;text-shadow:none}
+.aeroBtn:not(.is-primary) .aeroBtn_fill,
+.aeroBtn:not(.is-primary):hover .aeroBtn_fill{
+  background:linear-gradient(180deg,rgba(147,113,46,.15) 0%,rgba(255,255,255,0) 100%),
+             linear-gradient(90deg,#ffffff 0%,#ffffff 100%);
+  border:1px solid rgba(11,47,82,.16);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+.aeroBtn:not(.is-primary):hover{color:#0B2F52}
+
+/* the deep sign-off keeps its navy fill and takes the shared stroke + shadow */
+.aeroBtn.is-primary.is-deep .aeroBtn_fill,
+.aeroBtn.is-primary.is-deep:hover .aeroBtn_fill{
+  border:1px solid rgba(255,255,255,.30);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+
+/* ---------- the web app's button takes it too ----------
+   .ukBtn was already the same gold in the same gradient; it carried a 14px
+   radius, a gold stroke and a tight gold shadow instead. Its own weight and
+   padding stay, because a dashboard button is not a hero button's size. */
+.ukBtn{border-radius:12px;
+  border:1px solid rgba(255,255,255,.30);
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+.ukBtn--sm{border-radius:10px}
+/* the secondary keeps its own surface, and takes the shared shadow */
+.ukBtn--sec{border-radius:12px;box-shadow:0 2px 10px rgba(3,12,22,.28)}
+
+/* ---------- the press and the glare, shared ---------- */
+.aeroBtn:hover,.ukBtn:hover{transform:scale(1.02)}
+.aeroBtn:active,.ukBtn:active{transform:scale(.96)}
+.aeroBtn,.ukBtn{position:relative;overflow:hidden}
+.aeroBtn::after,.ukBtn::after{content:"";position:absolute;top:0;bottom:0;left:-60px;
+  width:50px;transform:skewX(-20deg);pointer-events:none;z-index:3;
+  background:linear-gradient(to right,transparent,rgba(255,255,255,.28),transparent)}
+.aeroBtn:hover::after,.ukBtn:hover::after{animation:btnGlare 1.85s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){
+  .aeroBtn:hover::after,.ukBtn:hover::after{animation:none}
+  .aeroBtn:hover,.aeroBtn:active,.ukBtn:hover,.ukBtn:active{transform:none}
+}
+/* the glare needs its keyframes wherever this file is loaded on its own */
+@keyframes btnGlare{
+  0%{left:-60px}
+  55%{left:110%}
+  100%{left:110%}
+}

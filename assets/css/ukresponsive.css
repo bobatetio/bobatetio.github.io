@@ -1,0 +1,227 @@
+/* ====================================================================
+   Responsive layer. Loads last, on purpose.
+
+   uk4401.css is a Figma export written at a fixed 1440px canvas: .results,
+   .faqs, .cs-card and the old .footer block all carry literal pixel widths.
+   A single fixed-width block sets the document's width, so every element on
+   a percentage inherited 1440 too and the page never responded at any
+   viewport. This file makes those blocks fluid and then tunes the layout for
+   tablet and phone. Nothing here restyles anything; it only lets things fit.
+   ==================================================================== */
+
+/* ---------- 1. the fixed canvas becomes fluid ---------- */
+/* the sections run the full width of the window like every other one; it is
+   their contents that stay on the page's measure, not the section itself */
+.results,
+.faqs{width:100%;max-width:none;margin-inline:auto}
+.faqs{padding-inline:clamp(20px,5vw,60px)}
+.faqs > *{width:100%;max-width:1118px;margin-inline:auto}
+.results__bg{width:100%;height:100%;top:0;left:0}
+.results__bg img{width:100%;height:100%;object-fit:cover}
+.cs-card{width:min(1145px,100%)}
+.cs-left{width:min(549px,100%)}
+.cs-gradient{width:100%;left:0}
+
+/* the legacy Figma footer block is not used by this page, but its fixed
+   widths would set the document width the moment it ever rendered */
+.footer,.footer__bg,.footer__overlay,.footer__newsletter,.footer__nl-text,
+.footer__nl-btn,.footer__bottom-wrap,.footer__brand,.footer__watermark{
+  max-width:100%}
+
+/* ---------- 2. nothing may push the page sideways ---------- */
+img,video,svg,canvas{max-width:100%}
+.ukFoot_sns img{max-width:none}          /* fixed-size brand marks */
+*,*::before,*::after{min-width:0}
+.aeroNav,.aeroNav_shell{max-width:100vw}
+
+/* ---------- 3. the floating hero cards ----------
+   The travelling card layer is a fixed, full-viewport scene sized for a wide
+   screen. Its slot is already hidden below 900, so the cards themselves go
+   with it rather than hanging off the side of the page. */
+@media (max-width:900px){
+  .surfer,.surfer_scene,.surfer_track{display:none}
+}
+
+/* ---------- 4. tablet ---------- */
+@media (max-width:1024px){
+  .ukZig_in,.ukFounders_in,.ukSides_grid{max-width:100%}
+  .ukSides_grid{grid-template-columns:minmax(0,1fr);gap:clamp(20px,3vw,32px)}
+  .cs-card{zoom:1}
+  .ukFoot_cols{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:clamp(22px,3vw,32px)}
+}
+
+/* ---------- 5. the alternating rows stack ---------- */
+@media (max-width:899px){
+  .ukZig_row{grid-template-columns:minmax(0,1fr);gap:clamp(18px,4vw,28px)}
+  .ukZig_panel{max-width:520px;margin-inline:auto}
+  .ukZig_copy{max-width:none}
+  .ukZig_head{margin-bottom:clamp(28px,6vw,44px)}
+}
+
+/* ---------- 6. phone ---------- */
+@media (max-width:640px){
+  .ukSection,.ukZig,.ukFeat,.ukFounders,.ukClose{
+    padding-left:clamp(16px,5vw,24px);padding-right:clamp(16px,5vw,24px)}
+  .results,.faqs{padding-left:clamp(16px,5vw,24px);padding-right:clamp(16px,5vw,24px)}
+
+  /* the case study stops being a two-column card */
+  .cs-card{display:block}
+  .cs-left{width:100%;margin-bottom:clamp(16px,4vw,24px)}
+  .cs-stats{gap:clamp(16px,5vw,26px)}
+  .cs-thumbs{position:static;transform:none;margin-top:12px;flex-wrap:wrap;
+    justify-content:center}
+
+  /* the newsletter control stacks, and both halves stay full width */
+  .ukNews_form{flex-direction:column;gap:10px}
+  .ukNews_form .ukNews_input,.ukNews_btn{width:100%}
+
+  /* the footer's four link columns become two */
+  .ukFoot_cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* the bar carries the copyright alone now that the legal links live in
+     their own column, so it centres the way the desktop does */
+  .ukFoot_bar{flex-direction:row;align-items:center;justify-content:center;gap:10px;text-align:center}
+  /* the link rows are spaced for a wide four-column row; on a phone that
+     rhythm reads as drift rather than air */
+  .ukOutro .ukFoot_col h4{margin-bottom:15px}
+  .ukOutro .ukFoot_col ul{gap:9px}
+
+  /* section heads come in proportionally */
+  .ukZig_head,.uk_head,.results__header{max-width:100%}
+}
+
+/* ---------- 7. small phone ---------- */
+@media (max-width:400px){
+  .ukFoot_cols{grid-template-columns:minmax(0,1fr)}
+  .explainer_grid{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ---------- 8. touch targets ----------
+   Anything tappable clears 40px on a touch pointer without changing how it
+   looks on a mouse. */
+@media (pointer:coarse){
+  .ukFoot_col a,.ukClose_alt a,.ukTextCta{display:inline-block;padding-block:6px}
+  .ukFoot_sns{width:40px;height:40px}
+  .ukFoot_sns img{width:40px;height:40px}
+}
+
+/* ---------- 9. the FAQ header has a mobile variant that was never used ----
+   uk4401.css hides .faqs__mobile-header unconditionally, with no breakpoint
+   anywhere, so the 699px-wide desktop lockup ("COMMON / QUESTIONS") was the
+   only one that ever rendered and it hung off the side of every phone. The
+   two swap over at 768. */
+@media (max-width:768px){
+  .faqs .faqs__desktop-header{display:none}
+  .faqs .faqs__mobile-header{display:block}
+  .faqs__row1,.faqs__big,.faqs__side{width:auto;max-width:100%}
+}
+@media (min-width:769px){
+  .faqs .faqs__mobile-header{display:none}
+}
+
+/* and the nav drawer never wider than the screen */
+.aeroNav_links,.aeroNav_mobileTop,.aeroNav_mobileCta{max-width:100vw}
+
+/* ---------- 10. the hero headline on a phone ----------
+   Desktop holds one sentence per line, which means no-wrap and type that
+   shrinks to fit. On a 390px screen that drove it down to 23.8px, smaller
+   than some body copy. Below 640 the sentences are allowed to wrap and the
+   type is sized for reading instead of for fitting. */
+@media (max-width:640px){
+  .legionHero_line{white-space:normal;font-size:clamp(29px,8.4vw,40px);
+    width:auto;max-width:100%}
+  .legionHero_main{width:auto;max-width:100%}
+  .legionHero_lede{max-width:100%}
+}
+
+/* ---------- 11. the hero collage on tablet and phone ----------
+   This used to turn the collage into a horizontal scrolling strip below 900,
+   from when the tiles were a flex row. They are absolutely placed now, so the
+   strip could not scroll and all the block did was force every tile to one
+   width and one 3:4 shape and drop the rotations, which is the opposite of
+   what the collage is for. The ring thins out on its own instead: see the
+   collage breakpoints in ukported.css, which are the single place the tile
+   set is decided. */
+@media (max-width:640px){
+  .homeHeader_inner.legionHero{text-align:center}
+  .hero__buttons{flex-wrap:wrap;justify-content:center}
+}
+
+/* (the phone tile set is decided with the rest of the ring, in ukported.css) */
+
+/* ---------- 12. the case study card on a phone ----------
+   The thumbnail strip is absolutely positioned over the hotel shot on desktop.
+   Section 6 turned it static and let it wrap, which pushed it out of .cs-left
+   (overflow:hidden) so the last tiles were clipped and the rest sat on top of
+   the picture. It stays over the image here, sized so all six fit one row. */
+@media (max-width:768px){
+  /* uk4401.css pads the card 17 left and 33 right — right for the desktop
+     two-column card, but once it stacks that reads as the picture sitting
+     off-centre. Even it up. */
+  .cs-card{padding:clamp(14px,4vw,17px)}
+  .cs-left{min-height:clamp(200px,58vw,320px);margin-bottom:clamp(16px,4vw,24px)}
+  /* .results .cs-thumb in ukported.css is (0,2,0) and sizes these to 50-58px,
+     so these have to match that weight to win */
+  .results .cs-thumbs,.cs-thumbs{position:absolute;bottom:12px;left:50%;
+    transform:translateX(-50%);flex-wrap:nowrap;gap:clamp(4px,1.5vw,9px);
+    width:auto;max-width:calc(100% - 20px);justify-content:center}
+  .results .cs-thumb,.cs-thumb{width:clamp(40px,13vw,58px);height:auto;
+    aspect-ratio:46/82}
+  /* four is enough on a phone — the rest only crowd the picture */
+  .results .cs-thumb:nth-child(n+5){display:none}
+  .cs-gradient{left:0;width:100%}
+
+  /* the CTA keeps the arrows on its own line, hard right, and sits closer to
+     the results above it */
+  .cs-cta-row{flex-wrap:nowrap;gap:10px;align-items:center;margin-top:0;padding-top:0}
+  .cs-sections .cs-section:last-child{margin-bottom:clamp(4px,1.5vw,10px)}
+  .cs-cta-row .aeroBtn{flex:0 1 auto;min-width:0}
+  .cs-nav{flex:0 0 auto;margin-left:auto;gap:8px}
+  .cs-nav-btn{width:clamp(38px,10.5vw,44px);height:clamp(38px,10.5vw,44px);
+    border-radius:12px}
+  .cs-nav-btn svg{width:18px;height:18px}
+
+  /* the three results read as one row of three, not two-then-one */
+  .cs-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(8px,2.4vw,16px)}
+  /* the creator card carries four, so they sit two by two */
+  .cs-card--creator .cs-stats{grid-template-columns:repeat(2,minmax(0,1fr));
+    row-gap:clamp(12px,3vw,18px)}
+  .cs-card--creator .cs-stat{width:auto}
+  .cs-stat-value{font-size:clamp(18px,5.6vw,26px)}
+  .cs-stat-label{font-size:clamp(10px,2.9vw,12px);line-height:1.3}
+}
+
+/* ---------- 13. the FAQ mobile header ----------
+   uk4401.css only ever wrote `display:none` for this block — it has no styling
+   at all, so once section 9 switched it on it rendered as a bare h2 and two
+   paragraphs, left-adrift under a 60px gap. It takes the site's section-head
+   language: eyebrow, Marcellus title, sub, centred. */
+@media (max-width:768px){
+  .faqs__header{margin-bottom:clamp(24px,6vw,36px)}
+  .faqs__mobile-header{text-align:center;width:100%;max-width:520px;margin-inline:auto}
+  /* the tagline is the hero badge component, unchanged apart from its words */
+  .faqs__mobile-label{margin:0 0 clamp(12px,3vw,16px)}
+  .faqs__mobile-title{font-family:"Marcellus",serif;font-weight:400;
+    font-size:clamp(30px,8.4vw,44px);line-height:1.08;letter-spacing:-.01em;
+    color:#102e37;margin:0;text-wrap:balance}
+  .faqs__mobile-sub{font-family:'Lato',sans-serif;font-size:clamp(14px,3.8vw,16px);
+    line-height:1.6;color:#696a72;margin:clamp(10px,2.6vw,14px) 0 0;text-wrap:pretty}
+}
+
+/* ---------- 14. the footer keeps two columns on a phone ----------
+   Section 7 dropped it to one below 400, which strung all four link lists down
+   the page. For Hotels sits beside For Creators, Company beside Legal. */
+@media (max-width:400px){
+  .ukFoot_cols{grid-template-columns:repeat(2,minmax(0,1fr));
+    -moz-column-gap:clamp(14px,5vw,24px);column-gap:clamp(14px,5vw,24px)}
+}
+
+
+/* ── The two side cards once they stack ──
+   The picture was inset 9px at the sides but 22px at the top, and the pill sat
+   flush against its bottom edge with nothing between them. ── */
+@media (max-width:860px){
+  .ukSides_card .ukSides_vis{margin-top:0}
+  .ukSides_card .ukSides_body{padding-top:18px}
+  .ukSides_card .ukSides_body .ukSides_h{margin-top:13px}
+}

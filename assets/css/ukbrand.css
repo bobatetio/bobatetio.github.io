@@ -1,0 +1,445 @@
+/* ====================================================================
+   Ukreate — the brand surface, shared across the marketing pages.
+
+   ukapp.css already names the brand blue: --uk-deep #0B2F52, with
+   --uk-deep-2 and --uk-deep-3 as the steps below it. Its own note records
+   that the token exists because the dark surface used to be several
+   near-identical greens written out by hand, which had drifted apart.
+
+   Three of those greens are still hardcoded in the marketing CSS:
+     #0d2026  hero ground and footer      (ukhero-main, ukmarketing)
+     #0f262d  nav pill and trusted cards  (aeronav, ukhero-main, ukmarketing)
+     #102e37  the ink on the cream sections (ukapp, fc-shared, ukhero-main)
+
+   This sheet puts each of them back on the token. It is loaded last, after
+   ukmarketing.css, so it wins without any of the source files needing to
+   change — the app shares those files.
+   ==================================================================== */
+
+/* ---------- the ink token ----------
+   ukapp.css sets --text:#102e37 on :root, and everything on the cream sections
+   inherits from it — which is why the body copy stayed teal while the surfaces
+   went blue. Moving the token is the whole fix; --line and --line-soft are the
+   same colour at low alpha, so they move with it. */
+:root{
+  --text:#0B2F52;
+  --line:rgba(11,47,82,.12);
+  --line-soft:rgba(11,47,82,.08);
+}
+
+/* ---------- the dark ground: hero and footer ---------- */
+.homeHeader{background:var(--uk-deep)}
+.ukMktFootWrap{background:var(--uk-deep)!important}
+
+/* The photograph is the point of the hero and stays legible: these are the
+   original gradient weights, recoloured. The one change is the last stop,
+   which closes on the brand surface at the image's bottom edge. */
+.heroBgCustom::after,.heroBgPlain::after{
+  background:
+    linear-gradient(to right,rgba(11,47,82,.60),rgba(11,47,82,.24) 55%,rgba(11,47,82,.34)),
+    linear-gradient(to bottom,rgba(11,47,82,.32),rgba(11,47,82,.08) 40%,
+      rgba(11,47,82,.46) 84%,var(--uk-deep) 100%)!important;
+  /* the source masks this scrim away below 72%, which brings the photo back
+     hard at the fold and reads as a seam. It closes here instead. */
+  -webkit-mask-image:none!important;mask-image:none!important}
+
+/* ---------- the nav pill ---------- */
+/* it was authored blue — rgba(11,35,72,.82) — and a later rule in aeronav.css
+   forces it to #0f262d with a grey border. That was the green. */
+.aeroNav_bg{background:var(--uk-deep-2)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  box-shadow:0 4px 18px rgba(6,24,41,.38)!important}
+
+/* ---------- the trusted-by plates ----------
+   The plates read the other way round now: the mark carries the brand blue and
+   the plate behind it is a bluish grey. Both come off --uk-deep rather than a
+   new hex, so the band moves with the palette: the face is that blue mixed down
+   into white, and the hairline the same mix one step darker. The marks are all
+   currentColor SVGs, so the ink is the one property that has to change. */
+.trusted__card{
+  background:color-mix(in srgb,var(--uk-deep) 8%,#fff);
+  border:1px solid color-mix(in srgb,var(--uk-deep) 16%,#fff);
+  color:var(--uk-deep);
+}
+/* fc-shared.css writes the white button's ink as #102e37 rather than taking the
+   token, so it is the last teal left on the page */
+.btn--white{color:var(--uk-deep)}
+
+/* The card scene is a fixed full-viewport layer, so pinning its ride keeps the
+   pose but not the place — it would hold that pose over the sections below. It
+   retires with the hero instead. */
+.surfer{transition:opacity .45s ease,visibility .45s ease}
+.surfer.is-gone{opacity:0;visibility:hidden;pointer-events:none}
+
+/* ====================================================================
+   The two sides — a pair of cards under the hero.
+
+   A tinted tag, a heavy heading, a short paragraph, a large tinted panel
+   carrying a mock of the real thing, then the points as a two-by-two grid
+   of ticked label-and-description pairs.
+   ==================================================================== */
+
+.ukSides{padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px);background:#fff}
+.ukSides_grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(16px,2vw,28px);max-width:1200px;margin-inline:auto;align-items:start}
+
+.ukSides_card{border:1px solid rgba(11,47,82,.08);border-radius:26px;
+  padding:clamp(22px,2.4vw,34px);display:flex;flex-direction:column;
+  box-shadow:0 1px 2px rgba(11,47,82,.03),0 18px 44px rgba(11,47,82,.06)}
+
+.ukSides_tag{align-self:flex-start;border-radius:9999px;padding:6px 13px;
+  font:600 12px/1.2 'Lato',sans-serif;letter-spacing:.01em}
+.ukSides_tag--creator{background:rgba(215,165,67,.16);color:#8a6414}
+.ukSides_tag--hotel{background:rgba(11,47,82,.09);color:var(--uk-deep)}
+
+/* Marcellus ships a single weight, so the 700 that Lato was carrying would only
+   have been synthesised — it is set at 400 and the size lifted a little to hold
+   the same presence. Serif tracking wants less negative than the sans did. */
+/* No `balance` here: both headings are 35 characters and the hotels one sits
+   right on the card's width, so balance split a line that fits rather than
+   letting it run. `pretty` guards the last line without forcing a break. */
+.ukSides_h{margin:clamp(14px,1.6vw,20px) 0 0;color:var(--uk-deep);text-wrap:pretty;
+  font:400 clamp(26px,2.7vw,38px)/1.14 'Marcellus',Georgia,serif;letter-spacing:-.012em;
+  /* Marcellus has one weight, so there is no heavier cut to switch to and a
+     synthesised bold would smear the serifs. A hairline stroke in the same
+     colour thickens the strokes evenly instead — heavier, still Marcellus. */
+  -webkit-text-stroke:.4px currentColor;paint-order:stroke fill}
+/* One line at desktop, so the 42ch cap that was forcing a wrap is gone and the
+   copy is cut to fit the card's own measure instead. It still wraps on a phone,
+   where no single line of this length can hold. */
+.ukSides_p{margin:10px 0 0;max-width:none;text-wrap:balance;white-space:normal;
+  font:400 clamp(14px,1.08vw,15.5px)/1.6 'Lato',sans-serif;color:var(--text-2)}
+
+.ukSides_vis{position:relative;margin-top:clamp(20px,2.4vw,30px);border-radius:16px;
+  overflow:hidden;padding:clamp(16px,1.8vw,24px);min-height:clamp(230px,25vw,320px)}
+/* ---------- the card grounds ----------
+   Each card takes its own wash rather than sitting on flat white: cream for
+   hotels, a cool light blue for creators. Both run light at the top-left to a
+   touch deeper at the foot, so the card reads as lit from above.
+
+   The panels inside go white. With the card tinted, the gold and blue panel
+   tints they used to carry sat too close to their own ground and the panel
+   stopped reading as a panel — white gives it a clean edge on either card. */
+/* a cool light blue for hotels, cream for creators — each running light at the
+   top-left to a touch deeper at the foot, so the card reads as lit from above */
+.ukSides_card--hotel{background:linear-gradient(163deg,#fdfeff 0%,#f1f5fa 52%,#e8eff8 100%);
+  border-color:rgba(11,47,82,.12)}
+.ukSides_card--creator{background:linear-gradient(163deg,#fffefb 0%,#fdf7ea 52%,#f8efdc 100%);
+  border-color:rgba(215,165,67,.22)}
+
+/* the nested panel: white, thin grey rule, generous radius — the way the
+   reference nests a table inside its card */
+.ukSides_vis{background:#fff;border:1px solid rgba(11,47,82,.09);box-shadow:none}
+.ukSides_vis--hotel,.ukSides_vis--creator{background:#fff}
+
+.ukSides_cta{display:flex;align-items:center;gap:10px;margin-top:14px}
+.ukSides_cta span{background:var(--uk-deep);color:#fff;border-radius:9999px;padding:8px 18px;
+  font:700 12px/1 'Lato',sans-serif}
+.ukSides_cta em{font-style:normal;font:400 11px/1 'Lato',sans-serif;color:var(--text-2)}
+
+/* the lifecycle, two by two, numbered — each card tells the same exchange from
+   its own side, which is what the block it replaces said in prose */
+/* two beats now, each carrying a full paragraph — a single column, not the
+   two-by-two the four short beats used */
+.ukSides_feats{display:flex;flex-direction:column;
+  gap:clamp(18px,2vw,26px);margin-top:clamp(22px,2.5vw,32px)}
+.ukSides_f{position:static}
+
+/* The marker is an empty element: the numeral comes from a CSS counter, so no
+   number is written into the markup or the heading. Dropping an <svg> inside
+   .ukSides_feats{counter-reset:ukBeat}
+
+/* h3 under the card's h2 — the beats are subheadings of the side, not bold spans */
+.ukSides_ft{margin:0;text-wrap:pretty;
+  font:600 clamp(14px,1.18vw,17px)/1.3 'Lato',sans-serif;color:var(--uk-deep)}
+.ukSides_fp{margin:6px 0 0;text-wrap:pretty;
+  font:400 clamp(13px,1.02vw,14.5px)/1.6 'Lato',sans-serif;color:var(--text-2)}
+
+@media (max-width:860px){.ukSides_grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.ukSides_feats{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- the mocks inside each panel ----------
+   Kept on their original class names, which the markup still uses. The hotel
+   panel shows properties from ukdata.js with creators applying to them; the
+   creator panel shows a stay brief with its terms already set. */
+
+/* hotels: the properties, then the creators */
+.ukSides_chips{display:flex;gap:7px;overflow:hidden;margin-bottom:clamp(14px,1.6vw,20px)}
+.ukSides_chips span{flex:0 0 auto;background:#fff;border:1px solid var(--line-soft);
+  border-radius:9999px;padding:6px 11px;white-space:nowrap;
+  font:600 11px/1.2 'Lato',sans-serif;color:var(--uk-deep);
+  box-shadow:0 1px 3px rgba(11,47,82,.06)}
+.ukSides_stack{position:relative;height:clamp(150px,16vw,196px)}
+.ukSides_mini{position:absolute;background:#fff;border:1px solid var(--line-soft);
+  border-radius:14px;padding:13px;box-shadow:0 10px 26px rgba(11,47,82,.12)}
+.ukSides_mini img{width:38px;height:38px;border-radius:50%;object-fit:cover;display:block}
+.ukSides_mini b{display:block;margin-top:9px;font:700 12.5px/1.2 'Lato',sans-serif;color:var(--uk-deep)}
+.ukSides_mini i{display:block;margin-top:2px;font-style:normal;
+  font:400 11px/1.2 'Lato',sans-serif;color:var(--text-2)}
+.ukSides_mini--back{left:2%;top:16%;width:44%;transform:rotate(-5deg);opacity:.75}
+.ukSides_mini--front{left:34%;top:0;width:57%;z-index:2}
+.ukSides_pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.ukSides_pills span{background:rgba(11,47,82,.06);border-radius:6px;padding:4px 7px;
+  font:600 9.5px/1 'Lato',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--uk-deep)}
+.ukSides_row{display:flex;justify-content:space-between;gap:8px;margin-top:11px;
+  padding-top:9px;border-top:1px solid var(--line-soft);
+  font:400 10.5px/1 'Lato',sans-serif;color:var(--text-2);white-space:nowrap}
+
+/* creators: the brief */
+.ukSides_brief{background:#fff;border:1px solid var(--line-soft);border-radius:14px;
+  padding:clamp(14px,1.5vw,18px);box-shadow:0 10px 26px rgba(11,47,82,.10)}
+.ukSides_briefTop{display:flex;align-items:center;gap:7px;
+  font:600 10.5px/1 'Lato',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+.ukSides_dot{width:7px;height:7px;border-radius:50%;background:#2e9e63;flex:0 0 auto}
+.ukSides_briefH{margin:11px 0 14px;font:700 15px/1.3 'Lato',sans-serif;color:var(--uk-deep)}
+.ukSides_kv{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:8px 0;border-top:1px solid var(--line-soft);
+  font:400 12px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukSides_kv b{font-weight:700;color:var(--uk-deep);white-space:nowrap}
+
+@media (max-width:980px){.ukTrade_grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.ukTrade_grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ====================================================================
+   Alternating feature rows — replaces "What each side actually sees".
+
+   The reference's anatomy: full-width rounded cards stacked, each split
+   into a text half and a tinted visual half, the sides swapping row to
+   row, with a single pill CTA centred underneath. Its pink wash becomes
+   the brand gold. The screens inside are the product's real ones.
+   ==================================================================== */
+
+/* the card's own call to action, sitting at its foot */
+
+/* ---------- the card, in the reference's shape ----------
+   Serif headline, a rule, then the beats: a filled badge marker, a bold sans
+   heading that may run to two or three lines, its paragraph, and a pill CTA
+   with an arrow at the foot. */
+
+.ukSides_h{margin:clamp(14px,1.6vw,20px) 0 clamp(18px,2vw,26px)}
+
+.ukSides_card--hotel 
+/* the marker is a filled badge now, not a tinted ring — the reference's seal */
+
+/* the beat heading carries the argument, so it is set larger and heavier and
+   is free to run to two or three lines as the reference's do */
+.ukSides_ft{font:700 clamp(15px,1.3vw,19px)/1.32 'Lato',sans-serif;letter-spacing:-.012em}
+.ukSides_fp{margin-top:8px;font-size:clamp(13px,1.05vw,15px)}
+
+
+/* the panel now sits under the text, so its spacing flips: it takes a top
+   margin from the CTA above it rather than a bottom margin into the rule */
+.ukSides_vis{margin-top:clamp(24px,2.8vw,36px);margin-bottom:0}
+
+/* ---------- back to four small beats, two to a row ----------
+   The two long beats were a single column; four short ones read better as a
+   two-by-two, which is how they sat before. Marker, heading and body all step
+   back down to the smaller scale that grid needs. */
+.ukSides_feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(16px,1.8vw,24px) clamp(14px,1.6vw,22px)}
+.ukSides_ft{white-space:normal;
+  font:700 clamp(12.5px,1vw,14px)/1.32 'Lato',sans-serif;letter-spacing:-.008em}
+.ukSides_fp{margin-top:4px;font:400 clamp(11.5px,.94vw,13px)/1.5 'Lato',sans-serif}
+
+@media (max-width:560px){ .ukSides_feats{grid-template-columns:minmax(0,1fr)} }
+
+/* two beats to a card, side by side in a single row — the grid keeps its two
+   columns, so two items fill one row rather than two. The copy is longer than
+   the four-beat set was, so the cells need to align to the top. */
+.ukSides_feats{align-items:start;gap:clamp(14px,1.6vw,22px)}
+.ukSides_ft{font:700 clamp(13px,1.06vw,15px)/1.34 'Lato',sans-serif}
+.ukSides_fp{margin-top:6px;font:400 clamp(12px,.96vw,13.5px)/1.55 'Lato',sans-serif}
+
+/* the panel is back above the beats, so its margins flip again */
+.ukSides_vis{margin-top:clamp(18px,2vw,26px);margin-bottom:0}
+
+/* ---------- tightened ----------
+   The divider is gone, so the card is held together by spacing alone. Every
+   gap between blocks comes in, and the padding with it, so the four elements
+   read as one card rather than four stacked panels. */
+.ukSides_card{padding:clamp(8px,.8vw,10px);border-radius:22px}
+.ukSides_h{margin:clamp(10px,1.1vw,14px) 0 0}
+.ukSides_vis{margin-top:clamp(13px,1.4vw,18px);
+  padding:clamp(12px,1.3vw,17px);min-height:clamp(190px,20vw,250px)}
+.ukSides_feats{margin-top:clamp(14px,1.5vw,19px);gap:clamp(12px,1.3vw,18px)}
+.ukSides_grid{gap:clamp(12px,1.4vw,18px)}
+
+/* the pack draws on a 24x24 canvas with currentColor ink, so the marker just
+   sizes the canvas and sets the colour */
+
+/* the frame is a faint wash and the glyph carries the colour, so the ink is the
+   strong tone and the circle only sits behind it */
+
+/* the four headings are within two characters of each other, so balance breaks
+   them at the same shape rather than leaving one with a short second line */
+.ukSides_ft{text-wrap:balance}
+.ukSides_fp{text-wrap:pretty}
+
+/* ---------- the beat, laid out like the reference ----------
+   A rounded-square badge and the heading share one row, vertically centred on
+   each other; the description sits underneath at full width rather than being
+   indented into a text column beside the icon. No divider between items. */
+.ukSides_f{position:static;padding-left:0}
+.ukSides_ft{flex:1 1 auto;min-width:0}
+.ukSides_fp{margin-top:9px}
+
+/* the reference's badges are solid with a white glyph */
+
+/* ---------- the beats, single column ----------
+   Two beats side by side gave each one a 247px cell. At that width every
+   heading wrapped to two lines and every description ran to three, which is
+   what stopped the cards reading as clean — the reference stacks its items so
+   each heading gets the full width and sits on one line.
+
+   Stacked, the same copy needs no trimming: the headings fit on one line and
+   the descriptions settle to two. */
+.ukSides_feats{display:flex;flex-direction:column;gap:clamp(18px,2vw,26px)}
+.ukSides_ft{font:700 clamp(15px,1.22vw,17.5px)/1.35 'Lato',sans-serif;text-wrap:pretty}
+.ukSides_fp{margin-top:7px;max-width:56ch;
+  font:400 clamp(13px,1.05vw,14.5px)/1.6 'Lato',sans-serif}
+
+/* ---------- the gold card's ink ----------
+   Contrast was never the problem — every value on this card already cleared AA.
+   The mismatch was temperature: navy headings and a cool grey body sat on a
+   warm cream ground, so the type read as borrowed from the blue card next to
+   it. Both move into the gold family's own dark end, which keeps the same
+   contrast while belonging to the card it sits on.
+
+   The blue card is left alone: its cool ink is correct on a cool ground. */
+.ukSides_card--creator .ukSides_h,
+.ukSides_card--creator .ukSides_ft{color:#3d2f14}
+.ukSides_card--creator .ukSides_fp{color:#6e6252}
+.ukSides_card--creator .ukSides_chips span{color:#4a3a1c}
+.ukSides_card--creator .ukSides_mini b{color:#3d2f14}
+.ukSides_card--creator .ukSides_mini i,
+.ukSides_card--creator .ukSides_row{color:#6e6252}
+
+/* ---------- the trusted strip, below the hero ----------
+   Moved out of the hero and set on the white band beneath it. Two changes only:
+   it flows instead of being absolutely positioned, and the label goes dark so
+   it can be read on white. The logo cards keep their own colour. */
+/* the strip and the two cards below it were separated by 126px of stacked
+   padding — 40 under the logos and 86 above the cards. Both come in. */
+.heroTrust{position:static;inset:auto;transform:none;
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(24px,2.8vw,40px) clamp(24px,7vw,132px) clamp(12px,1.4vw,20px);
+  background:#fff}
+.heroTrust .trusted__logos{justify-content:center}
+/* the label sits between two rules, each fading away from the text */
+.heroTrust .trusted__label{color:var(--uk-deep);font-size:13px;letter-spacing:1.9px;
+  display:flex;align-items:center;gap:clamp(14px,1.6vw,22px);white-space:nowrap}
+.heroTrust .trusted__label i{display:block;height:1px;width:clamp(34px,6vw,92px);flex:0 0 auto}
+.heroTrust .trusted__label i:first-child{
+  background:linear-gradient(90deg,rgba(11,47,82,0) 0%,rgba(11,47,82,.28) 100%)}
+.heroTrust .trusted__label i:last-child{
+  background:linear-gradient(90deg,rgba(11,47,82,.28) 0%,rgba(11,47,82,0) 100%)}
+.heroTrust .trusted__logos{gap:clamp(11px,1.15vw,15px)}
+/* the mark could not grow because the card's content box was too narrow for it,
+   whatever height it was given — the card widens first */
+.heroTrust .trusted__card{padding:clamp(14px,1.5vw,19px) clamp(20px,2.1vw,28px);
+  min-width:clamp(132px,11.5vw,166px)}
+.heroTrust .trusted__card svg,
+.heroTrust .trusted__card img{height:clamp(25px,2.35vw,32px)!important;width:auto!important;
+  max-width:100%!important;display:block}
+
+/* the two-card block sits under the logos with a little more air than the
+   20px it had after the last trim */
+.ukSides{padding-top:clamp(30px,3.4vw,50px)}
+
+/* ====================================================================
+   The section headline — one standard, system wide.
+
+   Taken from Featured Creators, which is the accepted treatment:
+   Marcellus SC at 52px/400, tracking -0.008em, leading 1.08, with a
+   gradient clipped to the text rather than a flat fill.
+
+   Only the two gradient stops change between grounds. On dark the run is
+   white into gold; on light it is the deep ink into the gold's dark end,
+   so the same movement reads without the type going pale on cream.
+   ==================================================================== */
+.ukTrade_h2,
+.ukMktH2,
+.ukResults .uk_title,
+.ukPricing .uk_title,
+.ukFaq_title,
+.ukFeat .uk_title{
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;
+  font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);letter-spacing:var(--uk-h2-track);
+  background:linear-gradient(101.34deg,var(--h-a) 0.18%,var(--h-b) 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important}
+
+/* on a dark ground */
+.ukResults .uk_title,.ukPricing .uk_title,.ukFaq_title,.ukFeat .uk_title{
+  --h-a:#ffffff; --h-b:#d7a543}
+
+/* on a light ground */
+.ukTrade_h2,.ukMktH2{--h-a:#0B2F52; --h-b:#8a6414}
+
+/* ---------- the carousel's text CTA ----------
+   The other build's link came across unstyled, so it rendered as a default
+   browser link over the photograph. */
+.ukCreators_cta{display:flex;justify-content:center;margin-top:clamp(20px,2.4vw,32px)}
+.ukTextCta{display:inline-block;text-decoration:none;color:#fff;
+  font:400 clamp(15px,1.25vw,18px)/1.2 'Marcellus',Georgia,serif;
+  padding-bottom:6px;border-bottom:1px solid rgba(215,165,67,.85);
+  transition:color .25s ease,border-color .25s ease}
+.ukTextCta:hover{color:var(--uk-gold);border-bottom-color:var(--uk-gold)}
+
+/* The hero photograph is a 100vw square anchored to the top — at 1440 wide that
+   is 1440 tall, which stretches the hero half again past its screen. The clip
+   goes on the photo layer, not on .homeHeader, so the headline keeps its
+   horizontal overflow. (This was lost in an earlier cleanup of this file.) */
+.homeHeader{min-height:100svh}
+.homeHeader_bg{height:100svh;overflow:hidden}
+
+/* ---------- the two-path section's headline ----------
+   Same standard as every other section headline on a light ground. */
+.ukSides_head{text-align:center;margin:0 auto clamp(26px,3.2vw,42px);max-width:900px}
+.ukSides_h2{margin:0;text-wrap:balance;--h-a:#0B2F52;--h-b:#8a6414;
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;
+  font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);letter-spacing:var(--uk-h2-track);
+  background:linear-gradient(101.34deg,var(--h-a) 0.18%,var(--h-b) 221.09%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+
+/* ── The two sides read as a pair of rows rather than a pair of columns: each
+      card runs horizontally, and they mirror each other — the hotel's picture
+      on the left, the creator's on the right. ── */
+@media (min-width:861px){
+  .ukSides_grid{grid-template-columns:minmax(0,1fr);gap:clamp(22px,2.6vw,36px)}
+
+  .ukSides_card{display:flex;flex-direction:row;align-items:center;
+    gap:clamp(22px,2.6vw,42px);
+    padding:clamp(8px,.75vw,10px)}
+  .ukSides_card--creator{flex-direction:row-reverse}
+
+  .ukSides_card > .ukSides_vis{flex:1 1 0;min-width:0;margin:0}
+  .ukSides_body{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+  .ukSides_body .ukSides_h{margin:clamp(12px,1.3vw,17px) 0 0}
+  .ukSides_body .ukSides_feats{width:100%;margin-top:clamp(16px,1.8vw,24px)}
+}
+
+
+/* ── The two cards read like an ecosystem row: heading, a short description,
+      then three points with icons. The list is the section's own, so the two
+      blocks are the same object in two places. ── */
+.ukSides_body-text{margin:clamp(10px,1.1vw,14px) 0 clamp(16px,1.8vw,22px);
+  max-width:46ch;text-wrap:pretty;
+  font:400 15.5px/1.65 'Lato',sans-serif}
+.ukSides_points{margin:0}
+/* the glyph chip takes each card's own ink, as the old points did */
+.ukSides_card--hotel   .ukZig_ico{background:rgba(11,47,82,.09)}
+.ukSides_card--creator .ukZig_ico{background:rgba(215,165,67,.16)}
+.ukSides_card--hotel   .ukSides_points li{color:var(--uk-deep)}
+.ukSides_card--creator .ukSides_points li{color:#3d2f14}
+.ukSides_card--hotel   .ukSides_body-text{color:var(--text-2)}
+.ukSides_card--creator .ukSides_body-text{color:#6e6252}
+/* the hotel card's glyphs take a blue two-stop, the way the gold ones do */
+.ukSides_card--hotel   .ukZig_ico .ukZig_glyph path{fill:url(#ukIcoGradBlue);stroke:none}
+.ukSides_card--creator .ukZig_ico .ukZig_glyph path{fill:url(#ukIcoGradLight);stroke:none}
+
+@media (min-width:861px){
+  /* the copy side keeps a little breathing room the picture does not need */
+  .ukSides_body{padding:clamp(10px,1.4vw,20px) clamp(12px,1.6vw,24px)}
+}

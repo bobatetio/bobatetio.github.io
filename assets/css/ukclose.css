@@ -1,0 +1,33 @@
+/* ====================================================================
+   The closing call to action. Same text format as Join Our Newsletter:
+   eyebrow, title, sub, action. Only the ground differs, so only the
+   two gradient stops and the body ink are restated for light.
+   ==================================================================== */
+.ukClose{background:var(--bg);
+  padding:clamp(56px,7vw,104px) clamp(20px,5vw,48px)}
+.ukClose_inner{text-align:center;max-width:900px;margin-inline:auto}
+.ukClose_tag{margin:0 0 clamp(16px,1.9vw,24px)}
+.ukClose .uk_title{--h-a:#0B2F52;--h-b:#8a6414;
+  background:linear-gradient(101.34deg,var(--h-a) 0.18%,var(--h-b) 221.09%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+.ukClose .uk_sub{color:#696a72}
+.ukClose_cta{display:flex;justify-content:center;margin-top:clamp(22px,2.6vw,32px)}
+
+/* ---- the creator row, and the second path out ---- */
+.ukClose_avs{list-style:none;display:flex;justify-content:center;align-items:center;
+  padding:0;margin:clamp(30px,3.6vw,48px) 0 0}
+.ukClose_avs li{margin-left:-14px}
+.ukClose_avs li:first-child{margin-left:0}
+.ukClose_avs img{display:block;width:clamp(48px,4.4vw,62px);height:clamp(48px,4.4vw,62px);
+  border-radius:50%;object-fit:cover;
+  border:3px solid var(--bg);box-shadow:0 2px 10px rgba(11,47,82,.14)}
+.ukClose_alt{margin:clamp(16px,1.8vw,22px) 0 0;
+  font:400 clamp(14px,1.2vw,16px)/1.5 'Lato',sans-serif}
+.ukClose_alt a{color:var(--uk-deep);text-decoration:underline;text-underline-offset:3px}
+.ukClose_alt a:hover{color:var(--gold-ink)}
+
+/* ---- the action, built as the nav's Log in pill on the brand blue ---- */
+.ukClose_btn.aeroBtn{color:#fff}
+.ukClose_btn .aeroBtn_fill{background:var(--uk-deep);border:none;box-shadow:none}
+.ukClose_btn.aeroBtn:hover{filter:brightness(1.1);color:#fff}

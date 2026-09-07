@@ -1,0 +1,110 @@
+/* ====================================================================
+   Glow tag — a vanilla port of the shiny-button effect.
+
+   The original is React + Tailwind. The mechanism is what matters and it
+   is all CSS: a wide linear gradient is spun behind the pill, clipped to
+   the pill's box, then blurred outward. The blur alone leaves a washed
+   grey haze, so an SVG feColorMatrix multiplies alpha (9x on the outer
+   ring, 3x on the inner) to bring the colour back — that is the whole
+   trick, and it is why the filters ship with this file.
+
+   Two rings rather than the original's three: an outer halo and a sharp
+   edge. The third bought very little at this size and cost a layer.
+
+   Its orange-to-blue becomes the brand gold-to-blue.
+   ==================================================================== */
+
+.ukGlowDefs{position:absolute;width:0;height:0;overflow:hidden}
+
+/* The pill's own surface moves onto .ukGlow_face. A negative-z child paints
+   ABOVE its parent's background, so with the surface left on .ukGlow the rings
+   washed straight across the pill face instead of staying behind it — which is
+   what made the tags read as two blobs with text on top. Order is now
+   rings (0) -> face (1) -> text (2). */
+.ukGlow{position:relative;isolation:isolate;overflow:visible;background:transparent!important}
+.ukGlow_face{position:absolute;inset:0;border-radius:inherit;z-index:1;pointer-events:none}
+.ukGlow>b{position:relative;z-index:2;font-weight:inherit}
+
+/* Each ring clips the spinning gradient to the pill, then blurs it outward.
+   The blur has to be large relative to the pill or the gradient's two ends
+   land as separate coloured blobs instead of one travelling halo — at this
+   size that means ~18px, not the 9px I first tried. */
+.ukGlow_g{position:absolute;inset:0;border-radius:inherit;overflow:hidden;
+  pointer-events:none;z-index:0;opacity:.34;
+  filter:blur(18px) url(#ukGlowSat2);
+  transition:opacity .35s ease}
+.ukGlow_g::before{content:"";position:absolute;inset:-150%;
+  background:linear-gradient(90deg,#d7a543 26%,transparent 42% 58%,#3b7fc4 74%);
+  animation:ukGlowSpin 8s cubic-bezier(.56,.15,.28,.86) infinite,
+            ukGlowPulse 4s ease-in-out infinite}
+
+/* the inner ring is the lit edge itself: hairline, bright, barely blurred.
+   Its thickness is the sum of how far it sits outside the face and how far the
+   blur carries it, so both are kept sub-pixel-ish. */
+.ukGlow_g--in{inset:-0.5px;opacity:.8;filter:blur(0.7px) url(#ukGlowSat)}
+.ukGlow_g--in::before{
+  background:linear-gradient(90deg,#efc470 26%,transparent 42% 58%,#8bb8e8 74%)}
+
+.ukGlow:hover .ukGlow_g{opacity:.5}
+.ukGlow:hover .ukGlow_g--in{opacity:1}
+
+/* ---------- the surfaces ----------
+   The pill's own background lives on the face layer, above the rings and below
+   the text. (These were lost once when a rewrite truncated the file — the pills
+   rendered with no fill at all.) */
+.hero__badge.ukGlow .ukGlow_face{background:var(--uk-badge-face-dark);border:0;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ukSides_tag--creator.ukGlow .ukGlow_face{background:#f7edd8;border:0}
+.ukSides_tag--hotel.ukGlow .ukGlow_face{background:#e8edf4;border:0}
+
+/* ---------- the two card tags ----------
+   The blurred halo is built for a large button on a dark ground; at label size
+   on a cream card it only fogs the edge. So on the cards the halo is off and
+   the effect is a true one-pixel ring, masked to the border alone.
+
+   The angle is animated, not the element. Spinning the element would spin its
+   mask with it and the pill shape would come apart — which is what reduced the
+   ring to a couple of stray dashes. @property makes --ukRingAngle a real angle
+   so it can be interpolated; without it the gradient simply sits still, which
+   still reads as a lit border. */
+@property --ukRingAngle{syntax:"<angle>";inherits:false;initial-value:0deg}
+
+.ukSides_tag.ukGlow .ukGlow_g,
+.ukClose_tag.ukGlow .ukGlow_g{display:none}
+.ukSides_tag.ukGlow .ukGlow_g--in,
+.ukClose_tag.ukGlow .ukGlow_g--in{
+  display:block;position:absolute;inset:-1px;border-radius:inherit;
+  padding:1px;opacity:1;filter:none;overflow:visible;
+  /* the stroke never breaks and never goes flat: it falls to a semi-transparent
+     trough between the two bright tones rather than to nothing */
+  background:conic-gradient(from var(--ukRingAngle),
+    var(--ring-a)   0deg,
+    var(--ring-dim) 70deg,
+    var(--ring-b)   180deg,
+    var(--ring-dim) 290deg,
+    var(--ring-a)   360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  animation:ukRingTurn 6s linear infinite}
+.ukSides_tag.ukGlow .ukGlow_g--in::before,
+.ukClose_tag.ukGlow .ukGlow_g--in::before{content:none}
+
+.ukSides_tag--creator.ukGlow{--ring-a:#a8791f;--ring-b:#efc470;--ring-dim:rgba(168,121,31,.30)}
+.ukSides_tag--hotel.ukGlow{--ring-a:#0B2F52;--ring-b:#6aa3dd;--ring-dim:rgba(11,47,82,.28)}
+
+@keyframes ukRingTurn{to{--ukRingAngle:360deg}}
+@media (prefers-reduced-motion:reduce){
+  .ukSides_tag.ukGlow .ukGlow_g--in,
+.ukClose_tag.ukGlow .ukGlow_g--in{animation:none}
+}
+
+
+/* ---------- the closing section's tag ----------
+   The same light-ground pill as the two path cards use, on the gold ring. */
+.ukClose_tag.ukGlow{--ring-a:#a8791f;--ring-b:#efc470;--ring-dim:rgba(168,121,31,.30);
+  display:inline-flex;align-items:center;padding:5px 14px;border-radius:9999px;
+  font:400 clamp(13px,1.02vw,14.6px)/1.15 'Lato','Inter',sans-serif;
+  color:var(--uk-deep);white-space:nowrap}
+.ukClose_tag.ukGlow .ukGlow_face{background:#f7edd8;border:0}

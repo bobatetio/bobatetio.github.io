@@ -1,0 +1,99 @@
+/* ====================================================================
+   1:1 replica of the main-branch hero, nav ground and footer ground.
+   Every rule below is lifted verbatim from that page (its inline
+   <style> block and index.By0AFpwc.css). Loaded only by /for-hotels/,
+   after ukmarketing.css, so the other marketing pages are untouched.
+   ==================================================================== */
+.homeHeader_inner.legionHero{padding-inline:clamp(24px,7vw,132px);display:flex;align-items:center;justify-content:space-between;gap:clamp(28px,5vw,96px);width:100%}
+.legionHero_main{flex:0 1 auto;min-width:0;max-width:520px}
+.legionHero_title{font-family:"Marcellus SC",serif;font-weight:400;letter-spacing:-.045em;line-height:1.05;margin:0;color:#fff}
+.legionHero_line{display:block;width:max-content;font-size:clamp(28px,4.2vw,60px);white-space:nowrap;background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.legionHero_dash{display:inline-block;transform:scaleX(1.48);transform-origin:left center;margin-right:.32em}
+.legionHero_lede{font-family:"Lato","Inter",sans-serif;margin:clamp(10px,1.2vw,16px) 0 0;max-width:580px;font-size:clamp(14px,1.12vw,16.2px);line-height:1.6;color:rgba(255,255,255,.82);text-wrap:balance}
+.legionHero_tag{flex:0 0 auto;width:clamp(232px,24vw,326px);text-align:center}
+.legionHero_tagTitle{font-family:"Oranienbaum",serif;font-weight:400;text-transform:uppercase;color:var(--color-white-pure,#fff);font-size:clamp(23px,2.7vw,37px);line-height:1.06;letter-spacing:0;transform:scaleX(.735);transform-origin:center;margin:0 auto}
+.legionHero_tagCopy{font-family:"Inter",sans-serif;margin:clamp(18px,2vw,28px) auto 0;max-width:250px;font-size:clamp(12px,.98vw,13.8px);line-height:1.42;color:rgba(255,255,255,.6);text-wrap:balance}
+@media (max-width:900px){.homeHeader_inner.legionHero{flex-direction:column;align-items:flex-start;gap:clamp(30px,7vw,48px)}.legionHero_line{font-size:clamp(30px,10vw,60px)}.legionHero_tag{width:100%;text-align:left}.legionHero_tagTitle{transform-origin:left;margin:0}.legionHero_tagCopy{margin-left:0}}
+.legionHero_ctas{display:flex;align-items:center;gap:12px;margin-top:clamp(18px,2vw,28px);flex-wrap:wrap}
+.legionHero_ctas .aeroBtn{font-family:'Unica77',-apple-system,sans-serif}
+.homeHeader_bg{position:relative}
+.heroBgCustom{position:absolute;inset:0;background:transparent;pointer-events:none}
+.heroBgCustom:after{content:'';position:absolute;top:0;left:0;right:0;height:100svh;background:linear-gradient(to right,rgba(15,45,54,.60),rgba(15,45,54,.24) 55%,rgba(15,38,45,.34)),linear-gradient(to bottom,rgba(15,45,54,.32),rgba(15,45,54,.08) 40%,rgba(13,32,38,.40) 87%,#0d2026 100%);-webkit-mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.5) 88%,transparent 100%);mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.5) 88%,transparent 100%)}
+.legionHero_ctas{--aero-ink:#05275b;--aero-white:#fcfdfe}
+.legionHero_ctas .aeroBtn{font-weight:400}
+.homeHeader{position:relative}
+.heroTrust{position:absolute;left:clamp(24px,7vw,132px);top:calc(100svh - clamp(92px,13vh,118px));z-index:5;display:flex;align-items:center;gap:clamp(14px,2vw,30px);flex-wrap:wrap}
+.heroTrust_label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);white-space:nowrap}
+.heroTrust_mark{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);white-space:nowrap}
+.heroTrust_mark.-serif{font-family:'DM Serif Display',serif;font-weight:400;letter-spacing:.05em;text-transform:none;font-size:15px}
+@media (max-width:900px){.heroTrust{gap:12px}.heroTrust_mark{font-size:11px}}
+.homeHeader_clouds{visibility:hidden!important}
+.hero__badge{display:inline-flex;align-items:center;padding:5px 14px;background:rgba(255,255,255,0.10);border:none;box-shadow:none;border-radius:9999px;font-family:"Lato","Inter",sans-serif;font-size:clamp(13px,1.02vw,14.6px);line-height:1.15;color:rgba(255,255,255,.82);margin-bottom:16px}
+.heroTrust{display:flex;align-items:center;gap:21px;flex-wrap:wrap}
+.trusted__label{font-family:'Lato',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.85);white-space:nowrap}
+.trusted__logos{display:flex;align-items:center;gap:22px}
+.trusted__card{width:163px;height:66px;background:#fff;border:0.858px solid #000;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trusted__card img{max-width:80%;max-height:80%;object-fit:contain}
+@media (max-width:1100px){.trusted__card{width:130px;height:54px}}
+.heroTrust{flex-direction:column;align-items:flex-start;gap:12px}
+.trusted__label{font-size:11px;letter-spacing:1.5px}
+.trusted__logos{gap:14px}
+.trusted__card{width:118px;height:48px;border-radius:10px}
+.heroScroll{position:absolute;top:calc(100svh - clamp(92px,13vh,118px));right:clamp(24px,7vw,132px);display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px;color:rgba(255,255,255,.85);font-family:'Lato',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.heroScroll_oval{width:24px;height:40px;border:1px solid rgba(255,255,255,.55);border-radius:9999px;display:flex;align-items:center;justify-content:center}
+.heroScroll_oval svg{animation:heroScrollNudge 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.heroScroll_oval svg{animation:none}}
+.trusted__card{color:#102e37}
+.trusted__card svg{width:80%;height:64%;display:block}
+.trusted__card{background:#0f262d;border:1px solid rgba(255,255,255,.16);color:rgba(232,220,199,.68)}
+.heroScroll{color:rgba(232,220,199,.92)}
+.heroScroll_oval{border-color:rgba(232,220,199,.55)}
+.trusted__label{font-weight:400;color:rgba(255,255,255,.82)}
+.homeHeader{display:grid;align-content:center;position:relative}
+.homeHeader_contents{grid-area:1/1;display:grid;align-content:center;height:100svh}
+.homeHeader_title{color:var(--color-white-pure)}
+.homeHeader_bg{grid-area:1/1;display:grid}
+.homeHeader_img{grid-area:1/1}
+.homeHeader_clouds{grid-area:1/1;display:grid}
+.homeHeader_cloud{grid-area:1/1;position:relative;left:0;width:100vw;pointer-events:none}
+.layer{position:relative;z-index:1}
+@media(min-width:768px){.homeHeader_inner{padding-inline:17.5vw}.homeHeader_img{width:100vw;aspect-ratio:1/1}.homeHeader_cloud{top:14.6875vw}}
+@media(max-width:767px){.homeHeader_inner{padding-inline:20.1492537313vw}.homeHeader_img{width:100vw;height:296.2686567164vw}.homeHeader_cloud{top:58.4577114428vw}}/* the page ground the hero and footer sat on */
+.ukMkt .ukMktFootWrap{background:#0d2026}
+
+/* --- reinstating what ukmarketing.css had changed, back to main's values --- */
+
+/* main's hero photo is a 100vw square anchored at the top, not a 100svh cover:
+   that is why only the upper band of the Burj frame shows, and why the scrim
+   reads as light as it does on that page. */
+.homeHeader_img{width:100vw;aspect-ratio:1/1;height:auto}
+.heroBgPlain{width:100%;height:100%}
+.heroBgPlain img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* the title's letter-spacing is -.045em against ITS OWN size, and on main the
+   h1 inherited the 16px body. This page's base is 15px with a 30px h1, which
+   silently retracked the headline by 12px. Pin it back to main's. */
+.legionHero_title{font-size:16px}
+
+/* main's base was 16px; ukapp.css sets 15px, which the trusted strip inherits */
+.heroTrust{font-size:16px}
+
+/* main's own button row: 18.592px gap, 26px cap on the top margin */
+.hero__buttons{display:flex;gap:18.592px;align-items:center;margin-top:clamp(18px,2vw,26px)}
+
+/* main's page had no inherited line-height on the hero; ukapp.css sets 1.6,
+   which grew the badge row and the trusted label. Elements that state their
+   own line-height (lede, title) are unaffected. */
+.homeHeader,.heroTrust,.trusted__label,.hero__badge{line-height:normal}
+
+/* main lets the headline run past its 520px column — "Get Content That Sells."
+   is 517px of max-content and is meant to sit proud of the text block. The clip
+   ukmarketing.css puts on the hero was cutting it off, so it comes off here and
+   the page holds the horizontal axis instead. */
+.homeHeader{overflow:visible}
+html,body{overflow-x:hidden}
+
+/* "Get Content That Sells." is 636px of max-content against a 520px column, and
+   is meant to sit proud of the text block. ukmarketing.css had capped the line
+   at 100%, which cut it to 520 and clipped it mid-word. */
+.legionHero_line{max-width:none}

@@ -1,0 +1,282 @@
+/* ============================================================
+   ukMock — the hero mock stage (Figma 617:924, 1440x778 frame)
+   Every value below is the Figma coordinate, 1:1. The stage is a
+   fixed 1440x778 box centred on the hero and anchored so that its
+   own y=131.94 lands on the badge, which is where the frame puts it.
+   ============================================================ */
+
+.homeHeader_contents.is-mock{--uk-heroTop:131.94px;--uk-photo:.28;--uk-photoReach:83%;--uk-photoHold:33%;
+  --uk-metaFS:8.6px;height:var(--uk-heroH,778px);min-height:0;position:relative;align-content:start;
+  padding:0}
+/* The headline sits a step down from the Figma's 51px, at Bob's call. Only
+   the cap moves: the vw ramp is ukported's, so nothing changes below 1164
+   where the ramp already governs. Guarded above 900 so it cannot reach the
+   tablet rule (min(6.1vw,56px)) or the phone rule in ukresponsive, which
+   lets the sentences wrap and sizes them for reading. */
+@media (min-width:901px){
+  .homeHeader_contents.is-mock .legionHero_line{font-size:clamp(19px,3.95vw,46px)}
+}
+
+/* The background is a grid-area:1/1 child, so an abspos inset:0 resolves
+   against that grid ROW, not the hero: with the row centred it painted a band
+   in the middle of the screen and left flat blue above and below. Clearing the
+   placement puts it back on the padding box, at every width. */
+.homeHeader_contents.is-mock > .homeHeader_bg{grid-area:auto;inset:0}
+
+/* The hero is no longer tied to the viewport: it is the design's own 778 at
+   every window height. Everything under it that was sized to 100svh has to
+   follow the box instead, or the background outruns the section. */
+.homeHeader:has(.homeHeader_contents.is-mock){min-height:0}
+.homeHeader_contents.is-mock .homeHeader_bg,
+.homeHeader_contents.is-mock .heroBgPlain,
+.homeHeader_contents.is-mock .heroBgPlain img,
+.homeHeader_contents.is-mock .heroBgCustom:after{height:100%}
+
+/* The band of lighter blue under the hero: ukmarketing.css gives .heroTrust
+   a margin-top of clamp(32px,8vw,48px) below 900, and .homeHeader's own
+   background (--uk-deep, a lighter navy than the hero foot) shows through the
+   gap. The next section butts straight onto the hero instead. */
+.homeHeader_contents.is-mock + .heroTrust{margin-top:0}
+
+/* the drop goes on the copy, not on the grid: the background is a grid-area
+   child, and padding on the container would start its area below the fold */
+.homeHeader_contents.is-mock > .homeHeader_inner{margin-top:var(--uk-heroTop);
+  position:relative;z-index:2}
+
+.ukMock{--uk-cardFace:#0c3251;--uk-ringFade:.78;--uk-phone:.99;--uk-foot:1;--uk-ring:1.01;
+  --uk-footStart:59;--uk-vfade:1;--uk-vfadeH:98px;--uk-stay:1.11;--uk-stageK:1;
+  position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;
+  contain:paint}
+/* The stage must NOT clip: the foot is a full-viewport-width layer inside it,
+   and clipping here cut it off at 1440 and left hard vertical edges on any
+   window wider than that. The clip that stops the phone screen (laid out 459
+   tall) running on below the frame foot lives on .ukMock_phone instead. */
+.ukMock_stage{position:absolute;left:calc(50% - 720px);width:1440px;height:778px;
+  top:max(calc(var(--uk-heroTop) - 131.94px), calc(100% - 778px))}
+.ukMock_stage > *{position:absolute}
+.ukMock p,.ukMock b,.ukMock span,.ukMock i,.ukMock img{margin:0}
+.ukMock img{max-width:none}
+
+/* ukported.css masks this photograph away to nothing at 56% of the hero, to
+   hide a hard horizontal edge baked into the source at row 769. That mask, not
+   the opacity, is why the lower half never answered the slider — so how far
+   the picture reaches is its own knob now. */
+/* No calc() inside the gradient stops: a var multiplied by a percentage is
+   valid CSS but parses unreliably on older iOS Safari, and a mask that fails
+   to parse can take the whole picture with it. The stops carry their own
+   units instead. */
+.homeHeader_contents.is-mock .heroBgPlain img{opacity:var(--uk-photo,1);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,
+    #000 var(--uk-photoHold,33%), transparent var(--uk-photoReach,83%));
+  mask-image:linear-gradient(to bottom,#000 0%,
+    #000 var(--uk-photoHold,33%), transparent var(--uk-photoReach,83%))}
+
+/* --- the three concentric rings behind the phone (162:32425) --- */
+.ukMock_rings{left:388.43px;top:488.13px;width:663.031px;height:663.031px;overflow:hidden;
+  opacity:var(--uk-ringFade);transform:scale(var(--uk-ring,.82))}
+.ukMock_rings img{position:absolute;display:block}
+.ukMock_rings img:nth-child(1){left:-0.01px;top:0;width:663.09px;height:663.02px}
+.ukMock_rings img:nth-child(2){left:58.52px;top:58.55px;width:546.99px;height:546.99px}
+.ukMock_rings img:nth-child(3){left:125.92px;top:125.98px;width:412.11px;height:412.08px}
+
+/* --- the phone (162:32437 - 162:32442) --- */
+.ukMock_phone{left:0;top:0;width:1440px;height:778px;overflow:hidden;
+  transform:scale(var(--uk-phone,.88));transform-origin:708.4px 778px}
+.ukMock_phone > *{position:absolute}
+.ukMock_body{left:593.41px;top:449.66px;width:230px;height:328.328px;
+  border-radius:35.395px 35.395px 0 0}
+.ukMock_screen{left:603.87px;top:458.73px;width:210.5px;height:459.117px;
+  border-radius:27.3px;overflow:hidden;background:#000}
+.ukMock_vid{display:block;width:100%;height:100%;object-fit:cover}
+.ukMock_topnav{left:606.13px;top:459.04px;width:201.75px;height:48.5px}
+.ukMock_ui{left:602.88px;top:612.4px;width:212.25px;height:166px}
+.ukMock_cam{left:683.77px;top:466.7px;width:48.75px;height:13.5px;border-radius:6.75px}
+/* the frame cuts the phone flat at its foot; this fades the thumbnail out into
+   the ground instead. It lives in the phone group so it is exactly the phone's
+   width — the side cards sit outside that column and are untouched. */
+.ukMock_vfade{left:593.41px;width:230px;bottom:0;height:var(--uk-vfadeH,120px);
+  background:linear-gradient(to top,
+    rgba(23,56,85,var(--uk-vfade,1)) 0%,
+    rgba(23,56,85,var(--uk-vfade,1)) 26%,
+    rgba(23,56,85,calc(var(--uk-vfade,1) * .60)) 58%,
+    rgba(23,56,85,0) 100%)}
+
+/* --- the foot: ABOVE the phone, so it carries the bottom of the thumbnail,
+       and BELOW every card, so it cannot dim them. Broken out to the full
+       viewport width from inside the 1440 stage. --- */
+/* the width undoes the stage scale, or the foot shrinks with it and the hard
+   vertical edges come back on tablets */
+.ukMock_foot{left:50%;transform:translateX(-50%);width:calc(100vw / var(--uk-stageK,1));
+  top:0;height:778px;
+  background:linear-gradient(180deg,rgba(4,10,18,0) calc(var(--uk-footStart,22) * 1%),
+    rgba(4,10,18,var(--uk-foot,.24)) 100%)}
+
+/* --- shared card ground: the deep-blue face the four cards are cut from --- */
+.ukMock_card{background:var(--uk-cardFace);
+  border-radius:13.42px;box-shadow:0 4.416px 12.144px rgba(0,0,0,.25);overflow:hidden}
+.ukMock_card > *{position:absolute}
+.ukMock_figure{background-clip:text;-webkit-background-clip:text;color:transparent;
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;white-space:nowrap}
+
+/* --- commission earned (163:32682) --- */
+.ukMock_comm{left:406px;top:512.324px;width:168px;height:90.653px}
+.ukMock_commShot{left:7.485px;top:7.485px;width:45.743px;height:77.347px;
+  border-radius:6.404px;background:#4b3b32;overflow:hidden}
+.ukMock_commShot img{position:absolute;left:-13.487px;top:-14.832px;width:67px;height:94px;
+  display:block}
+.ukMock_commLabel{left:63.211px;top:13.316px;font-family:'Lato',sans-serif;font-weight:700;
+  font-size:8.317px;line-height:8.483px;color:#fff;white-space:nowrap}
+.ukMock_commNum{left:63.211px;top:17.139px;font-size:22.472px;line-height:38.45px;
+  background-image:linear-gradient(153.944deg,#ffe699 19.027%,#6fb8ff 95.808%)}
+.ukMock_commChip{left:116.438px;top:34.604px;width:29.109px;height:6.125px}
+.ukMock_bar{background:linear-gradient(180deg,#fff7e0 0%,#0b2f52 100%);
+  border-radius:6.128px 6.128px 0 0}
+.ukMock_bar--1{left:63.20px; top:55.437px;width:19.96px; height:29.396px}
+.ukMock_bar--2{left:88.99px; top:61.170px;width:19.129px;height:23.660px}
+.ukMock_bar--3{left:114.77px;top:48.270px;width:19.96px; height:36.565px}
+.ukMock_bar--4{left:140.55px;top:43.247px;width:19.96px; height:41.584px}
+
+/* --- 158 bookings (166:32880) --- */
+.ukMock_book{left:843.234px;top:526.336px;width:166.414px;height:76.641px}
+.ukMock_bookNum{left:12.328px;top:2.14px;font-size:28.47px;line-height:38.45px;
+  background-image:linear-gradient(147.077deg,#ffe699 19.027%,#6fb8ff 95.808%)}
+.ukMock_bookCap{left:12.328px;top:37.32px;font-family:'Lato',sans-serif;font-weight:500;
+  font-size:11.924px;line-height:normal;color:#fff;opacity:.9;white-space:nowrap}
+.ukMock_bookBar{left:12.328px;top:56.12px;width:53.648px;height:9.852px;
+  border-radius:15.328px;background:rgba(217,217,217,.24)}
+.ukMock_bookImg{left:77.977px;top:2.14px;width:85.977px;height:72.109px;
+  border-radius:11.79px;object-fit:cover}
+
+/* --- stay confirmed (162:32545) --- */
+.ukMock_stay{left:373px;top:634.977px;width:148.591px;height:98.003px;border-radius:12.25px;
+  transform:scale(var(--uk-stay,1.16));transform-origin:left top;
+  background:var(--uk-cardFace);box-shadow:none;
+  filter:drop-shadow(0 3.698px 11.095px rgba(0,0,0,.25))}
+.ukMock_stayTitle{left:12.25px;top:12.23px;font-family:'Marcellus',Georgia,serif;
+  font-weight:400;font-size:12.32px;line-height:8.483px;color:#fff;white-space:nowrap}
+/* one flex row rather than four hardcoded x positions, so the type size can
+   move without the flag and the city drifting out of place */
+.ukMock_metaRow{left:11.836px;top:23.4px;display:flex;align-items:center;gap:2.9px;
+  font-family:'Lato',sans-serif;font-weight:400;font-size:var(--uk-metaFS,8.6px);
+  line-height:1.35;color:#d3d6d8;white-space:nowrap}
+.ukMock_metaRow b,.ukMock_metaRow i{font-weight:400;font-style:normal}
+.ukMock_metaRow img{display:block;width:calc(var(--uk-metaFS,8.6px) * 1.2);
+  height:calc(var(--uk-metaFS,8.6px) * .96);flex:0 0 auto}
+.ukMock_stayImg{left:4px;top:40px;width:141px;height:55px;border-radius:10.79px;
+  overflow:hidden}
+.ukMock_stayImg img{position:absolute;display:block;max-width:none}
+.ukMock_stayImg img:nth-child(1){left:0;top:-77.665px;width:141px;height:193.336px}
+.ukMock_stayImg img:nth-child(2){left:0.353px;top:-33.963px;width:141px;height:96.718px}
+
+/* --- the room shot (162:32486) --- */
+.ukMock_room{left:886.109px;top:634.977px;width:172.891px;height:101.695px;
+  box-sizing:border-box;padding:3px;border-radius:12.859px;overflow:hidden;background:var(--uk-cardFace);
+  box-shadow:0 3.698px 33.284px rgba(0,0,0,.25)}
+.ukMock_roomIn{position:relative;width:100%;height:100%;overflow:hidden;border-radius:9.859px}
+/* the photo is laid out 98.695 tall and clipped by the frame, so it runs past
+   the bottom edge rather than sitting on a border */
+.ukMock_roomIn > img{display:block;width:100%;height:98.695px;object-fit:cover}
+
+/* --- the guests who stayed (168:32899) --- */
+.ukMock_hosted{left:919px;top:707px;width:117px;height:55px;background:var(--uk-cardFace);
+  border-radius:14.079px;overflow:hidden}
+.ukMock_hosted b{position:absolute;left:9px;top:6.836px;width:100.119px;text-align:center;
+  font-family:'Lato',sans-serif;font-weight:500;font-size:8.56px;line-height:13.851px;
+  letter-spacing:-.3424px;color:#fff}
+.ukMock_hosted img{position:absolute;left:14.684px;top:21.308px;width:88.75px;height:29.25px;
+  display:block}
+
+/* ---- narrower than the 1440 frame ----
+   The cards reach 363px either side of centre, so the composition fits
+   unscaled down to 726. Below that the stage steps down in scale (scale()
+   takes a number, not a length, so this cannot be a vw expression), and
+   below 520 the hero is a stacked phone layout and the mock steps aside. */
+@media (max-width:767px){
+  .homeHeader_contents.is-mock{--uk-photo:.42}
+}
+@media (max-width:725px){
+  /* the bottom anchor has to know the scale, or the frame stops short of the
+     hero foot and leaves a dead band under the phone */
+  .ukMock{--uk-stageK:.86}
+  .ukMock_stage{transform:scale(var(--uk-stageK));transform-origin:top center;
+    top:max(calc(var(--uk-heroTop) - 131.94px), calc(100% - 669.08px))}
+}
+@media (max-width:623px){
+  .ukMock{--uk-stageK:.72}
+  .ukMock_stage{transform:scale(var(--uk-stageK));transform-origin:top center;
+    top:max(calc(var(--uk-heroTop) - 131.94px), calc(100% - 560.16px))}
+}
+@media (max-width:519px){
+  /* The mock stays on a phone: the thumbnail, the circles and the cards are
+     the hero. The composition is 686 wide in stage units, so each step is the
+     largest scale that still clears ~10px at that band's narrowest width.
+     scale() takes a number, so these have to be steps. */
+  .homeHeader_contents.is-mock{--uk-photo:.55;--uk-heroTop:152px;--uk-heroH:700px}
+  .ukMock{--uk-stageK:.65}
+  .ukMock_stage{transform:scale(var(--uk-stageK));transform-origin:top center;
+    top:calc(100% - 778px * var(--uk-stageK))}
+}
+@media (max-width:470px){
+  .ukMock{--uk-stageK:.59}
+  .homeHeader_contents.is-mock{--uk-heroH:660px}
+}
+@media (max-width:430px){
+  .ukMock{--uk-stageK:.54}
+  .homeHeader_contents.is-mock{--uk-heroH:625px}
+}
+@media (max-width:395px){
+  .ukMock{--uk-stageK:.50}
+  .homeHeader_contents.is-mock{--uk-heroH:600px}
+}
+@media (max-width:365px){
+  .ukMock{--uk-stageK:.45}
+  .homeHeader_contents.is-mock{--uk-heroH:566px}
+}
+@media (max-width:335px){
+  .ukMock{--uk-stageK:.43}
+  .homeHeader_contents.is-mock{--uk-heroH:548px}
+}
+
+/* ---- the headline on a phone ----
+   ukresponsive lets the sentences wrap below 640 so the type can stay large.
+   With this copy that strands "make." alone on a third line, so instead each
+   sentence holds its own line and the type is sized to fit it: 6.6vw gives
+   ~27px at 390 and ~25px at 360, still well above the 16px lede. */
+@media (max-width:640px){
+  /* 8vw is where the longer sentence stops fitting the column at these widths;
+     7.6 keeps a margin so it never wraps and strands "Content." */
+  .homeHeader_contents.is-mock .legionHero_line{white-space:nowrap;
+    width:-moz-max-content;width:max-content;max-width:none;font-size:min(7.6vw,40px)}
+  .homeHeader_contents.is-mock .legionHero_lede{font-size:clamp(14px,4.05vw,17px)}
+}
+
+/* The lede holds ONE line above the phone breakpoint. It cannot rely on the
+   column being wide enough: .legionHero_main is width:max-content, so the lede
+   is boxed by the HEADLINE's width, and around 901 that left 2px of slack.
+   nowrap + max-content takes the column out of it; below 640 it wraps and
+   balances instead, where one line will not fit at any readable size. */
+.homeHeader_contents.is-mock .legionHero_lede{white-space:nowrap;
+  width:-moz-max-content;width:max-content;max-width:none;margin-inline:auto}
+@media (max-width:640px){
+  /* A little more room in the column, and no balancing — balance was splitting
+     it evenly 5/4; filling the first line naturally carries "manages" up. */
+  .homeHeader_contents.is-mock > .homeHeader_inner{padding-inline:18px}
+  .homeHeader_contents.is-mock .legionHero_lede{white-space:normal;width:auto;
+    max-width:100%;text-wrap:normal}
+}
+
+/* the two calls to action stay side by side all the way down; ukported stacks
+   them below 420, and the label padding eases off so they still fit at 320 */
+@media (max-width:420px){
+  .homeHeader .homeHeader_contents.is-mock .hero__buttons{
+    grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:380px){
+  .homeHeader_contents.is-mock .hero__buttons .btn{padding-inline:12px}
+}
+
+/* Below ~340 the trust badge wraps and strands "creators" on its own line;
+   a hair off the type keeps it on one. */
+@media (max-width:339px){
+  .homeHeader_contents.is-mock .hero__badge b{font-size:min(3.7vw,13px)}
+}

@@ -1,0 +1,267 @@
+/* ====================================================================
+   The trade section, moved here from the overview page. Its rules are
+   lifted from ukbrand.css unchanged, so the two pages cannot drift.
+   ==================================================================== */
+
+/* ====================================================================
+   A trade, with terms — three cards in the reference's shape.
+
+   Its anatomy, kept: a centred two-line serif heading over a short grey
+   lede, then three tall cards on a soft warm wash. Inside each, the mock
+   sits at the TOP, a small grey paragraph under it, and the large serif
+   title last — the reading order runs picture, note, name, which is what
+   gives the reference its rhythm. No button under the heading.
+
+   The mocks assert nothing that is not already claimed on this page:
+   no revenue figures, no invented performance numbers.
+   ==================================================================== */
+
+/* display:block is stated rather than assumed: a generic rule on this page
+   lays sections out as flex, which put the heading in a column beside the grid
+   instead of centred above it. */
+/* the cream --bg the two-sides block used to carry, which that block has now
+   given up for white — so the two alternate rather than both reading white */
+.ukTrade{display:block;padding:clamp(56px,7vw,104px) clamp(20px,5vw,48px);
+  /* white, not the cream --bg it used to take: the two sections that sit
+     straight under the hero read as one white shelf under the navy rather than
+     as a band of their own */
+  background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ukTrade_head{max-width:720px;margin:0 auto clamp(34px,4.5vw,62px);text-align:center}
+.ukTrade_h2{margin:0;color:var(--uk-deep);text-wrap:balance;
+  font:400 clamp(28px,3.9vw,52px)/1.14 'Marcellus',Georgia,serif;letter-spacing:-.012em}
+.ukTrade_sub{margin:clamp(13px,1.5vw,18px) auto 0;max-width:48ch;text-wrap:pretty;
+  font:400 clamp(13.5px,1.05vw,15.5px)/1.6 'Lato',sans-serif;color:var(--text-2)}
+.ukTrade_grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(14px,1.7vw,26px);max-width:1180px;margin-inline:auto;align-items:stretch}
+.ukTrade_card{position:relative;border-radius:20px;overflow:hidden;
+  padding:clamp(20px,2.2vw,30px);display:flex;flex-direction:column;
+  border:1px solid var(--line-soft);
+  background:linear-gradient(180deg,#fff 0%,#fdf8ef 58%,#f7ead6 100%)}
+/* The middle card used to take a cool wash so the row alternated warm, cool,
+   warm. The artwork in all three is gold, and a blue card under a gold picture
+   read as the odd one out rather than as a rhythm, so the row is one wash now. */
+.ukTrade_card:nth-child(2){background:linear-gradient(180deg,#fff 0%,#fdf8ef 58%,#f7ead6 100%)}
+/* the mock */
+.ukTrade_vis{position:relative;min-height:clamp(190px,20vw,248px);margin-bottom:clamp(16px,2vw,26px)}
+.ukTrade_script{display:inline-block;font-family:'DM Serif Display',Georgia,serif;font-style:italic;
+  font-size:clamp(13px,1.1vw,15.5px);color:var(--uk-deep);opacity:.72}
+.ukTrade_panel{position:absolute;left:0;right:0;top:22%;background:#fff;border-radius:12px;
+  padding:14px;border:1px solid var(--line-soft);box-shadow:0 12px 28px rgba(11,47,82,.12)}
+.ukTrade_kicker{margin:0;font:600 9.5px/1 'Lato',sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-2)}
+/* note, then name — the title sits last and is pinned to the foot */
+.ukTrade_p{margin:0;text-wrap:pretty;
+  /* stepped up from clamp(12.5px,1vw,14px): these three lines are the card's
+     argument, and at the smaller size they read as a caption under the mock
+     rather than as the point of it */
+  font:400 clamp(14.5px,1.18vw,16.5px)/1.58 'Lato',sans-serif;color:var(--text-2)}
+.ukTrade_t{margin:clamp(14px,1.6vw,20px) 0 0;color:var(--uk-deep);text-wrap:balance;
+  font:400 clamp(21px,2.3vw,31px)/1.16 'Marcellus',Georgia,serif;letter-spacing:-.01em}
+/* The mock is absolutely positioned inside a fixed-height panel, and the tilted
+   photograph runs past the bottom of it — it was overlapping the paragraph
+   below by 22px. The panel is given room for the rotation instead. */
+.ukTrade_vis{min-height:clamp(215px,22vw,276px)}
+/* all three paragraphs settle to the same depth, so the titles below them line
+   up across the row rather than stepping */
+
+/* ---------- even weight across the three cards ----------
+   Card 2 carried one element against the other two cards' two, so it filled
+   37% of its panel where they filled ~90% — a 113px void that made the middle
+   card read as unfinished next to its neighbours. The copy already promises
+   "a tracked link and code", so the code is the missing half, not decoration. */
+.ukTrade_panel{top:8%}
+/* ---------- the three steps ----------
+   Reassigned with the copy: the terms sheet moved to step 2 where the terms are
+   settled, and the rights slip and tracked link to step 3 where the work lands.
+   Step 1 needed a visual of its own — the live stay and the creators applying.
+   Each card keeps two elements so none reads fuller than its neighbours. */
+
+
+/* step 3's slip carries the link, so it sits wider than a status pill */
+
+/* ---------- three identical steps ----------
+   A photograph, a stack of faces and a data panel can never be visually
+   identical however carefully they are sized, so all three now render the SAME
+   component — one panel with a kicker, the stay, two key/value rows, and a pill
+   beneath. Only the values differ. Titles are four words each and break two and
+   two; paragraphs are twenty words each. */
+.ukTrade_vis{min-height:clamp(200px,20vw,250px);display:flex;flex-direction:column;
+  justify-content:flex-start}
+.ukTrade_script{margin-bottom:clamp(12px,1.4vw,18px)}
+.ukTrade_panel{position:static;background:#fff;border-radius:12px;padding:14px 15px;
+  border:1px solid var(--line-soft);box-shadow:0 12px 28px rgba(11,47,82,.10)}
+.ukTrade_kicker{margin:0;font:600 9.5px/1 'Lato',sans-serif;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-2)}
+.ukTrade_stay{margin:9px 0 12px;font:400 14px/1.3 'Lato',sans-serif;color:var(--uk-deep)}
+.ukTrade_stay b{font-weight:700}
+.ukTrade_kv{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding:8px 0;border-top:1px solid var(--line-soft);
+  font:400 11.5px/1.3 'Lato',sans-serif;color:var(--text-2)}
+.ukTrade_kv b{font-weight:700;color:var(--uk-deep);white-space:nowrap;
+  max-width:60%;overflow:hidden;text-overflow:ellipsis}
+.ukTrade_pill{align-self:flex-start;margin-top:clamp(12px,1.4vw,18px);
+  background:#fff;border:1px solid var(--line-soft);border-radius:9999px;padding:8px 15px;
+  font:700 11.5px/1 'Lato',sans-serif;color:var(--uk-deep);white-space:nowrap;
+  box-shadow:0 6px 16px rgba(11,47,82,.08)}
+/* ---------- tightened ----------
+   The card was carrying dead vertical space in three places: 29px above the
+   step label, a 45px gap under the pill, and an empty line's worth of
+   min-height on the paragraph. None of it was doing any work. */
+.ukTrade_card{padding:clamp(16px,1.7vw,22px) clamp(18px,1.9vw,26px) clamp(18px,1.9vw,26px)}
+.ukTrade_script{margin-bottom:clamp(9px,1vw,13px)}
+.ukTrade_vis{min-height:0;margin-bottom:clamp(12px,1.4vw,18px)}
+.ukTrade_pill{margin-top:clamp(10px,1.1vw,14px)}
+.ukTrade_p{margin:0}
+.ukTrade_t{margin-top:clamp(10px,1.2vw,15px)}
+/* ---------- no card shadows ----------
+   Every card and nested panel in these two sections carried a soft lift. On a
+   cream ground the blur bleeds past the card into the section's padding, which
+   is the smudge that shows at the section seams. The 1px border already gives
+   each card its edge, so the shadows come off entirely — outer and inner. */
+.ukSides_card,
+.ukSides_vis,
+.ukSides_chips span,
+.ukSides_mini,
+.ukSides_brief,
+.ukTrade_card,
+.ukTrade_panel,
+.ukTrade_pill{box-shadow:none}
+/* ---------- no rules between sections ----------
+   Every section boundary carried a 1px line. They are all off: the sections are
+   already distinguished by their own grounds, and the lines only drew attention
+   to the seams. The nav pill and the footer bar keep theirs — those are edges
+   within a component, not dividers between sections. */
+.ukTrade,
+.ukMktSection--band,
+.ukMktStats,
+.ukSides,
+.ukSection,
+.ukFront_main{border-top:0;border-bottom:0}
+/* ====================================================================
+   The section headline — one standard, system wide.
+
+   Taken from Featured Creators, which is the accepted treatment:
+   Marcellus SC at 52px/400, tracking -0.008em, leading 1.08, with a
+   gradient clipped to the text rather than a flat fill.
+
+   Only the two gradient stops change between grounds. On dark the run is
+   white into gold; on light it is the deep ink into the gold's dark end,
+   so the same movement reads without the type going pale on cream.
+   ==================================================================== */
+.ukTrade_h2,
+.ukMktH2,
+.ukResults .uk_title,
+.ukPricing .uk_title,
+.ukFaq_title,
+.ukFeat .uk_title{
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,3.9vw,52px);line-height:1.08;letter-spacing:-.008em;
+  background:linear-gradient(101.34deg,var(--h-a) 0.18%,var(--h-b) 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important}
+/* on a light ground */
+.ukTrade_h2,.ukMktH2{--h-a:#0B2F52; --h-b:#8a6414}
+
+/* the system headline standard, verbatim */
+.ukTrade_h2,
+.ukMktH2,
+.ukResults .uk_title,
+.ukPricing .uk_title,
+.ukFaq_title,
+.ukFeat .uk_title{
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,3.9vw,52px);line-height:1.08;letter-spacing:-.008em;
+  background:linear-gradient(101.34deg,var(--h-a) 0.18%,var(--h-b) 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important}
+
+/* on a dark ground */
+.ukResults .uk_title,.ukPricing .uk_title,.ukFaq_title,.ukFeat .uk_title{
+  --h-a:#ffffff; --h-b:#d7a543}
+
+/* on a light ground */
+.ukTrade_h2,.ukMktH2{--h-a:#0B2F52; --h-b:#8a6414}
+
+/* ====================================================================
+   The card, rebuilt: a picture, the headline, then the line under it.
+
+   What came out was the mock — the step label, the white panel with its
+   kicker, stay and two key/value rows, and the pill beneath. It said the same
+   thing the headline says, twice, and it was most of the card's height. In its
+   place is a plain frame the real artwork drops into, carrying the size it
+   should be drawn at.
+
+   The order changed with it. The card used to read picture, note, name, with
+   the title pinned last; it now reads picture, name, note, which is the order
+   somebody actually reads a card in.
+   ==================================================================== */
+.ukTrade_ph{
+  display:grid;place-items:center;
+  aspect-ratio:16/10;
+  margin-bottom:clamp(13px,1.4vw,17px);
+  border-radius:12px;
+  border:1px dashed rgba(11,47,82,.22);
+  background:rgba(11,47,82,.035);
+}
+.ukTrade_ph span{
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.14em;
+  color:rgba(11,47,82,.42);
+}
+/* the headline came down from clamp(21px,2.3vw,31px): at 31px it was the size
+   of a section heading sitting inside a card */
+.ukTrade_t{
+  margin:0 0 clamp(6px,.7vw,9px);
+  font-size:clamp(17px,1.55vw,21px);line-height:1.2;
+}
+.ukTrade_p{margin:0}
+/* and the card closes up around the three of them. The frame around the picture
+   is tight — 7px of card, no more — and the copy takes its own inset so the
+   text is not reading off the card's edge. */
+.ukTrade_card{padding:7px}
+.ukTrade_t,
+.ukTrade_p{padding-inline:clamp(7px,.8vw,11px)}
+.ukTrade_p{padding-bottom:clamp(7px,.8vw,11px)}
+.ukTrade_grid{gap:clamp(12px,1.4vw,20px)}
+
+/* the artwork, in the frame the placeholder held. Drawn at 16:10, so the card
+   is the only thing setting its width and nothing is cropped. It sits tight to
+   the card's top and sides — close to the edge, not against it — the way the
+   hero rail's stay card holds its photograph. */
+.ukTrade_shot,
+.ukTrade_ph{
+  display:block;width:100%;
+  margin:0 0 clamp(11px,1.2vw,14px);
+  aspect-ratio:16/10;
+  border-radius:14px;
+}
+.ukTrade_shot{height:auto;object-fit:cover}
+.ukTrade_ph{display:grid;place-items:center}
+
+/* ====================================================================
+   Tablet and phone.
+
+   uktrade.css loads after ukbrand.css, and ukbrand.css is where the three-up
+   row was told to become two-up and then one-up. Restating the columns here
+   without those breakpoints meant the row stayed three-up all the way down:
+   at 360px each card was 99px wide, which is narrower than the word
+   "commissions" set at the card's own heading size. The breakpoints come back
+   here, after the rule that was overriding them.
+   ==================================================================== */
+@media (max-width:980px){
+  .ukTrade_grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .ukTrade_grid{grid-template-columns:minmax(0,1fr)}
+  /* one card to a row is wide enough to read at the desktop measure, so the
+     copy takes the room rather than the card growing taller than it needs */
+  .ukTrade_card{max-width:520px;margin-inline:auto;width:100%}
+}
+
+/* the odd third card, on the two-up row: pinned to the left of a row of its
+   own it reads as a mistake, so it keeps a column's width and sits centred */
+@media (max-width:980px) and (min-width:641px){
+  .ukTrade_card:nth-child(3):last-child{
+    grid-column:1/-1;justify-self:center;
+    width:calc(50% - (clamp(12px,1.4vw,20px) / 2));
+  }
+}

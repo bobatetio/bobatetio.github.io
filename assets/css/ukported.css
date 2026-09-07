@@ -1,0 +1,1484 @@
+/* Ported from the tokscript/Ukreate build with the sections that use it.
+   Extracted by matching every rule whose selector names a class those
+   sections actually use, so nothing unrelated comes across. */
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12.782px 23.239px;border-radius:13.944px;font-family:'Lato',sans-serif;font-size:16px;line-height:23.239px;cursor:pointer;white-space:nowrap;text-decoration:none}
+.btn--gold{background:linear-gradient(5.71deg,#d7a543 13.297%,#efc470 89.683%);border:1.162px solid rgba(215,165,67,0.57);box-shadow:0px 1.162px 2.324px 0px #d7a543,0px 0px 0px 2.324px rgba(255,255,255,0.4);color:#fff;text-shadow:0px 0px 0.581px white}
+.btn{position:relative;overflow:hidden;transition:transform .25s cubic-bezier(.22,.9,.35,1)}
+.btn:hover{transform:scale(1.02)}
+.btn:active{transform:scale(.96)}
+.btn::after{content:"";position:absolute;top:0;bottom:0;left:-60px;width:50px;transform:skewX(-20deg);background:linear-gradient(to right,transparent,rgba(255,255,255,.28),transparent);pointer-events:none;z-index:3}
+.btn:hover::after{animation:btnGlare 1.85s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.btn:hover::after{animation:none}.btn:hover,.btn:active{transform:none}}
+.btnRoll{display:block;overflow:hidden;height:23.239px;position:relative}
+.btnRoll span{display:block;position:relative;line-height:23.239px;transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btnRoll span:before{content:attr(data-hover);position:absolute;top:100%;left:0;color:currentColor;transform-origin:0 50%;transform:rotate(20deg) translateY(132%);transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btnRoll span em{font-style:normal;display:inline-block;transform-origin:0 50%;transition:transform .5s cubic-bezier(.66,0,.34,1)}
+.btn:hover .btnRoll span{transform:translateY(-100%)}
+.btn:hover .btnRoll span:before{transform:rotate(0)}
+.btn:hover .btnRoll span em{transform:rotate(-20deg) translateY(-32%)}
+.hero__buttons .btnRoll{font-weight:400}
+.ukStats{margin:clamp(38px,4vw,64px) auto clamp(56px,6vw,96px);padding:clamp(30px,3.2vw,46px) 0;max-width:1100px;border-block:1px solid var(--uk-rule-dark);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));text-align:center}
+
+.philoStat{position:relative;padding:clamp(4px,.6vw,10px) clamp(10px,1.6vw,24px);opacity:0;transform:translateY(46px);transition:opacity .75s cubic-bezier(.22,.9,.35,1),transform .9s cubic-bezier(.19,1,.28,1);will-change:transform,opacity}
+
+.philoStat+.philoStat:before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:1px;height:58%;background:rgba(255,255,255,.18)}
+
+.philoStat.is-in{opacity:1;transform:none}
+
+.philoStat:nth-child(2){transition-delay:.12s}
+
+.philoStat:nth-child(3){transition-delay:.24s}
+
+.philoStat:nth-child(4){transition-delay:.36s}
+
+.philoStat_num{display:block;margin:0;font-family:"Marcellus",serif;font-weight:400;font-size:clamp(28px,3vw,42px);line-height:1;letter-spacing:-.01em;white-space:nowrap;background:linear-gradient(101.34deg,#fff .18%,#d7a543 210%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+.philoStat_label{display:block;margin:8px 0 0;font-family:'Lato','Inter',sans-serif;font-size:13px;letter-spacing:.02em;line-height:1.3;color:#fff;white-space:nowrap}
+
+/* text-only CTA: the label carries the action, no pill, no qualifier line */
+.ukCreators_cta{display:flex;justify-content:center}
+
+@media (max-width:700px){
+  .ukStats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:clamp(22px,5vw,30px)}
+  .philoStat:nth-child(3):before{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){.philoStat{transform:none;transition:opacity .35s ease}}
+.homePhilosophy .sticky_main{padding-inline-start:0!important}
+.homePhilosophy .inner{padding-inline:5vw!important}
+.homePhilosophy .label,.homeProjects .label,.homeCompany .label{display:none!important}
+.ukComp{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:80vh;padding-block:clamp(50px,7vw,100px)}
+.ukComp_eyebrow{font-family:'Lato',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:clamp(11px,1vw,13px);color:#e6b64c;margin:0 0 clamp(14px,1.5vw,20px);text-shadow:0 2px 14px rgba(0,0,0,.7)}
+.ukComp_title{font-family:"Marcellus",serif;font-weight:400;letter-spacing:-.03em;line-height:1.08;font-size:clamp(26px,3.5vw,48px);margin:0;background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 20px rgba(0,0,0,.55))}
+.ukComp_sub{font-family:'Lato',sans-serif;font-size:clamp(12px,1.05vw,14.5px);line-height:1.5;color:rgba(255,255,255,.85);margin:clamp(12px,1.4vw,20px) auto 0;white-space:nowrap;text-shadow:0 2px 14px rgba(0,0,0,.7)}
+.ukComp_cards{display:flex;justify-content:center;align-items:stretch;gap:clamp(28px,4vw,60px);margin-top:clamp(52px,6.8vw,100px)}
+.ukComp .ukCard{position:relative;flex:0 0 auto;width:clamp(230px,23vw,320px);border-radius:24px;padding:clamp(20px,1.9vw,30px) clamp(18px,1.7vw,26px) clamp(26px,2.6vw,38px);background:transparent;will-change:transform}
+.ukComp .ukCard::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:0;filter:url(#ukSquiggle)}
+.ukComp .ukCard_pill,.ukComp .ukCard_list{position:relative;z-index:1}
+.ukSquiggleDef{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+.hiwStack{position:relative;height:400vh;color:#fff}
+.hiwStack_pin{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.hiwStack_inner{display:flex;align-items:center;gap:clamp(36px,7vw,120px);max-width:1240px;margin-inline:auto;padding-inline:clamp(24px,7vw,120px) clamp(12px,2vw,40px);width:100%}
+.hiwStack_left{flex:1 1 auto;min-width:0}
+.hiwStack_right{flex:0 0 auto;width:clamp(372px,41vw,516px);display:flex;align-items:center;gap:clamp(44px,5.4vw,96px)}
+.hiwStack_stage{position:relative;flex:1 1 auto;height:clamp(470px,58vh,600px)}
+.hiwStack_step{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;pointer-events:none}
+.hiwStack_step.is-active{pointer-events:auto}
+.hiwStack_step .hiw__step-badge,.hiwStack_step .hiw__step-title,.hiwStack_step .hiw__step-desc{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.hiwStack_step .hiw__cardWrap{opacity:0;transform:translateY(46px) scale(.94);transition:opacity .55s ease,transform .85s cubic-bezier(.16,1,.3,1);position:relative;perspective:900px;width:100%;max-width:380px}
+.hiwStack_step .hiw__step{width:100%}
+.hiwStack_step .hiw__step-badge{display:none}
+.hiwStack_step.is-active .hiw__step-badge{opacity:1;transform:none;transition-delay:.05s}
+.hiwStack_step.is-active .hiw__step-title{opacity:1;transform:none;transition-delay:.12s}
+.hiwStack_step.is-active .hiw__step-desc{opacity:1;transform:none;transition-delay:.19s}
+.hiwStack_step.is-active .hiw__cardWrap{opacity:1;transform:none;transition-delay:.26s}
+.hiw__glow{position:absolute;inset:-16%;z-index:-1;border-radius:50%;filter:blur(46px);opacity:.55;pointer-events:none}
+.hiw__cardWrap--teal .hiw__glow{background:radial-gradient(closest-side,#2e839d,transparent)}
+.hiw__cardWrap--gold .hiw__glow{background:radial-gradient(closest-side,#ea4359,transparent)}
+.hiw__cardWrap--blue .hiw__glow{background:radial-gradient(closest-side,#65d2e9,transparent)}
+.hiwStack_step .hiw__card{transform-style:preserve-3d;transition:transform .2s ease;will-change:transform}
+.hiwStack_step .hiw__card-img{transition:transform .2s ease}
+.hiwRail{flex:0 0 auto;align-self:center;display:flex;flex-direction:column;align-items:center;height:clamp(260px,40vh,380px)}
+.hiwRail_seg{flex:1 1 auto;width:1px;margin:6px 0;background:rgba(255,255,255,.32);border-radius:2px;position:relative;overflow:hidden}
+.hiwRail_segFill{position:absolute;top:0;left:0;width:100%;height:0;background:rgba(255,255,255,.95);transition:height .18s ease-out}
+.hiwRail_node{flex:0 0 auto;font-family:"Marcellus",serif;font-style:italic;font-size:clamp(19px,1.6vw,26px);line-height:1;color:rgba(255,255,255,.45);padding:6px 0;display:flex;align-items:center;justify-content:center;transition:color .5s ease}
+.hiwRail_node.is-active{color:rgba(255,255,255,.95)}
+.hiwStack_step .hiw__step{padding-bottom:0}
+@media (max-width:860px){.hiwStack_inner{flex-direction:column;align-items:center;gap:0;padding-block:48px}.hiwStack_left{position:relative;top:auto;width:100%;max-width:460px;flex:0 0 auto}.hiwStack_left .hiw__left-content{align-items:center;text-align:center}.hiwStack_left .hiw__left-body{align-items:center}.hiwStack_right{width:100%;max-width:420px;padding-top:36px}.hiwStack{height:auto}.hiwStack_pin{position:relative;top:auto;height:auto;display:block;overflow:visible}.hiwStack_right{flex-direction:column;width:100%;max-width:420px;gap:0}.hiwRail{display:none}.hiwStack_stage{height:auto;display:flex;flex-direction:column;gap:44px}.hiwStack_step{position:relative;inset:auto;pointer-events:auto;padding-bottom:0}.hiwStack_step .hiw__step-badge,.hiwStack_step .hiw__step-title,.hiwStack_step .hiw__step-desc,.hiwStack_step .hiw__cardWrap{opacity:1;transform:none}}
+.hiw__left-content{display:flex;flex-direction:column;gap:12px}
+.hiw__label{font-family:'Lato',sans-serif;font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#d7a543}
+.hiw__left-body{display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+.hiw__title{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(32px,3.6vw,48px);letter-spacing:-.02em;line-height:1.05;margin:0;max-width:470px;text-wrap:balance;background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hiw__sub{font-family:'Lato',sans-serif;font-size:clamp(15px,1.15vw,16px);line-height:1.6;color:rgba(255,255,255,.72);margin:0}
+.hiw__step{display:flex;flex-direction:column;align-items:center;gap:clamp(20px,2.4vw,33px);padding-bottom:clamp(46px,6vw,84px);transition:opacity .8s ease,transform .8s ease}
+.hiw__step:last-child{padding-bottom:0}
+.hiw__step-header{display:flex;flex-direction:column;align-items:center;gap:11px;text-align:center;max-width:250px}
+.hiw__step-badge{width:26px;height:26px;border-radius:9999px;background:linear-gradient(135deg,#aeecff,#8fd3e8);display:flex;align-items:center;justify-content:center;font-family:'Lato',sans-serif;font-weight:700;font-size:11px;color:#102e37;flex-shrink:0}
+.hiw__step-title{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(20px,1.7vw,23px);line-height:1.1;color:#fff;text-align:center;margin:0}
+.hiw__step-desc{font-family:'Lato',sans-serif;font-size:14px;line-height:1.4;color:rgba(255,255,255,.6);text-align:center;margin:0;text-wrap:pretty}
+.hiw__card{width:100%;max-width:380px;aspect-ratio:360/278;border-radius:32px;box-shadow:0 24px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.09);overflow:hidden;position:relative;flex-shrink:0}
+.hiw__card--teal{background:linear-gradient(to bottom,#102e37,#2e839d)}
+.hiw__card--gold{background:linear-gradient(to bottom,#d7a543,#ea4359)}
+.hiw__card--blue{background:linear-gradient(to bottom,#65d2e9,#102e37)}
+.hiw__card-img{position:absolute;left:11.4%;top:16.9%;width:88.6%;height:83.1%;object-fit:cover;object-position:left top;border-radius:14px 0 0 0;pointer-events:none}
+@media (max-width:860px){.hiw__inner{flex-direction:column;align-items:center;gap:0}.hiw__left{position:relative;top:auto;width:100%;max-width:460px;flex:0 0 auto}.hiw__left-content{align-items:center;text-align:center}.hiw__left-body{align-items:center}.hiw__left-body .btn{display:none}.hiw__title{max-width:none}.hiw__right{width:100%;max-width:420px;padding-top:36px}.hiw__step--hidden{opacity:1;transform:none}.hiw__mobile-cta{display:flex;justify-content:center;margin-top:8px}}
+.ukComp .ukCard--without{z-index:1;box-shadow:0 24px 55px rgba(0,0,0,.45)}
+.ukComp .ukCard--without::before{background:#e9e5de}
+.ukComp .ukCard--way{z-index:2;box-shadow:0 30px 72px rgba(0,0,0,.6)}
+.ukComp .ukCard--way::before{background:linear-gradient(180deg,#0d3358,#0a1922);border:1px solid rgba(230,182,76,.45)}
+.ukComp .ukCard_pill{display:block;width:-moz-fit-content;width:fit-content;margin:0 auto clamp(18px,2vw,28px);background:#fff;color:#08233D;font-family:'Lato',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:clamp(10px,.9vw,12px);padding:clamp(8px,.85vw,12px) clamp(18px,1.8vw,28px);border-radius:9999px}
+.ukComp .ukCard_list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:clamp(13px,1.5vw,20px)}
+.ukComp .ukCard_list li{font-family:'Lato',sans-serif;text-transform:uppercase;letter-spacing:.09em;font-size:clamp(10px,.85vw,12.5px);line-height:1.45;text-align:center;text-wrap:balance}
+.ukComp .ukCard--without .ukCard_list li{color:#5f6367}
+.ukComp .ukCard--way .ukCard_list li{color:rgba(255,255,255,.92)}
+@media (max-width:720px){.ukComp_cards{flex-direction:column;align-items:center;gap:20px}.ukComp .ukCard{width:min(90vw,360px);transform:none;margin:0}}
+.homeProjects_contents .sticky_main{padding-inline-start:0!important}
+.homeProjects_content{padding-inline-start:0!important;padding-block-start:0!important;height:auto!important}
+.homeProjects_contents .sticky_sub{display:none!important}
+@media (max-width:640px){.ukComp_sub{white-space:normal;max-width:340px}}
+/* ===== Ukreate new sections — dark theme, matching the site ===== */.ukSection{position:relative;padding-block:clamp(64px,9vw,128px);padding-inline:clamp(24px,7vw,120px);color:#fff}
+.uk_head{max-width:780px;margin:0 auto clamp(40px,5vw,72px);text-align:center}
+.uk_eyebrow{font-family:'Lato',sans-serif;font-weight:700;letter-spacing:.12em;font-size:clamp(11px,1vw,13px);color:#d7a543;margin:0 0 clamp(14px,1.6vw,20px)}
+.uk_title{font-family:"Marcellus",serif;font-weight:400;font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);letter-spacing:var(--uk-h2-track);margin:0;text-wrap:balance;background:linear-gradient(101.34deg,#ffffff 0.18%,#d7a543 221.09%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.uk_sub{font-family:'Lato',sans-serif;font-size:clamp(14px,1.3vw,17px);line-height:1.6;color:rgba(255,255,255,.66);margin:clamp(14px,1.6vw,20px) auto 0;max-width:600px;text-wrap:pretty}
+.ukCreators_cta{display:flex;flex-direction:column;align-items:center;gap:clamp(12px,1.4vw,16px);margin-top:clamp(28px,3.4vw,44px)}
+.ukCf_card.is-active .ukCf_mute{opacity:1;pointer-events:auto}
+.ukCf_card:hover .fcMini,.ukCf_card.is-active .fcMini{opacity:1;transform:translateY(0) scale(1)}
+.ukCf_card:hover .fcPro_head,.ukCf_card.is-active .fcPro_head{opacity:1;transform:none;transition-delay:.06s}
+.ukCf_card:hover .fcPro_chips,.ukCf_card.is-active .fcPro_chips{opacity:1;transform:none;transition-delay:.14s}
+.ukCf_card:hover .fcPro_foot,.ukCf_card.is-active .fcPro_foot{opacity:1;transform:none;transition-delay:.2s}
+.ukCf_card.is-active{cursor:default;box-shadow:0 34px 82px rgba(0,0,0,.6),0 0 0 1px rgba(101,210,233,.5)}
+/* ---- Proven Results ---- */.ukResults_stage{position:relative;max-width:1120px;margin-inline:auto}
+/* ---- Complete Platform ---- */.ukPf_grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.8vw,26px);max-width:1200px;margin-inline:auto}
+.ukPf_card{background:linear-gradient(180deg,#102734,#061829);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:clamp(22px,2vw,30px) clamp(22px,2vw,30px) 0;overflow:hidden;box-shadow:0 24px 56px rgba(0,0,0,.4)}
+.ukPf_title{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(19px,1.7vw,23px);color:#fff;margin:0 0 8px}
+.ukPf_desc{font:400 clamp(13px,1.1vw,14.5px)/1.5 'Lato',sans-serif;color:rgba(255,255,255,.64);margin:0 0 clamp(18px,2vw,26px)}
+.ukPf_shot{border-radius:14px 14px 0 0;overflow:hidden;margin-left:clamp(6px,1vw,14px);box-shadow:0 -2px 20px rgba(0,0,0,.3)}
+.ukPf_shot img{width:100%;display:block;border-radius:14px 14px 0 0}
+.ukFc .uk_eyebrow{margin-bottom:14px}
+.ukFc .uk_title,.ukFc_text .uk_title{text-align:left}
+.ukFc .uk_sub{margin-left:0;text-align:left;max-width:460px}
+.ukPr_card .btn{margin-bottom:clamp(20px,2.4vw,28px);align-self:stretch;text-align:center}
+.ukPr_card .btn--gold{justify-content:center}
+@media (max-width:640px){  .ukPf_grid{grid-template-columns:1fr}  .ukNews_form{flex-direction:column;border-radius:20px}  .ukCrd{width:60vw}.ukCrd--center{width:68vw}}
+.ukResults{overflow:hidden;isolation:isolate}
+.ukResults::before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,#0B2F52 0%,rgba(13,32,38,.5) 22%,rgba(13,32,38,.5) 74%,#0B2F52 100%),url(/assets/img/uk/298df834-4d50-4185-a0d0-f4f398468592.webp) center/cover}
+.ukResults .uk_head,.ukResults_stage{position:relative;z-index:1}
+
+/* Proven Results — case study card (ported from previous Ukreate build) */
+.ukResults .ukResults_stage{max-width:1180px}
+
+.cs-card{position:relative;z-index:1;width:100%;max-width:1145px;margin:0 auto;background:#fff;border-radius:clamp(26px,3vw,50px);box-shadow:0 34px 80px rgba(0,0,0,.45);display:flex;gap:clamp(18px,2.4vw,34px);padding:clamp(14px,1.4vw,17px);padding-right:clamp(14px,2.6vw,33px);overflow:hidden;align-items:stretch}
+
+.cs-left{position:relative;flex:0 0 47.9%;border-radius:30px;overflow:hidden;background:#8f8f8f;min-height:clamp(320px,33vw,0px)}
+
+.cs-hotel-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.cs-gradient{position:absolute;bottom:0;left:0;right:0;height:155px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.6) 39%,transparent 100%);pointer-events:none}
+
+.cs-thumbs{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;gap:9px;align-items:center}
+
+.cs-thumb{position:relative;width:clamp(40px,4vw,46px);height:clamp(72px,7.2vw,82px);border-radius:6px;border:1.5px solid #102e37;overflow:hidden;flex-shrink:0;background:#000;cursor:pointer}
+
+.cs-thumb img.cs-thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.cs-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;background:rgba(0,0,0,.25);transition:background .18s}
+
+.cs-thumb:hover .cs-play{background:rgba(0,0,0,.45)}
+
+.cs-play svg{width:18px;height:18px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+
+.cs-right{flex:1;display:flex;flex-direction:column;gap:15px;min-width:0;padding-top:4px;padding-bottom:4px}
+
+.cs-logo-card{width:134px;height:54px;background:#fff;border:.858px solid #000;border-radius:13.7px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.cs-logo-card img{max-width:82%;max-height:82%;object-fit:contain}
+
+.cs-sections{display:flex;flex-direction:column;gap:15px}
+
+.cs-section{display:flex;flex-direction:column;gap:6px}
+
+.cs-section-title{font-family:"Marcellus",serif;font-size:clamp(22px,2vw,28px);letter-spacing:.09px;line-height:1.27;color:#102e37;margin:0}
+
+.cs-section-text{font-family:"Lato",sans-serif;font-size:clamp(15px,1.2vw,17px);letter-spacing:-.2px;line-height:1.53;color:#696a72;margin:0}
+
+.cs-divider{border:none;border-top:1px solid rgba(0,0,0,.1);margin:0}
+
+.cs-stats{display:flex;gap:clamp(30px,3.2vw,48px);align-items:flex-start}
+
+.cs-stat{display:flex;flex-direction:column;align-items:flex-start;width:91px}
+
+.cs-stat-value{font-family:"Lato",sans-serif;font-size:clamp(22px,1.9vw,27px);letter-spacing:.09px;line-height:1.32;color:#102e37;display:flex;align-items:center;gap:3px;white-space:nowrap}
+
+.cs-trending{width:22px;height:22px;flex-shrink:0}
+
+.cs-stat-label{font-family:"Lato",sans-serif;font-weight:500;font-size:14px;letter-spacing:-.2px;line-height:1.85;color:#696a72}
+
+.cs-cta-row{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:auto;padding-top:6px}
+
+.cs-cta-btn{background:linear-gradient(4.914deg,#d7a543 13.297%,#efc470 89.683%);border:1.162px solid rgba(215,165,67,.57);box-shadow:0 1.162px 2.324px 0 #d7a543,0 0 0 2.324px rgba(255,255,255,.4);padding:12.782px 23.239px;border-radius:13.944px;font-family:"Lato",sans-serif;font-size:16px;line-height:1.45;text-shadow:0 0 .581px #fff;color:#fff;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
+
+.cs-nav{display:flex;gap:12px;align-items:center}
+
+.cs-nav-btn{width:49px;height:49px;border-radius:14px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease,opacity .2s ease}
+
+.cs-nav-btn svg{width:22px;height:22px;transition:opacity .2s ease}
+
+.cs-nav-btn--prev{background:rgba(217,164,65,.08)}
+
+.cs-nav-btn--next{background:#d9a441}
+
+.cs-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9999;align-items:center;justify-content:center}
+
+.cs-modal.is-open{display:flex}
+
+.cs-modal-inner{position:relative;width:min(360px,90vw);aspect-ratio:9/16;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+
+.cs-modal video{width:100%;height:100%;object-fit:cover}
+
+.cs-modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.4);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+
+.cs-modal-close svg{width:16px;height:16px}
+
+@media(max-width:880px){
+.cs-card{flex-direction:column;align-items:stretch;max-width:520px;padding:14px;border-radius:26px;gap:18px}
+.cs-left{flex:0 0 auto;width:100%;height:220px;min-height:0;border-radius:16px}
+.cs-right{width:100%;padding:4px 0}
+.cs-logo-card{width:106px;height:44px}
+.cs-stats{flex-wrap:wrap;gap:clamp(20px,2.4vw,30px)}
+.cs-cta-row{flex-wrap:wrap;gap:14px}
+}
+
+/* Proven Results — dark mode card (the live background is in ukdark.css) */
+.cs-card{background:linear-gradient(180deg,#102734,#061829);border:1px solid rgba(255,255,255,.09)}
+.cs-section-title{color:#f4f1eb}
+.cs-section-text{color:rgba(255,255,255,.62)}
+.cs-stat-value{color:#f4f1eb}
+.cs-stat-label{color:rgba(255,255,255,.58)}
+.cs-divider{border-top-color:rgba(255,255,255,.1)}
+.cs-logo-card{border-color:rgba(0,0,0,.12)}
+.cs-card{zoom:.9}
+.cs-section-text{font-size:clamp(16px,1.35vw,19px)}
+
+/* ── Testimonials (ported from previous Ukreate build + Figma 133:3364) ── */
+.testimonials{position:relative;width:100%;background:#f5f7f7;overflow:hidden;padding:clamp(46px,5.5vw,78px) 0;color:#102e37}
+
+.testimonials__map{position:absolute;inset:0;background:url(/assets/img/uk/testimonials-map.png) center top/cover no-repeat;pointer-events:none;opacity:.92}
+
+.testimonials__plane{position:absolute;left:clamp(-60px,-3vw,-10px);bottom:clamp(0px,2vw,26px);width:min(690px,50vw);height:auto;z-index:1;pointer-events:none;filter:drop-shadow(0 28px 36px rgba(16,46,55,.14))}
+
+.testimonials__inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 clamp(24px,6vw,90px);display:grid;grid-template-columns:1fr minmax(0,517px);gap:clamp(30px,5vw,80px);align-items:center;min-height:clamp(500px,40vw,600px)}
+
+.testimonials__left{display:flex;flex-direction:column;gap:11px;align-self:start;padding-top:clamp(6px,2.6vw,36px)}
+
+.testimonials__label{font:700 clamp(11px,1vw,14px)/1 "Lato","Inter",sans-serif;letter-spacing:2px;text-transform:uppercase;color:#102e37;margin:0}
+
+.testimonials__title{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(30px,4vw,48px);letter-spacing:-1.5px;line-height:1.04;color:#102e37;margin:8px 0 0;max-width:min(470px,100%);text-wrap:balance}
+
+.testimonials__sub{font:400 clamp(14px,1.2vw,16px)/1.75 "Lato","Inter",sans-serif;letter-spacing:-.2px;color:#696a72;margin:8px 0 4px;max-width:34ch}
+
+.tc-cta{align-self:flex-start;background:linear-gradient(5.745deg,#d7a543 13.297%,#efc470 89.683%);border:1.162px solid rgba(215,165,67,.57);box-shadow:0 1.162px 2.324px 0 #d7a543,0 0 0 2.324px rgba(255,255,255,.4);padding:12.782px 23.239px;border-radius:13.944px;font-family:"Lato","Inter",sans-serif;font-size:16px;line-height:1.45;text-shadow:0 0 .581px #fff;color:#fff;text-decoration:none;display:inline-block;margin-top:8px;transition:filter .2s ease,transform .2s ease}
+
+.tc-cta:hover{filter:brightness(1.04);transform:translateY(-1px)}
+
+.tc-card{position:relative;z-index:4;width:100%;max-width:517px;border-radius:27px;background:linear-gradient(129deg,#aeecff 0%,#102e37 100%);box-shadow:0 18px 44px rgba(16,46,55,.3);display:flex;flex-direction:column;padding:clamp(34px,3vw,46px) clamp(28px,3.4vw,55px) clamp(30px,2.8vw,44px) clamp(30px,3.8vw,60px);gap:clamp(24px,2.4vw,35px);margin-top:clamp(56px,5vw,67px)}
+
+.tc-avatar{position:absolute;right:clamp(24px,3vw,38px);top:clamp(-56px,-4.6vw,-67px);width:clamp(104px,10vw,144px);height:clamp(106px,10.2vw,147px);border-radius:50%;border:2px solid #fff;overflow:hidden;transform:rotate(-1deg);background:#fff;z-index:5;box-shadow:0 12px 26px rgba(16,46,55,.22)}
+
+.tc-avatar img{width:106%;height:100%;object-fit:cover;margin-left:-3%;display:block}
+
+.tc-content{display:flex;flex-direction:column;gap:clamp(24px,2.4vw,35px)}
+
+.tc-name{font-family:"Marcellus",serif;font-weight:400;font-size:clamp(24px,2.4vw,32px);letter-spacing:.06px;line-height:1.1;color:#fff;text-transform:capitalize;margin:0}
+
+.tc-role{font:400 clamp(14px,1.15vw,16px)/1.4 "Lato","Inter",sans-serif;letter-spacing:.06px;color:rgba(255,255,255,.85);text-transform:capitalize;margin:6px 0 0}
+
+.tc-quote{font:400 clamp(17px,1.55vw,22px)/1.5 "Lato","Inter",sans-serif;color:#fff;margin:0}
+
+.tc-nav{display:flex;gap:12px;align-items:center}
+
+.tc-nav-btn{width:49px;height:49px;border-radius:14px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s ease}
+
+.tc-nav-btn svg{width:22px;height:22px}
+
+.tc-nav-btn--prev{background:rgba(217,164,65,.08)}
+
+.tc-nav-btn--next{background:#d9a441}
+
+@media(max-width:900px){
+.testimonials__inner{grid-template-columns:1fr;min-height:0;gap:0}
+.testimonials__plane{position:relative;left:auto;bottom:auto;width:min(360px,74%);margin:26px auto -6px;display:block}
+.testimonials__map{opacity:.5}
+.testimonials__left{align-items:flex-start}
+.tc-card{margin-top:64px;max-width:520px}
+}
+.ukFeat .uk_title{background:none;-webkit-background-clip:border-box;background-clip:border-box;-webkit-text-fill-color:#102e37;color:#102e37}
+.ukFeat .uk_head{margin-bottom:clamp(18px,2.2vw,28px)}
+.ukFeat .ukCreators_cta{margin-top:clamp(18px,2.2vw,28px)}
+.ukFeat .uk_head{margin-bottom:clamp(30px,3.6vw,48px)}
+.ukFeat .ukCreators_cta{margin-top:clamp(26px,3vw,40px)}
+.ukFeat .uk_head,.ukFeat .ukEx,.ukFeat .ukCreators_cta{will-change:transform}
+
+/* the comparison block sits a step deeper, as the source has it */
+.homeProjects{background:linear-gradient(180deg,var(--uk-deep) 0%,var(--uk-deep-2) 100%)}
+
+/* testimonials already reads on its own pale ground — left alone */
+
+
+/* The last few classes these sections use live in that build's main
+   bundle rather than its inline style. Only their rules are taken. */
+.homeProjects_inner,.homeProjects_content{height:100%}
+.homeProjects_bg{grid-area:1/1}
+@media(min-width:768px){.cz_R30_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(22.5px,1.875vw,33.75px);line-height:1}.cz_R20_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(15px,1.25vw,22.5px);line-height:1}.cz_R18_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(13.5px,1.125vw,20.25px);line-height:1}.cz_R16_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(12px,1vw,18px);line-height:1}.cz_R14_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(10.5px,.875vw,15.75px);line-height:1}.pfd_R50_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(37.5px,3.125vw,56.25px);line-height:1}.pfd_R40_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(30px,2.5vw,45px);line-height:1}.pfd_R20_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(15px,1.25vw,22.5px);line-height:1}.pfd_R30_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(22.5px,1.875vw,33.75px);line-height:1}.sm_R50_H100{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(37.5px,3.125vw,56.25px);line-height:1}.sm_R30_H180{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(22.5px,1.875vw,33.75px);line-height:1.8}.sm_R24_H100{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(18px,1.5vw,27px);line-height:1}.sm_R20_H180{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(15px,1.25vw,22.5px);line-height:1.8}.sm_R16_H240{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(12px,1vw,18px);line-height:2.4}.sm_R16_H200{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:clamp(12px,1vw,18px);line-height:2}.aside{padding-block-end:2.5vw}.aside_block{grid-template-columns:repeat(36,1fr)}.aside_copyright{grid-column:1/4}.aside_times{grid-column:6/16;grid-template-columns:repeat(10,1fr)}.aside_time{gap:.1875vw}.aside_time:first-of-type{grid-column:1/6}.aside_time:last-of-type{grid-column:6/11}.aside_clock{width:clamp(41.25px,3.4375vw,61.875px)}.aside_place{width:clamp(77.25px,6.4375vw,115.875px)}.aside_scroll{grid-column:34/37;justify-self:end}.footer{padding-block:1.875vw 2.3125vw}.footer_next{margin-block-start:14.625vw;margin-inline-start:-1.25vw}.footer_nextLink{padding-block:1.25vw;padding-inline:1.25vw 0}.footer_nextLink:before{width:1.25vw}.footer_nextLinkBlock{grid-template-columns:22.5vw 1fr;gap:2.5vw;padding-inline-end:1.25vw}.footer_nextLinkLine{width:90vw}.footer_body{display:grid;grid-template-columns:12.5vw 1fr;margin-block-start:12.75vw}.footer_list{margin-block-start:-.5vw;margin-inline-start:-.5vw}.footer_link{padding:.5vw}.footer_linkCircle{left:-2.5vw;width:.25vw;height:.25vw}.footer_address{display:grid;grid-template-columns:1fr auto}.footer_snsList{margin-block-start:-.5vw;margin-inline-end:-.375vw}.footer_snsLink{grid-template-columns:1fr 1vw;gap:.625vw;margin-inline-start:auto;padding:.5vw}.footer_privacyLink{margin-block-start:1.25vw;margin-inline-end:-.375vw;padding:.375vw}.footer_info{grid-area:1/1;grid-template-columns:repeat(2,12.5vw)}.footer_locationBody{margin-block-start:1.25vw}.footer_foot{grid-template-columns:repeat(36,1fr);margin-block-start:5.125vw}.footer_copyright{grid-column:1/4}.footer_times{grid-column:6/16;grid-template-columns:repeat(10,1fr)}.footer_time{gap:.1875vw}.footer_time:first-of-type{grid-column:1/6}.footer_time:last-of-type{grid-column:6/11}.footer_clock{width:clamp(41.25px,3.4375vw,61.875px)}.footer_place{width:clamp(77.25px,6.4375vw,115.875px)}.footer_pageTop{grid-column:34/37;margin-block-end:-.625vw;margin-inline-end:-.625vw}.footer_pageTopLink{padding:.625vw}.header_inner{padding-inline:5vw}.header_block{grid-template-columns:67.5vw auto 1fr;margin-inline:clamp(-11.8125px,-.65625vw,-7.875px);padding-block-start:.75vw}.header_logo{width:clamp(52.575px,4.38125vw,78.8625px);margin-block-start:clamp(21.375px,1.78125vw,32.0625px);padding:clamp(7.875px,.65625vw,11.8125px)}.header_langLink{gap:1.25vw;padding:clamp(7.875px,.65625vw,11.8125px)}.header_langLinkCircle{width:clamp(3px,.25vw,4.5px)}.inner{padding-inline:5vw}.loader_inner{padding-inline:17.5vw}.loader_progress{bottom:2.5vw}.nav_inner{padding-inline:5vw}.nav_block{grid-template-rows:9.875vw 1fr auto;position:relative}.nav_body{margin-block-start:1.34375vw;padding-inline-start:66.75vw}.nav_link{padding:clamp(11.25px,.9375vw,16.875px) .375vw}.nav_linkText{padding-inline:.375vw}.nav_linkCircle{left:-2.5vw;width:.25vw;height:.25vw}.nav_subList{grid-template:"school school" auto "craft izanami-space" auto "retreat retreat" auto/auto 1fr;-moz-column-gap:1.375vw;column-gap:1.375vw;margin-block:.4375vw;margin-inline-start:.28125vw}.nav_subLink{padding:.375vw}.nav_subLink.-line{padding-inline-start:1.25vw}.nav_subLink.-line:before{width:.375vw}.nav_privacy{position:absolute;bottom:2.625vw;left:67.03125vw}.nav_foot{margin-block-start:6.25vw;padding-block-end:2.625vw}.nav_info{grid-template-columns:repeat(2,15vw)}.nav_locationBody{margin-block-start:1.25vw}.nav_locationLine.-inline{display:inline-grid}.openTrigger{gap:1.25vw;padding:clamp(7.875px,.65625vw,11.8125px)}.openTrigger_circleInner{width:clamp(3px,.25vw,4.5px)}[data-mesh-manager=common-text-mesh]{padding-block:clamp(7.5px,.625vw,11.25px)}.button{padding-block:1.25vw;padding-inline:1.25vw 0}.button_block{grid-template-columns:5vw 1fr;gap:1.25vw;padding-inline-end:1.25vw}.cloud:first-of-type{top:-33.0625vw}.cloud:first-of-type .cloud_img{width:233.75vw;height:112.5vw}.cloud:last-of-type{top:-14.6875vw}.cloud:last-of-type .cloud_img{width:168.75vw;height:81.25vw}.cloud.-notFound:nth-of-type(1){top:0}.cloud.-notFound:nth-of-type(2){top:12.625vw}.cloud.-notFound:nth-of-type(3){top:25.25vw}.label{top:clamp(147.75px,12.3125vw,221.625px)}.paragraph_text.-end{width:-moz-fit-content;width:fit-content;margin-inline-start:15.625vw}.projectsSubHeader{padding-block:12.3125vw 32vw;padding-inline-start:12.5vw}.projectsSubHeader_block{grid-template-columns:12.5vw 1fr}.projectsSubHeader_titleNumber{font-size:1.125vw}.projectsSubHeader_titleEn{margin-block-start:15.5vw}.projectsSubHeader_titleText{font-size:3.125vw}.projectsSubHeader_lead{margin-block-start:16.5625vw;padding-inline-start:30vw}.projectsSubHeader_enLeadText{font-size:3.125vw}.projectsSubHeader_jaLead{margin-block-start:1.25vw;font-size:1.25vw}.projectsSubHeader_img{top:6.25vw}.projectsSubHeader_imgContent{width:30vw;height:50vw}.projectsSubSection.-craft:first-of-type{padding-block:.9375vw}.projectsSubSection.-retreat{padding-block:.9375vw}.projectsSubSection.-craft .projectsSubSection_fullImg{width:90vw;height:37.5vw}.projectsSubSection.-retreat .projectsSubSection_fullImg{width:100vw;aspect-ratio:1/1;margin-inline-start:-5vw}.-craft .projectsSubSection_content{padding-block:6.25vw 25.625vw}.-craft.-reverse .projectsSubSection_content{padding-block-end:21.875vw}.-retreat.-reverse .projectsSubSection_content{margin-block-start:99.0625vw;padding-block:9.625vw 24.0625vw}.projectsSubSection_block{grid-template:"img title" auto "text text" auto/minmax(0,1fr) minmax(0,1fr);gap:1.875vw 2.5vw;padding-inline:12.5vw 15vw}.-reverse .projectsSubSection_block{grid-template:"title img" auto "text text" auto/minmax(0,1fr) minmax(0,1fr)}.-retreat.-reverse .projectsSubSection_block{padding-inline:17.5vw 20vw}[lang=ja] .projectsSubSection_block{row-gap:5vw}.projectsSubSection_label{padding-inline-start:.9375vw}.-retreat.-reverse .projectsSubSection_label{padding-block-end:5vw}.projectsSubSection_title{grid-template:"enTitle" auto "jaTitle" auto/1fr;align-content:end}.-retreat.-reverse .projectsSubSection_title{padding-block-start:0}.projectsSubSection_title:has(.projectsSubSection_titleNumber){grid-template:"number" auto "enTitle" auto "jaTitle" auto/1fr}.projectsSubSection_titleNumber{margin-block-end:5.625vw}.projectsSubSection_jaTitle{margin-block-start:1.25vw}.projectsSubSection_subBlock{grid-template-columns:repeat(2,1fr);gap:2.5vw}[lang=en] .projectsSubSection.-craft:nth-of-type(odd) .projectsSubSection_subBlock{grid-template-columns:1fr;padding-inline-start:32.5vw}.projectsSubSection_description+.projectsSubSection_description{margin-block-start:1.25vw}.projectsSubSection_button{margin-block-start:5vw;padding-inline-start:31.25vw}[lang=en] .projectsSubSection.-craft:nth-of-type(2n) .projectsSubSection_button{margin-inline-start:-1.25vw;padding-inline-start:0}.projectsSubSection_img{width:22.5vw;height:34.375vw;margin-block-start:-21.875vw}.sticky.-primary .sticky_main{padding-inline-start:12.5vw}.stickySection{padding-block:6.25vw}.stickySection:not(:first-of-type):before{width:calc(100% - 10vw)}.stickySection:after{left:0;width:100vw;height:6.1875vw}.stickySection_inner:after{content:"";position:absolute;top:0;left:0;z-index:-1;width:calc(100% - 27.5vw);height:100%;background-color:var(--color-black)}.stickySection.-craftSpace .stickySection_inner:after{width:calc(100% - 40vw)}.stickySection_block{grid-template-columns:22.75vw 1fr}.-craftSpace .stickySection_block{grid-template-columns:12.5vw 1fr}.stickySection_subBlock{grid-template-columns:clamp(270px,22.5vw,405px) 22.5vw;justify-content:space-between}.-craftSpace .stickySection_subBlock{grid-template-columns:22.5vw 35vw}.stickySection_text{display:grid;grid-template-rows:auto auto auto 1fr}.stickySection_title{margin-inline-end:-13.4375vw}.stickySection_titleNumber{bottom:0}.stickySection_EnTitle{padding-inline-end:1.875vw}.stickySection_lead{margin-block-start:1.875vw}.-craftSpace .stickySection_lead{margin-block-start:3.75vw}.stickySection_description{margin-block-start:1.875vw}.-craftSpace .stickySection_description{margin-block-start:2.5vw}.stickySection_button{align-self:end;margin-block-end:-1.25vw;margin-inline-start:-1.25vw}.stickySection_img{width:22.5vw;height:34.375vw}.-craftSpace .stickySection_img{width:35vw;height:50vw}.stickySection:not(:first-of-type) .stickySection_img{height:46.875vw;margin-block:-6.1875vw}.stickySection.-craftSpace:not(:first-of-type) .stickySection_img{height:62.5vw;margin-block:-6.1875vw}.company_content{padding-block-end:10.625vw}.companyHeader_contents{padding-block-start:23.8125vw;padding-inline-start:17.5vw}.companyHeader_block{grid-template-columns:32.5vw 30vw}.companyHeader_jaLead{margin-block-start:3.125vw}.companyHeader_texts{padding-block-start:16.25vw}.companyHeader_description+.companyHeader_description{margin-block-start:1.25vw}.companyHeader_img{width:100vw;aspect-ratio:1/1}.companyHeader_cloud:first-of-type{top:14.6875vw}.companyHeader_cloud:last-of-type{top:38.125vw}.companyHeader_cloudImg{width:168.75vw;height:81.25vw}.companyHeader_map{width:100vw;height:62.5vw}.companyHeader_label{padding-block-end:5vw}.founderSection{padding-block-start:1.875vw}.founderSection_content{padding-block-end:23.125vw}.founderSection_block{display:grid;grid-template:"head body" 1fr "foot body" auto/1fr 35vw;row-gap:2.5vw}.founderSection_head{grid-area:head;margin-block-start:-.625vw}.founderSection_subTitle{gap:.625vw;margin-block-start:1.25vw}.founderSection_body{grid-area:body}.founderSection_img{width:35vw;height:50vw}.founderSection_foot{grid-area:foot;padding-inline-end:10vw}.founderSection_description+.founderSection_description{margin-block-start:1.25vw}.outlineSection{padding-block-start:1.875vw}.outlineSection_content{padding-block-end:15.625vw}.outlineSection_list{gap:6.25vw}.outlineSection_item{grid-template-columns:32.5vw 1fr}.outlineSection_item:not(:first-of-type):before{top:-3.125vw}.outlineSection_subItem{padding-inline-start:1.5vw}.outlineSection_subItem:before{top:clamp(11.25px,.9375vw,16.875px);left:clamp(7.5px,.625vw,11.25px);width:.25vw;height:.25vw}.outlineSection_subDataItem{grid-template-columns:7.5vw 1fr;-moz-column-gap:2.5vw;column-gap:2.5vw}.outlineSection_subDataItem+.outlineSection_subDataItem{margin-block-start:1.25vw}.contact_contents{margin-block-start:11.875vw;padding-block-end:12.5vw}.contactForm_item{grid-template-columns:15vw 1fr;padding-block:3.125vw}.contactForm_input{height:2vw}.contactForm_textarea{height:11.25vw}.contactForm_message{top:3.125vw;right:0}.contactForm_submit{margin-block-start:5vw;margin-inline-start:-1.25vw}.contactHeader{padding-block-start:23.8125vw}.craft_contents{padding-block:12.5vw 24.0625vw}.craft_sections{grid-template-columns:repeat(3,1fr);gap:7.5vw}.craftSection_titleText{margin-block-start:6.25vw}.craftSection_texts{margin-block-start:1.875vw}.craftSection_description+.craftSection_description{margin-block-start:1.25vw}.craftSpaceHeader_contents{padding-block:28.875vw 18.75vw;padding-inline-start:17.5vw}.craftSpaceHeader_jaTitle{margin-block-start:1.25vw}.craftSpaceHeader_texts{margin-block-start:12.5vw}.craftSpaceHeader_description+.craftSpaceHeader_description{margin-block-start:1.875vw}.craftSpaceHeader_bg{width:100vw;aspect-ratio:1/1}.craftSpaceHeader_label{padding-block-end:5vw}.processSection{padding-block-start:25vw}.processSection_content{margin-block-start:-.625vw}.processSection_lists{margin-block-start:3.125vw;padding-block-end:23.125vw}.homeCompany_contents{padding-block:6.25vw}.homeCompany_logo{width:4.6875vw}.homeCompany_text{margin-block-start:4.375vw}.homeCompany_descriptions{margin-block-start:1.25vw}[lang=en] .homeCompany_descriptions{width:25vw}.homeCompany_description+.homeCompany_description{margin-block-start:1.25vw}.homeCompany_button{margin-block-start:3.75vw}.homeCompany_bg{width:100vw;aspect-ratio:1/1}.homeHeader_inner{padding-inline:17.5vw}.homeHeader_img{width:100vw;aspect-ratio:1/1}.homeHeader_cloud{top:14.6875vw}.homePhilosophy{padding-block-start:68.75vw}.homePhilosophy_content{padding-block-end:21.25vw}.homePhilosophy_block{grid-template:"head foot" auto "head foot" auto/1fr 32.5vw;row-gap:14.5625vw}.homePhilosophy_head{margin-block-start:-.625vw;padding-inline-start:12.5vw}.homePhilosophy_descriptions{margin-block-start:1.25vw}[lang=en] .homePhilosophy_descriptions{width:32.5vw}.homePhilosophy_button{margin-block-start:8.75vw;margin-inline-start:-1.25vw}.homePhilosophy_foot{margin-block-start:-15.9375vw}.homePhilosophy_img:nth-of-type(1){width:32.5vw;height:50vw}.homePhilosophy_img:nth-of-type(2){top:-8.75vw;left:10vw;width:17.5vw;height:28.75vw}.homePhilosophy_singleImg{top:34.1875vw;left:5vw;width:20vw;height:20vw}.homeProjects{padding-block-start:1.875vw}.homeProjects_content{padding-block-start:11.875vw;padding-inline-start:45vw}.homeProjects_description{margin-block-start:1.25vw}.homeProjects_button{margin-block-start:4.0625vw;margin-inline-start:-1.25vw}.homeProjects_bg{width:100vw;aspect-ratio:1/1}.notFound_content{padding-inline:25vw}.notFound_description{margin-block-start:1.875vw}.notFound_button{margin-block-start:5vw;margin-inline-start:-1.25vw}.ourValuesSection_block{display:grid;grid-template-columns:1fr 30vw 22.5vw;gap:7.5vw}.ourValuesSection_head{display:grid;align-content:center;position:sticky;top:0;height:100vh}.ourValuesSection_label{height:43.75vw}.ourValuesSection_sections{gap:100vh}.ourValuesSection_foot{grid-area:1/2/2/3;display:grid;place-content:center;position:sticky;top:0;height:100vh}.ourValuesSection_img{width:30vw;height:43.75vw}.ourValuesSubSection{display:grid;place-content:center;height:100vh}.ourValuesSubSection_block{height:43.75vw}.ourValuesSubSection_text{display:grid;grid-template-rows:1fr auto auto;height:100%}.ourValuesSubSection_titleNumber{top:0;left:-45vw}.ourValuesSubSection_jaTitle{margin-block-start:1.875vw}.ourValuesSubSection_description{margin-block-start:1.25vw}.ourValuesSubSection_img{display:none}.philosophyHeader_contents{padding-block-start:12.3125vw}.philosophyHeader_content{padding-block:8.75vw 29.4375vw}.philosophyHeader_text{margin-block-start:6.875vw}[lang=en] .philosophyHeader_text{width:45vw;margin-inline:auto}.philosophyHeader_description+.philosophyHeader_description{margin-block-start:2.5vw}.philosophyHeader_bg{width:100vw;aspect-ratio:1/1}.privacy_contents{width:45vw;margin-block-start:5.625vw;padding-block-end:6.25vw}.privacy_sections{margin-block-start:3.125vw}.privacyHeader{padding-block-start:23.8125vw}.privacySection+.privacySection{margin-block-start:3.125vw}.privacySection_title{margin-block-end:1.875vw}.privacySection_list{margin-block:1.25vw}.privacySection_item{padding-inline-start:1.5vw}.privacySection_item:before{top:.9375vw;left:.625vw;width:.25vw;height:.25vw}.privacySection_orderItem{padding-inline-start:1.5vw}.privacySection_orderItem:before{left:.4375vw}.processList+.processList{margin-block-start:5vw}.processList:not(:last-of-type):before{top:15%;left:3.0625vw;height:calc(100% + 5vw)}.processList_block{grid-template-columns:32.5vw 1fr;align-items:start}.processList_title{grid-template:"number enTitle" auto "number jaTitle" auto/6.25vw 1fr;align-items:center;-moz-column-gap:3.75vw;column-gap:3.75vw}.processList_titleNumber{border-radius:3.125vw}.processList_body{padding-block-start:.5vw}.processList_description+.processList_description{margin-block-start:.625vw}.processList_list{margin-block:.625vw}.processList_item{padding-inline-start:1.5vw}.processList_item:before{top:.9375vw;left:.625vw;width:.25vw;height:.25vw}.projectsHeader_contents{padding-block-start:12.3125vw}.projectsHeader_content{padding-block:11.5625vw 10vw;padding-inline-start:12.5vw}.projectsHeader_description{margin-block-start:1.25vw}.projectsHeader_bg{width:100vw;aspect-ratio:1/1}.projectsSection{padding-block-start:1.875vw}.projectsSection_content{margin-block-start:11.25vw;margin-inline:0 -5vw;padding-block-end:21.875vw}.-reverse .projectsSection_content{margin-inline:-5vw 0}.projectsSection.-end .projectsSection_content{padding-block-end:11.25vw}.projectsSection_block{grid-template-columns:32.5vw 40vw;justify-content:end;gap:10vw}.-reverse .projectsSection_block{grid-template-columns:40vw 42.5vw;justify-content:start}.projectsSection_titleNumber{left:17.5vw}.projectsSection_titleJa{margin-block-start:1.25vw}.projectsSection_lead{margin-block-start:3.75vw}[lang=en] .projectsSection:not(.-reverse) .projectsSection_lead{width:26.125vw}.projectsSection_texts{width:min(100%,clamp(270px,22.5vw,405px));margin-block-start:2.5vw}.projectsSection_description+.projectsSection_description{margin-block-start:1.25vw}.projectsSection_button{margin-block-start:2.25vw;margin-inline-start:-1.25vw}.projectsSection_imgs{grid-template-columns:repeat(3,22.5vw);gap:1.25vw;width:40vw;height:34.375vw;margin-block-start:11.5625vw}.-reverse .projectsSection_imgs{grid-area:1/1}.journeySection_contents{padding-inline-start:45vw}.journeySection_block{height:50vw}.journeySection_label{padding-block-end:5vw;padding-inline-start:.9375vw}.journeySection_jaTitle{margin-block-start:1.25vw}.journeySection_img{margin-inline:-5vw}.journeySection_body{padding-block:12.5vw 23.125vw;padding-inline:17.5vw 12.5vw;background-color:var(--color-black)}.mocaSection{padding-block-start:1.875vw}.mocaSection_contents{margin-block-start:-.625vw;padding-block-end:23.125vw}.mocaSection_subTitle{gap:1.25vw;margin-block-start:1.25vw}.mocaSection_body{margin-block-start:6.25vw}.mocaSection_subBlock{grid-template-columns:repeat(2,22.5vw);gap:10vw}.mocaSection_text{margin-block-start:-.625vw}.mocaSection_lead{gap:1.25vw;margin-block-end:2vw}.mocaSection_description+.mocaSection_description{margin-block-start:2.5vw}.mocaSection_list{margin-block-start:1.25vw}.mocaSection_item{padding-inline-start:1.5vw}.mocaSection_item:before{top:.9375vw;left:.625vw;width:.25vw;height:.25vw}.mocaSection_img{width:22.5vw;height:34.375vw}.retreat_contents{padding-block:1.875vw .9375vw}.retreat_text{width:55vw;padding-block-end:24.0625vw;padding-inline-start:17.5vw}.retreat_texts{width:32.5vw;margin-block-start:2.5vw}.retreat_description+.retreat_description{margin-block-start:2.5vw}.retreat_bg{width:100vw}.voiceCarousel_content{width:27.5vw;height:clamp(296.0475px,24.670625vw,444.07125px);margin-inline-start:-17.5vw}.voiceCarousel_body{gap:1.25vw;margin-block-start:1.125vw}.voiceCarousel_description{-webkit-line-clamp:3}.voiceCarousel_trigger{margin-block-start:1.5vw;margin-inline-start:-1.25vw;padding-block:1.25vw;padding-inline:1.25vw 0}.voiceCarousel_triggerBlock{grid-template-columns:17.5vw 1fr;gap:2.5vw;padding-inline-end:1.25vw}.voiceDialog{padding-block:12.5vw}.voiceDialog_inner{max-width:45vw;padding-inline-end:17.5vw}.voiceDialog_close{top:11.875vw;right:25.25vw;width:3.75vw;height:3.75vw;padding:1.25vw}.voiceDialog_closeLines{width:1.25vw}.voiceDialog_description+.voiceDialog_description{margin-top:1.25vw}.voiceSection{padding-block-start:1.875vw}.voiceSection_carousel{margin-inline:-5vw;padding-block:.625vw 21.875vw}.voiceSection_quotation{top:1.5625vw;left:17.1875vw}.voiceSection_quotation svg{width:3.75vw;height:3.125vw;padding:.3125vw}.contactSection{padding-block-start:1.875vw}.contactSection_block{gap:5.625vw;padding-block-end:13.5vw}.contactSection_descriptions{margin-block-start:2.1875vw}[lang=en] .contactSection_descriptions{width:35vw}.contactSection_description+.contactSection_description{margin-block-start:1.25vw}.contactSection_button{margin-block-start:4.75vw}.contactSection_notes{margin-block-start:1.25vw}.contactSection_img{width:20vw;height:31.25vw}.mediaSection{padding-block:1.875vw .9375vw}.mediaSection_content{padding-block-end:24.0625vw}.mediaSection_subBlock{grid-template:"title img" 1fr "description img" auto/1fr 20vw;row-gap:2.5vw}.mediaSection_title{grid-area:title;margin-block-start:-.625vw}.mediaSection_jaTitle{margin-block-start:1.25vw}.mediaSection_description{grid-area:description;width:24.125vw}[lang=en] .mediaSection_description{width:32.5vw}.mediaSection_img{grid-area:img;width:20vw;height:28.5625vw}.programSection_contents{padding-block-start:.9375vw}.programSection_content{padding-block-end:41.6875vw}.programSection_text{padding-block-start:21.3125vw;padding-inline-start:42.5vw}.programSection_descriptions{margin-block-start:1.25vw}.programSection_bg{width:100vw;height:62.5vw}.school_contents{padding-block:1.875vw 23.125vw}.school_subBlock{grid-template-columns:35vw 45vw;gap:10vw}.school_texts{width:40vw;margin-block-start:2.5vw}.school_description+.school_description{margin-block-start:2.5vw}.school_imgs{padding-block-start:12.5vw}.school_img:nth-of-type(1){width:22.5vw;height:34.375vw}.school_img:nth-of-type(2){width:22.5vw;height:34.375vw;margin-block-start:-21.875vw;margin-inline-start:12.5vw}.schoolSubSection{padding-block-start:1.875vw}.schoolSubSection_subBlock{grid-template-columns:1fr 35vw;gap:20vw}.-reverse .schoolSubSection_subBlock{grid-template-columns:35vw 1fr}.schoolSubSection_text,.schoolSubSection_title{display:grid;grid-template-rows:1fr auto}.schoolSubSection_description{margin-block-start:2.5vw}.schoolSubSection_list{margin-block-start:3.125vw;padding-block-start:1.875vw}.schoolSubSection_item{padding-inline-start:1.5vw}.schoolSubSection_item:before{top:.9375vw;left:.625vw;width:.25vw;height:.25vw}.schoolSubSection_img{width:35vw;height:50vw}.-reverse .schoolSubSection_img{grid-area:1/1}.schoolSubSection_section{margin-block-start:3.125vw;padding-block-end:23.125vw}.supervisedSection{padding-block-start:3.125vw}.supervisedSection_block{grid-template-columns:repeat(2,1fr);justify-content:space-between;gap:7.5vw;margin-block-start:3.125vw}.supervisedSubSection_block{grid-template-columns:10vw 1fr;align-items:end;gap:2.5vw}.supervisedSubSection_description{margin-block-start:1.25vw}.supervisedSubSection_img{width:10vw;height:12.5vw}.thanks_contents{margin-block-start:5.625vw;padding-block-end:12.5vw}.thanks_description+.thanks_description{margin-block-start:1.25vw}.thanks_button{margin-block-start:5vw;margin-inline-start:-1.25vw}.thanksHeader{padding-block-start:23.8125vw}.pcBr{display:inline}.pcBr:after{content:"\a";white-space:pre}.pc{display:block}.sp{display:none!important}}
+@media(max-width:767px){.SP_cz_R24_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:5.9701492537vw;line-height:1}.SP_cz_R12_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:2.9850746269vw;line-height:1}.SP_cz_R16_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:3.9800995025vw;line-height:1}.SP_cz_R11_H100{font-family:Cinzel,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:2.736318408vw;line-height:1}.SP_pfd_R30_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:7.4626865672vw;line-height:1}.SP_pfd_R26_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:6.4676616915vw;line-height:1}.SP_pfd_M20_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:4.9751243781vw;line-height:1}.SP_pfd_M14_H100{font-family:Playfair Display,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:3.4825870647vw;line-height:1}.SP_sm_R30_H100{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:7.4626865672vw;line-height:1}.SP_sm_R18_H180{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:4.4776119403vw;line-height:1.8}.SP_sm_R16_H100{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:3.9800995025vw;line-height:1}.SP_sm_R14_H180{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:3.4825870647vw;line-height:1.8}.SP_sm_R12_H240{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:2.9850746269vw;line-height:2.4}.SP_ms_R12_H200{font-family:Shippori Mincho,serif;font-optical-sizing:auto;font-weight:400;font-style:normal;font-size:2.9850746269vw;line-height:2}.aside{padding-block-end:7.960199005vw}.aside_block{grid-template-columns:repeat(32,1fr)}.aside_copyright{grid-column:1/5}.aside_times{grid-column:7/20;gap:2.4875621891vw}.aside_time{gap:.7462686567vw}.aside_clock{width:10.9452736318vw}.aside_scroll{grid-column:29/33}.footer{padding-block:7.4626865672vw 12.4378109453vw}.footer_next{margin-block:19.9004975124vw 19.4029850746vw;margin-inline-start:-4.9751243781vw}.footer_nextLink{padding-block:4.9751243781vw;padding-inline:4.9751243781vw 0}.footer_nextLink:before{width:4.9751243781vw}.footer_nextLinkBlock{grid-template-columns:9.9502487562vw 1fr;gap:4.9751243781vw;padding-inline-end:4.9751243781vw}.footer_body{margin-block-start:11.9402985075vw;padding-inline-start:14.9253731343vw}.footer_list{margin-block-start:-2.1144278607vw;margin-inline-start:-2.1144278607vw}.footer_link{padding:2.1144278607vw}.footer_linkCircle{left:-12.8109452736vw;width:.9950248756vw;height:.9950248756vw}.footer_address{margin-block-start:1.9900497512vw;margin-inline-start:-.7462686567vw}.footer_snsLink{grid-template-columns:2.4875621891vw 1fr;gap:1.4925373134vw;padding:.7462686567vw}.footer_snsLinkIcon{grid-area:1/1}.footer_privacyLink{margin-block-start:2.4875621891vw;padding:.7462686567vw}.footer_info{grid-template-columns:24.8756218905vw 1fr;margin-block-start:13.9303482587vw;padding-inline-start:.7462686567vw}.footer_locationBody{margin-block-start:3.4825870647vw}.footer_foot{grid-template-columns:repeat(32,1fr);margin-block-start:10.9452736318vw}.footer_copyright{grid-column:1/5}.footer_times{grid-column:7/20;gap:2.4875621891vw}.footer_time{gap:.7462686567vw}.footer_clock{width:10.9452736318vw}.footer_pageTop{grid-column:29/33;margin-block-end:-2.4875621891vw;margin-inline-end:-2.4875621891vw}.footer_pageTopLink{padding:2.4875621891vw}.header_inner{padding-inline:5.223880597vw}.header_block{grid-template-columns:40.1741293532vw auto 1fr;padding-block-start:1.8656716418vw;padding-inline:1.5547263682vw}.header_logo{width:13.6815920398vw;padding:3.1094527363vw}.header_langLink{gap:5.7213930348vw;padding:3.1094527363vw}.header_langLinkCircle{width:.9950248756vw}.inner{padding-inline:10.1990049751vw}.loader_inner{padding-inline:20.1492537313vw}.loader_progress{bottom:7.960199005vw}.nav_inner{padding-inline:5.223880597vw}.nav_block{grid-template-rows:22.3880597015vw 1fr auto}.nav_body{margin-block-start:5.8457711443vw;padding-inline-start:42.2885572139vw}.nav_link{padding:2.4875621891vw 1.2437810945vw}.nav_linkText{padding-inline:1.2437810945vw}.nav_linkCircle{left:-37.3134328358vw;width:.9950248756vw;height:.9950248756vw}.nav_subList{grid-template:"school school" auto "craft izanami-space" auto "retreat retreat" auto/auto 1fr;-moz-column-gap:1.4925373134vw;column-gap:1.4925373134vw;margin-block:.7462686567vw;margin-inline-start:.9950248756vw}.nav_subLink{padding:1.2437810945vw}.nav_subLink.-line{padding-inline-start:3.7313432836vw}.nav_subLink.-line:before{width:.7462686567vw}.nav_privacy{margin-block-start:10.447761194vw;margin-inline-start:.9950248756vw}.nav_foot{margin-block-start:12.9353233831vw;padding-block-end:12.4378109453vw;padding-inline:4.9751243781vw}.nav_info{grid-template-columns:repeat(2,1fr)}.nav_locationBody{margin-block-start:3.4825870647vw}.openTrigger{gap:5.7213930348vw;padding:3.1094527363vw}.openTrigger_circleInner{width:.9950248756vw}[data-mesh-manager=common-text-mesh]{padding-block:1.2437810945vw}.button{padding-block:4.9751243781vw;padding-inline:4.9751243781vw 0}.button_block{grid-template-columns:19.9004975124vw 1fr;gap:4.9751243781vw;padding-inline-end:4.9751243781vw}.cloud:first-of-type{top:-23.631840796vw}.cloud:first-of-type .cloud_img{width:139.8009950249vw;height:67.4129353234vw}.cloud:last-of-type{top:-3.7313432836vw}.cloud:last-of-type .cloud_img{width:193.7810945274vw;height:93.2835820896vw}.cloud.-notFound:nth-of-type(1){top:75.3731343284vw}.cloud.-notFound:nth-of-type(2){top:100.4975124378vw}.cloud.-notFound:nth-of-type(3){top:125.6218905473vw}.label{top:33.3333333333vw}.projectsSubHeader{padding-block:33.3333333333vw 73.8805970149vw}.projectsSubHeader_block{gap:4.9751243781vw}.projectsSubHeader_titleNumber{padding-inline-start:15.4228855721vw}.projectsSubHeader_titleEn{margin-block-start:64.4278606965vw}.projectsSubHeader_lead{padding-inline-start:23.8805970149vw}.projectsSubHeader_jaLead{margin-block-start:3.7313432836vw}.projectsSubHeader_img{top:55.7213930348vw}.projectsSubHeader_imgContent{width:59.7014925373vw;height:99.5024875622vw}.projectsSubSection.-craft:first-of-type{padding-block:3.7313432836vw}.projectsSubSection.-retreat{padding-block:3.7313432836vw}.projectsSubSection_fullImg{width:100vw;margin-inline:-10.1990049751vw}.projectsSubSection.-craft .projectsSubSection_fullImg{height:74.6268656716vw}.projectsSubSection.-retreat .projectsSubSection_fullImg{height:99.5024875622vw}.projectsSubSection_content{padding-inline-start:14.9253731343vw}.-craft .projectsSubSection_content{margin-block-start:-24.8756218905vw;padding-block-end:41.0447761194vw}.-craft.-reverse .projectsSubSection_content{margin-block-start:-24.8756218905vw;padding-block-end:37.3134328358vw}.-retreat.-reverse .projectsSubSection_content{margin-block-start:70.8955223881vw;padding-block-end:21.144278607vw;padding-inline:25.1243781095vw 10.1990049751vw}.projectsSubSection_block{grid-template:"img" auto "title" auto "text" auto/1fr;row-gap:7.4626865672vw}.projectsSubSection_label{padding-inline-start:3.7313432836vw}.-retreat.-reverse .projectsSubSection_label{padding-block-end:10.1990049751vw}.projectsSubSection_title{grid-template:"enTitle" auto "jaTitle" auto/1fr;padding-block-start:1.2437810945vw}.-retreat.-reverse .projectsSubSection_title{padding-block-start:1.2437810945vw}.projectsSubSection_title:has(.projectsSubSection_titleNumber){grid-template:"number" auto "enTitle" auto "jaTitle" auto/1fr;margin-block-start:1.2437810945vw}.projectsSubSection_titleNumber{margin-block-end:3.7313432836vw}.projectsSubSection_jaTitle{margin-block-start:1.25vw}.projectsSubSection_subBlock{gap:2.4875621891vw}.projectsSubSection_description+.projectsSubSection_description{margin-block-start:2.4875621891vw}.projectsSubSection_button{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.projectsSubSection_img{width:47.263681592vw;height:72.1393034826vw}.stickySection{padding-block:24.8756218905vw}.stickySection:not(:first-of-type):before{width:calc(100% - 20.3980099502vw)}.stickySection:after{right:10.1990049751vw;width:79.6019900498vw;height:104.2288557214vw}.stickySection_block{grid-template-columns:14.9253731343vw 1fr}.stickySection_subBlock{gap:7.4626865672vw}.-craftSpace .stickySection_subBlock{gap:14.9253731343vw}.stickySection_titleNumber{bottom:89.0547263682vw}.stickySection_EnTitle{padding-inline-end:2.4875621891vw}.stickySection_lead{margin-block-start:4.9751243781vw;line-height:1.8}.stickySection_description{margin-block-start:4.9751243781vw}.stickySection_button{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.stickySection_img{width:64.6766169154vw;height:92.2885572139vw}.company_content{padding-block-end:17.4129353234vw}.companyHeader_contents{padding-block-start:58.4577114428vw;padding-inline:25.1243781095vw 10.1990049751vw}.companyHeader_block{gap:12.4378109453vw}.companyHeader_jaLead{margin-block-start:3.7313432836vw}.companyHeader_description+.companyHeader_description{margin-block-start:4.9751243781vw}.companyHeader_img{width:100vw;height:213.9303482587vw}.companyHeader_cloud:first-of-type{top:58.4577114428vw}.companyHeader_cloud:last-of-type{top:75.8706467662vw}.companyHeader_cloudImg{width:193.7810945274vw;height:93.2835820896vw}.companyHeader_map{width:100vw;height:99.5024875622vw;margin-block-start:17.6616915423vw}.companyHeader_label{padding-block-end:10.1990049751vw}.founderSection{padding-block-start:7.4626865672vw}.founderSection_content{margin-block-start:-1.2437810945vw;padding-block-end:42.2885572139vw;padding-inline-start:14.9253731343vw}.founderSection_subTitle{margin-block-start:1.2437810945vw}.founderSection_body{margin-block-start:9.9502487562vw}.founderSection_img{width:49.7512437811vw;height:71.144278607vw}.founderSection_foot{margin-block-start:7.4626865672vw}.founderSection_description+.founderSection_description{margin-block-start:4.9751243781vw}.outlineSection{padding-block-start:7.4626865672vw}.outlineSection_content{padding-block-end:24.8756218905vw;padding-inline-start:14.9253731343vw}.outlineSection_list{gap:9.9502487562vw}.outlineSection_item{grid-template-columns:22.3880597015vw 1fr;gap:2.4875621891vw}.outlineSection_item:not(:first-of-type):before{top:-4.9751243781vw}.outlineSection_subItem{padding-inline-start:4.4776119403vw}.outlineSection_subItem:before{top:2.736318408vw;left:1.9900497512vw;width:.7462686567vw;height:.7462686567vw}.outlineSection_subDataItem{gap:1.2437810945vw}.outlineSection_subDataItem+.outlineSection_subDataItem{margin-block-start:4.9751243781vw}.contact_contents{margin-block-start:23.631840796vw;padding-block-end:22.3880597015vw}.contactForm_item{gap:2.4875621891vw;padding-block:4.9751243781vw}.contactForm_input{height:5.9701492537vw}.contactForm_textarea{height:42.2885572139vw}.contactForm_message{top:13.6815920398vw;left:0}.contactForm_submit{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.contactHeader{padding-block-start:32.3383084577vw;padding-inline:14.9253731343vw}.craft_contents{padding-block:7.4626865672vw 95.7711442786vw}.craft_sections{gap:12.4378109453vw}.craftSection_title{grid-template-columns:14.9253731343vw 1fr}.craftSection_texts{margin-block-start:4.9751243781vw;padding-inline-start:14.9253731343vw}.craftSection_description+.craftSection_description{margin-block-start:2.4875621891vw}.craftSpaceHeader_contents{padding-block:70.6467661692vw 24.8756218905vw;padding-inline:10.1990049751vw}.craftSpaceHeader_jaTitle{margin-block-start:3.7313432836vw}.craftSpaceHeader_texts{margin-block-start:24.8756218905vw}.craftSpaceHeader_description+.craftSpaceHeader_description{margin-block-start:7.4626865672vw}.craftSpaceHeader_bg{width:100vw;height:248.7562189055vw}.craftSpaceHeader_label{padding-block-end:10.1990049751vw}.processSection{padding-block-start:24.8756218905vw}.processSection_content{margin-block-start:-1.2437810945vw;padding-block-end:42.2885572139vw}.processSection_title{margin-inline-start:14.9253731343vw}.processSection_lists{margin-block-start:13.6815920398vw}.homeCompany_contents{padding-block-start:27.3631840796vw}.homeCompany_content{padding-block-end:17.4129353234vw}.homeCompany_logo{width:12.4378109453vw;margin-block-start:21.8905472637vw}.homeCompany_text{margin-block-start:18.6567164179vw}.homeCompany_descriptions{margin-block-start:6.2189054726vw}.homeCompany_description+.homeCompany_description{margin-block-start:4.9751243781vw}.homeCompany_button{margin-block-start:7.4626865672vw}.homeCompany_bg{width:100vw;height:175.1243781095vw}.homeHeader_inner{padding-inline:20.1492537313vw}.homeHeader_img{width:100vw;height:296.2686567164vw}.homeHeader_cloud{top:58.4577114428vw}.homePhilosophy{padding-block-start:24.8756218905vw}.homePhilosophy_content{padding-block:68.407960199vw 42.2885572139vw}.homePhilosophy_block{grid-template:"head head" auto "foot foot" auto/34.8258706468vw 1fr}.homePhilosophy_descriptions{margin-block-start:6.2189054726vw}.homePhilosophy_button{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.homePhilosophy_foot{margin-block-start:34.328358209vw;margin-inline-start:14.9253731343vw}.homePhilosophy_img:nth-of-type(1){width:52.2388059701vw;height:80.5970149254vw}.homePhilosophy_img:nth-of-type(2){top:-12.4378109453vw;left:24.8756218905vw;width:29.8507462687vw;height:49.2537313433vw}.homePhilosophy_singleImg{top:24.8756218905vw;right:10.1990049751vw;width:44.776119403vw;height:44.776119403vw;margin-inline-start:auto}.homeProjects{padding-block-start:7.4626865672vw}.homeProjects_content{height:223.8805970149vw;margin-block-start:-1.2437810945vw;padding-inline-start:14.9253731343vw}.homeProjects_description{margin-block-start:6.2189054726vw}.homeProjects_button{margin-block-start:9.4527363184vw;margin-inline-start:-4.9751243781vw}.homeProjects_bg{width:100vw;height:199.0049751244vw;margin-block-start:32.3383084577vw}.notFound_content{padding-inline:14.9253731343vw}.notFound_description{margin-block-start:6.2189054726vw}.notFound_button{margin-block-start:19.9004975124vw;margin-inline-start:-4.9751243781vw}.ourValuesSection_head{position:absolute}.ourValuesSection_sections{gap:49.7512437811vw}.ourValuesSection_foot{display:none}.ourValuesSubSection_block{gap:10.9452736318vw}.ourValuesSubSection_title{text-align:center}.ourValuesSubSection_titleNumber{top:-13.9303482587vw;left:0}.ourValuesSubSection_jaTitle{margin-block-start:2.4875621891vw}.ourValuesSubSection_lead{margin-block-start:9.9502487562vw;text-align:center}.ourValuesSubSection_description{margin-block-start:4.9751243781vw;text-align:center}.ourValuesSubSection_img{grid-area:1/1;width:49.7512437811vw;margin-inline:auto}.philosophy{padding-block-end:49.7512437811vw}.philosophyHeader_contents{padding-block-start:33.3333333333vw}.philosophyHeader_content{padding-block:23.631840796vw 49.7512437811vw}.philosophyHeader_text{margin-block-start:23.631840796vw}.philosophyHeader_description+.philosophyHeader_description{margin-block-start:4.9751243781vw}.philosophyHeader_bg{width:100vw;height:227.3631840796vw}.privacy_contents{margin-block-start:27.3631840796vw;padding-block-end:24.8756218905vw}.privacy_sections{margin-block-start:12.4378109453vw}.privacyHeader{padding-block-start:32.3383084577vw;padding-inline-start:14.9253731343vw}.privacySection+.privacySection{margin-block-start:12.4378109453vw}.privacySection_title{margin-block-end:4.9751243781vw}.privacySection_list{margin-block:4.9751243781vw}.privacySection_item{padding-inline-start:4.4776119403vw}.privacySection_item:before{top:2.736318408vw;left:1.9900497512vw;width:.7462686567vw;height:.7462686567vw}.privacySection_orderItem{padding-inline-start:4.4776119403vw}.privacySection_orderItem:before{left:1.2437810945vw}.processList+.processList{margin-block-start:9.9502487562vw}.processList:not(:last-of-type):before{top:0;left:4.7263681592vw;height:calc(100% + 9.9502487562vw)}.processList_block{gap:2.4875621891vw;align-items:center}.processList_title{grid-template:"number enTitle" auto "number jaTitle" auto/9.9502487562vw 1fr;gap:1.2437810945vw 4.9751243781vw}.processList_titleNumber{border-radius:12.4378109453vw}.processList_body{padding-inline-start:14.9253731343vw}.processList_description+.processList_description{margin-block-start:2.4875621891vw}.processList_list{margin-block:2.4875621891vw}.processList_item{padding-inline-start:4.4776119403vw}.processList_item:before{top:2.736318408vw;left:1.9900497512vw;width:.7462686567vw;height:.7462686567vw}.projectsHeader_contents{padding-block-start:33.3333333333vw}.projectsHeader_content{padding-block:37.3134328358vw 0;padding-inline-start:14.9253731343vw}.projectsHeader_description{margin-block-start:6.2189054726vw}.projectsHeader_bg{width:100vw;height:248.7562189055vw}.projectsSection{padding-block-start:7.4626865672vw}.projectsSection_content{margin-block-start:24.8756218905vw;padding-block-end:37.3134328358vw}.projectsSection.-end .projectsSection_content{padding-block-end:19.9004975124vw}.projectsSection_block{gap:11.1940298507vw}.projectsSection_text{width:64.6766169154vw;margin-inline-start:14.9253731343vw}.projectsSection_titleNumber{left:24.8756218905vw}.projectsSection_titleJa{margin-block-start:1.2437810945vw}.projectsSection_lead,.projectsSection_texts{margin-block-start:7.4626865672vw}.projectsSection_description+.projectsSection_description{margin-block-start:2.4875621891vw}.projectsSection_button{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.projectsSection_imgs{grid-area:1/1;grid-template-columns:repeat(3,64.6766169154vw);gap:2.4875621891vw;width:100vw;height:99.5024875622vw;margin-inline-start:-10.1990049751vw}.journeySection_contents{padding-inline-start:39.8009950249vw}.journeySection_block{height:74.6268656716vw}.journeySection_label{padding-block-end:10.1990049751vw;padding-inline-start:3.7313432836vw}.journeySection_enTitle{white-space:nowrap}.journeySection_jaTitle{margin-block-start:1.2437810945vw}.journeySection_img{margin-inline:-20.3980099502vw}.journeySection_body{margin-block-start:24.8756218905vw;padding-block-end:42.2885572139vw;padding-inline:10.1990049751vw}.mocaSection{padding-block-start:7.4626865672vw}.mocaSection_contents{margin-block-start:-1.2437810945vw;padding-block-end:42.2885572139vw;padding-inline-start:14.9253731343vw}.mocaSection_subTitle{gap:2.4875621891vw;margin-block-start:3.7313432836vw}.mocaSection_body{margin-block-start:7.4626865672vw}.mocaSection_subBlock{gap:9.9502487562vw}.mocaSection_lead{gap:3.2338308458vw;margin-block-end:4.9751243781vw}.mocaSection_description+.mocaSection_description{margin-block-start:9.9502487562vw}.mocaSection_list{margin-block-start:4.9751243781vw}.mocaSection_item{padding-inline-start:4.4776119403vw}.mocaSection_item:before{top:2.736318408vw;left:1.9900497512vw;width:.7462686567vw;height:.7462686567vw}.mocaSection_img{width:47.263681592vw;height:72.1393034826vw}.retreat_contents{padding-block:7.4626865672vw 3.7313432836vw}.retreat_text{padding-block:24.8756218905vw 21.144278607vw}.retreat_texts{margin-block-start:4.9751243781vw}.retreat_description+.retreat_description{margin-block-start:4.9751243781vw}.retreat_bg{width:100vw;height:99.2537313433vw}.voiceCarousel_content{width:64.6766169154vw;height:89.3034825871vw;margin-inline-start:50.2487562189vw}.voiceCarousel_body{gap:4.9751243781vw;margin-block-start:4.9751243781vw}.voiceCarousel_description{-webkit-line-clamp:4}.voiceCarousel_trigger{margin-block-start:5.9701492537vw;margin-inline-start:-4.9751243781vw;padding-block:4.9751243781vw;padding-inline:4.9751243781vw 0}.voiceCarousel_triggerBlock{grid-template-columns:39.8009950249vw 1fr;gap:7.960199005vw}.voiceDialog{padding-block:34.07960199vw}.voiceDialog_inner{max-width:79.6019900498vw}.voiceDialog_close{top:30.0995024876vw;right:5.223880597vw;width:14.9253731343vw;height:14.9253731343vw;padding:5.3333333333vw}.voiceDialog_closeLines{width:5.3333333333vw}.voiceDialog_description+.voiceDialog_description{margin-top:4.9751243781vw}.voiceSection{padding-block-start:7.4626865672vw}.voiceSection_carousel{margin-inline:-45.5223880597vw -10.1990049751vw;padding-block:12.4378109453vw 44.776119403vw}.voiceSection_quotation{top:6.2189054726vw;left:23.631840796vw}.voiceSection_quotation svg{width:8.7064676617vw;height:7.4626865672vw;padding:1.2437810945vw}.contactSection{padding-block-start:7.4626865672vw}.contactSection_block{gap:11.1940298507vw;padding-block-end:20.6467661692vw}.contactSection_text{width:79.6019900498vw}.contactSection_descriptions{margin-block-start:6.2189054726vw}.contactSection_description+.contactSection_description{margin-block-start:2.4875621891vw}.contactSection_button{margin-block-start:7.4626865672vw}.contactSection_notes{margin-block-start:4.9751243781vw}.contactSection_img{width:49.7512437811vw;height:77.8606965174vw}.mediaSection{padding-block-end:3.7313432836vw}.mediaSection_content{margin-block-start:-1.2437810945vw;padding-block-end:21.144278607vw;padding-inline-start:14.9253731343vw}.mediaSection_subBlock{gap:12.4378109453vw}.mediaSection_jaTitle{margin-block-start:3.7313432836vw}.mediaSection_img{grid-area:2/1/3/2;width:47.263681592vw;height:67.4129353234vw}.programSection_contents{padding-block-start:3.7313432836vw}.programSection_content{padding-block-end:123.631840796vw}.programSection_text{padding-block-start:105.7213930348vw;padding-inline-start:14.9253731343vw}.programSection_descriptions{margin-block-start:6.2189054726vw}.programSection_bg{width:100vw;height:248.7562189055vw}.school_contents{padding-block:7.4626865672vw 42.2885572139vw}.school_subBlock{gap:12.4378109453vw}.school_texts{margin-block-start:4.9751243781vw}.school_description+.school_description{margin-block-start:4.9751243781vw}.school_img:nth-of-type(1){width:44.776119403vw;height:68.407960199vw}.school_img:nth-of-type(2){width:44.776119403vw;height:68.407960199vw;margin-block-start:-43.5323383085vw;margin-inline-start:34.8258706468vw}.school_sections,.schoolSubSection{padding-block-start:7.4626865672vw}.schoolSubSection_content{position:relative;padding-block-start:12.4378109453vw;padding-inline-start:14.9253731343vw}.schoolSubSection_content{padding-block-end:42.2885572139vw}.schoolSubSection_subBlock{gap:7.4626865672vw}.schoolSubSection_titleNumber{position:absolute;top:0;left:14.9253731343vw}.schoolSubSection_description{margin-block-start:4.9751243781vw}.schoolSubSection_list{margin-block-start:4.9751243781vw;padding-block-start:4.9751243781vw}.schoolSubSection_item{padding-inline-start:4.4776119403vw}.schoolSubSection_item:before{top:2.736318408vw;left:1.9900497512vw;width:.7462686567vw;height:.7462686567vw}.schoolSubSection_img{grid-area:1/1;width:64.6766169154vw;height:92.5373134328vw}.schoolSubSection_section{margin-block-start:4.9751243781vw}.supervisedSection{padding-block-start:9.9502487562vw}.supervisedSection_block{gap:7.4626865672vw;margin-block-start:9.9502487562vw}.supervisedSubSection_block{grid-template-columns:1fr 2fr;gap:4.9751243781vw}.supervisedSubSection_description{margin-block-start:2.4875621891vw}.supervisedSubSection_img{width:19.9004975124vw;height:24.8756218905vw}.thanks_contents{margin-block-start:8.7064676617vw;padding-block-end:19.9004975124vw;padding-inline-start:14.9253731343vw}.thanks_description+.thanks_description{margin-block-start:4.9751243781vw}.thanks_button{margin-block-start:7.4626865672vw;margin-inline-start:-4.9751243781vw}.thanksHeader{padding-block-start:32.3383084577vw;padding-inline-start:14.9253731343vw}.spBr{display:inline}.spBr:after{content:"\a";white-space:pre}.pc{display:none!important}.sp{display:block}}
+
+/* Founders-speak video and the six-item explainer grid, which live in the
+   same section as the creator carousel in the source. */
+.homePhilosophy_video{position:absolute;inset:0;border-radius:16px;overflow:hidden;background:#0B2F52;opacity:0;transform:scale(.88);transform-origin:50% 50%;transition:opacity .9s cubic-bezier(.22,.9,.35,1),transform .9s cubic-bezier(.22,.9,.35,1)}
+.homePhilosophy_video.is-in{opacity:1;transform:scale(1)}
+.homePhilosophy_videoInner{position:absolute;inset:0}
+.homePhilosophy_videoInner iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+/* ---------- the six differentiators ----------
+   No rules and no cards: the items stand on their own spacing. The glyphs are
+   the site's own Iconly set, the one the grid carried before. */
+.explainer_grid{display:grid;grid-template-columns:repeat(3,1fr);
+  column-gap:clamp(28px,3.4vw,52px);row-gap:clamp(34px,3.8vw,54px);
+  width:100%;margin-inline:auto;text-align:left}
+.explainer_item{min-width:0;display:grid;grid-template-columns:34px minmax(0,1fr);
+  column-gap:12px;align-items:center}
+
+/* smaller now that it sits beside the headline rather than above it: at 46px
+   the chip stood nearly twice the height of the line it was pairing with */
+.explainer_ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  flex:none;background:var(--uk-chip-dark)}
+.explainer_ico .explainer_icon{width:17px;height:17px;display:block;overflow:visible}
+/* the glyphs take the same paint the stat numbers carry: white falling off to
+   a pale gold. Solid --uk-gold sat too heavy against this ground. */
+.explainer_ico .explainer_icon path{fill:url(#ukIcoGrad);stroke:none}
+/* the glyph sits beside its headline rather than stacked above it, and the
+   description lines up under the headline instead of under the glyph */
+.explainer_ico{grid-column:1;grid-row:1}
+.explainer_title{grid-column:2;grid-row:1;
+  font-family:'Marcellus',serif;font-weight:400;font-size:20px;
+  line-height:1.25;color:#fff;margin:0;text-wrap:balance}
+.explainer_desc{grid-column:1/-1;grid-row:2;margin-top:12px}
+/* set to match the CTA lead line above the button, 15.5px. The measure is
+   capped so the line does not run the full width of the column. */
+.explainer_desc{font-family:'Lato',sans-serif;font-weight:400;font-size:15.5px;
+  line-height:1.6;color:rgba(255,255,255,.68);text-wrap:pretty;max-width:31ch}
+.explainer_desc i{font-style:italic}
+
+@media (max-width:1100px){.explainer_grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.explainer_grid{grid-template-columns:1fr}}
+.homePhilosophy .homePhilosophy_block{grid-template:"head" auto "foot" auto/1fr!important;row-gap:0!important}
+.homePhilosophy .homePhilosophy_head{padding-inline-start:0!important;margin-block-start:0!important;padding-block-start:3.2vw!important}
+/* Creator Revolution card hidden 2026-07-29 at Bob's request; remove the
+   display:none line to bring it back exactly as it was */
+.philoVideoBox{display:none;position:absolute;right:auto;left:calc(367.5px - 45vw);top:58%;width:clamp(265px,24vw,320px);z-index:4;pointer-events:auto}
+.philoVideoBox .homePhilosophy_video{position:relative;inset:auto;flex-shrink:0;width:clamp(140px,13.5vw,168px);border-radius:14px;overflow:hidden;background:#0B2F52;opacity:1;transform:none}
+@media (max-width:1204px){.philoVideoBox{right:-14.5vw}}
+@media (max-width:900px){.philoVideoBox{display:none}}
+.philoVideoBox .homePhilosophy_video{cursor:pointer}
+.philoVideoBox .homePhilosophy_video:hover .philoPlay{transform:translate(-50%,-50%) scale(1.08);background:#fff}
+.philoLightbox{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:clamp(16px,5vw,64px);background:rgba(6,12,14,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+.philoLightbox.is-open{opacity:1;pointer-events:auto}
+/* the stage the frame sits in. philovideo.js has always wrapped the frame in
+   this div, but nothing ever styled it: as an unstyled flex item in a row it
+   collapsed to zero width, took the frame down with it, and the video played
+   its audio into a box with no pixels. It carries the width now, and is capped
+   by the viewport height so a 16/9 frame always fits on screen. */
+.philoLightbox_stage{position:relative;width:min(1180px,100%);
+  max-width:calc((100svh - 2 * clamp(16px,5vw,64px)) * 16 / 9)}
+.philoLightbox_frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:scale(.96);transition:transform .3s ease}
+.philoLightbox.is-open .philoLightbox_frame{transform:scale(1)}
+.philoLightbox_frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.philoLightbox_close{position:absolute;top:clamp(14px,3vw,28px);right:clamp(14px,3vw,28px);width:42px;height:42px;border-radius:9999px;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);transition:background .25s ease}
+.philoLightbox_close:hover{background:rgba(255,255,255,.22)}
+@media (prefers-reduced-motion:reduce){.philoLightbox,.philoLightbox_frame{transition:none}}
+.explainer_cta{display:flex;flex-direction:column;align-items:center;width:80%;margin-inline:auto;margin-top:clamp(30px,3.4vw,44px)}
+.philoBigVideo.homePhilosophy_video{position:relative;inset:auto;width:clamp(340px,49vw,652px);margin:0 auto clamp(18px,2.1vw,32px);aspect-ratio:3/2;border-radius:20px;overflow:hidden;background:#0B2F52;cursor:pointer;opacity:0;transform:none;transition:opacity 1s ease}
+.philoBigVideo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(to bottom,rgba(13,32,38,0),#0B2F52 82%);pointer-events:none;z-index:2}
+.philoBigCaption{position:absolute;left:0;right:0;bottom:clamp(20px,2.6vw,38px);z-index:3;margin:0;padding-inline:clamp(24px,3.4vw,48px);font-family:'Marcellus',serif;font-weight:400;font-size:clamp(21px,2.4vw,31px);line-height:1.34;letter-spacing:.005em;color:#fff;text-align:center;text-wrap:balance;pointer-events:none}
+.philoWord{opacity:.26;transition:opacity .2s ease}
+.philoBigVideo .homePhilosophy_videoInner{transform:none}
+.philoBigVideo.is-in.homePhilosophy_video{opacity:1}
+@media (prefers-reduced-motion:reduce){.philoBigVideo.homePhilosophy_video{opacity:1;transform:none;transition:none}@media (prefers-reduced-motion:reduce){.philoWord{opacity:.92}}}
+.philoVideoBox{opacity:0;transform:translateY(60px);transition:opacity .9s ease,transform 1.8s cubic-bezier(.16,1,.3,1)}
+.philoVideoBox.is-in{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.philoVideoBox{opacity:1;transform:none;transition:none}}
+.philoBigVideo .philoPlay{width:66px;height:66px;top:40%}
+.philoBigVideo .philoPlay svg{width:30px;height:30px}
+.philoBigVideo:hover .philoPlay{transform:translate(-50%,-50%) scale(1.08);background:#fff}
+.label{grid-area:1/1;position:sticky;height:-moz-fit-content;height:fit-content;inline-size:-moz-max-content;inline-size:max-content;writing-mode:vertical-rl}
+.sticky{display:grid;height:100%}
+.sticky_main{grid-area:1/1}
+.sticky_sub{grid-area:1/1;justify-self:start}
+.homePhilosophy_block{display:grid}
+.homePhilosophy_head{grid-area:head}
+.homePhilosophy_singleImg{position:absolute}
+/* ---------- Founders speak + the explainer grid ----------
+   In the source this sits OUTSIDE the photo block, not inside it — which is why
+   ours was stretching the background image down the page. It is its own section
+   here, on the page's own ground, and the Izanami sticky scaffolding it was
+   wrapped in (which carried the vertical "philosophy" label and a narrow
+   measure) is gone.
+
+   Widths are the source's own, measured: video 652, grid 1037 across three
+   columns with a 42/66 gap. */
+.ukFounders{background:var(--uk-deep);padding:clamp(40px,5vw,76px) clamp(20px,5vw,48px)}
+.ukFounders_in{max-width:1240px;margin-inline:auto}/* 1120px, the same stage width Proven Results uses: at 1037px the third
+   card broke "Content + Exposure Combined" onto a second line while its
+   two neighbours stayed on one. The copy is fixed, so the stage widens. */
+
+.ukFounders .homePhilosophy_block,
+.ukFounders .homePhilosophy_head{display:block;width:auto;max-width:none;margin:0;padding:0}
+
+.ukFounders [data-philo-video]{position:relative;inset:auto;opacity:1;transform:none;
+  width:min(652px,100%);aspect-ratio:652/435;margin:0 auto clamp(14px,1.5vw,22px);
+  border-radius:16px;overflow:hidden;background:var(--uk-deep-3)}
+
+/* width:100% matters — without it the grid shrinks to its content (830px)
+   instead of filling the 1037 measure, which narrows every column */
+.ukFounders .explainer_grid{width:100%;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  max-width:1240px;margin-inline:auto}
+.ukFounders .explainer_item{width:auto}
+.ukFounders .explainer_cta{max-width:1037px;margin-inline:auto;text-align:center}
+
+@media (max-width:900px){ .ukFounders .explainer_grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:560px){ .ukFounders .explainer_grid{grid-template-columns:minmax(0,1fr)} }
+
+
+/* ---------- spacing ----------
+   The video sat a long way below the stats above it, and the CTA a long way
+   above the section that follows. Both come in. */
+.ukFounders{padding-top:clamp(14px,1.5vw,22px);padding-bottom:clamp(22px,2.4vw,34px)}
+.ukFounders [data-philo-video]{margin-bottom:clamp(14px,1.5vw,22px)}
+.ukFounders .explainer_cta{margin-top:clamp(24px,2.8vw,40px)}
+
+
+/* The play button, thumbnail and lightbox are injected by philovideo.js at
+   runtime, so their classes were never in the markup I scanned for CSS —
+   which is why the button existed in the DOM with no styling. */
+.philoVideoBox .homePhilosophy_video{position:relative;inset:auto;flex-shrink:0;width:clamp(140px,13.5vw,168px);border-radius:14px;overflow:hidden;background:#0d2026;opacity:1;transform:none}
+.philoThumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.philoPlay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:9999px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding-left:2px;background:rgba(255,255,255,.92);color:#0d2026;box-shadow:0 4px 14px rgba(0,0,0,.4);transition:transform .25s ease,background .25s ease}
+.philoBigVideo.homePhilosophy_video{position:relative;inset:auto;width:clamp(340px,49vw,652px);margin:0 auto clamp(18px,2.1vw,32px);aspect-ratio:3/2;border-radius:20px;overflow:hidden;background:#0d2026;cursor:pointer;opacity:0;transform:none;transition:opacity 1s ease}
+.philoBigVideo::after{content:"";position:absolute;left:0;right:0;bottom:0;height:52%;background:linear-gradient(to bottom,rgba(13,32,38,0),#0d2026 82%);pointer-events:none;z-index:2}
+@media (prefers-reduced-motion:reduce){.philoBigVideo.homePhilosophy_video{opacity:1;transform:none;transition:none}.philoWord{opacity:.92}}
+
+/* ---------- How It Works, on a light ground ----------
+   With the comparison block gone, this section is only the pinned step
+   sequence. It runs on the page's light surface now, so the type, the rail and
+   the numerals all move from their dark-ground values to the deep ink. */
+.homeProjects{background:var(--bg);color:var(--uk-deep)}
+.homeProjects .hiw__label{color:var(--uk-gold)}
+.homeProjects .hiw__title,
+.homeProjects .hiwStack_step h3,
+.homeProjects .hiw__card h3{color:var(--uk-deep)}
+.homeProjects .hiw__sub,
+.homeProjects .hiwStack_step p,
+.homeProjects .hiw__card p{color:var(--text-2)}
+.homeProjects .hiwRail_seg{background:rgba(11,47,82,.14)}
+.homeProjects .hiwRail_segFill{background:var(--uk-gold)}
+.homeProjects .hiwRail_node{color:rgba(11,47,82,.34)}
+.homeProjects .hiwRail_node.is-on,
+.homeProjects .hiwRail_node.is-active{color:var(--uk-deep)}
+
+/* ---------- How It Works: headline, tag and spacing ----------
+   The headline still carried the white-to-gold gradient it had on a dark
+   ground, so on cream it washed out to nothing. It takes the system headline
+   treatment on its light-ground stops. The tagline uses the glow tag the rest
+   of the page uses. */
+.homeProjects .hiw__title{
+  font-family:'Marcellus SC',Georgia,serif;font-weight:400;
+  font-size:clamp(30px,3.9vw,52px);line-height:1.08;letter-spacing:-.008em;
+  background:linear-gradient(101.34deg,#0B2F52 0.18%,#8a6414 221.09%)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;color:transparent!important}
+
+.homeProjects .hiw__label{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;padding:7px 16px;margin:0 0 clamp(14px,1.6vw,20px);
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:#8a6414}
+.homeProjects .hiw__label .ukGlow_face{background:#f7edd8;border:0}
+.homeProjects .hiw__label{--ring-a:#a8791f;--ring-b:#efc470;--ring-dim:rgba(168,121,31,.30)}
+
+/* the pin centres its content in a full viewport, but the fixed nav sits over
+   the top of that — which is the space above the items. It centres in the space
+   below the nav instead. */
+.homeProjects .hiwStack_pin{top:var(--aero-h,88px);height:calc(100svh - var(--aero-h,88px))}
+
+/* and the gap under Start Booking Creators */
+.ukFounders{padding-bottom:clamp(12px,1.3vw,18px)}
+
+/* ====================================================================
+   Round of adjustments. Spacing is moved, never restyled; the colours
+   below only swap the legacy green for the brand's deep blue.
+   ==================================================================== */
+
+/* The video's ground and the wash over its foot take the colour of the section
+   they sit in — --uk-deep, the same blue as the ground all around the frame —
+   not the darker --uk-deep-3. The foot then dissolves into the section instead
+   of ending on a darker band that reads as a seam. */
+.philoVideoBox .homePhilosophy_video{background:var(--uk-deep)}
+.philoBigVideo.homePhilosophy_video{background:var(--uk-deep)}
+.philoBigVideo::after{background:linear-gradient(to bottom,rgba(11,47,82,0),var(--uk-deep) 88%)}
+
+/* ---- the play mark ----
+   The mark is a filled disc with the triangle knocked out of it, so it needs no
+   pill behind it — it IS the disc. Two things were fighting that: the svg was
+   pinned to 30px inside a 66px button, which left a small mark floating in a
+   large empty hit area, and the hover rule painted a white background on the
+   button, which filled the knocked-out triangle and turned it into a plain
+   white circle. The mark now fills its button, and hover only scales. */
+.philoPlay{padding-left:0;background:none;box-shadow:none;
+  color:rgba(255,255,255,.94);filter:drop-shadow(0 4px 14px rgba(6,18,25,.45));
+  transition:transform .18s ease,color .18s ease}
+.philoBigVideo .philoPlay{width:clamp(64px,6.2vw,84px);height:clamp(64px,6.2vw,84px);top:50%}
+.philoBigVideo .philoPlay svg,
+.philoPlay .ukPlayMk{width:100%;height:100%;display:block;fill:currentColor}
+/* the mark takes the same paint the icons carry, white falling off to a pale
+   gold, and warms towards full gold on hover. Hover also lifts and brightens
+   the glow, so the button answers the pointer rather than only scaling. */
+.philoPlay .ukPlayMk path{fill:url(#ukIcoGrad);transition:fill .22s ease}
+.philoBigVideo:hover .philoPlay .ukPlayMk path,
+.philoPlay:hover .ukPlayMk path,
+.philoPlay:focus-visible .ukPlayMk path{fill:url(#ukPlayGradHover)}
+/* every hover path, including the one the video wrapper owns: no pill, ever */
+.philoPlay:hover,
+.philoBigVideo:hover .philoPlay,
+.philoVideoBox .homePhilosophy_video:hover .philoPlay{
+  background:none;color:#fff;transform:translate(-50%,-50%) scale(1.1);
+  filter:drop-shadow(0 6px 22px rgba(215,165,67,.5))}
+.philoPlay:active{transform:translate(-50%,-50%) scale(1.03)}
+
+/* ---- spacing only: things move, nothing changes shape ---- */
+/* the stats sat 215px clear of the video: 86px of their own margin plus
+   128px of section padding underneath them */
+.ukFeat .ukStats{margin-bottom:clamp(18px,2.2vw,30px)}
+.ukSection.ukFeat{padding-bottom:clamp(34px,4vw,56px)}
+
+/* and the room under Start Booking Creators. The scroll-revealed sentence that
+   used to close this section is gone, so the CTA is now the last thing on the
+   deep ground and needs its own foot rather than sitting flush on the seam. */
+.ukFounders{padding-bottom:clamp(56px,6vw,92px)}
+
+/* ====================================================================
+   How it works, as alternating rows.
+   The layout is ported measure for measure from the Viral Marketing
+   reference (apps/viralmarketing, section #solved): equal 1fr 1fr
+   columns so the stage is the same width on either side, 64px between
+   rows, every visual on the identical 788/729 panel, and a copy block
+   capped at 42ch holding a kicker, a two-line headline whose lines are
+   separate blocks, a short paragraph and exactly three bullets, each
+   led by a 30px tinted icon chip. Only the inks and the type are
+   Ukreate's: Marcellus headline, gold chip, deep-blue ink on cream.
+   ==================================================================== */
+.ukZig{background:var(--bg);padding:clamp(48px,6vw,88px) clamp(20px,5vw,48px)}
+.ukZig_in{max-width:1120px;margin-inline:auto}
+
+.ukZig_head{max-width:var(--uk-head-max);margin:0 auto var(--uk-head-gap-end);text-align:center}
+.ukZig_tag{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;padding:var(--uk-badge-pad);margin:0 0 var(--uk-head-gap-tag);
+  font:var(--uk-eyebrow);letter-spacing:var(--uk-eyebrow-track);text-transform:uppercase;
+  color:var(--uk-badge-ink-light);--ring-a:#a8791f;--ring-b:#efc470;--ring-dim:rgba(168,121,31,.30)}
+.ukZig_tag .ukGlow_face{background:var(--uk-badge-face-light);border:0}
+.ukZig_h2{margin:0;font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:var(--uk-h2-size);line-height:var(--uk-h2-line);
+  letter-spacing:var(--uk-h2-track);text-wrap:balance;
+  background:linear-gradient(101.34deg,#0B2F52 0.18%,#8a6414 221.09%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent}
+.ukZig_sub{margin:var(--uk-head-gap-sub) auto 0;max-width:var(--uk-measure);text-wrap:pretty;
+  font:400 var(--uk-sub-size)/var(--uk-sub-line) var(--uk-font-body);color:var(--text-2)}
+
+/* the rows themselves */
+.ukZig_rows{display:flex;flex-direction:column;gap:clamp(40px,4.4vw,64px)}
+.ukZig_row{display:grid;gap:clamp(24px,3vw,40px);align-items:center}
+@media (min-width:900px){
+  .ukZig_row{grid-template-columns:1fr 1fr;gap:clamp(40px,5vw,72px)}
+  /* zig-zag: even rows put the copy first */
+  .ukZig_row:nth-child(even) .ukZig_visual{order:2}
+  .ukZig_row:nth-child(even) .ukZig_copy{order:1}
+}
+
+/* every visual sits on the identical panel, so the rows read as one system */
+.ukZig_panel{aspect-ratio:788/729;border-radius:var(--uk-panel-radius);overflow:hidden;
+  display:grid;place-items:center;
+  border:var(--uk-panel-border);background:var(--uk-panel-fill)}
+.ukZig_panelLabel{display:grid;gap:6px;justify-items:center;text-align:center;
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--uk-deep) 55%, transparent)}
+.ukZig_panelLabel b{font-weight:400;letter-spacing:.06em;
+  color:color-mix(in srgb, var(--uk-deep) 38%, transparent)}
+
+/* the copy block */
+.ukZig_copy{max-width:42ch}
+.ukZig_kicker{margin:0 0 clamp(10px,1.1vw,14px);
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8a6414}
+.ukZig_title{margin:0 0 clamp(14px,1.5vw,20px);font-family:'Marcellus',Georgia,serif;
+  font-weight:400;font-size:clamp(26px,2.7vw,38px);line-height:1.14;letter-spacing:-.012em;
+  color:var(--uk-deep)}
+.ukZig_title span{display:block}
+.ukZig_body{margin:0 0 clamp(20px,2.2vw,28px);max-width:46ch;text-wrap:pretty;
+  font:400 15.5px/1.65 'Lato',sans-serif;color:var(--text-2)}
+
+.ukZig_points{list-style:none;margin:0;padding:0;display:grid;gap:clamp(12px,1.3vw,16px)}
+.ukZig_points li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:14px;
+  align-items:center;font:500 15px/1.45 'Lato',sans-serif;color:var(--uk-deep);text-wrap:pretty}
+/* the icon chip: the tinted gold square the rest of the site uses for glyphs */
+.ukZig_ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:var(--uk-chip-gold);color:var(--uk-badge-ink-light)}
+.ukZig_ico svg{width:16px;height:16px;display:block;overflow:visible}
+/* the pack's glyphs are solid, filled shapes, not strokes */
+/* the glyphs take the same two-stop gradient treatment the founders icons use.
+   That gradient runs white to pale gold for a dark ground; this section's chip
+   is a pale gold tint on cream, so it uses the light-ground twin. */
+.ukZig_ico .ukZig_glyph path{fill:url(#ukIcoGradLight);stroke:none}
+
+@media (max-width:899px){
+  .ukZig_copy{max-width:none}
+  .ukZig_panel{max-width:520px;margin-inline:auto}
+}
+
+/* the section's own call to action: a simple line, then the page's own
+   button. It is the same aeroBtn the closing section signs off with, so the
+   two final calls to action on the page are the one component. The button
+   carries the action label only; the line above it does the qualifying. */
+.ukZig_foot{margin-top:clamp(40px,4.6vw,68px);text-align:center}
+.ukZig_footLead{margin:0 0 clamp(14px,1.5vw,20px);text-wrap:balance;
+  font:400 16px/1.6 'Lato',sans-serif;color:var(--text-2)}
+.ukZig_footCta{display:flex;justify-content:center}
+/* the button carries a whole section, so it is sized for that rather than for
+   the nav bar it borrows its treatment from: the nav's 44px at 14px read far
+   too small standing on its own under the rows. */
+.ukZig_footCta .aeroBtn,
+.explainer_cta .aeroBtn{min-height:var(--uk-btn-h);padding:0 var(--uk-btn-pad-x);
+  font-size:var(--uk-btn-size);font-weight:var(--uk-btn-weight);min-width:var(--uk-btn-min)}
+/* the label was landing at 900: the button's markup wraps it in <strong><em>,
+   and the roll treatment weights those. The button already carries presence
+   through its size and its gold fill, so the text itself sits light. */
+.ukZig_footCta .aeroBtn strong,.ukZig_footCta .aeroBtn em,.ukZig_footCta .aeroBtn span,
+.explainer_cta .aeroBtn strong,.explainer_cta .aeroBtn em,.explainer_cta .aeroBtn span{
+  font-weight:400;font-style:normal}
+/* the roll window is hard-coded to 18px in aeronav.css, sized for the nav's
+   14px label. At 17px the text no longer fits that clip and the duplicate
+   label the roll animates in showed through, on hover and at rest. The window
+   and its line box scale with the larger type. */
+.ukZig_footCta .aeroBtn strong,
+.explainer_cta .aeroBtn strong{height:var(--uk-btn-roll)}
+.ukZig_footCta .aeroBtn strong span,
+.explainer_cta .aeroBtn strong span{line-height:var(--uk-btn-roll)}
+
+/* a short line above the section's button. The button carries the action
+   label on its own; this does the qualifying, on its own line above it. */
+.explainer_ctaLead{margin:0 0 clamp(14px,1.5vw,20px);text-align:center;text-wrap:balance;
+  font:400 15.5px/1.6 'Lato','Inter',sans-serif;color:rgba(255,255,255,.72)}
+
+/* ---------- the hero headline holds one line per sentence ----------
+   Each sentence is its own block and neither may wrap. Two things had to give.
+   The column is a flex item with min-width:0, so it was being shrunk to 566px
+   at 1440 regardless of any max-width, and the sentence needs about 747px at
+   58px: nowrap then held it on one line while the text ran out of its own box.
+   The column now sizes to its content instead of being shrunk to fit, capped
+   so it never crowds the cards beside it, and the type tracks the viewport so
+   the longer sentence still fits the cap at every width. */
+.legionHero_main{flex:0 0 auto;width:-moz-max-content;width:max-content;
+  max-width:min(880px,64vw)}
+.legionHero_line{white-space:nowrap;width:-moz-max-content;width:max-content;max-width:none;
+  font-size:clamp(19px,3.95vw,51px)}
+.legionHero_lede,.hero__buttons{max-width:min(620px,100%);margin-inline:auto}
+@media (max-width:900px){
+  .legionHero_main{width:auto;max-width:100%}
+  .legionHero_line{font-size:min(6.1vw,56px)}
+}
+
+/* the scroll tag is gone from the markup; make sure nothing still reserves
+   space or paints for it */
+.heroScroll,.heroScroll_oval{display:none!important}
+
+/* ====================================================================
+   One section-head standard, taken from How It Works.
+   Proven Results and Featured Creators had each drifted: 14px vs 11px on
+   the tag and no pill at all on Proven Results, 48px/700/-1.5px vs
+   52px/400/-0.416px on the headline, and Featured Creators was set in
+   Marcellus SC where the standard is Marcellus. Type, spacing and the pill
+   are identical across the three now; only the inks differ, because two of
+   these sit on a dark ground and one on cream.
+   ==================================================================== */
+.results .results__label,
+.ukScan .results__label,
+.ukFeat .ukFeat_tag{
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9999px;padding:7px 16px;
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase}
+/* the face is the one Featured Creators already uses on a dark ground. The
+   --ring-* variables I had here belong to the flat one-pixel ring the card
+   tags use; this pill uses the blurred halo, so they did nothing and the
+   badge read wrong. */
+.results .results__label,
+.ukScan .results__label{color:var(--uk-gold);margin:0 0 clamp(8px,.9vw,12px)}
+.results .results__label .ukGlow_face,
+.ukScan .results__label .ukGlow_face{background:var(--uk-badge-face-dark);border:0;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
+/* ---- and the spacing, which is part of the same standard ----
+   The head was 642px wide with a flat 21px gap between every part. The
+   benchmark is 780px, with the tag sitting closer to the headline than the
+   headline sits to the sub, and a larger drop to the content below. */
+.results .results__header{width:auto;max-width:780px;gap:0;
+  margin:0 auto clamp(40px,5vw,72px)}
+.results .results__title{margin:0}
+/* the shared head rule caps the sub at 56ch, which broke this one onto a
+   second line at about 470px when the sentence needs roughly 560. The head is
+   780 wide, so the cap comes off here and the line holds. It still wraps
+   naturally once the viewport is narrower than the sentence. */
+.results .results__sub{margin:clamp(7px,.8vw,11px) auto 0;max-width:none}
+/* the title and sub share a wrapper div, and as a centred flex item it was
+   shrinking to about 520px, which broke the sub even with its cap removed */
+.results .results__header>div{width:100%}
+.ukFeat .uk_head{margin-bottom:clamp(40px,5vw,72px)}
+.ukFeat .ukFeat_tag{margin:0 auto clamp(8px,.9vw,12px)}
+.ukFeat .uk_title{margin:0}
+.ukFeat .uk_sub{margin:clamp(7px,.8vw,11px) auto 0}
+
+.results .results__title,
+.ukFeat .uk_title{font-family:var(--uk-font-display)!important;font-weight:400!important;
+  font-size:var(--uk-h2-size)!important;line-height:var(--uk-h2-line)!important;
+  letter-spacing:var(--uk-h2-track)!important;text-wrap:balance}
+
+.results .results__sub,
+.ukFeat .uk_sub{font-family:var(--uk-font-body);font-weight:400;font-size:var(--uk-sub-size);
+  line-height:var(--uk-sub-line);letter-spacing:normal;text-wrap:pretty;max-width:var(--uk-measure);
+  margin-inline:auto}
+
+/* ---- specificity: uk4401.css loads after this file, so its single-class
+   rules for the case-study block and the results head win on order alone.
+   These are scoped to .results so they take precedence on specificity. ---- */
+.results .cs-stats{gap:clamp(30px,3.2vw,48px)}
+.results .results__header>div{width:100%;max-width:100%}
+.results .results__sub{max-width:none}
+@media (max-width:900px){.results .cs-stats{gap:clamp(20px,2.4vw,30px)}}
+
+/* ---- case-study thumbnails ----
+   They keep their still, their play button and the click-to-open lightbox in
+   casestudy.js. What changed is what they point at: the six were loading
+   Google's public sample bucket (ForBiggerBlazes.mp4 and friends), and now
+   carry the site's own UGC clips and poster frames. Slightly larger too.
+   Scoped under .results so uk4401.css does not win on load order. */
+.results .cs-thumb{width:clamp(50px,4.9vw,58px);height:clamp(89px,8.7vw,103px);
+  border-radius:7px}
+.results .cs-thumbs{gap:11px;bottom:18px}
+
+/* ---- the way out of the FAQ ----
+   For anyone whose question is not on the list. Same shape as the other
+   section calls to action: a short line, then the gold button, sized the way
+   the section CTAs are rather than the way the nav pill is. */
+.faqCta{margin:clamp(34px,4vw,56px) auto 0;text-align:center;
+  padding-inline:clamp(20px,5vw,48px)}
+.faqCta_lead{margin:0 0 clamp(14px,1.5vw,20px);text-wrap:balance;
+  font:400 16px/1.6 'Lato',sans-serif;color:var(--text-2)}
+.faqCta_btn{display:flex;justify-content:center}
+.faqCta .aeroBtn{min-height:56px;padding:0 40px;font-size:17px;font-weight:400;
+  min-width:clamp(220px,20vw,280px)}
+.faqCta .aeroBtn strong,.faqCta .aeroBtn em,.faqCta .aeroBtn span{
+  font-weight:400;font-style:normal}
+.faqCta .aeroBtn strong{height:23px}
+.faqCta .aeroBtn strong span{line-height:23px}
+
+/* ---- the closing badge IS the How It Works badge ----
+   It carries .ukZig_tag and nothing else, so it inherits that badge whole.
+   It used to also carry .ukClose_tag, which pulled in rules from ukclose.css
+   and ukglow.css that load later and quietly beat the shared ones on colour,
+   type and the ring. Only the section's own spacing is stated here. */
+.ukClose .ukZig_tag{margin:0 0 clamp(14px,1.6vw,20px)}
+
+.ukClose_cta .aeroBtn{min-height:56px;padding:0 40px;font-size:17px;font-weight:400;
+  min-width:clamp(220px,20vw,280px)}
+.ukClose_cta .aeroBtn strong,.ukClose_cta .aeroBtn em,.ukClose_cta .aeroBtn span{
+  font-weight:400;font-style:normal}
+.ukClose_cta .aeroBtn strong{height:23px}
+.ukClose_cta .aeroBtn strong span{line-height:23px}
+
+
+
+/* ---- the deep-blue button ----
+   The same object as the gold one, in the brand's blue: a slight gradient
+   running the same 5.7deg with the darker stop at the foot, a border tinted
+   from its own colour, and the same lift on hover. Added as a modifier rather
+   than a one-off so it can be reused wherever a blue action is wanted. */
+.aeroBtn.is-primary.is-deep{color:#fff;text-shadow:none}
+.aeroBtn.is-primary.is-deep .aeroBtn_fill{
+  background:var(--uk-btn-deep);
+  border:1px solid rgba(11,47,82,.57);
+  box-shadow:0 1px 2px rgba(11,47,82,.55), 0 0 0 2px rgba(255,255,255,.4)}
+.aeroBtn.is-primary.is-deep:hover .aeroBtn_fill{
+  background:var(--uk-btn-deep-hover);
+  border:1px solid rgba(11,47,82,.57)}
+.aeroBtn.is-primary.is-deep:hover{color:#fff}
+
+/* ---- the badge face follows its ground ----
+   Case studies, Featured Creators and the hero sit on dark grounds and take
+   the dark face with a gold label. How It Works and the closing section sit on
+   cream, so they keep the cream face and the darker gold ink. Recolouring them
+   was my mistake: what was actually wrong with the closing badge was the ring
+   overflow below, not its colour. Everything else about the pill is shared. */
+
+/* ---- descenders on the gradient headlines ----
+   These titles paint through -webkit-background-clip:text, so the gradient
+   only exists inside the element's own box. At line-height 1.08 the ink of a
+   g or y falls about 5px below that box, gets no paint, and reads as cut off.
+   A little room at the foot puts the tail back inside the painted area. */
+.ukClose .uk_title,
+.ukZig_h2,
+.results .results__title,
+.ukFeat .uk_title{padding-bottom:var(--uk-h2-descender)}
+
+/* ====================================================================
+   Newsletter and footer.
+   ==================================================================== */
+
+/* the field was a full pill against a 12px-radius button; it takes the
+   button's corner instead so the pair reads as one control */
+.ukNews_form .ukNews_input{border-radius:12px}
+/* and the label sits lighter */
+.ukNews_btn .btnRoll,
+.ukNews_btn .btnRoll span,
+.ukNews_btn .btnRoll em{font-weight:500}
+
+
+
+/* ---- the real brand marks ----
+   These files are the official full-colour logos already: Instagram's
+   gradient, YouTube red, LinkedIn blue, TikTok's own mark. The stylesheet was
+   running brightness(0) invert(1) over them, which flattened every one to the
+   same white blob inside a grey ring. The filter comes off, and the ring with
+   it, because each logo carries its own shape. */
+.ukFooter .ukFoot_sns{width:34px;height:34px;border:0;border-radius:50%;
+  overflow:hidden;transition:transform .2s ease,opacity .2s ease}
+.ukFooter .ukFoot_sns img{width:34px;height:34px;filter:none;opacity:1}
+.ukFooter .ukFoot_sns:hover{transform:translateY(-2px)}
+.ukFooter .ukFoot_sns:hover img{opacity:1}
+.ukFoot_socials{gap:10px;align-items:center}
+
+/* ---- the divider sits with the footer, not with the newsletter ----
+   It was 52px below the newsletter and 130px above the footer's first line,
+   so it read as belonging to the newsletter. The space moves to the other
+   side of it. */
+.ukOutro .ukNews::after{margin-top:clamp(56px,6.6vw,96px)}
+
+/* ---- and the footer loses the slack in its middle ----
+   96px of top padding and an 86px column gap left a band of empty ground
+   between the rule and the links. Both come in; nothing changes size. */
+.ukOutro .ukFooter{padding-top:clamp(22px,2.4vw,32px);
+  padding-bottom:clamp(24px,2.8vw,38px)}
+.ukOutro .ukFoot_inner{gap:clamp(28px,3.4vw,64px)}
+
+/* the photograph keeps its footing. With center/cover the crop floats, so a
+   shorter footer would have slid the image up and lost the effect; anchoring
+   it to the bottom keeps the base of the picture on the base of the footer
+   however tall the block ends up. */
+.ukOutro::before{background-position:center bottom}
+
+/* ---- the network section head, on the How It Works rhythm ----
+   Its internals already matched (20px badge to headline, 18px to the sub,
+   72px down to the content). What did not was the space above: 128px of
+   section padding against How It Works' 86.4px, which is what made the head
+   sit adrift at the top. Same padding now, so the two heads start alike. */
+.ukSection.ukFeat{padding-top:clamp(48px,6vw,88px)}
+
+/* each sentence of the network headline holds its own line, and balances
+   inside that line rather than running across the full stop */
+.ukFeat .uk_title span{display:block;text-wrap:balance}
+
+/* ---- the footer's remaining slack ----
+   343px broke down as 32 top padding, a 172px content band, then 52px of
+   empty ground before the bottom bar, the 49px bar, and 38px below it. The
+   gap before the bar and the bar's own top padding were the loose part, and
+   the brand column left a hole under its social row because it stretched to
+   match the four link columns. The columns align to the top instead, and the
+   two vertical gaps come in. */
+.ukOutro .ukFoot_inner{align-items:flex-start}
+.ukOutro .ukFoot_bar{margin-top:clamp(20px,2.2vw,28px);
+  padding-top:clamp(14px,1.6vw,20px)}
+.ukOutro .ukFoot_tag{margin:12px 0 16px}
+.ukOutro .ukFoot_col h4{margin-bottom:12px}
+.ukOutro .ukFoot_col ul{gap:9px}
+
+/* ---- footer: given its air back ----
+   421px carried an empty band in the middle, 248 and 292 both read airless.
+   This sits near 350: the padding is generous again and the link columns
+   breathe, but the dead space between the columns and the bottom bar that
+   started this is not coming back. */
+.ukOutro .ukFooter{padding-top:clamp(34px,4vw,54px);
+  padding-bottom:clamp(30px,3.4vw,46px)}
+.ukOutro .ukFoot_bar{margin-top:clamp(26px,3vw,40px);
+  padding-top:clamp(18px,2.2vw,28px)}
+.ukOutro .ukFoot_tag{margin:16px 0 20px}
+.ukOutro .ukFoot_col h4{margin-bottom:29px}
+.ukOutro .ukFoot_col ul{gap:16px}
+.ukOutro .ukNews{padding-bottom:clamp(40px,4.6vw,64px)}
+
+/* ---- the two card visuals, as marked-out placeholders ----
+   Same treatment as the How It Works rows: one fixed ratio, a dashed outline
+   and the export size written on it, so both cards read as one system and
+   real art can drop straight in. 2:1 is the shape the composed vignettes
+   were already occupying. */
+.ukSides_vis{background:none;padding:0;border:0}
+.ukSides_panel{aspect-ratio:2/1;width:100%;border-radius:16px;overflow:hidden;
+  display:grid;place-items:center;
+  border:var(--uk-panel-border);background:var(--uk-panel-fill)}
+.ukSides_panelLabel{display:grid;gap:6px;justify-items:center;text-align:center;
+  font:700 11px/1 'Lato',sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:color-mix(in srgb, var(--uk-deep) 55%, transparent)}
+.ukSides_panelLabel b{font-weight:400;letter-spacing:.06em;
+  color:color-mix(in srgb, var(--uk-deep) 38%, transparent)}
+
+/* the photograph behind the newsletter and footer sits further back.
+   Dropping its own opacity was wrong: the pale page ground sits behind it, so
+   fading the image let that through and made the whole block lighter rather
+   than quieter. The image stays at full strength and the scrim over it comes
+   up instead, which pushes the picture down into the deep blue. Position and
+   size are untouched, so the bottom anchoring still holds. */
+.ukOutro::after{background:linear-gradient(to bottom,
+  var(--uk-deep-3) 0%,
+  rgba(6,24,41,.74) 15%,
+  rgba(6,24,41,.84) 52%,
+  rgba(6,24,41,.93) 100%)}
+
+/* ====================================================================
+   Hero: copy on top, the work below.
+   The hero was a two-column row, copy left and the travelling card rail
+   right. It is now a centred column with a floating collage beneath it.
+   The collage is built here rather than pulled in as a React component,
+   because this site is static HTML and CSS: same layout, same drift
+   animation, no build step or framework added to render one section.
+   ==================================================================== */
+/* the hero sat under the fixed nav: .homeHeader_contents is pinned to
+   100svh and centres its content, so a taller column started above the nav's
+   bottom edge. It clears the nav explicitly and the container is allowed to
+   grow past the viewport rather than clipping the collage. */
+.homeHeader_contents{height:auto;min-height:100svh;
+  padding-top:calc(var(--aero-h,88px) + clamp(14px,2.2vw,34px));
+  padding-bottom:clamp(20px,3vw,44px)}
+.homeHeader_inner.legionHero{flex-direction:column;align-items:center;
+  justify-content:flex-start;text-align:center;gap:0}
+.legionHero_main{width:auto;max-width:min(980px,100%);margin-inline:auto;text-align:center}
+.legionHero_line{margin-inline:auto}
+.legionHero_lede{margin-inline:auto;max-width:60ch}
+.hero__buttons{display:flex;justify-content:center;width:100%;margin-inline:auto}
+
+/* the old travelling layer is stood down in the markup; make sure it also
+   takes up no room and paints nothing */
+.surfer{display:none!important}
+
+/* ---------- the collage ----------
+   The real clips, overlapping, on an upward curve. Tiles pull into each other
+   with a negative gap so they layer rather than sit apart, each one rotates a
+   little further as it moves out from the middle, and each sits a little
+   higher, so the row sweeps up at both ends instead of running flat. The
+   centre tile is the lowest and the most upright. */
+.ukCollage{position:relative;z-index:1;margin-top:clamp(16px,2.2vw,30px);
+  padding-inline:clamp(16px,4vw,48px)}
+.ukCollage_stage{position:relative;width:100%;max-width:min(1120px,100%);
+  margin-inline:auto;display:flex;align-items:center;justify-content:center;
+  gap:0;padding-block:44px}
+
+.ukCollage_item{position:relative;margin:0 var(--overlap,-3px);flex:0 0 auto;
+  width:clamp(86px,9.9vw,142px);aspect-ratio:9/16;
+  border-radius:14px;overflow:hidden;background:var(--uk-deep-3);
+  box-shadow:0 22px 46px -14px rgba(0,0,0,.55);
+  transform:translate3d(0,var(--rise,0px),0) rotate(var(--tilt,0deg))}
+.ukCollage_item .ukCollage_img,
+.ukCollage_item .ukCollage_vid{display:block;width:100%;height:100%;object-fit:cover}
+
+/* left to right. --rise lifts a tile above the centre one, --tilt fans it,
+   and z-index keeps the middle of the row in front. */
+.ukCollage_item--fl{order:1;--rise:-46px;--tilt:-9deg;  z-index:1}
+.ukCollage_item--bl{order:2;--rise:-26px;--tilt:-6deg;  z-index:2}
+.ukCollage_item--tl{order:3;--rise:-10px;--tilt:-3deg;  z-index:3}
+.ukCollage_item--c {order:4;--rise:0px;  --tilt:0deg;   z-index:4;
+  width:clamp(98px,11.2vw,158px);border-radius:16px;
+  box-shadow:0 28px 58px -16px rgba(0,0,0,.6)}
+.ukCollage_item--tr{order:5;--rise:-10px;--tilt:3deg;   z-index:3}
+.ukCollage_item--br{order:6;--rise:-26px;--tilt:6deg;   z-index:2}
+.ukCollage_item--fr{order:7;--rise:-46px;--tilt:9deg;   z-index:1}
+
+/* the tiles are still; nothing to reduce for reduced motion */
+
+/* ---------- the hero ground ----------
+   The photograph is now a texture rather than the subject: it drops back far
+   enough that the brand gradient carries the section, with a cloud band
+   drifting across it. The ground behind is --uk-deep, so fading the picture
+   settles it into the blue instead of washing it out. */
+.homeHeader{
+  background:
+    radial-gradient(130% 78% at 50% -8%, #17527f 0%, rgba(23,82,127,0) 62%),
+    radial-gradient(90% 60% at 82% 18%, rgba(215,165,67,.16) 0%, rgba(215,165,67,0) 60%),
+    linear-gradient(180deg, #08233D 0%, #0B2F52 46%, #061829 100%)}
+.homeHeader .heroBgPlain img{opacity:.16}
+
+/* the travelling cloud: one wide plate repeated across and drawn slowly
+   sideways, so the sky moves without anything else on the page moving */
+.heroBgCustom::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:url(../img/hero/hero-clouds.png) repeat-x 0 22%;
+  background-size:auto 62%;
+  opacity:.30;mix-blend-mode:screen;
+  animation:ukCloudDrift 120s linear infinite}
+@keyframes ukCloudDrift{
+  from{background-position:0 22%}
+  to  {background-position:-2048px 22%}
+}
+@media (prefers-reduced-motion:reduce){
+  .heroBgCustom::before{animation:none}
+}
+
+/* ---------- the hero ground is the bloom ----------
+   The shader carries the section now, so the photograph and the cloud plate
+   stand down rather than competing with it. Colours are the brand's: the
+   ground is --uk-deep-3, the light rises in brand blue and its hottest core
+   is gold, in place of the component's default purple on black. */
+.heroBloom{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;
+  pointer-events:none}
+/* the photograph is the ground the bloom and the two plates sit on. It is a
+   tall portrait shot on a wide hero, so it covers and anchors to the centre;
+   held well back so the navy still carries the section. */
+/* the photograph fills the hero and fades down it: clear at the top where the
+   trees and sky do the work, gone by the foot so the deep navy takes over and
+   the collage has clean ground to sit on. The overall opacity comes up,
+   because the mask is what holds the bottom back now rather than a flat
+   value applied to the whole frame. */
+.homeHeader .heroBgPlain img{opacity:.42;object-fit:cover;object-position:center;
+  transform:none;
+  /* the photograph carries a hard horizontal edge at source row 769, which
+     lands at page y=546 and is what read as a seam. The picture is faded out
+     above it, so the edge never renders: the trees and sky still do their
+     work at the top and the navy takes the whole lower half. */
+  -webkit-mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1.000) 0%,
+    rgba(0,0,0,0.940) 7%,
+    rgba(0,0,0,0.842) 14%,
+    rgba(0,0,0,0.739) 21%,
+    rgba(0,0,0,0.621) 28%,
+    rgba(0,0,0,0.491) 35%,
+    rgba(0,0,0,0.346) 42%,
+    rgba(0,0,0,0.180) 49%,
+    rgba(0,0,0,0.000) 56%,
+    rgba(0,0,0,0.000) 100%);
+  mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1.000) 0%,
+    rgba(0,0,0,0.940) 7%,
+    rgba(0,0,0,0.842) 14%,
+    rgba(0,0,0,0.739) 21%,
+    rgba(0,0,0,0.621) 28%,
+    rgba(0,0,0,0.491) 35%,
+    rgba(0,0,0,0.346) 42%,
+    rgba(0,0,0,0.180) 49%,
+    rgba(0,0,0,0.000) 56%,
+    rgba(0,0,0,0.000) 100%)}
+.heroBgCustom::before{content:none}
+
+
+
+/* the hero ground: photograph, shader over it, and a scrim weighted to the
+   foot. The top is left alone so the trees and sky read as they do now; the
+   bottom goes down hard into the deep navy, which also gives the collage
+   something to sit against. */
+.homeHeader .heroBgCustom{position:absolute;inset:0;z-index:1;pointer-events:none}
+.homeHeader .heroBgCustom::before{content:none}
+.homeHeader .heroBgCustom::after{content:'';position:absolute;inset:0;
+  /* weighted to the foot: the top keeps the picture, the bottom goes down
+     into the deep navy so nothing glows where the page hands off */
+  background:linear-gradient(to bottom,
+    rgba(5,17,30,.10)   0%,
+    rgba(5,17,30,.14)  12%,
+    rgba(5,17,30,.22)  24%,
+    rgba(5,17,30,.34)  36%,
+    rgba(5,17,30,.48)  48%,
+    rgba(5,17,30,.62)  60%,
+    rgba(5,17,30,.75)  72%,
+    rgba(5,17,30,.86)  82%,
+    rgba(5,17,30,.94)  91%,
+    rgba(5,17,30,.99) 100%)!important}
+
+/* the hero pair tightens: narrower, shorter, less padding around the label,
+   and a stroke that barely shows */
+.hero__buttons{max-width:min(372px,100%);gap:clamp(10px,1.1vw,14px)}
+.homeHeader .hero__buttons .btn{font-size:15.5px;padding-block:11px;
+  padding-inline:clamp(12px,1.4vw,18px);border-radius:12px}
+.homeHeader .hero__buttons .btn--gold{border-color:rgba(215,165,67,.16)}
+.homeHeader .hero__buttons .btn--white{border-color:rgba(255,255,255,.14)}
+
+/* the hero headline is set in Marcellus SC, a small-caps face: every
+   lowercase letter renders as a small capital, so the line reads as all
+   caps whatever the markup says. The regular Marcellus shows the casing
+   that is actually written, and no transform is applied on top. */
+.homeHeader .legionHero_title,
+.homeHeader .legionHero_line{font-family:'Marcellus',Georgia,serif;
+  text-transform:none;font-variant-caps:normal}
+
+/* one thin stroke on the hero buttons, and nothing else.
+   The heavy ring that used to read as a stroke was not a border at all: .btn
+   carries a box-shadow with a 2.3px white spread. That stays off, so the only
+   edge is this 1px line, tinted from each button's own colour. */
+.homeHeader .hero__buttons .btn{border:1px solid transparent;
+  box-shadow:0 2px 10px rgba(3,12,22,.28)}
+.homeHeader .hero__buttons .btn--gold{border-color:rgba(255,255,255,.30)}
+.homeHeader .hero__buttons .btn--white{border-color:rgba(11,47,82,.16)}
+
+
+
+/* ---------- the hero background must be as tall as the hero ----------
+   ukbrand.css pins .homeHeader_bg to 100svh and ukmarketing pins the photo
+   inside it to 100svh as well. The hero is min-height:100svh but grows with
+   its content, so as soon as the content is taller than the viewport -- which
+   it is in any real browser once chrome is subtracted -- the whole background
+   layer stops short and the last strip of the hero falls back to the plain
+   gradient underneath. That hard edge, where the bloom, the photograph and
+   the scrim all end together, is the band.
+
+   Measured at a 720px viewport before the fix: hero 836, background 720, a
+   116px strip with a 39.8-unit step at its top.
+
+   .homeHeader is a grid with the background and the content both in cell 1/1,
+   so a stretched item already fills the row and the row is as tall as the
+   content. Only the hard 100svh had to go. It must stay in flow: taking it
+   out blacked the hero out, because the WebGL canvas lost its sizing and
+   painted opaque black. */
+/* The background is taken out of flow and pinned to the hero box. In flow it
+   sized itself from its own children and pushed the hero to 1532px; pinned,
+   it can only ever be exactly as tall as the hero, whatever the content or
+   the viewport does. */
+.homeHeader{position:relative}
+.homeHeader .homeHeader_bg{position:absolute!important;inset:0!important;
+  height:auto!important;min-height:0!important;z-index:0}
+.homeHeader .heroBgPlain,
+.homeHeader .heroBgPlain img,
+.homeHeader .homeHeader_img{position:absolute;inset:0;width:100%;height:100%;
+  min-height:0}
+.homeHeader .heroBgCustom,
+.homeHeader .heroBloom{position:absolute;inset:0;height:100%}
+.homeHeader .homeHeader_contents{position:relative;z-index:2}
+
+/* ---------- the hero foot cannot glow, on any machine ----------
+   The band in Bob's browser was far lighter than anything my render produced,
+   and the arithmetic ruled out the scrim: a .97 cover over rgba(5,17,30)
+   cannot yield (31,61,100) whatever the canvas draws. The difference is the
+   canvas itself -- a real GPU renders the shader far brighter than the
+   software rasteriser I test against -- so anything that depends on how the
+   bloom happens to render is not something I can verify.
+
+   The ground is therefore deterministic CSS, and the canvas is masked away
+   entirely through the lower half. It can brighten the top, where it is
+   wanted, and it cannot touch the foot on any hardware. */
+.homeHeader .heroBloom{
+  -webkit-mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%, rgba(0,0,0,.96) 22%, rgba(0,0,0,.78) 40%,
+    rgba(0,0,0,.46) 56%, rgba(0,0,0,.18) 70%, rgba(0,0,0,0) 82%);
+  mask-image:linear-gradient(to bottom,
+    rgba(0,0,0,1) 0%, rgba(0,0,0,.96) 22%, rgba(0,0,0,.78) 40%,
+    rgba(0,0,0,.46) 56%, rgba(0,0,0,.18) 70%, rgba(0,0,0,0) 82%);
+  opacity:.85}
+
+/* the ground under everything: brand navy, darkening to the foot, drawn in
+   CSS so it renders identically everywhere */
+.homeHeader{
+  background:
+    radial-gradient(120% 70% at 50% 0%, #17527f 0%, rgba(23,82,127,0) 58%),
+    linear-gradient(180deg, #0a2d4d 0%, #0b2f52 34%, #082238 66%, #04101e 100%)
+    !important}
+
+/* ---------- restored: the badge's avatar stack ----------
+   These rules were lost when I rewrote the tail of this file, which is why
+   the badge grew to 730px: the avatars fell back to their natural 240px and
+   dragged the whole hero to 1532px with them. */
+.hero__badge{gap:10px}
+.hero__badgeAvs{display:inline-flex;align-items:center;position:relative;z-index:2}
+.hero__badgeAvs img{width:22px;height:22px;border-radius:50%;display:block;
+  object-fit:cover;border:1.5px solid rgba(4,13,24,.88);
+  box-shadow:0 1px 3px rgba(3,12,22,.5)}
+.hero__badgeAvs img + img{margin-left:-8px}
+.hero__badge > b{position:relative;z-index:2}
+.hero__badge.ukGlow .ukGlow_face{background:var(--uk-badge-face-dark)}
+@media (max-width:560px){
+  .hero__badgeAvs img{width:19px;height:19px}
+  .hero__badgeAvs img + img{margin-left:-7px}
+}
+
+/* ---------- restored: how the tile stroke is lit across the row ----------
+   Gold on the left three, blue on the right three, both on the centre. The
+   rotation stays frozen or the sides would travel around each frame. */
+.ukCollage_item.ukGlow > .ukGlow_g::before{animation:none}
+.ukCollage_item--fl.ukGlow > .ukGlow_g::before,
+.ukCollage_item--bl.ukGlow > .ukGlow_g::before,
+.ukCollage_item--tl.ukGlow > .ukGlow_g::before{
+  background:linear-gradient(90deg,#d7a543 26%,transparent 46%,transparent 100%)}
+.ukCollage_item--fl.ukGlow > .ukGlow_g--in::before,
+.ukCollage_item--bl.ukGlow > .ukGlow_g--in::before,
+.ukCollage_item--tl.ukGlow > .ukGlow_g--in::before{
+  background:linear-gradient(90deg,#efc470 26%,transparent 46%,transparent 100%)}
+.ukCollage_item--tr.ukGlow > .ukGlow_g::before,
+.ukCollage_item--br.ukGlow > .ukGlow_g::before,
+.ukCollage_item--fr.ukGlow > .ukGlow_g::before{
+  background:linear-gradient(90deg,transparent 0%,transparent 54%,#3b7fc4 74%)}
+.ukCollage_item--tr.ukGlow > .ukGlow_g--in::before,
+.ukCollage_item--br.ukGlow > .ukGlow_g--in::before,
+.ukCollage_item--fr.ukGlow > .ukGlow_g--in::before{
+  background:linear-gradient(90deg,transparent 0%,transparent 54%,#8bb8e8 74%)}
+.ukCollage_item--c.ukGlow > .ukGlow_g::before{
+  background:linear-gradient(90deg,#d7a543 26%,transparent 42% 58%,#3b7fc4 74%)}
+.ukCollage_item--c.ukGlow > .ukGlow_g--in::before{
+  background:linear-gradient(90deg,#efc470 26%,transparent 42% 58%,#8bb8e8 74%)}
+
+/* ---------- restored: the video frames' stroke and halo ----------
+   Also lost in the rewrite. Without these the tile clipped its own glow away,
+   so the frames had no lit edge and the rings never showed. The tile stops
+   clipping, the rounding moves onto the footage, and the video sits above the
+   rings so the halo reads behind it. */
+.ukCollage_item.ukGlow{overflow:visible;isolation:isolate}
+.ukCollage_item.ukGlow > .ukCollage_vid,
+.ukCollage_item.ukGlow > .ukCollage_img{position:relative;z-index:2;
+  border-radius:inherit;overflow:hidden}
+.ukCollage_item.ukGlow > .ukGlow_g{border-radius:inherit}
+
+/* ---------- four clips, placed around the copy ----------
+   Seven scattered cards read as clutter: too many objects, all the same size,
+   competing with the headline. Four is enough to say "creator video" and few
+   enough to compose. They sit in the margins the copy does not use, at four
+   different heights and four different sizes so the eye reads depth rather
+   than a pattern, and the pair on each side is deliberately unequal so the
+   arrangement looks placed rather than mirrored. The other three are hidden
+   rather than deleted, so the set can come back. */
+.ukCollage{position:absolute;inset:0;z-index:1;margin:0;padding:0;
+  pointer-events:none}
+.ukCollage_stage{position:absolute;inset:0;display:block;max-width:none;
+  width:auto;height:auto;padding:0;margin:0}
+.ukCollage_item{position:absolute;margin:0;aspect-ratio:9/16;
+  transform:rotate(var(--tilt,0deg))}
+.ukCollage_item .ukCollage_vid{pointer-events:none}
+
+/* the three that are not part of the composition */
+.ukCollage_item--tl,
+.ukCollage_item--tr,
+.ukCollage_item--c{display:none}
+
+/* upper left, the largest: it balances the headline's first line */
+.ukCollage_item--fl{left:4.5%;  top:16%; width:clamp(84px,9.2vw,136px); --tilt:-7deg}
+/* lower left, smaller and further in, so the left side is not a column */
+.ukCollage_item--bl{left:12.5%; top:58%; width:clamp(62px,6.6vw,98px);  --tilt:-4deg}
+/* upper right, smallest and highest, answering the lower-left */
+.ukCollage_item--fr{right:5.5%; left:auto; top:11%; width:clamp(58px,6.1vw,90px); --tilt:6deg}
+/* lower right, second largest, carrying the weight under the buttons */
+.ukCollage_item--br{right:11%;  left:auto; top:54%; width:clamp(76px,8.3vw,122px); --tilt:3deg}
+
+/* the copy sits above the scatter */
+.homeHeader .homeHeader_inner.legionHero{position:relative;z-index:3}
+
+/* ---------- the hero composes vertically ----------
+   The copy was sitting in the top half with 200px of dead ground under the
+   cards, which is what made the arrangement look arbitrary. The content is
+   centred in the space below the nav instead, and the cards are spread across
+   more of the height so the composition reaches the foot. */
+.homeHeader .homeHeader_contents{align-content:center;
+  padding-top:calc(var(--aero-h,88px) + clamp(10px,1.4vw,20px));
+  padding-bottom:clamp(16px,2.2vw,30px)}
+
+/* upper pair sits higher, lower pair drops further, so the four span the
+   hero rather than huddling in its middle */
+.ukCollage_item--fl{top:12%}
+.ukCollage_item--fr{top:8%}
+.ukCollage_item--bl{top:62%}
+.ukCollage_item--br{top:58%}
+
+/* the lower pair drops a little further again so the composition reaches
+   toward the foot of the hero instead of leaving a dead band under it */
+.ukCollage_item--bl{top:66%}
+.ukCollage_item--br{top:62%}
+
+/* ---- hero clips off ----
+   The scattered video clips are out of the hero; the copy carries it alone.
+   The markup stays in place so the collage can be switched back on by
+   dropping this rule, but nothing renders. */
+.ukCollage{display:none}
+
+/* ---------- the scrim reads from the centre out, not top to bottom ----------
+   The old scrim was weighted to the foot, so the hero got steadily darker
+   down the frame and the bottom edge was the darkest thing on the page. It
+   is radial now: densest behind the copy, where it earns its keep by holding
+   the headline legible, and thinning outwards so the picture and the light
+   are strongest at the edges of the frame. */
+.homeHeader .heroBgCustom::after{
+  background:
+    radial-gradient(ellipse 62% 58% at 50% 48%,
+      rgba(5,17,30,.88)  0%,
+      rgba(5,17,30,.80) 26%,
+      rgba(5,17,30,.66) 45%,
+      rgba(5,17,30,.48) 62%,
+      rgba(5,17,30,.30) 78%,
+      rgba(5,17,30,.16) 90%,
+      rgba(5,17,30,.08) 100%)!important}
+
+/* The brand light still lifts the top, but the ground now settles as it falls:
+   the foot is the darkest part of the hero, so the cards standing on it read as
+   cards rather than as another shade of the same navy. */
+.homeHeader{
+  background:
+    radial-gradient(120% 72% at 50% 0%, #17527f 0%, rgba(23,82,127,0) 60%),
+    linear-gradient(180deg, #0b3157 0%, #0b2f52 46%, #071d33 100%)
+    !important}
+
+
+/* the photograph comes forward: the picture carries the hero rather than
+   sitting back as texture on the navy */
+.homeHeader .heroBgPlain img{opacity:.62}
+
+/* ---------- the For Hotels card carries its real screen ----------
+   The placeholder is replaced by the product shot. The picture is a light UI
+   on a white plate with wide empty margins above and below it, so the frame
+   keeps the 2:1 the two cards share and the crop is pulled up to 47% to sit
+   on the content rather than the margin. */
+.ukSides_shot{display:block;width:100%;height:auto;aspect-ratio:2/1;border-radius:16px;
+  object-fit:cover;object-position:center 47%;
+  border:var(--uk-panel-border);background:var(--uk-panel-fill);
+  box-shadow:0 18px 40px -22px rgba(6,24,41,.34)}
+
+/* ---------- the shot is shown whole ----------
+   The 2:1 frame was cropping the top and bottom off the screen. The container
+   takes the picture's own 1576:1318 instead and grows to fit it, so nothing is
+   cut. The For Creators placeholder takes the same shape, so the two cards
+   still line up and the matching art gets exported at the same size. */
+.ukSides_shot{aspect-ratio:1576/1318;object-fit:contain;object-position:center}
+.ukSides_card--creator .ukSides_panel{aspect-ratio:1576/1318}
+
+/* the shot is real art, so it drops the dashed placeholder edge and the tint
+   behind it. The For Creators panel keeps both: it is still a placeholder and
+   should read as one. */
+.ukSides_shot{border:0;background:none}
+
+/* ---------- the two card points take the founders-block form ----------
+   Same shape as the points under the founders video: a chip beside the
+   headline, the description spanning under both. The founders block sits on
+   navy, so its white ink and its white-wash chip cannot come with it -- this
+   section is on white. Each card keeps the ink it already carries and the chip
+   is filled from that card's own tag colour, so the form is shared and the
+   colour still belongs to the card it sits on.
+
+   The pair sits side by side on one row, not stacked. */
+/* The two points sit side by side in each card. That gives each one ~253px,
+   so the copy and the type are sized to hold one-line headings and two-line
+   bodies at that width — see the sizes below. */
+.ukSides_feats.explainer_grid--pair{display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:clamp(18px,1.9vw,28px);row-gap:clamp(22px,2.4vw,32px);
+  margin-top:clamp(18px,2vw,26px);align-items:start}
+
+.ukSides_pt.explainer_item{display:grid;grid-template-columns:34px minmax(0,1fr);
+  column-gap:12px;align-items:center;min-width:0}
+.ukSides_pt .explainer_ico{grid-column:1;grid-row:1}
+/* Fixed, not fluid: the rule for this block is one line per heading and two
+   per body at EVERY width, and 18/14.5/30ch is the largest pair that holds it
+   from 1440 down to 320. A clamp would drift out of it between breakpoints. */
+.ukSides_pt .explainer_title{grid-column:2;grid-row:1;
+  font:400 20px/1.25 'Marcellus',Georgia,serif;
+  margin:0;text-wrap:balance}
+/* the body aligns under the heading, not under the glyph */
+.ukSides_pt .explainer_desc{grid-column:2;grid-row:2;margin:10px 0 0;
+  font:400 15.5px/1.65 'Lato',sans-serif;
+  /* 30ch forces the break: wider and the short bodies collapse to one line,
+     narrower and the long ones run to three. */
+  color:var(--text-2);text-wrap:pretty;max-width:30ch}
+
+/* the chips and glyphs take each card's own tag colour */
+.ukSides_card--creator .ukSides_pt .explainer_ico{background:rgba(215,165,67,.16)}
+.ukSides_card--hotel   .ukSides_pt .explainer_ico{background:rgba(11,47,82,.09)}
+.ukSides_card--creator .ukSides_pt .explainer_title{color:#3d2f14}
+.ukSides_card--hotel   .ukSides_pt .explainer_title{color:var(--uk-deep)}
+.ukSides_card--creator .ukSides_pt .explainer_desc{color:#6e6252}
+/* the founders glyphs are painted with a white-to-gold gradient for a dark
+   ground; on white they take the card's own tag ink as a flat fill */
+.ukSides_card--creator .ukSides_pt .explainer_icon path{fill:#8a6414}
+.ukSides_card--hotel   .ukSides_pt .explainer_icon path{fill:var(--uk-deep)}
+
+@media (max-width:560px){
+  .ukSides_feats.explainer_grid--pair{grid-template-columns:minmax(0,1fr)}
+}
+
+/* No glyph on the points: the heading takes the full column and the body sits
+   under it. The markup keeps the chip, so this is the one rule to drop if it
+   should ever come back. */
+.ukSides_pt .explainer_ico{display:none}
+.ukSides_pt.explainer_item{grid-template-columns:minmax(0,1fr)}
+.ukSides_pt .explainer_title{grid-column:1}
+.ukSides_pt .explainer_desc{grid-column:1;margin-top:10px}
+
+/* both cards now carry real art, so the placeholder shape rule is retired:
+   the frame comes from the picture's own ratio on each side */
+.ukSides_card--creator .ukSides_panel{aspect-ratio:auto}
+
+/* ---------- the How It Works rows carry their real art ----------
+   The four exports come in at the panel's own 788:729, so the frame is
+   unchanged and nothing is cropped. Like the two side cards, real art drops
+   the dashed placeholder edge and the tint behind it. */
+.ukZig_shot{display:block;width:100%;height:auto;aspect-ratio:788/729;
+  border-radius:var(--uk-panel-radius);object-fit:contain;object-position:center;
+  border:0;background:none}
+
+
+/* ---------- the hero pair is the system button ----------
+   The two hero buttons are the correct treatment. The only thing wrong with
+   them was that they were different widths, 108 against 123, because each one
+   sized to its own label. A two-column track fixes that at the container: both
+   are as wide as the wider label needs, and they stay matched whatever the
+   copy does. */
+.homeHeader .hero__buttons{display:grid;grid-template-columns:repeat(2,1fr);
+  max-width:min(392px,100%);margin-inline:auto}
+.homeHeader .hero__buttons .btn{width:100%}
+@media (max-width:420px){
+  .homeHeader .hero__buttons{grid-template-columns:minmax(0,1fr)}
+}
+
+/* ---------- the hero collage, rebuilt ----------
+   Taking the reference's qualities rather than copying its layout: a loose,
+   asymmetric ring of tiles around centred copy, sizes running roughly 2:1 from
+   smallest to largest, mixed tile shapes, and a small rotation on each so
+   nothing lines up.
+
+   Seven tiles, seven different clips. There are twelve clips in the project
+   but five of them already play in the network section further down, and a
+   tile that repeats a clip you meet again later is the kind of duplication
+   worth avoiding. Seven fills the ring at this size.
+
+   The shapes are the point. Every clip is a vertical 9:16 source, so a wall of
+   identical portrait rectangles is what this turns into if the ratio is left
+   alone. Each tile takes its own frame and the video covers it, which is what
+   stops the set reading as one shape repeated. */
+.ukCollage{display:block}
+.ukCollage_item--tl,
+.ukCollage_item--tr,
+.ukCollage_item--c{display:block}
+
+/* the ring: top band clears the fixed nav, flanks hold the margins the copy
+   never uses, and the low tiles sit under the buttons */
+.ukCollage_item--tl{left:25%;   right:auto; top:10%; width:clamp(92px,9.8vw,142px);  aspect-ratio:4/5;  --tilt:-6deg}
+.ukCollage_item--tr{left:58%;   right:auto; top:11%; width:clamp(74px,7.9vw,114px);  aspect-ratio:9/16; --tilt:4deg}
+.ukCollage_item--fr{right:5%;   left:auto;  top:12%; width:clamp(86px,9.1vw,132px);  aspect-ratio:4/5;  --tilt:6deg}
+.ukCollage_item--fl{left:3.5%;  right:auto; top:26%; width:clamp(96px,10.2vw,148px); aspect-ratio:4/5;  --tilt:-8deg}
+.ukCollage_item--br{right:14%;  left:auto;  top:58%; width:clamp(88px,9.4vw,136px);  aspect-ratio:4/5;  --tilt:3deg}
+.ukCollage_item--bl{left:9%;    right:auto; top:62%; width:clamp(78px,8.3vw,120px);  aspect-ratio:9/16; --tilt:-4deg}
+.ukCollage_item--c { left:40%;  right:auto; top:74%; width:clamp(70px,7.4vw,106px);  aspect-ratio:1/1;  --tilt:5deg}
+
+/* ---- narrower screens ----
+   The copy takes the full width as the viewport closes, so the ring thins from
+   the inside out: the tiles nearest the centre step back first and the outer
+   flanks hold longest. Below the phone breakpoint the hero is copy alone. */
+@media (max-width:1100px){
+  .ukCollage_item--c{display:none}
+  .ukCollage_item--tl{left:20%}
+  .ukCollage_item--tr{left:62%}
+}
+@media (max-width:900px){
+  .ukCollage_item--tl,.ukCollage_item--tr{display:none}
+  .ukCollage_item--fl{top:14%}
+  .ukCollage_item--fr{top:11%}
+  /* the copy widens as the viewport closes and the buttons reach across into
+     where the lower tiles sat, so those move out to the edge and drop below
+     the button row rather than beside it */
+  .ukCollage_item--bl{left:3%;  top:70%}
+  .ukCollage_item--br{right:4%; top:67%}
+}
+@media (max-width:640px){
+  .ukCollage_item--bl,.ukCollage_item--br{display:none}
+  /* clear of the fixed nav, which the old tops ran underneath */
+  .ukCollage_item--fl{left:2%; top:16%}
+  .ukCollage_item--fr{right:2%;top:12%}
+}
+@media (max-width:460px){
+  .ukCollage{display:none}
+}
+
+/* ---- hero clips off ----
+   The scattered clips are out of the hero again; the copy carries it alone.
+   The ring above stays intact so it can be switched back on by dropping this
+   one rule. */
+.ukCollage{display:none}

@@ -1,0 +1,28 @@
+/* Ukreate — hero type tuner, local only. Delete with uktune.js. */
+#ukTune{position:fixed;top:12px;right:12px;z-index:99999;width:286px;max-height:calc(100vh - 24px);
+  display:flex;flex-direction:column;border-radius:12px;overflow:hidden;
+  background:rgba(12,18,26,.96);border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 18px 50px rgba(0,0,0,.5);color:#fff;
+  font:400 12px/1.35 ui-sans-serif,-apple-system,'Lato',sans-serif;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#ukTune header{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:9px 11px;background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.10)}
+#ukTune header b{font-size:12px;letter-spacing:.02em}
+#ukTune header span{display:flex;gap:6px}
+#ukTune button{cursor:pointer;border:1px solid rgba(255,255,255,.18);border-radius:6px;
+  background:rgba(255,255,255,.08);color:#fff;font:600 11px/1 inherit;padding:5px 8px}
+#ukTune button:hover{background:rgba(255,255,255,.16)}
+#ukTune .ukTune_b{padding:11px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+#ukTune.is-fold .ukTune_b{display:none}
+#ukTune label{display:flex;flex-direction:column;gap:5px;font-size:11px;color:rgba(255,255,255,.72)}
+#ukTune textarea,#ukTune select{width:100%;box-sizing:border-box;border-radius:7px;
+  border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.35);color:#fff;
+  font:400 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;padding:7px 8px;resize:vertical}
+#ukTune select{font-family:inherit;font-size:12px}
+#ukTune .ukTune_r span{display:flex;align-items:baseline;gap:4px}
+#ukTune .ukTune_r i{font-style:normal;font-weight:700;color:#fff}
+#ukTune .ukTune_r em{font-style:normal;opacity:.5}
+#ukTune input[type=range]{width:100%;accent-color:#d7a543}
+#ukTune #ukTuneOut{font-size:11px;color:rgba(255,255,255,.85)}
+#ukTune .ukTune_copy{width:100%;padding:8px;background:#d7a543;border-color:#d7a543;color:#12202e}
+#ukTune .ukTune_copy:hover{background:#efc470}
