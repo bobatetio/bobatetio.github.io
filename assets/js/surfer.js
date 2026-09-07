@@ -35,7 +35,10 @@
     surfer.dataset.ready = '1';
     try { window.__surferInit = (window.__surferInit||0) + 1; } catch (e) {}
 
-    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // concurrent hero clips. Three plays smoothly on a phone connection;
+  // seven does not play at all.
+  var MAX_PLAYING = 3;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     var forced = parseFloat(new URLSearchParams(location.search).get('surf'));
     var scales = cards.map(function () { return 1; });
     var vids = cards.map(function (cd) { return cd.querySelector('video'); });
@@ -163,6 +166,8 @@
       var cEff = c + ps * (N - 1 + E);
       var dockScale = pr ? clamp(pr.width / CW, 1, 2) : 1;
 
+      // how many clips may run together, counted fresh each frame
+      var playing = 0;
       for (var i = 0; i < cards.length; i++) {
         var card = cards[i];
         var e = i - cEff;
@@ -192,13 +197,24 @@
         var hoverNow = !reduce && interactive && card.matches(':hover');
         var prox = hoverNow ? 1 : 0;
 
-        // video playback: every card on the hero rail plays on its own, muted.
-        // Hover still lifts a card forward, and the docked first video keeps
-        // playing after it lands. Cards that have left the hero go passive, so
-        // nothing is decoding off screen.
+        // video playback: the cards on the hero rail play, muted. Hover still
+        // lifts a card forward, and the docked first video keeps playing after
+        // it lands. Cards that have left the hero go passive, so nothing is
+        // decoding off screen.
+        //
+        // But not all of them at once. Asking every interactive card to play
+        // started seven clips together, and five of them sat stalled below
+        // readyState 3 even reading from a local disk: seven 1MB streams is
+        // more than the pipeline will carry, so over a network none of them
+        // ever started and the rail read as broken. Playback is capped, and
+        // the cards nearest the dock get it, because those are the ones a
+        // visitor is actually looking at. Hover and the docked card are never
+        // rationed: those are asked for.
         var v = vids[i];
         if (v) {
-          var want = interactive || (i === 0 && docked) || hoverNow;
+          var nearFront = playing < MAX_PLAYING;
+          var want = (interactive && nearFront) || (i === 0 && docked) || hoverNow;
+          if (want) playing++;
           if (want && v.paused) { var pp = v.play(); if (pp && pp.catch) pp.catch(function () {}); }
           else if (!want && !v.paused) v.pause();
           // the class is NOT the playback flag: it lifts the profile overlay
