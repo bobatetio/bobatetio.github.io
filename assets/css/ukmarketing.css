@@ -798,3 +798,38 @@ html:has(.ukLegal),html:has(.ukCsd_side),body:has(.ukLegal),body:has(.ukCsd_side
 .ukLegal .ukPRights_r{font-weight:700;color:var(--uk-deep)}
 .ukLegal .ukPRights_a{margin-top:6px;font-size:14.5px}
 .ukPRights_a span{display:block;margin-bottom:2px;font:700 11px/1.3 'Lato',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8a6414}
+
+/* ---------- 404 ----------
+   Laid out like the reference: a light page with a huge faint 404, the words
+   and the way home sitting inside its 0. The numeral is SVG text whose
+   viewBox is the glyphs' ink box (Marcellus at 1000 units: "404" advances
+   1953, ink 711 above the baseline and 14 below), so the 0's hole, which is
+   round at 0.58 of the font size, lands on the section's centre. --n is the
+   numeral's font size; the words scale from it. On a phone the 0 stays big
+   enough to hold them and the 4s run off the sides. */
+.uk404{--n:min(43vw,600px);position:relative;overflow:hidden;background:var(--bg);display:grid;place-items:center;text-align:center;
+  min-height:max(100svh,calc(var(--n) * .725 + 280px));padding:110px 0 60px}
+.uk404_num{position:absolute;left:50%;top:calc(50% + 25px);max-width:none;width:calc(var(--n) * 1.953);height:calc(var(--n) * .725);
+  transform:translate(-50%,-50%);pointer-events:none;user-select:none;overflow:visible}
+/* the sign-in page's sky (ukfront.css .ukAuth--solo::before), same photograph
+   at the same strength, as its own layer under the numeral and the words */
+.uk404::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url('/assets/img/uk/auth-sky.jpg') center/cover no-repeat;opacity:.24}
+@media (prefers-reduced-transparency:reduce){.uk404::before{opacity:.12}}
+.uk404_num,.uk404_in{z-index:1}
+.uk404_num text{font:400 1000px 'Marcellus',Georgia,serif;fill:rgba(16,46,55,.07)}
+.uk404_in{position:relative;top:0;display:grid;justify-items:center;gap:calc(var(--n) * .02);width:calc(var(--n) * .42)}
+.uk404_h{margin:0;font:400 calc(var(--n) * .062)/1.1 'Marcellus',Georgia,serif;letter-spacing:-.012em;color:var(--uk-deep);white-space:nowrap}
+.uk404_p{margin:0 0 calc(var(--n) * .014);font:400 max(14px,calc(var(--n) * .027))/1.5 'Lato',sans-serif;color:rgba(16,46,55,.7);text-wrap:balance}
+/* phones: the 404 stands above "Page not found" rather than behind it,
+   sized to the screen (404 is 1.953 of its font size wide), and the page is
+   only as tall as it needs to be */
+@media (max-width:600px){
+  .uk404{min-height:480px;padding:100px 20px 48px;place-content:center;gap:4px}
+  .uk404_num{position:relative;left:auto;top:auto;transform:none;display:block;
+    width:min(100%,330px);height:auto;margin:0 auto}
+  .uk404_num text{fill:rgba(16,46,55,.12)}
+  .uk404_in{width:auto;max-width:320px;gap:14px}
+  .uk404_h{font-size:34px}
+  .uk404_p{font-size:16px;margin-bottom:6px}
+}

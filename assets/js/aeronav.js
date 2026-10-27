@@ -52,12 +52,19 @@
     }
 
     /* the bar steps aside once the footer is reached: nothing up there is worth
-       covering the footer for, and it reads as the end of the page */
+       covering the footer for, and it reads as the end of the page. Only once
+       the reader has scrolled, though: on a short page (the 404 on a phone) the
+       footer is already on screen at load, and the bar must not vanish on arrival */
     var foot = document.querySelector('.ukFooter, footer');
     if (foot && 'IntersectionObserver' in window) {
+      var footIn = false;
+      var place = function () {
+        nav.classList.toggle('is-gone', footIn && (window.scrollY || window.pageYOffset || 0) > 0);
+      };
       new IntersectionObserver(function (entries) {
-        nav.classList.toggle('is-gone', entries[0].isIntersecting);
+        footIn = entries[0].isIntersecting; place();
       }, { rootMargin: '-' + navH + 'px 0px 0px 0px', threshold: 0 }).observe(foot);
+      addEventListener('scroll', place, { passive: true });
     }
   }
 
