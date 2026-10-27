@@ -540,10 +540,15 @@
 .homeHeader.ukAbHero .legionHero_main{width:100%;max-width:none;margin:0;text-align:center;display:flex;flex-direction:column;align-items:center}
 .homeHeader.ukAbHero .hero__badge{align-self:center}
 .homeHeader.ukAbHero .legionHero_line{margin-inline:auto;white-space:normal;width:auto;padding-right:.14em;font-size:clamp(33px,3.6vw,52px)}
-/* the headline is two lines and never more: each line is held whole, and
-   below 700px it takes the size at which the longer line fits the width */
+/* the headline is two lines on anything wider than a phone: each line is
+   held whole */
 .homeHeader.ukAbHero .legionHero_line{white-space:nowrap}
-@media (max-width:700px){ .homeHeader.ukAbHero .legionHero_line{font-size:min(5.5vw,33px)} }
+/* on a phone the headline reads larger: the first line splits in two
+   ("Democratizing the / Creator Economy"), the italic line stays whole */
+@media (max-width:700px){
+  .homeHeader.ukAbHero .legionHero_line{font-size:min(8.6vw,34px)}
+  .homeHeader.ukAbHero .legionHero_line:not(.ukAbHero_it){white-space:normal;text-wrap:balance}
+}
 .homeHeader.ukAbHero .legionHero_title + .legionHero_lede{margin-inline:auto;text-align:center;max-width:640px;text-wrap:balance}
 .ukAbHero .philoBigVideo.ukAbPlayer{width:100%;max-width:900px;margin:0;box-shadow:0 30px 70px rgba(0,0,0,.35)}
 .ukAbHero .philoBigVideo.ukAbPlayer::after{display:none}
@@ -604,7 +609,7 @@
 .ukAb_vt{min-width:0}
 .ukAb_vd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.22,.9,.35,1)}
 .ukAb_vd > p{min-height:0;overflow:hidden;margin:0;font:400 15.5px/1.6 'Lato',sans-serif;color:rgba(16,46,55,.68);
-  opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .4s ease;text-wrap:pretty}
+  opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .4s ease;text-wrap:balance}
 .ukAb_vi{display:block;width:64px;height:44px;border-radius:10px;overflow:hidden;background:var(--bg);
   transition:width .4s cubic-bezier(.22,.9,.35,1),height .4s cubic-bezier(.22,.9,.35,1)}
 .ukAb_vi img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform .6s ease}
