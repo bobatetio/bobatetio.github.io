@@ -25,7 +25,10 @@
   var NAV = [
     { group: 'Today', items: [
       { id: 'home',    title: 'Dashboard',      icon: 'home' },
-      { id: 'collabs', title: 'Collaborations', icon: 'chat' }
+      { id: 'collabs', title: 'Collaborations', icon: 'chat' },
+      /* auto mode: its count is the exceptions waiting on the hotel, nothing else */
+      /* sparkles: it runs on its own. 'building' was a second house beside Hosted stays */
+      { id: 'auto',    title: 'Auto mode',      icon: 'sparkles' }
     ]},
     { group: 'Grow', items: [
       { id: 'stays',    title: 'Hosted stays',   icon: 'bag' },
@@ -87,6 +90,18 @@
         return { id:'apply:' + ap.id, kind:'move', at: 6,
           t: (ap.creatorName || 'A creator') + ' applied to ' + (st.t || 'a stay'),
           s: 'Waiting on your yes or no', go:'collabs', open: ap.id };
+      });
+    });
+
+    /* auto mode only raises the exceptions it will not decide for the hotel */
+    window.UKNOTIFY.source(function () {
+      var AU = window.UKAUTO;
+      if (!AU || AU.state().mode === 'off') return [];
+      var TT = { dates:'A creator asked to change dates', limits:'A request outside your auto mode limits',
+                 flag:'We held back a creator profile' };
+      return AU.model().queue.map(function (q) {
+        return { id:'auto:' + q.id, kind:'move', at: 5, t: TT[q.k], s:'Auto mode needs your answer',
+                 go:'auto', open:'needs' };
       });
     });
 
@@ -190,7 +205,9 @@
        same thing, on screen at the same time. */
     var mine = UK.collabs.filter(function (c) { return UK.STAGES[c.stage].mine; }).length;
     NAV.forEach(function (g) { g.items.forEach(function (i) {
-      if (i.id === 'collabs') i.count = mine || null; }); });
+      if (i.id === 'collabs') i.count = mine || null;
+      if (i.id === 'auto') i.count = (window.UKAUTO && window.UKAUTO.state().mode !== 'off' &&
+        window.UKAUTO.model().queue.length) || null; }); });
     paintNotify();
     /* Collapsed, the promo card is hidden and the primary action went with it —
        the one thing a hotel comes here to do became unreachable from the rail.
@@ -237,6 +254,7 @@
     if (view === 'hire')     return UKV.hire(s);
     if (view === 'guides')   return UKV.guides(s);
     if (view === 'property') return UKV.property(s);
+    if (view === 'auto' && UKV.auto) return UKV.auto(s);
     return UKV.empty('Nothing here', 'Pick a section from the sidebar.');
   }
 
@@ -708,6 +726,10 @@
   
   function repaint() { paintView(true); }
   window.UKGO = go;   // views can navigate
+  /* auto mode handles its own clicks (ukautoview.js) and needs these two doors in:
+     a repaint that keeps the scroll, and its own slice of the per-view state */
+  window.UKREPAINT = function () { paintNav(); repaint(); };
+  window.UKAUTOST = function () { return (S.auto = S.auto || {}); };
 
   /* Lets a view hand another view a starting state before navigating to it — the
      seam the natural-language creator search uses to open Host a Creator with the

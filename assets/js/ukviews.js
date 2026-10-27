@@ -1556,7 +1556,7 @@ window.UKV = (function () {
             '<span class="ukPkg_side"><span class="ukPkg_l">You give</span>' +
               '<span class="ukPkg_v">' + p.nights + (p.nights === '1' ? ' night' : ' nights') + '</span>' +
               '<span class="ukPkg_s">' + esc(p.inc) + '</span></span>' +
-            '<span class="ukPkg_ar" aria-hidden="true">&harr;</span>' +
+            '<span class="ukPkg_ar" aria-hidden="true">&harr;&#xFE0E;</span>' +
             '<span class="ukPkg_side"><span class="ukPkg_l">You get</span>' +
               '<span class="ukPkg_v">' + got + ' asset' + (got === 1 ? '' : 's') + '</span>' +
               '<span class="ukPkg_s">Yours in perpetuity</span></span>' +
@@ -2008,7 +2008,7 @@ window.UKV = (function () {
       '<div class="ukTrade"><div class="ukTrade_side"><p class="ukTrade_l">You give</p>' +
         '<p class="ukTrade_v' + (f.nights ? '' : ' is-wait') + '">' + nightsSaid + '</p>' +
         '<p class="ukTrade_s">' + (f.inc ? esc(f.inc) : 'Add what the stay includes on step two') + '</p></div>' +
-        '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
+        '<span class="ukTrade_ar" aria-hidden="true">&harr;&#xFE0E;</span>' +
         '<div class="ukTrade_side"><p class="ukTrade_l">You get</p>' +
         '<p class="ukTrade_v' + (total ? '' : ' is-wait') + '">' + getsSaid + '</p>' +
         '<p class="ukTrade_s">' + (total ? 'Yours in perpetuity' : 'Choose deliverables on step four') + '</p></div></div>' +
@@ -2339,7 +2339,9 @@ window.UKV = (function () {
       '<div class="ukLibTop">' +
         '<div class="ukFilters ukFilters--tabs ukLibTabs" role="group" aria-label="Videos or photos">' +
           KINDS.map(function (t) {
-            var on = kinds ? kinds.indexOf(t[0]) > -1 : true, n = kindCount(t[0]);
+            /* lit only when picked: with nothing picked you are seeing everything,
+               and two lit pills read as nothing being selectable */
+            var on = kinds ? kinds.indexOf(t[0]) > -1 : false, n = kindCount(t[0]);
             return '<button class="ukFilter' + (on ? ' is-on' : '') + '" type="button" ' +
               'aria-pressed="' + on + '" data-mset="fKind" data-mval="' + t[0] + '">' +
               '<span class="ukFilter_lb">' + t[1] + '</span>' +
@@ -2794,6 +2796,6 @@ window.UKV = (function () {
     dashboard: dashboard, collabs: collabs, host: host, stays: stays,
  library: library, settings: settings, empty: empty,
     creatorHead: creatorHead, stayCard: stayCard, favIcon: favIcon, playMark: playMark, starsOut: starsOut, reviewBlock: reviewBlock, PLATFORMS: PLATFORMS, PLAT_MARK: PLAT_MARK, availOf: availOf, creatorCard: creatorCard, crPopup: crPopup, head: head, who: who, paginate: paginate, stayListCard: stayListCard,
-    property: propertyPage
+    property: propertyPage, postCard: postCard
   };
 })();

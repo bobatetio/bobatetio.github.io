@@ -1,0 +1,394 @@
+/* Ukreate — auto mode. Hotel side.
+   Only what did not already exist in the app: the measured / estimate label, the
+   state notes, the limits, the arrival card, the activity log and the print
+   sheet. Every colour is an existing token; nothing here carries a left stroke. */
+
+/* ---- every stacked card on an auto mode screen sits 16px from the next ---- */
+.ukAuPage > .ukPanel,.ukAuPage > .ukCard,.ukAuPage > .ukBento,.ukAuPage > .ukTodo,
+.ukAuPage > .ukArrSheet,.ukAuPage > .ukAuQ,.ukAuPage > .ukAsk,.ukAuPage > .ukAuLogF,.ukAuPage > .ukGrid,
+.ukAuPage > .ukAuSettings,.ukAuPage > .ukSteps{margin:0 0 16px}
+.ukAuPage > :last-child{margin-bottom:0}
+.ukAuPage > .ukBento{gap:16px}
+
+/* ---- the switch that is always findable ---- */
+.ukAuPower{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:10px 14px 10px 16px}
+.ukAuPower_t{display:flex;flex-direction:column;gap:2px}
+.ukAuPower_l{font:700 13.5px/1.2 'Lato',sans-serif;color:var(--text);white-space:nowrap}
+.ukAuPower_s{font:400 12px/1.2 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
+
+/* ---- measured versus estimate: never alike ---- */
+.ukSrc{display:inline-flex;align-items:center;flex:none;padding:3px 7px;border-radius:9999px;
+  font:700 9.5px/1 'Lato',sans-serif;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;vertical-align:middle}
+.ukSrc--m{background:var(--tag-you-bg);color:var(--tag-you-ink);border:1px solid transparent}
+.ukSrc--e{background:transparent;color:var(--gold-ink);border:1px dashed var(--gold-ink)}
+.ukCard_h .ukSrc{margin-left:auto}
+
+/* ---- state notes: a tinted ground, no stroke ---- */
+.ukAuNote{border:1px solid transparent}
+.ukAuNote.is-warn{background:var(--tag-wait-bg)}
+.ukAuNote.is-calm{background:var(--todo-bg)}
+.ukAuNote.is-good{background:var(--tag-you-bg)}
+.ukAuNote.is-wait{background:var(--todo-bg)}
+.ukAuNote_t{margin:0;font:700 15.5px/1.35 'Lato',sans-serif;color:var(--text);text-wrap:balance}
+.ukAuNote_p{margin:6px 0 0;font:400 13.5px/1.6 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty;max-width:78ch}
+.ukAuNote_act{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}
+
+/* ---- facts: label and value rows, in place of paragraphs ---- */
+.ukAuFacts{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 22px;margin:14px 0 0}
+.ukAuFacts div{display:contents}
+.ukAuFacts dt{font:700 10.5px/1.9 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);white-space:nowrap}
+.ukAuFacts dd{margin:0;font:600 13.5px/1.5 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukAuNote_k{margin:16px 0 8px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.ukAuNote .ukAuHow_l{font-size:13.5px}
+.ukAuQ .ukAuFacts{margin-top:10px}
+.ukAuEst .ukAuFacts{margin-top:4px}
+.ukLog_form .ukAuFacts{margin:4px 0 2px}
+
+/* ---- setup ---- */
+.ukAuSetup{align-items:start}
+.ukAuSetup > div,.ukAuSettings{display:flex;flex-direction:column;gap:clamp(16px,2vw,22px);min-width:0}
+.ukAuSettings{max-width:860px}
+.ukAuSettings > .ukPanel{margin:0}
+.ukAuSetup > div > .ukPanel{margin:0}
+.ukAuSetup > aside{position:sticky;top:calc(var(--uk-top-h,70px) + 16px)}
+.ukAuRules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.ukAuRules_k{margin:0 0 8px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3)}
+.ukAuRules ul{margin:0;padding:0 0 0 17px;display:flex;flex-direction:column;gap:7px;
+  font:400 13px/1.55 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+.ukAuSetup .ukPanel > .ukAuHow_l{margin-top:4px}
+.ukAuHow{margin-top:16px;padding:18px 20px;border-radius:16px;background:var(--surface-2);
+  display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.ukAuHow .ukField{width:100%;margin:0}
+.ukAuHow_l{margin:0;padding:0 0 0 20px;display:flex;flex-direction:column;gap:6px;
+  font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text)}
+.ukAuOnly{margin:16px 0 0}
+.ukAuSetup .ukHint,.ukAuSetup .ukAsk,.ukView .ukAuQ .ukWhy{text-wrap:pretty}
+.ukAuNext,.ukAuGo{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:14px}
+.ukAuGo{margin-top:18px}
+.ukAuGo .ukHint{margin:0;flex:1 1 240px;text-wrap:pretty}
+.ukAuSum{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:8px;
+  font:400 14px/1.55 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukAuWait{margin:14px 0 0;font:600 13px/1.5 'Lato',sans-serif;color:var(--gold-ink)}
+
+/* ---- limits ---- */
+.ukAuLim{display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:18px 0;border-bottom:1px solid var(--line-soft)}
+.ukAuLim:last-child{border-bottom:0;padding-bottom:0}
+.ukAuLim--col{flex-direction:column;align-items:stretch;gap:10px}
+.ukAuLim_q{min-width:0}
+.ukAuLim_t{margin:0;font:700 14px/1.35 'Lato',sans-serif;color:var(--text)}
+.ukAuLim_q .ukHint{margin:3px 0 0}
+.ukAuLim .ukToggleRow{padding:11px 0}
+.ukAuBo{list-style:none;margin:0;padding:0}
+.ukAuBo li{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.ukAuBo_n{font:600 13.5px/1.4 'Lato',sans-serif;color:var(--text)}
+.ukAuBo_d{font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
+.ukAuBo li .ukGhost{margin-left:auto}
+.ukAuBoAdd{display:grid;grid-template-columns:1fr 1fr 1.3fr auto;gap:10px;align-items:end}
+.ukAuBoAdd .ukField{margin:0}
+.ukAuWin{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ukAuWin .ukField{margin:0}
+.ukAuWin .ukSelect{width:100%}
+.ukAuLim .ukSeg{align-self:flex-start;flex-wrap:wrap}
+.ukAuLim .ukSeg_b{white-space:nowrap}
+
+/* ---- preview ---- */
+.ukAuPrev_h{margin:0 0 14px;font:400 19px/1.35 'Marcellus',Georgia,serif;color:var(--text);text-wrap:balance}
+.ukAuPrev_t{min-width:0}
+.ukAuPrev_t th{white-space:nowrap}
+.ukAuPrev_t tbody tr{cursor:default}
+.ukAuPrev_t tbody tr:hover{background:none}
+.ukAuNum{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text)}
+.ukAuPrev_t th .ukSrc{margin-left:6px}
+.ukAuPrev .ukHint{margin:12px 0 0;text-wrap:pretty}
+.ukAuPrev .ukAuFacts{margin-top:16px}
+.ukAuPrev_h{font-size:21px}
+
+/* ---- rows: arrivals and listings on the overview ---- */
+.ukAuRows{list-style:none;margin:0;padding:0}
+.ukAuRow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.ukAuRow:last-child{border-bottom:0}
+.ukAuRow_b{flex:1 1 auto;min-width:0}
+.ukAuRow_t{margin:0;font:700 14px/1.35 'Lato',sans-serif;color:var(--text)}
+.ukAuRow_m{margin:2px 0 0;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3)}
+.ukAuRow_r{margin:0;text-align:right;font:700 13.5px/1.3 'Lato',sans-serif;color:var(--text);white-space:nowrap}
+.ukAuRow_r span{display:block;font-weight:400;font-size:12px;color:var(--text-3)}
+.ukAuRow .ukGhost{flex:none}
+.ukAu_av{width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;flex:none;background:var(--av-bg)}
+.ukAu_av--lg{width:56px;height:56px}
+.ukAuQuiet{margin:0;color:var(--text-3)}
+
+/* ---- the decision queue ---- */
+.ukAuQ{margin:0 0 14px}
+.ukAuQ_top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ukAuQ_t{margin:12px 0 8px;font:600 15px/1.5 'Lato',sans-serif;color:var(--text);text-wrap:pretty;max-width:74ch}
+.ukAuQ .ukWhy b{color:var(--text)}
+.ukAuQ_act{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.ukWhen{white-space:nowrap}
+
+/* ---- the activity log ---- */
+.ukAuLogF{margin:0 0 14px}
+.ukLog_d{margin:22px 0 4px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.15em;text-transform:uppercase;color:var(--text-3)}
+.ukLog_d:first-child{margin-top:0}
+.ukLog{list-style:none;margin:0;padding:0}
+.ukLog_i{display:grid;grid-template-columns:76px 10px minmax(0,1fr);gap:12px;align-items:start;
+  padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.ukLog_i:last-child{border-bottom:0}
+.ukCard > .ukLog .ukLog_i{grid-template-columns:118px 10px minmax(0,1fr)}
+.ukLog_t{font:400 12px/1.55 'Lato',sans-serif;color:var(--text-3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ukLog_dot{width:9px;height:9px;border-radius:50%;margin-top:6px;background:var(--text-3)}
+.ukLog_dot[data-k="list"],.ukLog_dot[data-k="close"]{background:var(--c1)}
+.ukLog_dot[data-k="match"],.ukLog_dot[data-k="pay"]{background:var(--c3)}
+.ukLog_dot[data-k="content"]{background:var(--c2)}
+.ukLog_dot[data-k="cancel"]{background:var(--tag-wait-ink)}
+.ukLog_dot[data-k="you"]{background:var(--text)}
+.ukLog_b{min-width:0}
+.ukLog_p{margin:0;font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukLog_act{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+/* the take-back and question links stay quiet until you reach for them */
+.ukLog_act .ukLinkBtn{font-size:12.5px;color:var(--text-3);text-decoration:none}
+.ukLog_act .ukLinkBtn:hover,.ukLog_act .ukLinkBtn:focus-visible{color:var(--accent);text-decoration:underline}
+.ukLog_c{margin:5px 0 0;font:400 12.5px/1.5 'Lato',sans-serif;color:var(--gold-ink)}
+.ukLog_form{margin-top:8px;display:flex;flex-direction:column;gap:8px}
+.ukLog_form .ukField{margin:0}
+
+/* ---- arrivals ---- */
+.ukAuDesk{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px}
+.ukAuDesk_b{flex:1 1 220px}
+.ukAuDesk_t{margin:0;font:700 15px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukAuDesk_b .ukHint{margin:3px 0 0}
+.ukAuDesk_act{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ukAuDesk_i{width:240px;max-width:100%}
+.ukAuDesk_h{flex:1 1 100%;margin:0}
+.ukAuDesk_h:empty{display:none}
+.ukArrSheet_h{display:none}
+.ukArrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin:0 0 24px}
+.ukArr{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;
+  display:flex;flex-direction:column;gap:16px;break-inside:avoid}
+.ukArr_who{display:flex;align-items:center;gap:14px}
+.ukArr_n{margin:0;font:400 21px/1.2 'Marcellus',Georgia,serif;color:var(--text)}
+.ukArr_h{margin:3px 0 0;font:400 12.5px/1.4 'Lato',sans-serif;color:var(--text-3)}
+.ukArr_f{display:grid;grid-template-columns:repeat(4,minmax(0,auto));justify-content:space-between;gap:12px;margin:0;
+  padding:14px 0;border-block:1px solid var(--line-soft)}
+.ukArr_f dt{font:700 10px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.ukArr_f dd{margin:6px 0 0;font:700 14px/1.2 'Lato',sans-serif;color:var(--text);white-space:nowrap}
+.ukArr_k{margin:0 0 5px;font:700 10px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.ukArr_v{margin:0;font:400 14px/1.5 'Lato',sans-serif;color:var(--text)}
+.ukArr_l{margin:0;padding:0 0 0 17px;display:flex;flex-direction:column;gap:5px;
+  font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text);text-wrap:pretty}
+.ukArr_note{margin:0;font:600 12.5px/1.5 'Lato',sans-serif;color:var(--gold-ink)}
+
+/* ---- results ---- */
+.ukAuEst_v{margin:4px 0 2px;font:400 34px/1.1 'Marcellus',Georgia,serif;color:var(--text);white-space:nowrap}
+.ukAuEst_n{margin:0 0 12px;font:400 13.5px/1.5 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+.ukAuCost_g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.ukAuCost_l{margin:0;font:700 12.5px/1.4 'Lato',sans-serif;color:var(--text-2)}
+.ukAuCost_v{margin:6px 0 4px;font:400 30px/1.1 'Marcellus',Georgia,serif;color:var(--text);white-space:nowrap}
+.ukAuCost_g .ukHint{margin:0;text-wrap:pretty}
+.ukAuCost_n{margin:18px 0 0;text-wrap:pretty}
+.ukAuPosts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.ukAuPost{min-width:0}
+.ukAuPost_s{display:flex;justify-content:space-between;gap:8px;margin:8px 2px 0;
+  font:400 12px/1.3 'Lato',sans-serif;color:var(--text-3);white-space:nowrap}
+.ukAuPost_s b{color:var(--text);font-weight:700}
+
+/* ---- Claude and ChatGPT ----
+   Namespaced ukCx: .ukApp, .ukStat, .ukGuide, .ukCode and .ukLogo all already
+   mean something elsewhere in the app. */
+.ukCxIntro{margin:0 0 16px}
+.ukLog_via{margin-left:6px;vertical-align:1px}
+.ukAuSetup > aside{display:flex;flex-direction:column;gap:16px}
+.ukCxSide{margin:0}
+
+/* each app's own icon, exactly as its maker publishes it, rounded the way the
+   phone rounds it; the hairline keeps white icons from dissolving into white cards */
+.ukCxLogo{display:block;flex:none;width:44px;height:44px;border-radius:22.5%;object-fit:cover;
+  box-shadow:0 0 0 1px rgba(16,46,55,.1),0 2px 6px -2px rgba(16,46,55,.18)}
+.ukCxLogo--sm{width:28px;height:28px}
+
+/* the one list of apps */
+.ukCxList{list-style:none;margin:0;padding:0}
+.ukCxRow{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:16px;
+  padding:16px 0;border-bottom:1px solid var(--line-soft)}
+.ukCxRow:first-child{padding-top:4px}
+.ukCxRow:last-child{border-bottom:0;padding-bottom:4px}
+.ukCxRow_n{margin:0;font:700 15px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukCxRow_s{margin:2px 0 0;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
+.ukCxRow .ukBtn,.ukCxRow .ukGhost{white-space:nowrap}
+
+/* status: a dot and a word, never an icon on its own */
+.ukCxStat{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font:700 12.5px/1 'Lato',sans-serif;color:var(--text-2)}
+.ukCxStat i{width:8px;height:8px;border-radius:50%;background:var(--text-3)}
+.ukCxStat--on{color:var(--tag-you-ink)}
+.ukCxStat--on i{background:var(--c3)}
+.ukCxStat--wait{color:var(--gold-ink)}
+.ukCxStat--wait i{background:var(--uk-gold)}
+
+/* in the narrow setup column the status drops under the name */
+.ukCxList--compact .ukCxRow{grid-template-columns:auto minmax(0,1fr) auto;row-gap:8px}
+.ukCxList--compact .ukCxStat{grid-column:2;grid-row:2}
+.ukCxList--compact .ukCxRow .ukBtn,.ukCxList--compact .ukCxRow .ukGhost{grid-column:3;grid-row:1 / 3}
+
+/* what Claude may do: one choice, three answers */
+.ukCxAccess{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ukCxAccess_o{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;text-align:left;cursor:pointer;
+  padding:18px 18px 20px;border-radius:16px;border:1px solid var(--line);background:var(--surface);
+  transition:background .16s ease,border-color .16s ease}
+.ukCxAccess_o:hover{background:var(--hover)}
+.ukCxAccess_o.is-on{background:var(--active-bg);border-color:var(--active-ring)}
+.ukCxAccess_o:focus-visible{outline:2px solid var(--uk-gold);outline-offset:2px}
+.ukCxAccess_ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface-2);color:var(--text)}
+.ukCxAccess_o.is-on .ukCxAccess_ic{background:var(--surface)}
+.ukCxAccess_ic svg{width:20px;height:20px}
+.ukCxAccess_b{display:flex;flex-direction:column;gap:4px;padding-right:22px}
+.ukCxAccess_t{font:700 14.5px/1.3 'Lato',sans-serif;color:var(--text)}
+.ukCxAccess_s{font:400 12.5px/1.5 'Lato',sans-serif;color:var(--text-2);text-wrap:pretty}
+.ukCxAccess_r{position:absolute;top:18px;right:18px;width:18px;height:18px;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--line)}
+.ukCxAccess_o.is-on .ukCxAccess_r{box-shadow:inset 0 0 0 5px var(--uk-gold)}
+.ukCxAccess_saved{margin:12px 0 0}
+
+/* the connect guide: a side sheet over the whole app. Header and status are
+   fixed; only the steps scroll, so nothing is ever cut off at the top. */
+html.ukCxLocked,html.ukCxLocked body{overflow:hidden}
+.ukCxSheetWrap{position:fixed;inset:0;z-index:1000;display:flex;justify-content:flex-end;
+  background:rgba(6,18,25,.5);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.ukCxSheet{display:flex;flex-direction:column;width:min(560px,100%);height:100%;max-height:100dvh;
+  background:var(--surface);border-radius:22px 0 0 22px;box-shadow:-24px 0 60px rgba(4,16,22,.28);overflow:hidden}
+.ukCxSheet_h{flex:none;padding:22px 24px 18px;border-bottom:1px solid var(--line-soft)}
+.ukCxSheet_top{display:flex;align-items:center;gap:14px}
+.ukCxSheet_tt{flex:1 1 auto;min-width:0}
+.ukCxSheet_k{margin:0 0 3px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.ukCxSheet_t{margin:0;font:400 26px/1.15 'Marcellus',Georgia,serif;color:var(--text)}
+.ukCxSheet_seg{display:inline-flex;margin-top:16px}
+.ukCxSheet_b{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:22px 24px}
+.ukCxSheet_f{flex:none;padding:14px 24px 18px;border-top:1px solid var(--line-soft);background:var(--surface)}
+@media (max-width:560px){
+  .ukCxSheet{border-radius:0}
+  .ukCxSheet_h,.ukCxSheet_b{padding-left:18px;padding-right:18px}
+  .ukCxSheet_f{padding:12px 18px 16px}
+}
+
+/* the connect guide */
+.ukCxGuide_x{flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+  font:400 20px/1 'Lato',sans-serif;color:var(--text-2);cursor:pointer}
+.ukCxGuide_x:hover{background:var(--hover)}
+.ukCxGuide_l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.ukCxGuide_l li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px}
+.ukCxGuide_n{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font:700 12.5px/1 'Lato',sans-serif;background:var(--surface-2);color:var(--text)}
+.ukCxGuide_b{min-width:0;padding-top:4px}
+.ukCxGuide_t{margin:0 0 10px;font:700 14px/1.4 'Lato',sans-serif;color:var(--text)}
+.ukCxGuide_b > .ukCxGuide_t:last-child{margin-bottom:0}
+.ukCxGuide_acc,.ukCxGuide_ask{display:flex;flex-wrap:wrap;gap:8px}
+.ukCxGuide_q{cursor:pointer;border:1px solid var(--line);background:var(--surface)}
+.ukCxGuide_q:hover{background:var(--hover)}
+.ukCxCode{display:flex;align-items:flex-start;gap:10px;border-radius:12px;background:var(--uk-deep);padding:12px 12px 12px 16px}
+/* the button sits beside the code, never on top of it; long commands wrap */
+.ukCxCode pre{flex:1 1 auto;min-width:0;margin:0;padding:2px 0;white-space:pre-wrap;overflow-wrap:anywhere;
+  font:400 12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--uk-on-deep)}
+.ukCxCode_b{flex:none;padding:7px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08);color:var(--uk-on-deep);font:700 12px/1 'Lato',sans-serif;cursor:pointer}
+.ukCxCode_b:hover{background:rgba(255,255,255,.16)}
+.ukCxGuide_live{display:flex;align-items:center;gap:12px;margin:0;padding:14px 16px;border-radius:14px;
+  background:var(--surface-2);font:600 13.5px/1.45 'Lato',sans-serif;color:var(--text)}
+.ukCxGuide_live span{flex:1 1 auto}
+.ukCxGuide_live i{width:9px;height:9px;border-radius:50%;flex:none;background:var(--uk-gold)}
+.ukCxGuide_live.is-wait i{animation:ukCxPulse 1.4s ease-in-out infinite}
+.ukCxGuide_live.is-ok{background:var(--tag-you-bg);color:var(--tag-you-ink)}
+.ukCxGuide_live.is-ok i{background:var(--c3)}
+.ukCxGuide_live.is-warn{background:var(--tag-wait-bg);color:var(--tag-wait-ink)}
+@keyframes ukCxPulse{0%,100%{box-shadow:0 0 0 0 rgba(215,165,67,.5)}50%{box-shadow:0 0 0 7px rgba(215,165,67,0)}}
+@media (prefers-reduced-motion:reduce){ .ukCxGuide_live.is-wait i{animation:none} }
+
+@media (max-width:820px){ .ukCxAccess{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:560px){
+  .ukCxRow{grid-template-columns:auto minmax(0,1fr) auto;row-gap:8px}
+  .ukCxRow .ukCxStat{grid-column:2;grid-row:2}
+  .ukCxRow .ukBtn,.ukCxRow .ukGhost{grid-column:3;grid-row:1 / 3}
+}
+
+/* ---- demo dock rows ---- */
+.ukDock_grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px}
+.ukDock_i--s{padding:7px 9px}
+
+/* ---- narrow ---- */
+@media (max-width:1100px){
+  .ukAuSetup{grid-template-columns:minmax(0,1fr)}
+  .ukAuSetup > aside{position:static}
+}
+@media (max-width:820px){
+  .ukAuRules,.ukAuCost_g{grid-template-columns:minmax(0,1fr)}
+  .ukAuBoAdd{grid-template-columns:1fr 1fr}
+  .ukAuBoAdd .ukField:nth-child(3){grid-column:1 / -1}
+}
+@media (max-width:560px){
+  /* one row that scrolls, rather than two tabs stranded on a second line */
+  .ukAuTabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;max-width:100%}
+  .ukAuTabs::-webkit-scrollbar{display:none}
+  .ukAuTabs .ukFilter{flex:none}
+  .ukAuWin{grid-template-columns:minmax(0,1fr)}
+  .ukArrs{grid-template-columns:minmax(0,1fr)}
+  .ukArr_f{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ukLog_i,.ukCard > .ukLog .ukLog_i{grid-template-columns:10px minmax(0,1fr)}
+  .ukLog_t{grid-column:2;grid-row:2}
+  .ukLog_dot{grid-row:1}
+  .ukAuLim{flex-direction:column;align-items:flex-start}
+  .ukAuDesk_i{width:100%}
+}
+
+/* ---- the arrivals sheet on paper: only the sheet prints ---- */
+@media print{
+  body.ukPrintArr{visibility:hidden;background:#fff}
+  body.ukPrintArr .ukArrSheet,body.ukPrintArr .ukArrSheet *{visibility:visible}
+  body.ukPrintArr .ukArrSheet{position:absolute;left:0;top:0;width:100%}
+  body.ukPrintArr .ukArrSheet_h{display:block;margin:0 0 12px;font:400 24px/1.2 'Marcellus',Georgia,serif}
+  body.ukPrintArr .ukArrs{grid-template-columns:1fr 1fr}
+  body.ukPrintArr .ukArr{border-color:#bbb}
+  body.ukPrintArr .ukProfLink{pointer-events:none}
+}
+
+/* the guide's "Open ChatGPT" style links and plan notes */
+.ukCxOpen{display:inline-flex;margin-top:10px;text-decoration:none}
+.ukCxGuide_b > .ukCxOpen:first-of-type{margin-top:0}
+.ukCxNote{margin:20px 0 0;padding:12px 14px;border-radius:12px;background:var(--surface-2);text-wrap:pretty}
+
+/* ---- content delivery ---- */
+.ukDlvPanel .ukAsk code,.ukDlvPanel .ukAuQuiet code{font:400 12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:var(--surface-2);padding:1px 6px;border-radius:6px}
+.ukCxConnect{text-decoration:none;white-space:nowrap}
+.ukDlv{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.ukDlv_h{margin:0 0 6px;font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)}
+.ukDlv_l{list-style:none;margin:0;padding:0}
+.ukDlv_i{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.ukDlv_i:last-child{border-bottom:0}
+.ukDlv_b{min-width:0}
+.ukDlv_t{margin:0;font:700 14px/1.35 'Lato',sans-serif;color:var(--text)}
+.ukDlv_m{margin:2px 0 0;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--text-3);text-wrap:pretty}
+.ukDlv_e{margin:4px 0 0;font:400 12.5px/1.45 'Lato',sans-serif;color:var(--tag-wait-ink)}
+.ukCxStat--warn{color:var(--tag-wait-ink)}
+.ukCxStat--warn i{background:var(--tag-wait-ink)}
+@media (max-width:560px){
+  .ukDlv_i{grid-template-columns:auto minmax(0,1fr) auto}
+  .ukDlv_i .ukCxStat{grid-column:2;grid-row:2}
+}
+
+/* ---- the static demo's in-page sandbox sign-in ---- */
+.ukdConsent{position:fixed;inset:0;z-index:1100;display:grid;place-items:center;padding:20px;background:rgba(6,18,25,.5);backdrop-filter:blur(3px)}
+.ukdConsent_c{width:min(420px,100%);background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 24px 60px rgba(4,16,22,.32)}
+.ukdConsent_s{display:inline-block;padding:4px 9px;border-radius:99px;background:var(--tag-wait-bg);color:var(--tag-wait-ink);font:700 10.5px/1 'Lato',sans-serif;letter-spacing:.12em;text-transform:uppercase}
+.ukdConsent_l{display:flex;align-items:center;gap:12px;margin:16px 0 10px}
+.ukdConsent_l img{width:44px;height:44px;border-radius:22.5%}
+.ukdConsent_l h2{margin:0;font:700 18px/1.3 'Lato',sans-serif;color:var(--text);text-wrap:balance}
+.ukdConsent_c p,.ukdConsent_c ul{font:400 13.5px/1.55 'Lato',sans-serif;color:var(--text-2)}
+.ukdConsent_c ul{padding-left:18px}
+.ukdConsent_a{display:flex;gap:10px;margin-top:18px}
+.ukdConsent_a > *{flex:1;justify-content:center}
+
+/* ---- Cloudbeds ---- */
+.ukCbConnect_h{display:flex;align-items:center;gap:14px;margin:0 0 4px}
+.ukCbConnect_h .ukPanel_title{margin:0}
+.ukCbConnect_h .ukHint{margin:2px 0 0}
+.ukCbConnect_h .ukTag{margin-left:auto}
+.ukCbGo{text-decoration:none}

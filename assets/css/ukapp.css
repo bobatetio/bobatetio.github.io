@@ -9644,3 +9644,6 @@ body.is-onboarding .ukDock_tab{align-self:flex-start}
 .ukPropPreview{border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--surface)}
 .ukPropPreview_tag{display:inline-flex;align-items:center;gap:6px;margin:0 0 16px;
   font:700 10.5px/1 'Lato',sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+
+/* the Library's kind filters are pills, not underlined tabs: no rule under them */
+.ukLibTabs.ukFilters--tabs{border-bottom:0;margin-bottom:0}

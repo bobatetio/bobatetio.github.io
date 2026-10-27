@@ -1496,84 +1496,359 @@
 .ukPrice_go.aeroBtn strong{flex:none;white-space:nowrap}
 
 /* ---------- the membership pricing card ----------
-   Two zones: a light panel carrying the plan, the headline, the price and the
-   action, sitting on a coloured panel that lists what is included in two
-   columns. Built to the supplied reference's structure, in the brand's gold
-   and near-black rather than its orange. */
-.ukPrice{background:#fff;padding-block:clamp(56px,7vw,104px)}
-.ukPrice_in{max-width:920px;margin-inline:auto;padding-inline:clamp(20px,5vw,40px);position:relative}
-/* the soft halo the card sits on */
-.ukPrice_in:before{content:"";position:absolute;left:8%;right:8%;top:14%;bottom:-6%;
-  border-radius:50%;filter:blur(64px);opacity:.30;pointer-events:none;
-  background:radial-gradient(60% 60% at 50% 50%,#f0c979 0%,transparent 70%)}
+   The upper pane is a one-for-one build of the supplied 660x346 frame. Every
+   position and size below is that frame's own measurement, converted to
+   container units (1 design px = 0.151515cqw), so the pane scales exactly at
+   any width instead of drifting. */
 .ukPrice_card{position:relative;border-radius:24px;overflow:hidden;
-  background:linear-gradient(152deg,#eec06a 0%,#d7a543 42%,#c8912f 100%);
+  /* a gold base with the Figma 'gold blur' artwork eased back over it, so the
+     texture reads without carrying the full weight of the render */
+  background:linear-gradient(152deg,#e8bc63 0%,#d7a543 45%,#c8912f 100%);
   box-shadow:0 34px 80px -34px rgba(150,106,20,.55)}
-.ukPrice_top{position:relative;margin:7px 7px 0;border-radius:19px;background:#fff;
-  padding:clamp(26px,3vw,36px) clamp(26px,3vw,38px) clamp(26px,3vw,34px);
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);
-  column-gap:clamp(20px,3vw,40px);row-gap:0;align-items:start}
+.ukPrice_card::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url(../img/uk/price-gold-blur.png) 0 0/100% 100% no-repeat;
+  opacity:.55}
+.ukPrice_top,.ukPrice_feats{position:relative;z-index:1}
 
-.ukPrice_eyebrow{grid-area:1/1;margin:0;display:inline-flex;align-items:center;gap:9px;
-  font:700 12px/1 'Lato',sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#c08d24}
-.ukPrice_eyebrow:before,.ukPrice_eyebrow:after{content:"";width:4px;height:4px;border-radius:50%;
-  background:currentColor;display:block}
-.ukPrice_save{grid-area:1/2;justify-self:end;border-radius:9999px;padding:7px 14px;
-  background:rgba(215,165,67,.18);color:#8a6414;
-  font:700 11.5px/1 'Lato',sans-serif;white-space:nowrap}
-.ukPrice_h{grid-area:2/1;margin:18px 0 0;max-width:15ch;
-  font:400 clamp(27px,3.2vw,38px)/1.16 'Marcellus',Georgia,serif;color:#121a22;text-wrap:balance}
-.ukPrice_h i{display:block;font-style:italic;color:#d7a543}
-.ukPrice_amt{grid-area:3/1;margin:clamp(22px,2.8vw,34px) 0 0;display:flex;align-items:flex-start;gap:1px;
-  color:#121a22;font-family:'Lato',sans-serif;line-height:1}
-.ukPrice_cur{font:700 clamp(19px,1.9vw,25px)/1 'Lato',sans-serif;margin-top:.5em}
-.ukPrice_num{font:700 clamp(46px,5.6vw,68px)/.92 'Lato',sans-serif;letter-spacing:-.025em}
-.ukPrice_per{align-self:flex-end;margin:0 0 .5em 6px;
-  font:400 clamp(15px,1.4vw,18px)/1 'Lato',sans-serif;color:#6b7480}
+.ukPrice_top{container-type:inline-size;position:relative;display:block;
+  margin:7px 7px 0;border-radius:17px;overflow:hidden;padding:0;
+  aspect-ratio:660/346;
+  background:linear-gradient(180deg,#E4F9FF 0%,#FFFFFF 100%)}
 
-/* the action: a near-black pill, white label */
-.ukPrice_go{grid-area:4/1;justify-self:start;margin-top:clamp(18px,2.2vw,26px);
+/* the photograph: x -67 y -67, 734 x 580, bleeding past the frame */
+.ukPrice_photo{position:absolute;left:-20.000cqw;top:-13.636cqw;
+  width:120.000cqw;height:94.848cqw;
+  background:url(../img/uk/price-resort.png) 0 0/100% 100% no-repeat}
+/* the wash that takes the photograph out toward the left: 0,193 493 x 217 */
+/* the action: the frame's 38,263.4 at 155.5 x 52, its own measured gold ramp
+   (top rgb(239,197,116), bottom rgb(216,168,74)) and a white label */
+.ukPriceBtn{position:absolute;left:5.758cqw;top:39.909cqw;z-index:2;
+  width:23.561cqw;height:7.879cqw;border-radius:1.818cqw;
   display:inline-flex;align-items:center;justify-content:center;
-  min-height:52px;padding:0 30px;border-radius:9999px;white-space:nowrap;
-  background:#14191f;color:#fff;text-decoration:none;
-  font:700 15.5px/1 'Lato',sans-serif;
-  box-shadow:0 12px 26px -10px rgba(10,14,18,.65);
-  transition:transform .25s cubic-bezier(.22,.9,.35,1),background-color .25s ease}
-.ukPrice_go:hover{background:#0b0f14;transform:translateY(-1px)}
-.ukPrice_go:active{transform:scale(.98)}
+  background:var(--uk-deep,#0B2F52);
+  color:#fff;-webkit-text-fill-color:#fff;text-decoration:none;text-shadow:none;
+  font:400 2.288cqw/1 'Lato',sans-serif;letter-spacing:.015em;white-space:nowrap;
+  box-shadow:0 0.909cqw 2.424cqw -0.909cqw rgba(11,47,82,.55);
+  transition:filter .25s ease,transform .25s ease}
+.ukPriceBtn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.ukPriceBtn:active{transform:scale(.985)}
 
-/* the "not sure" panel, sitting with the price rather than below it */
-.ukPrice_aside{grid-area:2/2/5/3;align-self:center;
-  border-radius:18px;background:#faf4e9;padding:clamp(18px,2vw,22px)}
-.ukPrice_askRow{display:flex;align-items:flex-start;gap:12px}
-.ukPrice_askIco{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
-  background:linear-gradient(150deg,#e8bd5c,#c8912f);color:#fff;
-  box-shadow:0 6px 14px -6px rgba(170,120,30,.8)}
-.ukPrice_askIco svg{width:19px;height:19px;display:block}
-.ukPrice_askT{margin:0;font:700 14.5px/1.35 'Lato',sans-serif;color:#121a22;text-wrap:pretty}
-.ukPrice_talk{display:block;margin-top:14px;text-align:center;border-radius:9999px;
-  background:#fff;padding:12px 16px;box-shadow:0 2px 6px rgba(20,25,31,.10);
-  font:700 14px/1 'Lato',sans-serif;color:#121a22;text-decoration:none;
-  transition:box-shadow .25s ease}
-.ukPrice_talk:hover{box-shadow:0 4px 12px rgba(20,25,31,.16)}
+.ukPrice_fade{position:absolute;left:0;top:29.242cqw;width:74.697cqw;height:32.879cqw;
+  /* measured off the frame: solid to x 281.5, gone by x 509.5 */
+  background:linear-gradient(90deg,#F1FBFF 0%,#F1FBFF 57.1%,rgba(241,251,255,0) 103.3%)}
 
-/* the coloured panel: what is included */
-.ukPrice_feats{padding:clamp(20px,2.4vw,26px) clamp(24px,3vw,34px) clamp(24px,2.8vw,30px)}
+/* the pill keeps the site's own glow tag; only its place comes from the frame */
+
+
+/* headline: ink at y 82 and y 126, 44 apart */
+
+.ukPrice_h i{display:block;font-style:italic;color:#D7A543}
+
+/* price: the $ at 38.4, the figure at 56.2, /mo at 229.9 */
+
+.ukPrice_cur{font-size:4.697cqw;font-weight:900;margin-top:1.212cqw}
+.ukPrice_num{font-size:10.606cqw;font-weight:900;letter-spacing:-.02em}
+.ukPrice_per{font-size:2.273cqw;font-weight:700;align-self:flex-end;
+  margin:0 0 2.273cqw 1.364cqw}
+
+
+
+/* ---- the included list, on the gold panel ---- */
+.ukPrice_feats{padding:clamp(20px,2.4vw,26px) clamp(24px,3vw,34px) 7px}
 .ukPrice_list{list-style:none;margin:0;padding:0;display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(13px,1.5vw,17px) clamp(20px,3vw,40px)}
 .ukPrice_list li{display:flex;align-items:flex-start;gap:10px;
   font:700 14.5px/1.35 'Lato',sans-serif;color:#fff;text-wrap:pretty}
-.ukPrice_tick{flex:none;width:18px;height:18px;margin-top:0;display:block;color:rgba(255,255,255,.95)}
+.ukPrice_tick{flex:none;width:18px;height:18px;display:block;color:rgba(255,255,255,.95)}
 .ukPrice_tick svg{width:18px;height:18px;display:block}
+@media (max-width:560px){ .ukPrice_list{grid-template-columns:minmax(0,1fr)} }
 
-@media (max-width:820px){
-  .ukPrice_top{grid-template-columns:minmax(0,1fr)}
-  .ukPrice_save{grid-area:auto;justify-self:start;margin-top:14px}
-  .ukPrice_h,.ukPrice_amt,.ukPrice_go,.ukPrice_aside{grid-area:auto}
-  .ukPrice_aside{margin-top:24px}
-  .ukPrice_h{max-width:none}
+/* ---------- the card section carries the world map ----------
+   The same tint that sat behind "What you are joining": the map as a mask,
+   --uk-deep showing through it. Centred here rather than weighted left,
+   because the card sits in the middle of the section. */
+.ukPrice{position:relative;overflow:hidden;background:#fff;
+  padding-block:clamp(56px,7vw,104px)}
+.ukPrice::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  /* the gold variant's own values, as it was on ukGlance--gold */
+  background:#b8801f;opacity:.16;
+  -webkit-mask:
+    url(../img/uk-worldmap-dots.svg?v=4) no-repeat center/100% auto,
+    linear-gradient(to right,transparent 0,rgba(0,0,0,.35) 26%,#000 46%),
+    linear-gradient(to bottom,transparent 0,#000 16%,#000 82%,transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask:
+    url(../img/uk-worldmap-dots.svg?v=4) no-repeat center/100% auto,
+    linear-gradient(to right,transparent 0,rgba(0,0,0,.35) 26%,#000 46%),
+    linear-gradient(to bottom,transparent 0,#000 16%,#000 82%,transparent 100%);
+  mask-composite:intersect}
+.ukPrice_in{position:relative;z-index:1;margin-inline:auto;
+  /* the frame is 660 wide, so the card lands at its native size on desktop
+     and keeps a gutter once the viewport closes */
+  max-width:calc(660px + 2 * clamp(20px,5vw,40px));
+  padding-inline:clamp(20px,5vw,40px)}
+
+/* with the helper panel gone the top pane is a single column */
+.ukPrice_top{grid-template-columns:minmax(0,1fr)}
+.ukPrice_save{grid-area:1/1;justify-self:end;align-self:start}
+.ukPrice_tag.ukZig_tag{grid-area:1/1;justify-self:start;align-self:start}
+.ukPrice_h{grid-area:2/1;max-width:20ch}
+.ukPrice_amt{grid-area:3/1}
+.ukPrice_go{grid-area:4/1}
+
+/* ---------- the membership page header is centred ----------
+   These rules were lost when the card's stylesheet block was replaced, which
+   is what left the hero copy aligned to the start. */
+.ukPubBand--center .ukPubBand_in{text-align:center}
+.ukPubBand--center .ukPubBand_h{margin-inline:auto;max-width:18ch;
+  font-size:clamp(34px,4.4vw,56px);line-height:1.08}
+.ukPubBand--center .ukPubBand_p{margin-inline:auto;max-width:56ch;
+  font-size:clamp(16px,1.45vw,19.5px);line-height:1.6}
+
+/* the stats sit under the header copy, on the dark band */
+.ukPubBand_stats{margin:clamp(26px,3vw,40px) auto 0;max-width:820px;
+  padding:clamp(20px,2.4vw,30px) 0;border-block:1px solid rgba(255,255,255,.16)}
+
+/* ---------- membership header and card corrections ----------
+   Lato is loaded at 300-700 only, so weight:900 was a no-op. The figures are
+   thickened with a hairline stroke in their own colour, the way ukSides_h
+   already does it, which is the only way to go heavier than the loaded cut. */
+.ukPrice_cur,.ukPrice_num{-webkit-text-stroke:.55px currentColor;paint-order:stroke fill}
+
+/* the header breaks after "need," rather than running to the frame edge */
+.ukPubBand--center .ukPubBand_h{max-width:21ch}
+/* and it takes the stats' own gradient instead of flat white */
+.ukPubBand--center .ukPubBand_h{
+  background:linear-gradient(101.34deg,#fff .18%,#d7a543 210%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  padding-bottom:.1em}
+
+/* the stats: give each figure room so 200M+ is not clipped by its column */
+.ukPubBand_stats{max-width:900px}
+.ukPubBand_stats .philoStat{padding-inline:clamp(6px,1vw,14px)}
+.ukPubBand_stats .philoStat_num{font-size:clamp(24px,2.5vw,36px);
+  letter-spacing:0;padding-bottom:.06em}
+.ukPubBand_stats .philoStat_label{font-size:12.5px;white-space:normal;text-wrap:balance}
+@media (max-width:640px){
+  .ukPubBand_stats .philoStat_num{font-size:clamp(22px,6vw,30px)}
 }
+
+/* the header is set at the same size as the figures below it */
+.ukPubBand--center .ukPubBand_h{font-size:clamp(24px,2.5vw,36px);line-height:1.18}
+
+/* the header comes up in size, and its measure is cut so it breaks after
+   "need," rather than after "about a" */
+.ukPubBand--center .ukPubBand_h{font-size:clamp(30px,3.7vw,48px);max-width:19ch}
+
+/* 19ch still held "for about a": Marcellus's ch is wider than its average
+   glyph, so the measure is cut to the length of the first line itself */
+.ukPubBand--center .ukPubBand_h{max-width:13ch;text-wrap:balance}
+
+/* the subheadline eases back a step */
+.ukPubBand--center .ukPubBand_p{font-size:clamp(14.5px,1.25vw,17px)}
+
+
+/* the bullet glyphs in this section read gold, not the pale two-stop fill */
+.ukPrice ~ .ukZig .ukZig_ico .ukZig_glyph path,
+.ukZig .ukZig_ico .ukZig_glyph path{fill:#b8801f;stroke:none}
+
+/* ukhotel.css paints these glyphs blue at (0,4,1); the gold gradient the site
+   already defines is restated here with enough weight to win */
+.ukZig .ukZig_rows .ukZig_points .ukZig_ico .ukZig_glyph path{
+  fill:url(#ukIcoGradLight);stroke:none}
+
+/* ---------- card: the pane is shorter now the action has moved out ---------- */
+.ukPrice_top{aspect-ratio:660/312}
+
+/* the action sits on the gold panel, full width, white with deep-blue ink */
+.ukPriceCta{display:block;margin-top:clamp(18px,2.2vw,26px);
+  /* the pane above is inset 7px from the card, while this sits inside the
+     panel's own padding: the negative margin pulls it back out so both
+     edges line up with the pane */
+  margin-inline:calc(7px - clamp(24px,3vw,34px));
+  padding:16px 20px;border-radius:17px;text-align:center;
+  background:#fff;color:#8a6414;text-decoration:none;
+  font:700 15.5px/1 'Lato',sans-serif;letter-spacing:.01em;
+  box-shadow:none;
+  transition:transform .25s cubic-bezier(.22,.9,.35,1)}
+.ukPriceCta:hover{transform:translateY(-1px)}
+.ukPriceCta:active{transform:scale(.99)}
+
+/* the Academy section's foot CTA sits centred under the cards */
+.ukAcad_foot{margin-top:clamp(30px,3.6vw,48px)}
+
+/* the pane's copy sits at the frame's own coordinates */
+.ukPrice_copy{position:absolute;left:5.758cqw;top:5.455cqw;z-index:2;display:block}
+.ukPrice_tag.ukZig_tag{margin:0;position:relative;display:inline-flex}
+.ukPrice_h{margin:3.939cqw 0 0;max-width:20ch;
+  font-family:'Marcellus',Georgia,serif;font-weight:400;
+  font-size:6.167cqw;line-height:6.061cqw;letter-spacing:-.025em;color:var(--uk-deep)}
+.ukPrice_h i{display:block;font-style:italic;color:#D7A543}
+
+/* ---------- the price ribbon ----------
+   The exported 276x67 tag: a rounded bar with a V notched into its right edge,
+   the amount on the left and the per-day note past a hairline divider. The
+   export's red ramp is swapped for the brand's own navy, running the same
+   top-right to bottom-left direction. */
+.ukPrice_amt{margin:2.424cqw 0 0;display:inline-flex;align-items:stretch;
+  width:41.818cqw;height:10.152cqw;border-radius:0.909cqw;overflow:hidden;
+  background:linear-gradient(235deg,#1c5183 0%,#0B2F52 100%);
+  color:#fff;font-family:'Lato',sans-serif;
+  clip-path:polygon(0 0, 97.63% 0, 99.2% 13.55%, 93.17% 44.22%,
+                    93.17% 54.69%, 99.2% 85.36%, 97.63% 100%, 0 100%)}
+.ukPrice_main{display:inline-flex;align-items:flex-start;gap:0;
+  padding:0 1.818cqw 0 2.727cqw;align-self:center;line-height:1}
+.ukPrice_cur{font-size:3.939cqw;font-weight:700;margin-top:.35em}
+.ukPrice_num{font-size:6.061cqw;font-weight:700;letter-spacing:-.02em}
+.ukPrice_per{font-size:3.939cqw;font-weight:700;align-self:flex-end;margin-bottom:.12em}
+/* the divider and the per-day note */
+.ukPrice_aside{display:flex;flex-direction:column;justify-content:center;
+  align-self:center;padding-left:1.818cqw;border-left:1px solid rgba(255,255,255,.45);
+  font-size:1.970cqw;font-weight:700;line-height:1.18;letter-spacing:.02em;text-transform:uppercase}
+
+
+/* ---------- the card now sits in the hero, under the stats ----------
+   The band opens up to carry it, and the card keeps its own 660 measure. */
+.ukPubBand_price{margin:clamp(28px,3.4vw,44px) auto 0;max-width:660px;text-align:left}
+.ukPubBand--center:has(.ukPubBand_price){padding-bottom:clamp(48px,6vw,88px)}
+.ukPubBand_price .ukPrice_card{box-shadow:0 44px 96px -38px rgba(0,0,0,.6)}
+@media (max-width:560px){ .ukPubBand_price{margin-top:26px} }
+
+/* ---------- the upper pane, one for one with Figma 243:1370 ----------
+   The frame is 660x281. Every value is the frame's own px converted to the
+   pane's container units (1 design px = 0.151515cqw), so it scales as one
+   piece. The copy layer covers the whole pane and each part is placed at
+   its measured x/y, rather than flowed, so nothing drifts as widths change. */
+.ukPrice_top{aspect-ratio:660/281;border-radius:15px;
+  background:linear-gradient(180deg,#E4F9FF 0%,#FFFFFF 100%)}
+/* the photograph: 9,-95 at 653x516, the image itself at -18.77% x 118.81% */
+.ukPrice_photo{left:-17.212cqw;top:-14.371cqw;width:117.545cqw;height:78.182cqw}
+/* the wash: 0,163 at 493x217, the frame's own -84deg ramp */
+.ukPrice_fade{left:0;top:24.697cqw;width:74.697cqw;height:32.879cqw;
+  background:linear-gradient(-83.991deg,rgba(241,251,255,0) .648%,#F1FBFF 44.041%)}
+.ukPrice_copy{inset:0;left:0;top:0}
+
+/* the pill is the site's own glow tag, exactly as every other tag on the
+   page renders it; the pane only places it at the frame's 38,36 */
+.ukPrice_tag.ukZig_tag{position:absolute;left:5.758cqw;top:5.455cqw;margin:0}
+
+/* the headline: 38,73, Marcellus 38 on a 44.08 line, the gold line in italic */
+.ukPrice_h{position:absolute;left:5.758cqw;top:11.061cqw;margin:0;max-width:none;
+  font:400 5.758cqw/6.679cqw 'Marcellus',Georgia,serif;letter-spacing:0;
+  color:#121A22;-webkit-text-fill-color:#121A22;white-space:nowrap}
+.ukPrice_h i{display:block;font-style:italic;color:#D7A543;-webkit-text-fill-color:#D7A543}
+
+/* the ribbon: the exported artwork (shadow included) at 28,176.16, 295x86,
+   with each figure at its measured offset inside it */
+.ukPrice_amt{position:absolute;left:4.242cqw;top:26.691cqw;margin:0;
+  width:44.703cqw;height:13.072cqw;display:block;overflow:visible;
+  border-radius:0;clip-path:none;
+  background:url(../img/uk/price-ribbon.svg?v=3) 0 0/100% 100% no-repeat;
+  color:#fff;font-family:'Lato',sans-serif}
+.ukPrice_main{display:contents}
+.ukPrice_cur,.ukPrice_num,.ukPrice_per,.ukPrice_aside{position:absolute;margin:0;padding:0;
+  line-height:normal;white-space:nowrap;-webkit-text-stroke:0;letter-spacing:0}
+.ukPrice_cur{left:3.336cqw;top:3.926cqw;font-size:3.997cqw;font-weight:900}
+.ukPrice_num{left:5.752cqw;top:2.259cqw;font-size:6.765cqw;font-weight:900}
+.ukPrice_per{left:23.185cqw;top:3.926cqw;font-size:3.997cqw;font-weight:900}
+.ukPrice_aside{left:32.655cqw;top:4.380cqw;width:6.364cqw;display:block;border:0;
+  font-size:1.654cqw;font-weight:700;text-transform:uppercase}
+.ukPrice_aside span{display:block}
+
+/* the price steps down to 700. The lighter cut is narrower, so the three
+   parts now run as one row (they sat edge to edge in the frame anyway) and
+   the row centres between the tag's left edge (x 40) and the divider (x 234.6),
+   rather than leaving the saved width as a gap before the divider */
+.ukPrice_main{position:absolute;display:flex;align-items:flex-start;justify-content:center;
+  left:1.818cqw;top:2.258cqw;width:29.485cqw}
+.ukPrice_main .ukPrice_cur,.ukPrice_main .ukPrice_num,.ukPrice_main .ukPrice_per{
+  position:static;flex:none;font-weight:700;align-self:flex-start}
+.ukPrice_main .ukPrice_cur,.ukPrice_main .ukPrice_per{margin-top:1.667cqw}
+.ukPrice_main .ukPrice_per{margin-left:.303cqw}
+/* the per-day note and its divider are gone; the tag's notched end comes in
+   46 design px so it sits as far past "/mo" as the body edge does before "$" */
+.ukPrice_amt{width:37.733cqw;background-image:url(../img/uk/price-ribbon.svg?v=4)}
+
+/* "Cancel anytime" sits under the tag, on the pill and headline's left edge,
+   in the frame's own chip type (Lato 700 11.5, #8A6414). The pane grows from
+   281 to 304 to hold it with a bottom margin near the pill's 36 at the top. */
+.ukPrice_top{aspect-ratio:660/304}
+.ukPrice_note{position:absolute;left:5.758cqw;top:39.697cqw;margin:0;
+  font:700 1.742cqw/normal 'Lato',sans-serif;color:#D7A543;-webkit-text-fill-color:#D7A543;
+  letter-spacing:.02em;white-space:nowrap}
+/* the note steps down to 400, sits 6 design px under the tag, and centres on
+   the tag's own span (x 38 to its painted edge at 265, so centre 152) */
+.ukPrice_note{font-weight:400;top:38.788cqw;left:23.030cqw;transform:translateX(-50%)}
+
+/* ---------- a gold comet running round the pricing card ----------
+   A conic sweep turned by an animated angle: transparent for most of the turn,
+   then a gold tail that warms to a pale gold head. It is masked to a 3px ring just
+   inside the card's edge, on its gold frame and above everything else, so it
+   never spills onto the navy. No white in it: the head stops at pale gold
+   #f9e0a6, just light enough to read over the frame it travels on. */
+@property --uk-orbit{syntax:'<angle>';inherits:false;initial-value:0deg}
+.ukPubBand_price{position:relative;isolation:isolate}
+.ukPubBand_price .ukPrice_card{z-index:1}
+.ukPubBand_price::before{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  border-radius:24px;padding:3px;
+  background:conic-gradient(from var(--uk-orbit),
+    transparent 0deg 220deg,
+    rgba(215,165,67,0) 220deg,
+    rgba(239,196,112,.85) 315deg,
+    #f4d38c 348deg,
+    #f9e0a6 357deg,
+    transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+  animation:ukOrbit 6s linear infinite}
+@keyframes ukOrbit{to{--uk-orbit:360deg}}
+@media (prefers-reduced-motion:reduce){ .ukPubBand_price::before{animation:none} }
+
+/* ---------- the pricing card on a phone ----------
+   The upper pane is placed to Figma in container units of a 660px frame, so
+   on a ~300px card everything shrank in step: the headline to 13-17px, the
+   price to 15-20px and the cancel note to 4-5px, while the tag's own 11px text
+   did not shrink, wrapped, and ran into the headline. Below 560 the copy is
+   laid out instead (tag, headline, ribbon, note) at readable sizes, and the
+   photograph stays the pane's background as on desktop: anchored bottom right,
+   with the frame's pale wash drawn in from the left so the copy reads over
+   it. The pane is only as tall as the copy. The ribbon keeps its artwork and
+   becomes its own container, so the figures inside keep their measured places
+   (each value is the frame's, divided by the ribbon's 0.37733 share of it). */
 @media (max-width:560px){
-  .ukPrice_list{grid-template-columns:minmax(0,1fr)}
-  .ukPrice_go{width:100%}
+  /* the band and its inner wrapper each pad 20px, which held the card 40px in
+     from the edge; it comes out to the site's 20px phone gutter */
+  .ukPubBand_price{margin-inline:-20px}
+  .ukPrice_top{aspect-ratio:auto;display:block}
+  .ukPrice_photo{left:auto;right:-16cqw;top:auto;bottom:0;width:min(112cqw,560px);height:auto;
+    aspect-ratio:1742/1161;background-size:100% 100%}
+  .ukPrice_fade{left:0;top:0;width:100%;height:100%;
+    background:linear-gradient(90deg,#F1FBFF 0%,rgba(241,251,255,.94) 50%,rgba(241,251,255,0) 90%)}
+  .ukPrice_copy{position:relative;inset:auto;display:flex;flex-direction:column;
+    align-items:flex-start;gap:12px;padding:20px 18px 22px}
+  .ukPrice_tag.ukZig_tag{position:relative;left:auto;top:auto;max-width:100%}
+  .ukPrice_tag.ukZig_tag b{white-space:normal;text-wrap:balance}
+  .ukPrice_h{position:static;margin:2px 0 0;font-size:26px;line-height:1.16;white-space:normal}
+  .ukPrice_amt{position:relative;left:auto;top:auto;container-type:inline-size;
+    width:190px;height:calc(190px / 2.8866)}
+  .ukPrice_main{left:4.818cqw;top:5.984cqw;width:78.141cqw}
+  .ukPrice_main .ukPrice_cur,.ukPrice_main .ukPrice_per{font-size:10.593cqw;margin-top:4.418cqw}
+  .ukPrice_main .ukPrice_num{font-size:17.929cqw}
+  .ukPrice_main .ukPrice_per{margin-left:.803cqw}
+  .ukPrice_note{position:static;transform:none;margin:-2px 0 0;font-size:13px;white-space:normal;text-wrap:balance}
 }
+/* the tag misses one line by a couple of pixels at 360; its tracking comes in
+   a fraction rather than the type coming down */
+@media (max-width:380px){
+  .ukPrice_tag.ukZig_tag{letter-spacing:1.5px}
+}
+
+/* ---------- membership: no visible headline ----------
+   The page opens straight on the pricing card at every width. The h1 stays in
+   the document for search and screen readers, only visually hidden, and the
+   card takes up the gap it left. */
+.ukPubBand--center:has(.ukPubBand_price) .ukPubBand_h{position:absolute;width:1px;height:1px;
+  margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.ukPubBand--center:has(.ukPubBand_price) .ukPubBand_price{margin-top:0}

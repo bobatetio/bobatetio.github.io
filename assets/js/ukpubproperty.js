@@ -119,7 +119,7 @@
           '<p class="ukTrade_v">' + esc(nightsOf(s.nights)) + '</p>' +
           '<p class="ukTrade_s">' + esc(s.inc || 'Room and breakfast') + '</p>' +
         '</div>' +
-        '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
+        '<span class="ukTrade_ar" aria-hidden="true">&harr;&#xFE0E;</span>' +
         '<div class="ukTrade_side ukTrade_side--pop">' +
           '<p class="ukTrade_l">You deliver</p>' +
           '<p class="ukTrade_v">' + assets + (assets === 1 ? ' asset' : ' assets') + '</p>' +

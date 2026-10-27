@@ -250,7 +250,9 @@
    at .28 under the same 33% to 83% fade. Two of those numbers live in
    ukmock.css, a home-only stylesheet, so they are stated here as they are on
    /for-creators/ and /for-hotels/. */
-.ukPubBand .homeHeader_bg{position:absolute;inset:0;z-index:0;display:grid;pointer-events:none}
+/* height:auto undoes ukbrand.css's 100svh, which is right for the homepage hero
+   but stopped this band's ground one screen down wherever the band is taller */
+.ukPubBand .homeHeader_bg{position:absolute;inset:0;height:auto;z-index:0;display:grid;pointer-events:none}
 .ukPubBand .homeHeader_bg > *{grid-area:1/1}
 .ukPubBand .heroBloom{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 .ukPubBand .heroBgCustom{position:absolute;inset:0;z-index:1;pointer-events:none}
@@ -642,3 +644,9 @@
 @media (max-width:1180px) and (min-width:621px){
   .ukPub_main .ukCrStats{grid-template-columns:repeat(3,1fr);gap:6px}
 }
+
+/* the footer's glow strip (.ukGlowBand) is fixed to the floor of the screen and
+   lives in .ukOutro, which comes later in the page and so paints over any band
+   taller than the screen: it drew a gold line straight across the membership
+   card. Lifting the band one layer keeps the strip off it and nowhere else. */
+.ukPubBand{z-index:1}

@@ -45,6 +45,11 @@
 .aeroNav_left{position:relative; display:flex; flex:1; min-width:0; align-items:center; justify-content:flex-start}
 .aeroNav_center{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:95}
 .aeroNav_right{position:relative; z-index:95; display:flex; flex:1; min-width:0; justify-content:flex-end; align-items:center; gap:12px}
+/* the right column takes half the bar so the links can centre, which lays its
+   empty left half over the right-hand links (Membership was unclickable on
+   desktop). Clicks pass through the empty part; the buttons still take them. */
+.aeroNav_right{pointer-events:none}
+.aeroNav_right > *{pointer-events:auto}
 
 /* ---- links + hover text-swap + underline ---- */
 .aeroNav_links{display:flex; align-items:center; gap:32px}

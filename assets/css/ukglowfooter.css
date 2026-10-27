@@ -3,8 +3,8 @@
    .ukOutro already isolates a stacking context: its photograph and scrim sit at
    z-index -1 and its newsletter and footer at z-index 1. The glow takes 0, so
    it lies over the picture and under every word. It is fixed to the viewport
-   rather than to the footer, which is what lets it sit on the floor of the
-   screen the whole way down the page and rise into place at the end. */
+   rather than to the footer, so it can rise from the floor of the screen into
+   place over the last stretch of scroll. Until then it is not shown. */
 .ukGlowBand{
   position:fixed;
   left:0;right:0;bottom:0;
@@ -12,7 +12,7 @@
   z-index:0;
   pointer-events:none;
   transform-origin:bottom;
-  transform:scaleY(0.045);
+  transform:scaleY(0);   /* hidden until the footer; the script raises it */
   will-change:transform;
 }
 .ukGlowBand svg{display:block;width:100%;height:100%}

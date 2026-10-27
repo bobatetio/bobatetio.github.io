@@ -221,7 +221,7 @@ window.UKSTAY = (function () {
             ? '<p class="ukTrade_s">' + esc(fmtRange(dates.from, dates.to)) + '</p>'
             : stay.from ? '<p class="ukTrade_s">' + esc(fmtRange(stay.from, stay.to)) + '</p>' : '') +
         '</div>' +
-        '<span class="ukTrade_ar" aria-hidden="true">&harr;</span>' +
+        '<span class="ukTrade_ar" aria-hidden="true">&harr;&#xFE0E;</span>' +
         '<div class="ukTrade_side ukTrade_side--pop"><p class="ukTrade_l">' +
           esc(opts.getLabel || 'You get') + '</p>' +
           '<p class="ukTrade_v' + (got ? '' : ' is-wait') + '">' +

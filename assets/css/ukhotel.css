@@ -1462,3 +1462,34 @@
      desktop card; at this width it eats into the copy under it */
   .ukZig--deep .ukZig_shot{margin-block:-22px}
 }
+
+/* ---------- phone: hero headline and network map ----------
+   1. The headline rule above (clamp 18px at its floor) outranks every phone
+      size, so on a phone these heroes set at 18px while the homepage sits at
+      ~28px. Below 640 it takes the homepage's phone scale. Each sentence is
+      its own line, except the hotels headline, which flows as one paragraph
+      so it holds three lines; it binds "Rest With Guests." with
+      non-breaking spaces so a wrap never strands one or two words.
+   2. The map is sized to the section's width and faded out over the left
+      column, which suits the desktop's two columns. On a phone the section is
+      one tall column, so the map shrank to a sliver behind the cards and the
+      left fade took most of that. Here it is scaled up and anchored behind
+      the cards, with only the top and bottom edges faded. */
+@media (max-width:640px){
+  .homeHeader .legionHero_line{display:block;font-size:min(7.6vw,32px)}
+  /* the hotels headline is two long sentences: one per line it runs to four
+     lines on a phone, so here they flow as one paragraph and hold three */
+  .homeHeader .legionHero_title--flow .legionHero_line{display:inline}
+}
+@media (max-width:560px){
+  .ukGlance::before{
+    -webkit-mask:
+      url(../img/uk-worldmap-dots.svg?v=4) no-repeat 50% 88%/250% auto,
+      linear-gradient(to bottom,transparent 0,transparent 30%,#000 48%,#000 90%,transparent 100%);
+    -webkit-mask-composite:source-in;
+    mask:
+      url(../img/uk-worldmap-dots.svg?v=4) no-repeat 50% 88%/250% auto,
+      linear-gradient(to bottom,transparent 0,transparent 30%,#000 48%,#000 90%,transparent 100%);
+    mask-composite:intersect;
+  }
+}

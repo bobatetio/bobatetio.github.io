@@ -488,8 +488,9 @@
     }
 
     .faq-item__q {
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
+      /* Lato like the rest of the site; it has no 500, so the question takes 700 */
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
       font-size: 15px;
       letter-spacing: 0.1px;
       color: #102e37;

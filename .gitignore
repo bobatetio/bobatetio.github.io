@@ -10,3 +10,9 @@ node_modules/
 
 # macOS
 .DS_Store
+
+# local runtime state for the app's helper services (never commit: rewritten
+# on every run, and the delivery store holds connection tokens)
+mcp/state.json
+delivery/store.json
+delivery/sandbox-drives/

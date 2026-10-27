@@ -38,7 +38,8 @@
 
   var OPT = {
     height: '30.6vh',   /* the band, and the scroll distance the reveal takes */
-    minReveal: 0.045, /* a thin flat strip of rainbow before the reveal starts */
+    minReveal: 0,     /* nothing on the floor of the screen until the footer: the
+                         strip used to sit there the whole way down the page */
     bars: 9,
     blur: 15,
     peak: 0.98,
@@ -97,11 +98,6 @@
 
     var reduced = !!(window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (reduced) {
-      /* no scroll-driven motion: the strip simply sits on the floor */
-      band.style.transform = 'scaleY(' + OPT.minReveal + ')';
-      return;
-    }
 
     var ticking = false;
     function measure() {
@@ -109,6 +105,8 @@
       var h = band.offsetHeight || 1;               /* offsetHeight ignores the transform */
       var left = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
       var t = clamp01((h - left) / h);
+      /* no gradual rise when motion is reduced: it is simply there at the footer */
+      if (reduced) t = t > 0 ? 1 : 0;
       band.style.transform = 'scaleY(' + (OPT.minReveal + (1 - OPT.minReveal) * t) + ')';
     }
     function onScroll() {

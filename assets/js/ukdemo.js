@@ -66,6 +66,7 @@ window.UKDEMO = (function () {
         if (window.UKAPPLY)  window.UKAPPLY.reset();
         if (window.UKINVITE) window.UKINVITE.reset();
         if (window.UKPITCHIN) window.UKPITCHIN.reset();
+        if (window.UKAUTO)   window.UKAUTO.reset();
         try { localStorage.removeItem('uk_shared_collabs_v1'); } catch (e) {}
         try { localStorage.removeItem('uk_favourites_v1'); } catch (e) {}
       }
@@ -124,7 +125,7 @@ window.UKDEMO = (function () {
         '<button class="ukDock_i' + (live ? '' : ' is-on') + '" type="button" data-demo="new">' +
           '<span class="ukDock_t">First-time account</span>' +
           '<span class="ukDock_s">The first hour. Onboarding, and nothing done yet.</span></button>' +
-        trackRows() +
+        trackRows() + autoRows() +
       '</div>' +
     '</div>';
   }
@@ -152,6 +153,32 @@ window.UKDEMO = (function () {
       }).join('');
   }
 
+  /* ---- auto mode, for review ----
+     Every state the feature has to handle, including the ones nobody can reach
+     on purpose: a dropped connection, a cancellation, a full calendar. The last
+     moments are one click each, for presenting. */
+  function autoRows() {
+    var AU = window.UKAUTO;
+    if (!AU || !document.querySelector('[data-ukapp]')) return '';
+    var now = AU.state(), cur = now.scn;
+    var rows = [['none','Not connected'],['requested','Setup requested'],
+      ['off','Connected, off'],['running','Running'],['full','On, calendar full'],['cancelled','A creator cancelled'],
+      ['dropped','Connection dropped'],['paused','Paused']];
+    return '<div class="ukDock_rule"></div><p class="ukDock_h">Auto mode</p>' +
+      '<div class="ukDock_grid">' + rows.map(function (r) {
+        return '<button class="ukDock_i ukDock_i--s' + (cur === r[0] ? ' is-on' : '') + '" type="button" data-auto-scn="' + r[0] + '">' +
+          '<span class="ukDock_t">' + r[1] + '</span></button>';
+      }).join('') + '</div>' +
+
+      /* one click each, for presenting: the same commands as the console */
+      (window.ukDemo ? '<div class="ukDock_rule"></div><p class="ukDock_h">Live moments</p><div class="ukDock_grid">' + [
+          ['act','Apps may look and act'], ['claude','Claude connects'], ['chatgpt-pause','ChatGPT pauses it'],
+          ['grok-resume','Grok turns it on'], ['content','Content arrives'], ['drop','Cloudbeds drops']
+        ].map(function (r) {
+          return '<button class="ukDock_i ukDock_i--s" type="button" data-auto-moment="' + r[0] + '"><span class="ukDock_t">' + r[1] + '</span></button>';
+        }).join('') + '</div>' : '');
+  }
+
   function mount() {
     var host = document.getElementById('ukDemoDock');
     if (!host) {
@@ -167,6 +194,32 @@ window.UKDEMO = (function () {
     if (el) { setDockOpen(!dockOpen()); return mount(); }
     var trk = e.target.closest && e.target.closest('[data-track]');
     if (trk && window.UKTRACK) return window.UKTRACK.set(trk.dataset.track);
+    var scn = e.target.closest && e.target.closest('[data-auto-scn]');
+    if (scn && window.UKAUTO) {
+      if (window.ukDemo) { window.ukDemo.state(scn.dataset.autoScn); return mount(); }
+      window.UKAUTO.scenario(scn.dataset.autoScn); location.href = location.pathname; return;
+    }
+    var mo = e.target.closest && e.target.closest('[data-auto-moment]');
+    if (mo && window.ukDemo) {
+      var d = window.ukDemo, k = mo.dataset.autoMoment;
+      var live = function () { if (window.UKAUTO.state().conn !== 'live') d.state('running'); };
+      var run = function (fn) { try { var r = fn(); if (r && r.catch) r.catch(function (x) { console.warn(x.message); }); } catch (x) { console.warn(x.message); } mount(); };
+      if (k === 'act') return run(function () { d.access('act'); d.tab('apps'); });
+      if (k === 'claude') return run(function () { live(); d.access('act'); d.connect('claude'); d.tab('apps'); });
+      if (k === 'chatgpt-pause') return run(function () { live(); d.access('act'); d.connect('chatgpt'); d.as('chatgpt').pause(); d.tab('activity'); });
+      if (k === 'grok-resume') return run(function () { live(); d.access('act'); d.connect('grok'); d.as('grok').resume(); d.tab('activity'); });
+      if (k === 'content') return run(function () {
+        var DL = window.UKDELIVERY;
+        if (window.UKAUTO.state().scn !== 'running') d.state('running');
+        if (DL && !DL.connected().length) { d.tab('results'); console.warn('Connect a drive in Content delivery first.'); return; }
+        return d.content('as11');
+      });
+      if (k === 'drop') return run(function () { live(); d.cloudbeds('drop'); d.tab('overview'); });
+    }
+
+    if (e.target.closest && e.target.closest('[data-auto-confirm]') && window.UKAUTO) {
+      window.UKAUTO.confirm(); location.href = location.pathname; return;
+    }
     var pick = e.target.closest && e.target.closest('[data-demo]');
     if (pick) set(pick.dataset.demo);
   });
@@ -174,6 +227,8 @@ window.UKDEMO = (function () {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mount);
   } else { mount(); }
+  /* the auto mode rows need scripts that load after this one: draw again once they are in */
+  window.addEventListener('load', mount);
 
   return { mode: mode, isNew: isNew, set: set, strip: strip, mount: mount };
 })();
