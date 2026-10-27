@@ -596,8 +596,34 @@
 .ukAb_img img{display:block;width:100%;height:100%;object-fit:cover}
 .ukAb_values{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(24px,5vw,80px);align-items:start}
 .ukAb_list{list-style:none;margin:0;padding:0;border-bottom:1px solid rgba(16,46,55,.12)}
-.ukAb_list li{display:flex;align-items:baseline;gap:clamp(18px,3vw,40px);padding:20px 0;border-top:1px solid rgba(16,46,55,.12)}
-.ukAb_n{flex:0 0 3ch;font:700 13px/1 'Lato',sans-serif;letter-spacing:.06em;color:rgba(16,46,55,.45)}
+.ukAb_list li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:clamp(18px,3vw,40px);
+  padding:16px 0;border-top:1px solid rgba(16,46,55,.12);outline:none;cursor:default;transition:padding .4s cubic-bezier(.22,.9,.35,1)}
+/* each value opens on hover (or tap / keyboard focus): its line slides in
+   under the title and its photograph grows at the far right; it closes again
+   when the pointer leaves */
+.ukAb_vt{min-width:0}
+.ukAb_vd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.22,.9,.35,1)}
+.ukAb_vd > p{min-height:0;overflow:hidden;margin:0;font:400 15.5px/1.6 'Lato',sans-serif;color:rgba(16,46,55,.68);
+  opacity:0;transform:translateY(-4px);transition:opacity .3s ease,transform .4s ease;text-wrap:pretty}
+.ukAb_vi{display:block;width:64px;height:44px;border-radius:10px;overflow:hidden;background:var(--bg);
+  transition:width .4s cubic-bezier(.22,.9,.35,1),height .4s cubic-bezier(.22,.9,.35,1)}
+.ukAb_vi img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform .6s ease}
+.ukAb_list li:focus-within,.ukAb_list li:focus-visible{padding-block:24px}
+.ukAb_list li:focus-within .ukAb_vd,.ukAb_list li:focus-visible .ukAb_vd{grid-template-rows:1fr}
+.ukAb_list li:focus-within .ukAb_vd > p,.ukAb_list li:focus-visible .ukAb_vd > p{opacity:1;transform:none;padding-top:8px}
+.ukAb_list li:focus-within .ukAb_vi,.ukAb_list li:focus-visible .ukAb_vi{width:clamp(120px,14vw,180px);height:clamp(80px,9.4vw,120px)}
+.ukAb_list li:focus-visible{outline:2px solid var(--uk-gold);outline-offset:4px;border-radius:4px}
+@media (hover:hover){
+  .ukAb_list li:hover{padding-block:24px}
+  .ukAb_list li:hover .ukAb_vd{grid-template-rows:1fr}
+  .ukAb_list li:hover .ukAb_vd > p{opacity:1;transform:none;padding-top:8px}
+  .ukAb_list li:hover .ukAb_vi{width:clamp(120px,14vw,180px);height:clamp(80px,9.4vw,120px)}
+  .ukAb_list li:hover .ukAb_vi img{transform:scale(1)}
+}
+@media (prefers-reduced-motion:reduce){
+  .ukAb_list li,.ukAb_vd,.ukAb_vd > p,.ukAb_vi,.ukAb_vi img{transition:none}
+}
+.ukAb_n{min-width:3ch;font:700 13px/1 'Lato',sans-serif;letter-spacing:.06em;color:rgba(16,46,55,.45)}
 .ukAb_v{font:400 clamp(20px,1.9vw,26px)/1.25 'Marcellus',Georgia,serif;color:var(--uk-deep)}
 .ukAb_split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,5vw,80px);align-items:center}
 .ukAb_split--founder .ukAb_img{aspect-ratio:1/1}
